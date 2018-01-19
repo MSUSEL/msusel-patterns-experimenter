@@ -1,0 +1,193 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Patterns
+    Copyright (c) 2015-2018 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>edu.montana.gsoc.msusel</groupId>
+        <artifactId>msusel-parent</artifactId>
+        <version>1.1.1</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>msusel-patterns-experimenter</artifactId>
+    <packaging>jar</packaging>
+    <version>1.1.1</version>
+    <name>MSUSEL Patterns Experimenter</name>
+    <description>A Module containing the artifacts needed to experiment with design pattern issues.</description>
+    <url>http://maven.apache.org</url>
+
+    <developers>
+        <developer>
+            <id>isaac.griffith</id>
+            <name>Isaac Griffith</name>
+            <email>isaacgriffith@gmail.com</email>
+            <organization>MSUSEL</organization>
+            <organizationUrl>https://msusel.github.io/</organizationUrl>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <jee.version>8.0</jee.version>
+        <h2.version>1.4.196</h2.version>
+        <hibernate.version>5.2.11.Final</hibernate.version>
+    </properties>
+
+    <dependencies>
+        <!-- Apache Commons Exec -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.3</version>
+        </dependency>
+
+        <!-- Design Pattern Detector -->
+        <dependency>
+            <groupId>gr.uom</groupId>
+            <artifactId>pattern4</artifactId>
+            <version>4.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/pattern4.jar</systemPath>
+        </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
+        </dependency>
+
+        <!-- MSUSEL Projects -->
+        <dependency>
+            <groupId>edu.montana.gsoc.msusel</groupId>
+            <artifactId>msusel-codetree</artifactId>
+            <version>${msusel.version}</version>
+        </dependency>
+
+        <!-- SikuliX UI Automation -->
+        <dependency>
+            <groupId>com.sikulix</groupId>
+            <artifactId>sikulixapi</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        <!-- JRuby -->
+        <dependency>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby-complete</artifactId>
+            <version>9.1.15.0</version>
+        </dependency>
+
+        <!-- GitHub -->
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>1.90</version>
+        </dependency>
+
+        <!-- JGit -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>4.10.0.201712302008-r</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit.junit</artifactId>
+            <version>4.10.0.201712302008-r</version>
+        </dependency>
+
+        <!-- PlantUML -->
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>1.2017.12</version>
+        </dependency>
+
+        <!-- Hibernate and JPA -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${jee.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>msusel-maven-repo</id>
+            <name>msusel-maven-repo</name>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+
+            <url>https://raw.github.com/MSUSEL/msusel-maven-repo/releases</url>
+        </repository>
+        <repository>
+            <id>snapshot</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>synergian-repo</id>
+            <url>https://raw.github.com/synergian/wagon-git/releases</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <distributionManagement>
+        <repository>
+            <id>msusel-maven-repo</id>
+            <name>msusel-maven-repo</name>
+            <url>git:releases://git@github.com:MSUSEL/msusel-maven-repo.git</url>
+        </repository>
+    </distributionManagement>
+</project>
