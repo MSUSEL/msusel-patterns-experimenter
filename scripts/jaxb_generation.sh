@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # The MIT License (MIT)
 #
@@ -24,4 +25,11 @@
 # SOFTWARE.
 #
 
-distributionUrl=https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.5.0/apache-maven-3.5.0-bin.zip
+
+curl https://raw.githubusercontent.com/pmd/pmd/pmd_releases/6.0.0/pmd-core/src/main/resources/report_2_0_0.xsd -o report_2_0_0.xsd
+xjc -d ../src/main/java -p edu.montana.gsoc.msusel.patterns.collector.impl.pmd report_2_0_0.xsd
+rm report_2_0_0.xsd
+
+curl https://raw.githubusercontent.com/findbugsproject/findbugs/release-3.0.1/findbugs/etc/bugcollection.xsd -o bugcollection.xsd
+xjc -d ../src/main/java -p edu.montana.gsoc.msusel.patterns.collector.impl.fb bugcollection.xsd
+rm bugcollection.xsd
