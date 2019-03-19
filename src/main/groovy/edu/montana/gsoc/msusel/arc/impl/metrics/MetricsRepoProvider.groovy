@@ -30,7 +30,7 @@ import edu.montana.gsoc.msusel.arc.AbstractRepoProvider
 import edu.montana.gsoc.msusel.datamodel.DataModelMediator
 import edu.montana.gsoc.msusel.datamodel.measures.Metric
 import edu.montana.gsoc.msusel.datamodel.measures.MetricRepository
-import edu.montana.gsoc.msusel.metrics.AbstractMetric
+import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 import org.reflections.Reflections
 /**
@@ -41,7 +41,7 @@ class MetricsRepoProvider extends AbstractRepoProvider {
 
     @Inject
     DataModelMediator mediator
-    Set<Class<AbstractMetric>> metrics
+    Set<Class<MetricEvaluator>> metrics
     static final String METRICS_PKG = "edu.montana.gsoc.msusel.metrics.impl"
 
     @Override
