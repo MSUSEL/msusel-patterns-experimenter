@@ -29,9 +29,12 @@ package edu.montana.gsoc.msusel.arc.impl.ghsearch;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.datamodel.SCM;
+import edu.isu.isuese.datamodel.SCMType;
+import edu.isu.isuese.datamodel.System;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand;
-import edu.montana.gsoc.msusel.arc.datamodel.Project;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTag;
 import org.kohsuke.github.GitHub;
@@ -70,8 +73,10 @@ public class GitHubSearchCommand extends RepositoryCommand {
         }
     }
 
-    public List<Project> findProjects() {
-        List<Project> projects = Lists.newCopyOnWriteArrayList();
+    public List<System> findProjects() {
+        final int[] numProj = {0};
+
+        List<System> systems = Lists.newCopyOnWriteArrayList();
 
         if (github != null) {
             PagedSearchIterable<GHRepository> repos = github.searchRepositories()
@@ -86,17 +91,28 @@ public class GitHubSearchCommand extends RepositoryCommand {
                     try {
                         List<GHTag> tags = repo.listTags().withPageSize(10).asList();
                         if (tags.size() >= MIN_TAGS) {
-                            Project p = Project.builder()
-                                    .repoName(repo.getName())
-                                    .repoURL(repo.getHtmlUrl().toString())
-                                    .size(repo.getSize())
+                            System sys = System.builder()
+                                    .name(repo.getName())
+                                    .key(repo.getName())
                                     .create();
-                            System.out.println(repo.getName() + ": " + tags.size() + " tags");
+                            systems.add(sys);
 
                             tags.forEach(tag -> {
-                                //p.addTag(tag.getName());
+                                Project p = Project.builder()
+                                        .name(repo.getName())
+                                        .version(tag.getName())
+                                        .projKey(repo.getName() + ":" + tag.getName())
+                                        .scm(
+                                            SCM.builder()
+                                                .name(repo.getName())
+                                                .url(repo.getHtmlUrl().toString())
+                                                .type(SCMType.GIT)
+                                                .tag(tag.getName())
+                                                .create())
+                                        .create();
+                                sys.addProject(p);
+                                numProj[0] += 1;
                             });
-                            projects.add(p);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -104,22 +120,22 @@ public class GitHubSearchCommand extends RepositoryCommand {
                 }
             });
 
-            System.out.println("Repos Found: " + projects.size());
+            java.lang.System.out.println("Repos Found: " + numProj[0]);
         }
 
-        return projects;
+        return systems;
     }
 
     public static void main(String args[]) {
         GitHubSearchCommand ghs = new GitHubSearchCommand();
         ghs.getAuth();
 
-        List<Project> projects = ghs.findProjects();
+        List<System> systems = ghs.findProjects();
 
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        String json = gson.toJson(projects);
+        String json = gson.toJson(systems);
 
         Path p = Paths.get("java_projects.json");
         try {
