@@ -26,13 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pmd
 
-import edu.montana.gsoc.msusel.arc.AbstractRepoProvider
-import edu.montana.gsoc.msusel.datamodel.measures.Priority
-import edu.montana.gsoc.msusel.datamodel.measures.Rule
-import edu.montana.gsoc.msusel.datamodel.measures.RuleRepository
-import edu.montana.gsoc.msusel.datamodel.measures.Tag
 
-import java.nio.file.Path
+import edu.isu.isuese.datamodel.RuleRepository
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
 
 /**
  * @author Isaac Griffith
@@ -40,40 +37,20 @@ import java.nio.file.Path
  */
 class PMDRepoProvider extends AbstractRepoProvider {
 
-    Path configPath
     def config
 
-    PMDRepoProvider(Path configPath) {
-        this.configPath = configPath
+    PMDRepoProvider(ArcContext context) {
+        super(context)
     }
 
     @Override
     void loadData() {
-        config = new XmlSlurper().parse(configPath.toFile())
     }
 
     @Override
     void updateDatabase() {
-        RuleRepository repo = RuleRepository.builder().name("PMD").repoKey("pmd").create()
-        mediator.addRuleRepository(repo)
-        config.rule.each { rule ->
-            String ruleKey = rule.@'key'
-            String ruleName = rule.configKey
-            Priority priority = Priority.forValue(rule.priority)
-            String tag = rule.tag
-
-            if (rule.status != "DEPRECATED") {
-                Rule r = Rule.builder()
-                        .name(ruleName)
-                        .ruleKey("${repo.repoKey}:${ruleKey}")
-                        .description()
-                        .priority(priority)
-                        .tags([Tag.builder().tag(tag).create()])
-                        .create()
-                repo << r
-                mediator.addRule(r)
-            }
-        }
-        mediator.updateRuleRepository(repo)
+        RuleRepository repo = RuleRepository.findFirst("repoKey = ?", PMDConstants.REPO_KEY)
+        if (!repo)
+            RuleRepository.builder().name("PMD").key("pmd").create()
     }
 }

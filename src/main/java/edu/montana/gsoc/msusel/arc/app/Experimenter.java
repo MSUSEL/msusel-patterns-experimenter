@@ -74,7 +74,7 @@ public class Experimenter {
             try {
                 Tool tool = t.getDeclaredConstructor().newInstance();
                 tool.init(context);
-                tool.getRepoProvider().registerRepos(context);
+                //tool.getRepoProvider().registerRepos(context);
             } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 System.out.println(e.getMessage());
             }

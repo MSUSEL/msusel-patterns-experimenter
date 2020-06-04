@@ -26,13 +26,11 @@
  */
 package edu.montana.gsoc.msusel.arc.tool;
 
-import edu.montana.gsoc.msusel.arc.RuleProvider;
-import edu.montana.gsoc.msusel.arc.provider.NullRuleProvider;
+import edu.montana.gsoc.msusel.arc.ArcContext;
 
 public abstract class MetricOnlyTool extends AbstractTool {
 
-    @Override
-    public RuleProvider getRuleProvider() {
-        return new NullRuleProvider();
+    public MetricOnlyTool(ArcContext context) {
+        super(context);
     }
 }

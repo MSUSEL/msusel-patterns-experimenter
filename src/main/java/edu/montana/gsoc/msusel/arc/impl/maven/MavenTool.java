@@ -27,12 +27,31 @@
 package edu.montana.gsoc.msusel.arc.impl.maven;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
+import edu.montana.gsoc.msusel.arc.impl.pmd.PMDProperties;
 import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class MavenTool extends CommandOnlyTool {
 
+    private MavenCommand command;
+
+    public MavenTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
-    public void init(ArcContext context) {
-        context.registerCommand(new MavenCommand());
+    public void init() {
+        command = MavenCommand.builder()
+                .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
+                .projectName(context.getProject().getName())
+                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
+                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
+                .projectBaseDirectory(context.getProjectDirectory())
+                .create();
+
+        context.registerCommand(command);
     }
 }

@@ -48,9 +48,9 @@ public class Phase {
     public void execute() {
 
         for (Command cmd : commands) {
-            log.info(String.format("Starting %s command:", cmd.getName()));
+            log.info(String.format("Starting %s command:", cmd.getToolName()));
             //cmd.execute();
-            log.info(String.format("Finished %s command.", cmd.getName()));
+            log.info(String.format("Finished %s command.", cmd.getToolName()));
         }
     }
 

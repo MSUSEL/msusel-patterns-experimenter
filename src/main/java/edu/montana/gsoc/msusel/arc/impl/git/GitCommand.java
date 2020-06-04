@@ -26,12 +26,12 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.git;
 
+import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.datamodel.SCMType;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand;
-import edu.montana.gsoc.msusel.arc.datamodel.Project;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -42,8 +42,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Slf4j
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class GitCommand extends RepositoryCommand {
+
     @Setter
     @Getter
     protected Project project;
@@ -58,6 +62,7 @@ public class GitCommand extends RepositoryCommand {
     protected String password;
     @Setter
     protected String tag;
+    protected ArcContext context;
 
     public GitCommand() {
         super("Git");
@@ -65,6 +70,14 @@ public class GitCommand extends RepositoryCommand {
 
     @Override
     public void execute(ArcContext context) {
+        this.context = context;
+        if (context != null) {
+            this.project = context.getProject();
+            this.repoDir = context.getProjectDirectory();
+            this.username = context.getArcProperty(GitProperties.GIT_USERNAME);
+            this.password = context.getArcProperty(GitProperties.GIT_PASSWORD);
+        }
+
         try {
             Path p = Paths.get(repoDir, ".git");
             Git git = null;
@@ -73,21 +86,30 @@ public class GitCommand extends RepositoryCommand {
             else
                 git = openRepository();
 
+            assert git != null;
+
             if (tag != null && !tag.isEmpty()) {
-                log.info("Checking out Tag");
+                assert context != null;
+                context.logger().atInfo().log("Checking out Tag");
                 git.checkout().setName(tag).call();
             }
 
             closeRepository(git);
         } catch (GitAPIException | IOException e) {
-            log.error(e.getMessage());
+            assert context != null;
+            context.logger().atSevere().withCause(e).log(e.getMessage());
         }
     }
 
+    @Override
+    public String getToolName() {
+        return GitConstants.GIT_CMD_NAME;
+    }
+
     private Git cloneRepository() throws GitAPIException {
-        log.info("Cloning Repo");
+        context.logger().atInfo().log("Cloning Repo");
         Git git = Git.cloneRepository()
-                .setURI(project.getRepoURL())
+                .setURI(project.getSCM(SCMType.GIT).getURL())
                 .setDirectory(new File(repoDir))
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
                 .call();
@@ -96,12 +118,12 @@ public class GitCommand extends RepositoryCommand {
     }
 
     private Git openRepository() throws IOException {
-        log.info("Opening Repo");
+        context.logger().atInfo().log("Opening Repo");
         return Git.open(new File(repoDir));
     }
 
     private void closeRepository(Git git) {
-        log.info("Closing Repo");
+        context.logger().atInfo().log("Closing Repo");
         git.close();
     }
 }

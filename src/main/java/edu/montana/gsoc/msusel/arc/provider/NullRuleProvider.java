@@ -26,7 +26,21 @@
  */
 package edu.montana.gsoc.msusel.arc.provider;
 
-import edu.montana.gsoc.msusel.arc.RuleProvider;
+import edu.montana.gsoc.msusel.arc.ArcContext;
 
-public class NullRuleProvider implements RuleProvider {
+public class NullRuleProvider extends AbstractRuleProvider {
+
+    public NullRuleProvider(ArcContext context) {
+        super(context);
+    }
+
+    @Override
+    public void loadData() {
+
+    }
+
+    @Override
+    public void updateDatabase() {
+
+    }
 }

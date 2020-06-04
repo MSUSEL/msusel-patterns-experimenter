@@ -27,9 +27,7 @@
 package edu.montana.gsoc.msusel.arc;
 
 import com.google.common.collect.Table;
-import com.google.inject.Inject;
-import edu.montana.gsoc.msusel.datamodel.DataModelMediator;
-import edu.montana.gsoc.msusel.datamodel.measures.Measurable;
+import edu.isu.isuese.datamodel.Measurable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Singular;
@@ -49,8 +47,6 @@ public abstract class ReportGenerator {
     @Singular
     protected Set<String> findings;
     protected Set<String> identifiers;
-    @Inject
-    protected DataModelMediator mediator;
     @Setter
     @Getter
     protected ReportingLevel level;

@@ -28,7 +28,11 @@ package edu.montana.gsoc.msusel.arc.impl.quamoco;
 
 public interface QuamocoConstants {
 
-    String QM_HOME_PROP_KEY = "quamoco.qm.home.dir";
-    String QUAMOCO_CONFIG_FILE = "quamoco.config";
-    String QUAMOCO_MEASURE_REPO = "quamoco";
+    String QUAMOCO_CMD_NAME         = "Quamoco";
+    String QM_HOME_PROP_KEY         = "quamoco.models.dir";
+    String QUAMOCO_LANG_MODELS_FILE = "config/quamoco/languages.properties";
+    String QUAMOCO_CONFIG_DIR       = "config/quamoco/";
+    String QUAMOCO_REPO_NAME        = "arc-quamoco";
+    String QUAMOCO_REPO_KEY         = "arc-quamoco";
+    String QUAMOCO_TOOL_NAME        = "Arc Quamoco";
 }

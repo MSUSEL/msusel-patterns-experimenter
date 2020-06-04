@@ -30,5 +30,5 @@ public interface Command {
 
     void execute(ArcContext context);
 
-    String getName();
+    String getToolName();
 }

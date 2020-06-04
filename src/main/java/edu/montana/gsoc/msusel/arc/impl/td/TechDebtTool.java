@@ -26,12 +26,23 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.td;
 
+import com.google.common.collect.ImmutableList;
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.MetricProvider;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
+import edu.montana.gsoc.msusel.arc.Provider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
 
+import java.util.List;
+
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class TechDebtTool extends MetricOnlyTool {
+
+    public TechDebtTool(ArcContext context) {
+        super(context);
+    }
 
     @Override
     public RepoProvider getRepoProvider() {
@@ -39,12 +50,12 @@ public class TechDebtTool extends MetricOnlyTool {
     }
 
     @Override
-    public MetricProvider getMetricProvider() {
-        return new TechDebtMetricProvider();
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new TechDebtMetricProvider(context));
     }
 
     @Override
-    public void init(ArcContext context) {
+    public void init() {
         context.registerCommand(new TechDebtCommand());
     }
 }

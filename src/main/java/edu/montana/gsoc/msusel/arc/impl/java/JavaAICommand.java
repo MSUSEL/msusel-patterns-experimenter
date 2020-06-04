@@ -33,12 +33,17 @@ import edu.montana.gsoc.msusel.datamodel.parsers.JavaArtifactIdentifier;
 public class JavaAICommand extends ArtifactIdentifierCommand {
 
     public JavaAICommand() {
-        super("Java Artifact Identifier");
+        super(JavaConstants.JAVA_TOOL_CMD_NAME);
     }
 
     @Override
     public void execute(ArcContext context) {
         JavaArtifactIdentifier jai = new JavaArtifactIdentifier();
         jai.identify(context.getProjectDirectory());
+    }
+
+    @Override
+    public String getToolName() {
+        return JavaConstants.JAVA_TOOL_CMD_NAME;
     }
 }

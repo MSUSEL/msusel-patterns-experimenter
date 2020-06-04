@@ -26,13 +26,7 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm
 
-import com.google.inject.Inject
-import edu.montana.gsoc.msusel.datamodel.DataModelMediator
-import edu.montana.gsoc.msusel.datamodel.type.Type
-
 class InstanceCoalescence {
-
-    @Inject DataModelMediator mediator
 
     def coalesce(Project proj) {
         // 1. Partition instances by pattern
@@ -83,25 +77,25 @@ class InstanceCoalescence {
     }
 
     def expand(PatternInstance inst) {
-        List<Type> knownTypes = []
-        inst.roles.each { Role r ->
-            def projKey = mediator.currentProject().projKey
-            Type t = mediator.findType("$projKey:${r.element}")
-            if (t) knownTypes << t
-        }
-
-        Set<Type> expansionTypes = [] as Set
-        knownTypes.each {
-            expansionTypes += mediator.getGeneralizedFrom(it)
-            expansionTypes += mediator.getRealizedFrom(it)
-            expansionTypes += mediator.getGeneralizedTo(it)
-            expansionTypes += mediator.getRealizedTo(it)
-        }
-
-        expansionTypes.removeAll(knownTypes)
-        expansionTypes.each {
-            inst.addRole(Role.builder().element(it.key()).create())
-        }
+//        List<Type> knownTypes = []
+//        inst.roles.each { Role r ->
+//            def projKey = mediator.currentProject().projKey
+//            Type t = mediator.findType("$projKey:${r.element}")
+//            if (t) knownTypes << t
+//        }
+//
+//        Set<Type> expansionTypes = [] as Set
+//        knownTypes.each {
+//            expansionTypes += mediator.getGeneralizedFrom(it)
+//            expansionTypes += mediator.getRealizedFrom(it)
+//            expansionTypes += mediator.getGeneralizedTo(it)
+//            expansionTypes += mediator.getRealizedTo(it)
+//        }
+//
+//        expansionTypes.removeAll(knownTypes)
+//        expansionTypes.each {
+//            inst.addRole(Role.builder().element(it.key()).create())
+//        }
     }
 
     static void main(String[] args) {

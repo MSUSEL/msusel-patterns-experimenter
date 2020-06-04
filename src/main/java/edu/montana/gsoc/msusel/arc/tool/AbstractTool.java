@@ -26,7 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc.tool;
 
+import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.Tool;
 
 public abstract class AbstractTool implements Tool {
+
+    protected final ArcContext context;
+
+    public AbstractTool(ArcContext context) {
+        this.context = context;
+    }
 }

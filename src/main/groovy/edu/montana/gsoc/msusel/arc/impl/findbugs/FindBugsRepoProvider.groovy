@@ -26,13 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.findbugs
 
-import edu.montana.gsoc.msusel.arc.AbstractRepoProvider
-import edu.montana.gsoc.msusel.datamodel.measures.Priority
-import edu.montana.gsoc.msusel.datamodel.measures.Rule
-import edu.montana.gsoc.msusel.datamodel.measures.RuleRepository
-import edu.montana.gsoc.msusel.datamodel.measures.Tag
 
-import java.nio.file.Path
+import edu.isu.isuese.datamodel.RuleRepository
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
 
 /**
  * @author Isaac Griffith
@@ -40,58 +37,29 @@ import java.nio.file.Path
  */
 class FindBugsRepoProvider extends AbstractRepoProvider {
 
-    Path fbConfigPath
-    Path fbSecConfigPath
-    Path fbContribConfigPath
-    def fbConfig
-    def fbSecConfig
-    def fbContribConfig
-
-    FindBugsRepoProvider(Path fbConfigPath, Path fbSecConfigPath, Path fbContribConfigPath) {
-        this.fbConfigPath = fbConfigPath
-        this.fbSecConfigPath = fbSecConfigPath
-        this.fbContribConfigPath = fbContribConfigPath
+    FindBugsRepoProvider(ArcContext context) {
+        super(context)
     }
 
     @Override
     void loadData() {
-        fbConfig = new XmlSlurper().parse(fbConfigPath.toFile())
-        fbSecConfig = new XmlSlurper().parse(fbSecConfigPath.toFile())
-        fbContribConfig = new XmlSlurper().parse(fbContribConfigPath.toFile())
+
     }
 
     @Override
     void updateDatabase() {
-        process("findbugs", "findbugs", fbConfig)
-        process("fbcontrib", "fbcontrib", fbContribConfig)
-        process("findsecbugs", "findsecbugs", fbSecConfig)
+        process(FindBugsConstants.FB_REPO_NAME, FindBugsConstants.FB_REPO_KEY)
+        process(FindBugsConstants.FB_CONTRIB_REPO_NAME, FindBugsConstants.FB_CONTRIB_REPO_KEY)
+        process(FindBugsConstants.FB_SEC_REPO_NAME, FindBugsConstants.FB_SEC_REPO_KEY)
     }
 
-    private process(String repoName, String repoKey, config) {
-        RuleRepository repo = RuleRepository.builder().name(repoName).repoKey(repoKey).create()
-        mediator.addRuleRepository(repo)
-        config.rule.each { rule ->
-            String ruleKey = rule.@'key'
-            String ruleName = rule.name
-            String description = rule.description
-            Priority priority = Priority.forValue(rule.@'priority')
-            List<Tag> tags = []
-            rule.tag.each { tag ->
-                tags << Tag.builder().tag(tag).create()
-            }
-
-            if (rule.status != "DEPRECATED") {
-                Rule r = Rule.builder()
-                        .name(ruleName)
-                        .ruleKey("${repo.repoKey}:${ruleKey}")
-                        .description(description)
-                        .priority(priority)
-                        .tags(tags)
-                        .create()
-                repo << r
-                mediator.addRule(r)
-            }
+    private process(String repoName, String repoKey) {
+        RuleRepository repo = RuleRepository.findFirst("repoKey = ?", repoKey)
+        if (!repo) {
+            RuleRepository.builder()
+                    .name(repoName)
+                    .key(repoKey)
+                    .create()
         }
-        mediator.updateRuleRepository(repo)
     }
 }

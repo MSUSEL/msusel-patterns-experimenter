@@ -33,9 +33,13 @@ import org.apache.commons.exec.CommandLine;
 
 public class FindBugsCommand extends ToolCommand {
 
+    FindBugsTool owner;
+
     @Builder(buildMethodName = "create")
-    public FindBugsCommand() {
-        super("FindBugs");
+    public FindBugsCommand(FindBugsTool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
+                           String binaryDirectory, String projectBaseDirectory) {
+        super(FindBugsConstants.FB_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory, binaryDirectory, projectBaseDirectory);
+        this.owner = owner;
     }
 
     @Override
@@ -56,13 +60,12 @@ public class FindBugsCommand extends ToolCommand {
             .addArgument(binaryDirectory);
     }
 
-    @Override
-    protected int getExpectedExitValue() {
-        return 0;
+    protected void updateCollector() {
+        owner.collector.setResultsFile(reportFile);
     }
 
     @Override
-    public String getName() {
-        return "FindBugs";
+    protected int getExpectedExitValue() {
+        return FindBugsConstants.FB_CMD_EXIT_VALUE;
     }
 }

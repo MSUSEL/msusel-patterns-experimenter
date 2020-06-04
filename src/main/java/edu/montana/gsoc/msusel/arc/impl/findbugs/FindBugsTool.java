@@ -26,12 +26,26 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.findbugs;
 
-import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
-import edu.montana.gsoc.msusel.arc.RuleProvider;
+import com.google.common.collect.ImmutableList;
+import edu.montana.gsoc.msusel.arc.*;
+import edu.montana.gsoc.msusel.arc.command.CommandUtils;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.RuleOnlyTool;
 
+import java.util.List;
+
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class FindBugsTool extends RuleOnlyTool {
+
+    FindBugsCollector collector;
+    FindBugsCommand command;
+
+    public FindBugsTool(ArcContext context) {
+        super(context);
+    }
 
     @Override
     public RepoProvider getRepoProvider() {
@@ -39,13 +53,32 @@ public class FindBugsTool extends RuleOnlyTool {
     }
 
     @Override
-    public RuleProvider getRuleProvider() {
-        return null;
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new FindBugsRuleProvider(context));
     }
 
     @Override
-    public void init(ArcContext context) {
-        context.registerCollector(new FindBugsCollector(""));
-        context.registerCommand(new FindBugsCommand());
+    public void init() {
+        String resultsFile = CommandUtils.normalizePathString(context.getArcProperty(ArcProperties.TOOL_OUTPUT_DIR)) +
+                FindBugsConstants.REPORT_FILE_NAME;
+
+        command = FindBugsCommand.builder()
+                .owner(this)
+                .toolHome(context.getArcProperty(FindBugsProperties.FB_TOOL_HOME))
+                .projectName(context.getProject().getName())
+                .reportFile(resultsFile)
+                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
+                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
+                .projectBaseDirectory(context.getProjectDirectory())
+                .create();
+
+        collector = FindBugsCollector.builder()
+                .owner(this)
+                .project(context.getProject())
+                .resultsFile(resultsFile)
+                .create();
+
+        context.registerCollector(collector);
+        context.registerCommand(command);
     }
 }

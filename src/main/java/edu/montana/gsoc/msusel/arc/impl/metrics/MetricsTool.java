@@ -26,12 +26,19 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics;
 
+import com.google.common.collect.ImmutableList;
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.MetricProvider;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
+import edu.montana.gsoc.msusel.arc.Provider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
 
+import java.util.List;
+
 public class MetricsTool extends MetricOnlyTool {
+
+    public MetricsTool(ArcContext context) {
+        super(context);
+    }
 
     @Override
     public RepoProvider getRepoProvider() {
@@ -39,12 +46,12 @@ public class MetricsTool extends MetricOnlyTool {
     }
 
     @Override
-    public MetricProvider getMetricProvider() {
-        return new MetricsRepoProvider();
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new MetricsToolMetricsProvider(context));
     }
 
     @Override
-    public void init(ArcContext context) {
+    public void init() {
         context.registerCommand(new MetricsCommand());
     }
 }

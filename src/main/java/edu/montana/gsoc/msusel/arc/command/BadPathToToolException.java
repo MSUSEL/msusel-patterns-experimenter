@@ -27,6 +27,7 @@
 package edu.montana.gsoc.msusel.arc.command;
 
 public class BadPathToToolException extends Throwable {
+
     public BadPathToToolException(String format) {
         super(format);
     }

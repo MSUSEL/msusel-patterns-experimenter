@@ -26,11 +26,12 @@
  */
 package edu.montana.gsoc.msusel.arc.command;
 
+import lombok.Getter;
 import lombok.Setter;
 
 public abstract class PrimaryAnalysisCommand extends AbstractCommand {
 
-    @Setter
+    @Setter @Getter
     protected String toolName;
     @Setter
     protected String toolHome;

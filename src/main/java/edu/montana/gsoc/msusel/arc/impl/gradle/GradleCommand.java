@@ -27,6 +27,7 @@
 package edu.montana.gsoc.msusel.arc.impl.gradle;
 
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
+import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
 import java.nio.file.Files;
@@ -35,15 +36,18 @@ import java.nio.file.Paths;
 
 public class GradleCommand extends ToolCommand {
 
-    public GradleCommand() {
-        super("Gradle");
+    @Builder(buildMethodName = "create")
+    public GradleCommand(String toolHome, String projectName, String sourceDirectory,
+                         String binaryDirectory, String projectBaseDirectory) {
+        super(GradleConstants.GRADLE_CMD_NAME, toolHome, projectName, null, sourceDirectory, binaryDirectory, projectBaseDirectory);
     }
 
     @Override
     public boolean isRequirementsMet() {
         Path bg = Paths.get(projectBaseDirectory, "build.gradle");
         Path gw = Paths.get(projectBaseDirectory, "gradlew");
-        return Files.exists(bg) && Files.exists(gw);
+        boolean executable = Files.isExecutable(gw);
+        return Files.exists(bg) && Files.exists(gw) && executable;
     }
 
     @Override
@@ -57,12 +61,17 @@ public class GradleCommand extends ToolCommand {
     }
 
     @Override
-    protected int getExpectedExitValue() {
-        return 0;
+    protected void updateCollector() {
+
     }
 
     @Override
-    public String getName() {
-        return "Gradle";
+    protected int getExpectedExitValue() {
+        return GradleConstants.GRADLE_CMD_EXIT_VALUE;
+    }
+
+    @Override
+    public String getToolName() {
+        return GradleConstants.GRADLE_CMD_NAME;
     }
 }

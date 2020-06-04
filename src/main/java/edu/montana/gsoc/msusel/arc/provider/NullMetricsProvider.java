@@ -26,7 +26,26 @@
  */
 package edu.montana.gsoc.msusel.arc.provider;
 
-import edu.montana.gsoc.msusel.arc.MetricProvider;
+import edu.montana.gsoc.msusel.arc.ArcContext;
 
-public class NullMetricsProvider implements MetricProvider {
+public class NullMetricsProvider extends AbstractMetricProvider {
+
+    public NullMetricsProvider(ArcContext context) {
+        super(context);
+    }
+
+    @Override
+    public void loadData() {
+
+    }
+
+    @Override
+    public void updateDatabase() {
+
+    }
+
+    @Override
+    public void initRepository() {
+
+    }
 }

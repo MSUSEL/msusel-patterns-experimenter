@@ -29,14 +29,25 @@ package edu.montana.gsoc.msusel.arc.impl.metrics;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class MetricsCommand extends PrimaryAnalysisCommand {
 
     public MetricsCommand() {
-        super("Metrics");
+        super(MetricsConstants.METRICS_CMD_NAME);
     }
 
     @Override
     public void execute(ArcContext context) {
+        ArcMetricsTool tool = new ArcMetricsTool(context);
 
+        context.logger().atInfo().log("Initializing Tool: %s", getToolName());
+        tool.init();
+
+        context.logger().atInfo().log("Executing Tool: %s", getToolName());
+        tool.exec();
+        context.logger().atInfo().log("Execution Complete: %s", getToolName());
     }
 }

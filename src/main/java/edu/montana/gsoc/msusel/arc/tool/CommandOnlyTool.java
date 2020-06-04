@@ -26,27 +26,26 @@
  */
 package edu.montana.gsoc.msusel.arc.tool;
 
-import edu.montana.gsoc.msusel.arc.MetricProvider;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
-import edu.montana.gsoc.msusel.arc.RuleProvider;
-import edu.montana.gsoc.msusel.arc.provider.NullMetricsProvider;
+import com.google.common.collect.ImmutableList;
+import edu.montana.gsoc.msusel.arc.*;
 import edu.montana.gsoc.msusel.arc.provider.NullRepoProvider;
-import edu.montana.gsoc.msusel.arc.provider.NullRuleProvider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
+
+import java.util.List;
 
 public abstract class CommandOnlyTool extends AbstractTool {
 
+    public CommandOnlyTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
     public RepoProvider getRepoProvider() {
-        return new NullRepoProvider();
+        return new NullRepoProvider(context);
     }
 
     @Override
-    public RuleProvider getRuleProvider() {
-        return new NullRuleProvider();
-    }
-
-    @Override
-    public MetricProvider getMetricProvider() {
-        return new NullMetricsProvider();
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of();
     }
 }

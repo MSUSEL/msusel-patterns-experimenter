@@ -26,27 +26,36 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.grime;
 
+import com.google.common.collect.ImmutableList;
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
-import edu.montana.gsoc.msusel.arc.RuleProvider;
+import edu.montana.gsoc.msusel.arc.Provider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.RuleOnlyTool;
 
+import java.util.List;
+
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class GrimeTool extends RuleOnlyTool {
+
+    public GrimeTool(ArcContext context) {
+        super(context);
+    }
 
     @Override
     public RepoProvider getRepoProvider() {
-        return new GrimeRepoProvider();
+        return new GrimeRepoProvider(context);
     }
 
     @Override
-    public RuleProvider getRuleProvider() {
-        return new GrimeRuleProvider();
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new GrimeRuleProvider(context));
     }
 
     @Override
-    public void init(ArcContext context) {
-//        registerCommand(new GrimeDetectorCommand());
-//        registerCommand(new GrimeInjectorCommand());
-//        registerCollector(new GrimeCollector());
+    public void init() {
+        context.registerCommand(new GrimeDetectorCommand());
     }
 }

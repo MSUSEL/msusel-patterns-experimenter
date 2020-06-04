@@ -1,0 +1,47 @@
+## Quamoco
+
+Java
+---
+[X] #Statements
+[X] #FieldDeclarations
+[X] #Methods
+[X] #LocalVariableDeclarations
+
+Object
+---
+[X] NOM
+[X] NOF
+[ ] NOV
+[X] NOS
+
+Root
+---
+[X] LOC
+
+## QMOOD
+
+[X] Design Size in Classes -> NOT
+[X] Number of Hierarchies -> #Hierarchies
+[X] Average Number of Ancestors -> averaged count of the number of ancestors for all classes in the system.
+[X] Data Access Metric -> Ratio of the number of private/protect attributes to the total number of attributes declared in the class
+[X] Direct Class Coupling -> count of classes directly coupled to a class including relations due to attribute declarations and message passing parameters in methods
+[X] Cohesion Among Methods of Class -> 1-LCOM4
+[X] Measure of Aggregation -> #Data Decls whose type is a user defined type
+[X] Measure of Functional Abstraction -> Ratio of Number of Inherited Methods to Num Method Avail
+[X] Number of Polymorphic Methods -> NOP = #Methods that exhibit polymorphic behavior
+[X] Class Interface Size -> CIS = Number of Public Methods
+[X] Number of Methods -> NOM
+
+[X] NIM
+[X] NOM
+[X] CIS
+[X] NOP / PM
+[X] NprivF
+[X] NprotF
+[X] NOF
+[X] NOH
+[X] NOT/DSC
+[X] NOA - Number of Ancestors
+[X] ANA
+
+Move all unneeded classes into a zip file backup and store in backup folder

@@ -28,6 +28,9 @@ package edu.montana.gsoc.msusel.arc.impl.td;
 
 public interface TechDebtConstants {
 
-    String TD_MEASURE_REPO = "techdebt";
+    String TD_REPO_KEY = "techdebt";
+    String TD_REPO_NAME = "Arc Tech Debt";
     String TD_MEASURE_NAME = "cast_td";
+    String TD_CMD_NAME = "Technical Debt";
+    String TD_TOOL_NAME = "Arc TD";
 }

@@ -26,14 +26,13 @@
  */
 package edu.montana.gsoc.msusel.arc;
 
-import com.google.common.collect.Lists;
-import edu.montana.gsoc.msusel.arc.datamodel.*;
-import edu.montana.gsoc.msusel.codetree.CodeTree;
+import com.google.common.flogger.FluentLogger;
+import edu.isu.isuese.datamodel.Project;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.flogger.Flogger;
+import lombok.extern.java.Log;
 
-import java.nio.file.Path;
-import java.util.List;
 import java.util.Properties;
 
 public class ArcContext {
@@ -41,12 +40,21 @@ public class ArcContext {
     @Getter
     String language;
 
+    @Getter
+    Project project;
+
     @Setter
     private Properties arcProperties;
 
+    private FluentLogger logger;
+
+    public ArcContext(FluentLogger logger) {
+        this.logger = logger;
+    }
+
     public String getArcProperty(String prop) {
-        if (arcProps.containsKey(prop)) {
-            return arcProps.getProperty(prop);
+        if (arcProperties.containsKey(prop)) {
+            return arcProperties.getProperty(prop);
         }
 
         return null; // consider throwing an exception here
@@ -59,11 +67,19 @@ public class ArcContext {
     public void registerCollector(Collector collector) {
     }
 
-    public void setArcProperties(Properties arcProperties) {
-        this.arcProperties = arcProperties;
+    public void addArcProperty(String key, String value) {
+        arcProperties.setProperty(key, value);
+    }
+
+    public void updateProperty(String key, String newValue) {
+        arcProperties.setProperty(key, newValue);
     }
 
     public String getProjectDirectory() {
         return null;
+    }
+
+    public FluentLogger logger() {
+        return log;
     }
 }

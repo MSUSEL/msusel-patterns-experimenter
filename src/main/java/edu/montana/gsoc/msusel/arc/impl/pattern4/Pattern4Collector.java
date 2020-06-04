@@ -26,7 +26,6 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4;
 
-import com.google.inject.Inject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import edu.montana.gsoc.msusel.arc.ArcContext;
@@ -35,9 +34,7 @@ import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Pattern;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Role;
-import edu.montana.gsoc.msusel.datamodel.DataModelMediator;
 import lombok.Builder;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -46,19 +43,13 @@ import java.text.SimpleDateFormat;
 @Slf4j
 public class Pattern4Collector extends FileCollector {
 
-    @Inject
-    DataModelMediator mediator;
+    Pattern4Tool owner;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-    @Setter
-    private String projName;
-    @Setter
-    private String projVersion;
 
     @Builder(buildMethodName = "create")
-    public Pattern4Collector(String projName, String projVersion, String resultFile) {
-        super(resultFile, "Pattern4 Collector");
-        this.projName = projName;
-        this.projVersion = projVersion;
+    public Pattern4Collector(Pattern4Tool owner, String resultFile, edu.isu.isuese.datamodel.Project project) {
+        super(Pattern4Constants.PATTERN4_COLL_NAME, resultFile, project);
+        this.owner = owner;
     }
 
     @Override
@@ -70,10 +61,6 @@ public class Pattern4Collector extends FileCollector {
         xstream.processAnnotations(Role.class);
 
         Project proj = (Project) xstream.fromXML(new File(this.resultsFile));
-
-        proj.setName(projName);
-        // Need to convert this to concepts in the data model
-
 
         // for each pattern instance's roles we need to modify the key to be consistent with the current keying scheme
         proj.getPatterns().forEach(pattern -> {

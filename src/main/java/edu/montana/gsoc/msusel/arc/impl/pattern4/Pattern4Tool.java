@@ -26,21 +26,51 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4;
 
-import edu.montana.gsoc.msusel.arc.RepoProvider;
+import com.google.common.collect.ImmutableList;
+import edu.montana.gsoc.msusel.arc.*;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
+import edu.montana.gsoc.msusel.arc.tool.PatternOnlyTool;
 
-public class Pattern4Tool /*extends PatternTool*/ {
+import java.util.List;
 
-//    public PatternProvider getPatternProvider() {
-//        return new Patter4Provider();
-//    }
+public class Pattern4Tool extends PatternOnlyTool {
+
+    Pattern4Command command;
+    Pattern4Collector collector;
+
+    public Pattern4Tool(ArcContext context) {
+        super(context);
+    }
+
+    @Override
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new Pattern4PatternProvider());
+    }
 
     public RepoProvider getRepoProvider() {
         return new Pattern4RepoProvider();
     }
 
-//    @Override
+    @Override
     public void init() {
-//        registerCommand(new Pattern4Command());
-//        registerCollector(new Pattern4Collector());
+        String resultsFile = context.getArcProperty(ArcProperties.TOOL_OUTPUT_DIR) + "/" + Pattern4Constants.REPORT_FILE_NAME;
+
+        command = Pattern4Command.builder()
+                .toolHome(context.getArcProperty(Pattern4Properties.P4_TOOL_HOME))
+                .projectName(context.getProject().getName())
+                .reportFile(resultsFile)
+                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
+                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
+                .projectBaseDirectory(context.getProjectDirectory())
+                .create();
+
+        collector = Pattern4Collector.builder()
+                .owner(this)
+                .resultFile(resultsFile)
+                .project(context.getProject())
+                .create();
+
+        context.registerCommand(command);
+        context.registerCollector(collector);
     }
 }

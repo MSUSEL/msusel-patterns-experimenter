@@ -26,50 +26,44 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4
 
-import edu.montana.gsoc.msusel.arc.AbstractRepoProvider
-import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.datamodel.pattern.Pattern
-import edu.montana.gsoc.msusel.datamodel.pattern.PatternRepository
-import edu.montana.gsoc.msusel.datamodel.pattern.Role
 
-import java.nio.file.Files
+import edu.isu.isuese.datamodel.PatternRepository
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
+import edu.montana.gsoc.msusel.arc.impl.pmd.PMDRepoProvider
+import groovy.xml.XmlSlurper
 
 class Pattern4RepoProvider extends AbstractRepoProvider {
 
+    def config
+
+    Pattern4RepoProvider(ArcContext context) {
+        super(context)
+    }
+
     @Override
-    void registerRepos(ArcContext context) {
-
-    }
-
     def loadData() {
-        def repos = Files.readAllLines(configPath).join("\n")
-        def configSluper = new ConfigSlurper()
-        config = configSluper.parse(repos)
+        config = new XmlSlurper()
+                .parseText(PMDRepoProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).getText('UTF-8'))
     }
 
+    @Override
     def updateDatabase() {
-        config.repos.each { key, value ->
-            String repoKey = value["key"]
-            String repoName = value["name"]
-            PatternRepository repo = PatternRepository.builder().repoKey(repoKey).name(repoName).create()
-            mediator.addPatternRepository(repo)
-
-            value.patterns.each { pKey, pValue ->
-                def patternName = pKey
-                def patternKey = "${repoKey}:${pKey.replaceAll(/\s/, "_")}"
-                Pattern pattern = Pattern.builder().repository(null).name(patternName).patternKey(patternKey).create()
-                repo << pattern
-                mediator.addPattern(pattern)
-
-                pValue.roles.each {
-                    def roleKey = "${patternKey}#${it}"
-                    Role r = Role.builder().roleKey(roleKey).name(it).create()
-                    pattern << r
-                    mediator.addRole(r)
-                }
-                mediator.updatePattern(pattern)
-            }
-            mediator.updatePatternRepository(repo)
+        config.patterns.each {
+            createPatternRepo(it)
         }
+    }
+
+    private void createPatternRepo(patterns) {
+        String repoName = patterns.@repo
+        String toolName = patterns.@tool
+
+        PatternRepository repo = PatternRepository.findFirst("repoKey = ?", repoName)
+        if (!repo)
+            PatternRepository.builder()
+                    .name(repoName)
+                    .key(repoName)
+                    .toolName(toolName)
+                    .create()
     }
 }

@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.command;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.Command;
+import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
@@ -39,7 +40,7 @@ import java.io.IOException;
 
 public abstract class ToolCommand implements Command {
 
-    @Setter
+    @Setter @Getter
     protected String toolName;
     @Setter
     protected String toolHome;
@@ -54,20 +55,30 @@ public abstract class ToolCommand implements Command {
     @Setter
     protected String projectBaseDirectory;
 
-    public ToolCommand(String toolName) {
+    public ToolCommand(String toolName, String toolHome, String projectName, String reportFile, String sourceDirectory,
+                       String binaryDirectory, String projectBaseDirectory) {
         this.toolName = toolName;
+        this.toolHome = toolHome;
+        this.projectName = projectName;
+        this.reportFile = reportFile;
+        this.sourceDirectory = sourceDirectory;
+        this.binaryDirectory = binaryDirectory;
+        this.projectBaseDirectory = projectBaseDirectory;
     }
 
     public void execute(ArcContext context) {
         if (isRequirementsMet()) {
             CommandLine cmdLine = buildCommandLine();
             executeCmdLine(cmdLine, getExpectedExitValue());
+            updateCollector();
         }
     }
 
     public abstract boolean isRequirementsMet();
 
     protected abstract CommandLine buildCommandLine();
+
+    protected abstract void updateCollector();
 
     protected abstract int getExpectedExitValue();
 

@@ -27,22 +27,32 @@
 package edu.montana.gsoc.msusel.arc.impl.findbugs;
 
 import com.google.common.collect.Lists;
+import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.collector.FileCollector;
-import edu.montana.gsoc.msusel.arc.datamodel.Violation;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.resultsdm.BugCollection;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.resultsdm.SourceLine;
+import lombok.Builder;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.lang.System;
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class FindBugsCollector extends FileCollector {
 
-    public FindBugsCollector(String resultsFile) {
-        super(resultsFile, "FindBugs Collector");
+    FindBugsTool owner;
+
+    @Builder(buildMethodName = "create")
+    public FindBugsCollector(FindBugsTool owner, String resultsFile, Project project) {
+        super(FindBugsConstants.FB_COLL_NAME, resultsFile, project);
+        this.owner = owner;
     }
 
     @Override
@@ -54,49 +64,33 @@ public class FindBugsCollector extends FileCollector {
             BugCollection bugColl = (BugCollection) unmarshaller.unmarshal(new File(resultsFile));
             System.out.println("Instances Found: " + bugColl.getBugInstance().size());
 
-            List<Violation> violations = Lists.newArrayList();
+            List<Finding> findings = Lists.newArrayList();
             bugColl.getBugInstance().forEach(inst -> {
-                Violation violation = new Violation();
-                violation.setRule("findbugs:" + inst.getType());
+                Rule rule = Rule.findFirst("ruleKey = ?", "findbugs:" + inst.getType());
+                Finding finding = Finding.of(inst.getType());
 
                 inst.getClazzOrTypeOrMethod().forEach(obj -> {
                     if (obj instanceof BugCollection.BugInstance.Class) {
                         BugCollection.BugInstance.Class clazz = (BugCollection.BugInstance.Class) obj;
-                        violation.setClassName(clazz.getClassname());
-                        if (clazz.getSourceLine() != null) {
-                            if (clazz.getSourceLine().getStart() != null)
-                                violation.setStart(clazz.getSourceLine().getStart());
-                            if (clazz.getSourceLine().getEnd() != null)
-                                violation.setEnd(clazz.getSourceLine().getStart());
-                            if (clazz.getSourceLine().getSourcepath() != null)
-                                violation.setSourcePath(clazz.getSourceLine().getSourcepath());
-                        } 
+                        Type type = project.findTypeByQualifiedName(clazz.getClassname());
+                        setReferenceAndLineInfo(finding, type, clazz.getSourceLine());
                     } else if (obj instanceof BugCollection.BugInstance.Method) {
                         BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
-                        violation.setClassName(meth.getClassname());
-                        if (meth.getSourceLine() != null && meth.getClassname().equals(violation.getClassName())) {
-                            if (meth.getSourceLine().getStart() != null)
-                                violation.setStart(meth.getSourceLine().getStart());
-                            if (meth.getSourceLine().getEnd() != null)
-                                violation.setEnd(meth.getSourceLine().getStart());
-                            if (meth.getSourceLine().getSourcepath() != null)
-                                violation.setSourcePath(meth.getSourceLine().getSourcepath());
-                        }
-                    }
-                    else if (obj instanceof SourceLine) {
+                        Type type = project.findTypeByQualifiedName(meth.getClassname());
+                        Method method = type.findMethodBySignature(meth.getSignature());
+                        setReferenceAndLineInfo(finding, method, meth.getSourceLine());
+                    } else if (obj instanceof SourceLine) {
                         SourceLine line = (SourceLine) obj;
-                        if (violation.getStart() <= 0)
-                            violation.setStart(line.getStart());
-                        if (violation.getEnd() <= 0)
-                            violation.setEnd(line.getEnd());
-                        violation.setSourcePath(line.getSourcepath());
+                        Type type = project.findTypeByQualifiedName(line.getClassname());
+                        setReferenceAndLineInfo(finding, type, line);
                     }
                 });
-                violations.add(violation);
+                findings.add(finding);
+                rule.addFinding(finding);
             });
 
-            System.out.println("Violations Created: " + violations.size());
-            for (Violation f : violations) {
+            System.out.println("Findings Created: " + findings.size());
+            for (Finding f : findings) {
                 System.out.println("\t" + f);
             }
         } catch (JAXBException e) {
@@ -104,7 +98,21 @@ public class FindBugsCollector extends FileCollector {
         }
     }
 
+    public void setReferenceAndLineInfo(Finding finding, Component comp, SourceLine line) {
+        finding.on(comp);
+        setStartAndEnd(finding, line);
+    }
+
+    public void setStartAndEnd(Finding finding, SourceLine line) {
+        if (line != null) {
+            if (line.getStart() != null)
+                finding.setStart(line.getStart());
+            if (line.getEnd() != null)
+                finding.setEnd(line.getEnd());
+        }
+    }
+
     public static void main(String args[]) {
-        new FindBugsCollector("/home/git/msusel/msusel-patterns-experimenter/data/fbresults/fbresults.xml").execute(null);
+        //new FindBugsCollector("/home/git/msusel/msusel-patterns-experimenter/data/fbresults/fbresults.xml").execute(null);
     }
 }

@@ -1,0 +1,15 @@
+NumberOfFields -> NOF
+NumberOfMethods -> NOM
+NumberOfStatements -> NOS
+NumberOfTypes -> NOT
+LinesOfCode -> LOC
+LinesOfCodePerClass -> LOCC
+LogicalLinesOfCode -> LLOC
+TotalNumberOfAttributes -> TNOA
+TotalNumberOfClasses -> TNOT
+TotalNumberOfMethods -> TNOM
+SourceLinesOfCode -> SLOC
+PolymorphicMethods -> PM
+NumberOfPrivateAttributes -> NPRIVA
+NumberOfProtectedAttributes -> NPROTA
+NumberOfAncestorClasses -> NOA

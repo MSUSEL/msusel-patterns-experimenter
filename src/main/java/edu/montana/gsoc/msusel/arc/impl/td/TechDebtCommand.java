@@ -27,13 +27,14 @@
 package edu.montana.gsoc.msusel.arc.impl.td;
 
 import com.google.common.collect.Lists;
+import edu.isu.isuese.datamodel.Measure;
+import edu.isu.isuese.datamodel.Rule;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
-import edu.montana.gsoc.msusel.arc.datamodel.Rule;
-import edu.montana.gsoc.msusel.arc.td.CastTD;
-import edu.montana.gsoc.msusel.arc.td.TechnicalDebtCalcStrategy;
-import edu.montana.gsoc.msusel.arc.td.param.CastParams;
-import edu.montana.gsoc.msusel.arc.td.param.TDParams;
+import edu.montana.gsoc.msusel.arc.impl.td.strategies.CastTD;
+import edu.montana.gsoc.msusel.arc.impl.td.strategies.TechnicalDebtCalcStrategy;
+import edu.montana.gsoc.msusel.arc.impl.td.param.CastParams;
+import edu.montana.gsoc.msusel.arc.impl.td.param.TDParams;
 
 import java.util.List;
 
@@ -42,13 +43,13 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
     TechnicalDebtCalcStrategy strategy;
 
     public TechDebtCommand() {
-        super("TechnicalDebt");
+        super(TechDebtConstants.TD_CMD_NAME);
         strategy = new CastTD();
     }
 
     @Override
     public void execute(ArcContext context) {
-        List<Rule> rules = context.getRules();
+        List<Rule> rules = Rule.findAll();
 
         List<Rule> high = Lists.newArrayList();
         List<Rule> med = Lists.newArrayList();
@@ -56,28 +57,29 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
 
         for (Rule r : rules) {
             switch(r.getPriority()) {
-                case INFO:
-                case MINOR:
+                case VERY_LOW:
+                case LOW:
                     low.add(r);
                     break;
-                case MAJOR:
+                case MODERATE:
                     med.add(r);
                     break;
-                case CRITICAL:
-                case BLOCKER:
+                case HIGH:
+                case VERY_HIGH:
                     high.add(r);
                     break;
             }
         }
 
-        TDParams params = TDParams.builder()
-                .param(CastParams.COUNT_HIGH_SEVERITY, high.size())
-                .param(CastParams.COUNT_MED_SEVERITY, med.size())
-                .param(CastParams.COUNT_LOW_SEVERITY, low.size())
-                .create();
+        TDParams params = strategy.generateParams();
+        params.setParam(CastParams.COUNT_HIGH_SEVERITY, high.size());
+        params.setParam(CastParams.COUNT_MED_SEVERITY, med.size());
+        params.setParam(CastParams.COUNT_LOW_SEVERITY, low.size());
 
         double value = strategy.calculate(params);
 
-        context.recordMeasure(TechDebtConstants.TD_MEASURE_REPO, TechDebtConstants.TD_MEASURE_NAME, value);
+        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.TD_MEASURE_NAME)
+                .on(context.getProject())
+                .withValue(value);
     }
 }

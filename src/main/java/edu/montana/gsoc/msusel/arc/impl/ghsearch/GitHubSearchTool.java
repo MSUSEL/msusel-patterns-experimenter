@@ -31,8 +31,12 @@ import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
 public class GitHubSearchTool extends CommandOnlyTool {
 
+    public GitHubSearchTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
-    public void init(ArcContext context) {
+    public void init() {
         context.registerCommand(new GitHubSearchCommand());
     }
 }

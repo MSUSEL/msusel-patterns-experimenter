@@ -26,25 +26,32 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quamoco;
 
+import com.google.common.collect.ImmutableList;
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.MetricProvider;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
+import edu.montana.gsoc.msusel.arc.Provider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
+
+import java.util.List;
 
 public class QuamocoTool extends MetricOnlyTool {
 
+    public QuamocoTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
     public RepoProvider getRepoProvider() {
-        return new QuamocoRepoProvider();
+        return new QuamocoRepoProvider(context);
     }
 
     @Override
-    public MetricProvider getMetricProvider() {
-        return new QuamocoMetricProvider();
+    public List<Provider> getOtherProviders() {
+        return ImmutableList.of(new QuamocoMetricProvider(context));
     }
 
     @Override
-    public void init(ArcContext context) {
+    public void init() {
         context.registerCommand(new QuamocoCommand());
     }
 }

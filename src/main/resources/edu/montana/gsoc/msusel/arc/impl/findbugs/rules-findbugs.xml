@@ -22,7 +22,7 @@ of the double to create the BigDecimal (e.g., BigDecimal.valueOf(0.1) gives 0.1)
     <name>Correctness - D'oh! A nonsensical method invocation</name>
     <configKey>DMI_DOH</configKey>
     <description>&lt;p&gt;
-This partical method invocation doesn't make sense, for reasons that should be apparent from inspection.
+This partial method invocation doesn't make sense, for reasons that should be apparent from inspection.
 &lt;/p&gt;</description>
     <tag>correctness</tag>
     <tag>bug</tag>

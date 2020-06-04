@@ -26,10 +26,9 @@
  */
 package edu.montana.gsoc.msusel.arc.collector;
 
-import com.google.inject.Inject;
+import edu.isu.isuese.datamodel.Project;
 import edu.montana.gsoc.msusel.arc.Collector;
 import edu.montana.gsoc.msusel.arc.Command;
-import edu.montana.gsoc.msusel.datamodel.DataModelMediator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,16 +36,21 @@ public abstract class FileCollector implements Collector, Command {
 
     @Setter
     protected String resultsFile;
+    @Setter
+    protected Project project;
 
     @Setter
     @Getter
     protected String name;
 
-    @Inject
-    DataModelMediator mediator;
-
-    public FileCollector(String name, String resultsFile) {
+    public FileCollector(String name, String resultsFile, Project project) {
         this.name = name;
         this.resultsFile = resultsFile;
+        this.project = project;
+    }
+
+    @Override
+    public String getToolName() {
+        return name;
     }
 }

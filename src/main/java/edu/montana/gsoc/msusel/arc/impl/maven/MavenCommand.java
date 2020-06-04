@@ -33,11 +33,13 @@ import org.apache.commons.exec.CommandLine;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 public class MavenCommand extends ToolCommand {
 
     @Builder(buildMethodName = "create")
-    public MavenCommand() {
-        super("Apache Maven");
+    public MavenCommand(String toolHome, String projectName, String sourceDirectory,
+                        String binaryDirectory, String projectBaseDirectory) {
+        super(MavenConstants.MVN_CMD_NAME, toolHome, projectName, null, sourceDirectory, binaryDirectory, projectBaseDirectory);
     }
 
     @Override
@@ -56,12 +58,17 @@ public class MavenCommand extends ToolCommand {
     }
 
     @Override
-    protected int getExpectedExitValue() {
-        return 0;
+    protected void updateCollector() {
+
     }
 
     @Override
-    public String getName() {
-        return "Maven";
+    protected int getExpectedExitValue() {
+        return MavenConstants.MVN_CMD_EXIT_VALUE;
+    }
+
+    @Override
+    public String getToolName() {
+        return MavenConstants.MVN_CMD_NAME;
     }
 }

@@ -26,13 +26,15 @@
  */
 package edu.montana.gsoc.msusel.arc;
 
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
+
+import java.util.List;
+
 public interface Tool {
 
     RepoProvider getRepoProvider();
 
-    RuleProvider getRuleProvider();
+    List<Provider> getOtherProviders();
 
-    MetricProvider getMetricProvider();
-
-    void init(ArcContext context);
+    void init();
 }

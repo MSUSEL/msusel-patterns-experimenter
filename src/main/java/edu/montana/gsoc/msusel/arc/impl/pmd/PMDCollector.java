@@ -27,31 +27,32 @@
 package edu.montana.gsoc.msusel.arc.impl.pmd;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Inject;
+import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.collector.FileCollector;
 import edu.montana.gsoc.msusel.arc.impl.pmd.resultsdm.Pmd;
-import edu.montana.gsoc.msusel.datamodel.DataModelMediator;
-import edu.montana.gsoc.msusel.datamodel.measures.Finding;
-import edu.montana.gsoc.msusel.datamodel.measures.Rule;
-import edu.montana.gsoc.msusel.datamodel.member.Member;
-import edu.montana.gsoc.msusel.datamodel.structural.File;
-import edu.montana.gsoc.msusel.datamodel.type.Type;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.lang.System;
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 @Slf4j
 public class PMDCollector extends FileCollector {
 
-    @Inject
-    DataModelMediator mediator;
+    PMDTool owner;
 
-    public PMDCollector(String resultsFile) {
-        super("PMD Collector", resultsFile);
+    @Builder(buildMethodName = "create")
+    public PMDCollector(PMDTool owner, String resultsFile, Project project) {
+        super(PMDConstants.PMD_COLL_NAME, resultsFile, project);
+        this.owner = owner;
     }
 
     @Override
@@ -62,17 +63,18 @@ public class PMDCollector extends FileCollector {
 
             Pmd pmd = (Pmd) unmarshaller.unmarshal(new java.io.File(resultsFile));
             System.out.println("Files: " + pmd.getFile().size());
-            pmd.getFile().forEach(f -> System.out.println("File: " + f.getName() + " has " + f.getViolation().size() + " violations"));
+            pmd.getFile().forEach(f -> System.out.println("File: " + f.getName() + " has " + f.getViolation().size() + " findings"));
 
-            List<Finding> violations = Lists.newArrayList();
             pmd.getFile().forEach(file ->
                 file.getViolation().forEach(v -> {
-                    Rule rule = mediator.getRule("pmd:" + v.getRule());
-                    File f = mediator.findFile(file.getName());
-                    Type t = f.findType(v.getPackage() + "." + v.getClazz());
-                    Member m = t.findMemberInRange(v.getBeginline().intValue(), v.getEndline().intValue());
-                    Finding finding = Finding.builder().rule(rule).ref(m.asRef()).create();
-                    violations.add(finding);
+                    Rule rule = Rule.findFirst("pmd:" + v.getRule());
+                    File f = ctx.getProject().getFile(file.getName());
+                    Type t = f.getTypeByName(v.getClazz());
+                    if (t != null) {
+                        Member m = t.findMemberInRange(v.getBeginline().intValue(), v.getEndline().intValue());
+                        Finding finding = Finding.of(rule.getKey()).on(m);
+                        rule.addFinding(finding);
+                    }
                 })
             );
         } catch (JAXBException e) {
@@ -81,6 +83,6 @@ public class PMDCollector extends FileCollector {
     }
 
     public static void main(String args[]) {
-        new PMDCollector("/home/git/msusel/msusel-patterns-experimenter/data/pmdresults/pmdreport.xml").execute(new ArcContext());
+//        new PMDCollector("/home/git/msusel/msusel-patterns-experimenter/data/pmdresults/pmdreport.xml").execute(new ArcContext());
     }
 }

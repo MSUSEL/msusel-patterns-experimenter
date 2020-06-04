@@ -31,8 +31,12 @@ import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
 public class JavaTool extends CommandOnlyTool {
 
+    public JavaTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
-    public void init(ArcContext context) {
+    public void init() {
 
     }
 }

@@ -31,4 +31,9 @@ public abstract class SecondaryAnalysisCommand extends AbstractCommand {
     public SecondaryAnalysisCommand(String name) {
         super(name);
     }
+
+    @Override
+    public String getToolName() {
+        return name;
+    }
 }

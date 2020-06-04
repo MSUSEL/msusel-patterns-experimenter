@@ -27,12 +27,20 @@
 package edu.montana.gsoc.msusel.arc.provider;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.RepoProvider;
 
-public class NullRepoProvider implements RepoProvider {
+public class NullRepoProvider extends AbstractRepoProvider {
+
+    public NullRepoProvider(ArcContext context) {
+        super(context);
+    }
 
     @Override
-    public void registerRepos(ArcContext context) {
+    public void loadData() {
+
+    }
+
+    @Override
+    public void updateDatabase() {
 
     }
 }

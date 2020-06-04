@@ -28,14 +28,23 @@ package edu.montana.gsoc.msusel.arc.impl.pmd;
 
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import edu.montana.gsoc.msusel.arc.command.CommandUtils;
+import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsTool;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class PMDCommand extends ToolCommand {
 
+    PMDTool owner;
+
     @Builder(buildMethodName = "create")
-    public PMDCommand() {
-        super("PMD");
+    public PMDCommand(PMDTool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
+                      String binaryDirectory, String projectBaseDirectory) {
+        super(PMDConstants.PMD_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory, binaryDirectory, projectBaseDirectory);
+        this.owner = owner;
     }
 
     @Override
@@ -62,12 +71,12 @@ public class PMDCommand extends ToolCommand {
     }
 
     @Override
-    protected int getExpectedExitValue() {
-        return 0;
+    protected void updateCollector() {
+        owner.collector.setResultsFile(reportFile);
     }
 
     @Override
-    public String getName() {
-        return "PMD";
+    protected int getExpectedExitValue() {
+        return PMDConstants.PMD_CMD_EXIT_VALUE;
     }
 }

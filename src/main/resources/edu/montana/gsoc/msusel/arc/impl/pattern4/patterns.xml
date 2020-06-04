@@ -1,100 +1,100 @@
 <patterns>
     <pattern name="Factory Method">
-        <role name="Creator" elementType="CLASS" />
-        <role name="FactoryMethod()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Creator" elementType="CLASS"/>
+        <role name="FactoryMethod()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Prototype">
-        <role name="Prototype" elementType="CLASS" />
-        <role name="Client" elementType="CLASS" />
-        <role name="Operation()" elementType="METHOD" />
+        <role name="Prototype" elementType="CLASS"/>
+        <role name="Client" elementType="CLASS"/>
+        <role name="Operation()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="Singleton">
-        <role name="Singleton" elementType="CLASS" />
-        <role name="uniqueInstance" elementType="FIELD" multiplicity="MANY" />
+        <role name="Singleton" elementType="CLASS"/>
+        <role name="uniqueInstance" elementType="FIELD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="(Object)Adapter">
-        <role name="Adaptee" elementType="CLASS" />
-        <role name="Adapter" elementType="CLASS" />
-        <role name="adaptee" elementType="FIELD" multiplicity="MANY" />
-        <role name="Request()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Adaptee" elementType="CLASS"/>
+        <role name="Adapter" elementType="CLASS"/>
+        <role name="adaptee" elementType="FIELD" multiplicity="MANY"/>
+        <role name="Request()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Command">
-        <role name="Adapter/ConcreteCommand" elementType="CLASS" />
-        <role name="Adaptee/Receiver" elementType="CLASS" />
-        <role name="Request()/Execute()" elementType="METHOD" />
+        <role name="Adapter/ConcreteCommand" elementType="CLASS"/>
+        <role name="Adaptee/Receiver" elementType="CLASS"/>
+        <role name="Request()/Execute()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="Composite">
-        <role name="Component" elementType="CLASS" />
-        <role name="Composite" elementType="CLASS" />
-        <role name="Operation()" elementType="METHOD" />
+        <role name="Component" elementType="CLASS"/>
+        <role name="Composite" elementType="CLASS"/>
+        <role name="Operation()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="Decorator">
-        <role name="Component" elementType="CLASS" />
-        <role name="Decorator" elementType="CLASS" />
-        <role name="component" elementType="FIELD" multiplicity="MANY" />
-        <role name="Operation()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Component" elementType="CLASS"/>
+        <role name="Decorator" elementType="CLASS"/>
+        <role name="component" elementType="FIELD" multiplicity="MANY"/>
+        <role name="Operation()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Observer">
-        <role name="Subject" elementType="CLASS" />
-        <role name="Observer" elementType="CLASS" />
-        <role name="Notify()" elementType="METHOD" />
+        <role name="Subject" elementType="CLASS"/>
+        <role name="Observer" elementType="CLASS"/>
+        <role name="Notify()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="State">
-        <role name="Context" elementType="CLASS" />
-        <role name="State" elementType="CLASS" />
-        <role name="state" elementType="FIELD" multiplicity="MANY" />
-        <role name="Request()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Context" elementType="CLASS"/>
+        <role name="State" elementType="CLASS"/>
+        <role name="state" elementType="FIELD" multiplicity="MANY"/>
+        <role name="Request()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Strategy">
-        <role name="Strategy" elementType="CLASS" />
-        <role name="Context" elementType="CLASS" />
-        <role name="strategy" elementType="FIELD" multiplicity="MANY" />
-        <role name="ContextInterface()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Strategy" elementType="CLASS"/>
+        <role name="Context" elementType="CLASS"/>
+        <role name="strategy" elementType="FIELD" multiplicity="MANY"/>
+        <role name="ContextInterface()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Bridge">
-        <role name="Implementor" elementType="CLASS" />
-        <role name="Abstraction" elementType="CLASS" />
-        <role name="implementor" elementType="FIELD" />
-        <role name="Operation()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Implementor" elementType="CLASS"/>
+        <role name="Abstraction" elementType="CLASS"/>
+        <role name="implementor" elementType="FIELD"/>
+        <role name="Operation()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Template Method">
-        <role name="AbstractClass" elementType="CLASS" />
-        <role name="TemplateMethod()" elementType="METHOD" multiplicity="MANY" />
+        <role name="AbstractClass" elementType="CLASS"/>
+        <role name="TemplateMethod()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Visitor">
-        <role name="Visitor" elementType="CLASS" />
-        <role name="ConcreteElement" elementType="CLASS" />
-        <role name="Accept()" elementType="METHOD" />
+        <role name="Visitor" elementType="CLASS"/>
+        <role name="ConcreteElement" elementType="CLASS"/>
+        <role name="Accept()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="Proxy">
-        <role name="RealSubject" elementType="CLASS" />
-        <role name="Proxy" elementType="CLASS" />
-        <role name="Request()" elementType="METHOD" multiplicity="MANY" />
+        <role name="RealSubject" elementType="CLASS"/>
+        <role name="Proxy" elementType="CLASS"/>
+        <role name="Request()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Proxy2">
-        <role name="Proxy" elementType="CLASS" />
-        <role name="RealSubject" elementType="CLASS" />
-        <role name="Subject" elementType="CLASS" />
-        <role name="subject" elementType="FIELD" />
-        <role name="Request()" elementType="METHOD" multiplicity="MANY" />
+        <role name="Proxy" elementType="CLASS"/>
+        <role name="RealSubject" elementType="CLASS"/>
+        <role name="Subject" elementType="CLASS"/>
+        <role name="subject" elementType="FIELD"/>
+        <role name="Request()" elementType="METHOD" multiplicity="MANY"/>
     </pattern>
 
     <pattern name="Chain of Responsibility">
-        <role name="Handler" elementType="CLASS" />
-        <role name="successor" elementType="FIELD" />
+        <role name="Handler" elementType="CLASS"/>
+        <role name="successor" elementType="FIELD"/>
     </pattern>
 </patterns>

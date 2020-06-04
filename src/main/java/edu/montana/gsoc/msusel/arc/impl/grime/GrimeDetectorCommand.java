@@ -26,5 +26,40 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.grime;
 
-public class GrimeDetectorCommand {
+import com.google.common.collect.Lists;
+import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.detstrat.impl.ClassGrimeDetector;
+import edu.isu.isuese.detstrat.impl.GrimeDetector;
+import edu.isu.isuese.detstrat.impl.ModularGrimeDetector;
+import edu.isu.isuese.detstrat.impl.OrgGrimeDetector;
+import edu.montana.gsoc.msusel.arc.ArcContext;
+import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
+
+import java.util.List;
+
+public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
+
+    public GrimeDetectorCommand() {
+        super(GrimeConstants.GRIME_DETECT_CMD_NAME);
+    }
+
+    @Override
+    public void execute(ArcContext context) {
+        Project project = context.getProject();
+
+        context.logger().atInfo().log("Initializing Grime Detectors");
+        List<GrimeDetector> detectors = Lists.newArrayList(
+                new ModularGrimeDetector(),
+                new ClassGrimeDetector(),
+                new OrgGrimeDetector()
+        );
+
+        context.logger().atInfo().log("Starting Grime Detection");
+        for (GrimeDetector detector : detectors) {
+            context.logger().atInfo().log("Detecting %s Started", detector.getClass().getSimpleName());
+            project.getPatternInstances().forEach(detector::detect);
+            context.logger().atInfo().log("Detecting %s Complete", detector.getClass().getSimpleName());
+        }
+        context.logger().atInfo().log("Grime Detection Complete");
+    }
 }

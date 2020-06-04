@@ -26,16 +26,23 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4;
 
+import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import edu.montana.gsoc.msusel.arc.command.CommandUtils;
+import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
 public class Pattern4Command extends ToolCommand {
 
+    Pattern4Tool owner;
+
     @Builder(buildMethodName = "create")
-    public Pattern4Command() {
-        super("Pattern4");
+    public Pattern4Command(Pattern4Tool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
+                           String binaryDirectory, String projectBaseDirectory) {
+        super(Pattern4Constants.PATTERN4_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory,
+                binaryDirectory, projectBaseDirectory);
+        this.owner = owner;
     }
 
     @Override
@@ -57,12 +64,12 @@ public class Pattern4Command extends ToolCommand {
     }
 
     @Override
-    protected int getExpectedExitValue() {
-        return 0;
+    protected void updateCollector() {
+        owner.collector.setResultsFile(reportFile);
     }
 
     @Override
-    public String getName() {
-        return "Pattern4";
+    protected int getExpectedExitValue() {
+        return Pattern4Constants.PATTERN4_EXIT_VALUE;
     }
 }

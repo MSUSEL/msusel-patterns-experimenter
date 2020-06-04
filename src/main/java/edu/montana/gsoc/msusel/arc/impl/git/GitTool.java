@@ -29,10 +29,18 @@ package edu.montana.gsoc.msusel.arc.impl.git;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class GitTool extends CommandOnlyTool {
 
+    public GitTool(ArcContext context) {
+        super(context);
+    }
+
     @Override
-    public void init(ArcContext context) {
+    public void init() {
         context.registerCommand(new GitCommand());
     }
 }
