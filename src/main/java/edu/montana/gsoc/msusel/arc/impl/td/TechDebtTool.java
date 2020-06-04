@@ -46,7 +46,7 @@ public class TechDebtTool extends MetricOnlyTool {
 
     @Override
     public RepoProvider getRepoProvider() {
-        return new TechDebtRepoProvider();
+        return new TechDebtRepoProvider(context);
     }
 
     @Override

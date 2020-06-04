@@ -12,11 +12,16 @@ import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class ArcMetricsTool {
 
     MetricsRegistrar registrar;
     ArcContext context;
     List<MetricEvaluator> evaluatorList;
+    List<MetricEvaluator> secondaryList;
 
     public ArcMetricsTool(ArcContext context) {
         this.context = context;
@@ -25,12 +30,16 @@ public class ArcMetricsTool {
 
     public void init() {
         evaluatorList = registrar.getPrimaryEvaluators();
+        secondaryList = registrar.getSecondaryEvaluators();
         Collections.sort(evaluatorList);
     }
 
     public void exec() {
         Project proj = context.getProject();
+        context.logger().atInfo().log("Measuring Primary Metrics");
         evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
+        context.logger().atInfo().log("Measuring Secondary Metrics");
+        secondaryList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
     }
 
     private void streamAndMeasureMethods(Type type) {

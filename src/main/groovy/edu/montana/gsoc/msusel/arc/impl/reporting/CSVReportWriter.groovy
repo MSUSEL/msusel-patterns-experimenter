@@ -4,6 +4,10 @@ import com.google.common.collect.Table
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class CSVReportWriter implements ReportWriter {
 
     @Override

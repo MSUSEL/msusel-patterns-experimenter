@@ -26,6 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.command;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class RepositoryCommand extends AbstractCommand {
 
     public RepositoryCommand(String name) {

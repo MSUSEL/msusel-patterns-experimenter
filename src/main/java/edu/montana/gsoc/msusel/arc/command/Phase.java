@@ -26,13 +26,17 @@
  */
 package edu.montana.gsoc.msusel.arc.command;
 
+import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.Command;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-@Slf4j
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 @Builder(buildMethodName = "create")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,13 +48,14 @@ public class Phase {
     private List<Command> commands;
     @Getter
     private String name;
+    private ArcContext context;
 
     public void execute() {
 
         for (Command cmd : commands) {
-            log.info(String.format("Starting %s command:", cmd.getToolName()));
+            context.logger().atInfo().log("Starting %s command:", cmd.getToolName());
             //cmd.execute();
-            log.info(String.format("Finished %s command.", cmd.getToolName()));
+            context.logger().atInfo().log("Finished %s command.", cmd.getToolName());
         }
     }
 

@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * @author Isaac Griffith
- * @version 1.1.1
+ * @version 1.3.0
  */
 @XStreamAlias("instance")
 @Builder(buildMethodName = "create")

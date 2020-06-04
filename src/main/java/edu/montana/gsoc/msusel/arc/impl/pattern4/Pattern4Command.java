@@ -33,15 +33,17 @@ import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class Pattern4Command extends ToolCommand {
 
     Pattern4Tool owner;
 
     @Builder(buildMethodName = "create")
-    public Pattern4Command(Pattern4Tool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
-                           String binaryDirectory, String projectBaseDirectory) {
-        super(Pattern4Constants.PATTERN4_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory,
-                binaryDirectory, projectBaseDirectory);
+    public Pattern4Command(Pattern4Tool owner, String toolHome, String reportFile) {
+        super(Pattern4Constants.PATTERN4_CMD_NAME, toolHome, reportFile);
         this.owner = owner;
     }
 

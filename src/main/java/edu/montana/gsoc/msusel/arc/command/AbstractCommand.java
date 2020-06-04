@@ -29,6 +29,10 @@ package edu.montana.gsoc.msusel.arc.command;
 import edu.montana.gsoc.msusel.arc.Command;
 import lombok.Getter;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class AbstractCommand implements Command {
 
     @Getter

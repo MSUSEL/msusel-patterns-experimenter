@@ -28,6 +28,10 @@ package edu.montana.gsoc.msusel.arc.tool;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class MetricOnlyTool extends AbstractTool {
 
     public MetricOnlyTool(ArcContext context) {

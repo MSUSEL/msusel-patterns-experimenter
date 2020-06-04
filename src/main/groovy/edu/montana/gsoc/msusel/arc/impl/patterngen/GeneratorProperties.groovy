@@ -1,5 +1,9 @@
 package edu.montana.gsoc.msusel.arc.impl.patterngen
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 interface GeneratorProperties {
 
     String GEN_LANG_PROP      = "arc.generator.language"

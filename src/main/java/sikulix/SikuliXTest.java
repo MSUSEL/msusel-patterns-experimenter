@@ -35,6 +35,10 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class SikuliXTest {
 
     private static final String Pattern4Location = "/home/isaac/dev_tools/patterns/pattern4.jar";

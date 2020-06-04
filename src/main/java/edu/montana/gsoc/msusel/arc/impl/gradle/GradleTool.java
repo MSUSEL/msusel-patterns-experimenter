@@ -46,10 +46,6 @@ public class GradleTool extends CommandOnlyTool {
     public void init() {
         command = GradleCommand.builder()
                 .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
-                .projectName(context.getProject().getName())
-                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
-                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
-                .projectBaseDirectory(context.getProjectDirectory())
                 .create();
 
         context.registerCommand(command);

@@ -1,5 +1,9 @@
 package edu.montana.gsoc.msusel.arc.impl.ghsearch;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public interface GitHubSearchProperties {
 
     String GIT_HUB_USER     = "arc.ghsearch.github.username";

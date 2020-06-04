@@ -24,49 +24,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.pattern4;
+package edu.montana.gsoc.msusel.arc.impl.pattern4
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.collector.FileCollector;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Pattern;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Role;
-import lombok.Builder;
-import lombok.extern.slf4j.Slf4j;
+import com.thoughtworks.xstream.XStream
+import com.thoughtworks.xstream.io.xml.DomDriver
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.collector.FileCollector
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Pattern
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Role
+import groovy.transform.builder.Builder
 
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat
 
-@Slf4j
-public class Pattern4Collector extends FileCollector {
+class Pattern4Collector extends FileCollector {
 
-    Pattern4Tool owner;
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+    Pattern4Tool owner
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss")
 
     @Builder(buildMethodName = "create")
-    public Pattern4Collector(Pattern4Tool owner, String resultFile, edu.isu.isuese.datamodel.Project project) {
-        super(Pattern4Constants.PATTERN4_COLL_NAME, resultFile, project);
-        this.owner = owner;
+    Pattern4Collector(Pattern4Tool owner, String resultFile) {
+        super(Pattern4Constants.PATTERN4_COLL_NAME, resultFile)
+        this.owner = owner
     }
 
     @Override
-    public void execute(ArcContext context) {
-        XStream xstream = new XStream(new DomDriver());
-        xstream.processAnnotations(Project.class);
-        xstream.processAnnotations(Pattern.class);
-        xstream.processAnnotations(PatternInstance.class);
-        xstream.processAnnotations(Role.class);
+    void execute(ArcContext context) {
+        context.logger().atInfo().log("Collecting Pattern4 reported patterns.")
 
-        Project proj = (Project) xstream.fromXML(new File(this.resultsFile));
+        this.project = context.getProject()
+        XStream xstream = new XStream(new DomDriver())
+        xstream.processAnnotations(Project.class)
+        xstream.processAnnotations(Pattern.class)
+        xstream.processAnnotations(PatternInstance.class)
+        xstream.processAnnotations(Role.class)
+
+        Project proj = (Project) xstream.fromXML(new File(this.resultsFile))
 
         // for each pattern instance's roles we need to modify the key to be consistent with the current keying scheme
         proj.getPatterns().forEach(pattern -> {
             pattern.getInstances().forEach(instance -> {
                 instance.getRoles().forEach(role -> {
-                    String name = role.getElement();
+                    String name = role.getElement()
 
                     def group = ((String) it =~ /((\w+\b\.)+)((\w+)(\$(\w+))?)((::)?)((\w+)\(.*\))?/)
                     println group.count
@@ -78,9 +78,11 @@ public class Pattern4Collector extends FileCollector {
                         println "Method Name: ${group[0][10]}"
                     }
 
-                    mediator.findComponentByName(name);
-                });
-            });
-        });
+                    mediator.findComponentByName(name)
+                })
+            })
+        })
+
+        context.logger().atInfo().log("Finished Collecting Pattern4 reported patterns.")
     }
 }

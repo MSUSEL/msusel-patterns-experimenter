@@ -16,7 +16,10 @@ import edu.montana.gsoc.msusel.arc.impl.java.JavaTool
 import edu.montana.gsoc.msusel.arc.impl.maven.MavenTool
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsTool
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Tool
+import edu.montana.gsoc.msusel.arc.impl.patterngen.PatternGeneratorTool
+import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternTool
 import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool
+import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodTool
 import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoTool
 import edu.montana.gsoc.msusel.arc.impl.td.TechDebtTool
 import groovy.util.logging.Log
@@ -25,6 +28,10 @@ import java.util.logging.FileHandler
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class CLI {
 
     public static final FluentLogger logger = FluentLogger.forEnclosingClass()
@@ -168,6 +175,10 @@ class CommandLineInterface {
     }
 }
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class ToolsLoader {
 
     void loadTools(ArcContext context) {
@@ -187,7 +198,10 @@ class ToolsLoader {
                 new Pattern4Tool(context),
                 new QuamocoTool(context),
                 new SoftwareInjectorTool(context),
-                new TechDebtTool(context)
+                new TechDebtTool(context),
+                new QMoodTool(context),
+                new ArcPatternTool(context),
+                new PatternGeneratorTool(context)
         ]
 
         context.logger().atInfo().log("Tools instantiated now loading repos and initializing commands")

@@ -29,7 +29,12 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.ArtifactIdentifierCommand;
 import edu.montana.gsoc.msusel.datamodel.parsers.JavaArtifactIdentifier;
+import edu.montana.gsoc.msusel.datamodel.parsers.JavaModelBuilder;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class JavaAICommand extends ArtifactIdentifierCommand {
 
     public JavaAICommand() {
@@ -38,8 +43,10 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
 
     @Override
     public void execute(ArcContext context) {
-        JavaArtifactIdentifier jai = new JavaArtifactIdentifier();
-        jai.identify(context.getProjectDirectory());
+        context.logger().atInfo().log("Java Artifact Identification Started");
+        JavaModelBuilder builder = new JavaModelBuilder(context.logger());
+        builder.build(context.getProject(), context.getProjectDirectory());
+        context.logger().atInfo().log("Java Artifact Identification Complete");
     }
 
     @Override

@@ -4,6 +4,10 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.command.Workflow
 import edu.montana.gsoc.msusel.arc.impl.reporting.Report
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 abstract class EmpiricalStudy {
 
     String name

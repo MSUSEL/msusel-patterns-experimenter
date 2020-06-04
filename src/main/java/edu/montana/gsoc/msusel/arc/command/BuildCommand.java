@@ -29,6 +29,10 @@ package edu.montana.gsoc.msusel.arc.command;
 import java.io.File;
 import java.nio.file.*;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class BuildCommand extends AbstractCommand {
 
     public BuildCommand(String name) {

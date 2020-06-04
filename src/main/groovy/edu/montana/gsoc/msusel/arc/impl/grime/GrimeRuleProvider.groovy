@@ -30,6 +30,10 @@ import edu.isu.isuese.detstrat.impl.RuleProvider
 import edu.montana.gsoc.msusel.arc.provider.AbstractRuleProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class GrimeRuleProvider extends AbstractRuleProvider {
 
     GrimeRuleProvider(ArcContext context) {

@@ -29,6 +29,10 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 import edu.montana.gsoc.msusel.arc.*;
 import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class JavaTool extends CommandOnlyTool {
 
     public JavaTool(ArcContext context) {
@@ -37,6 +41,6 @@ public class JavaTool extends CommandOnlyTool {
 
     @Override
     public void init() {
-
+        context.registerCommand(new JavaAICommand());
     }
 }

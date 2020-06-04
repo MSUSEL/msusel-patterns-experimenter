@@ -35,7 +35,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-@Slf4j
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class ExperimenterPropLoader {
 
     public static Properties loadProperties(String settingsDir) {

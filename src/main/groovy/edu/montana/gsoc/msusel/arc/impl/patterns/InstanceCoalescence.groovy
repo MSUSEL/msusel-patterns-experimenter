@@ -24,8 +24,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm
+package edu.montana.gsoc.msusel.arc.impl.patterns
 
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Pattern
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
+
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class InstanceCoalescence {
 
     def coalesce(Project proj) {

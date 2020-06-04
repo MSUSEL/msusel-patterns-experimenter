@@ -10,6 +10,10 @@ import edu.montana.gsoc.msusel.arc.provider.AbstractPatternProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.xml.XmlSlurper
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class Pattern4PatternProvider extends AbstractPatternProvider {
 
     def data

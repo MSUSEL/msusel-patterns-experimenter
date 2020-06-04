@@ -40,6 +40,7 @@
 package edu.montana.gsoc.msusel.arc.impl.ghsearch
 
 import com.google.common.collect.Lists
+import com.google.common.flogger.StackSize
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.SCM
 import edu.isu.isuese.datamodel.SCMType
@@ -68,8 +69,13 @@ class GitHubSearchCommand extends RepositoryCommand {
 
     @Override
     void execute(ArcContext context) {
+        context.logger().atInfo().log("Searching GitHub for projects")
+
         authenticate()
+
         findProjects()
+
+        context.logger().atInfo().log("GitHub Search Complete")
     }
 
     @Override
@@ -78,17 +84,18 @@ class GitHubSearchCommand extends RepositoryCommand {
     }
 
     void authenticate() {
+        context.logger().atInfo().log("Authenticating with GitHub")
         try {
             github = GitHub.connect(context.getArcProperty(GitHubSearchProperties.GIT_HUB_USER),
                     context.getArcProperty(GitHubSearchProperties.GIT_HUB_TOKEN))
         } catch (IOException e) {
-            java.lang.System.out.println()
-            e.printStackTrace()
-            java.lang.System.out.println()
+            context.logger().atSevere().withCause(e).withStackTrace(StackSize.MEDIUM).log(e.getMessage())
         }
+        context.logger().atInfo().log("Authenticated to GitHub")
     }
 
     List<System> findProjects() {
+        context.logger().atInfo().log("Searching...")
         int maxProj = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_PROJ))
         int minSize = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MIN_SIZE))
         int maxSize = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_SIZE))

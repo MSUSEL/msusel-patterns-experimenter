@@ -31,14 +31,17 @@ import edu.montana.gsoc.msusel.arc.command.CommandUtils;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class FindBugsCommand extends ToolCommand {
 
     FindBugsTool owner;
 
     @Builder(buildMethodName = "create")
-    public FindBugsCommand(FindBugsTool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
-                           String binaryDirectory, String projectBaseDirectory) {
-        super(FindBugsConstants.FB_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory, binaryDirectory, projectBaseDirectory);
+    public FindBugsCommand(FindBugsTool owner, String toolHome, String reportFile) {
+        super(FindBugsConstants.FB_CMD_NAME, toolHome, reportFile);
         this.owner = owner;
     }
 

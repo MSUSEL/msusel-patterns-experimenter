@@ -51,6 +51,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 @Phase(FlowPhase.SECONDARY_ANALYSIS)
 public class QuamocoCommand extends SecondaryAnalysisCommand {
 
@@ -63,6 +67,7 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
 
     @Override
     public void execute(ArcContext context) {
+        context.logger().atInfo().log("Executing Quamoco Analysis");
         // preliminaries
         this.context = context;
         loadConfig();
@@ -80,9 +85,12 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
 
         // Store Results
         storeResults();
+
+        context.logger().atInfo().log("Finished Quamoco Analysis");
     }
 
     private Network<Node, Edge> buildGraph() {
+        context.logger().atInfo().log("Creating Quamoco Processing Graph");
         String baseDir = context.getArcProperty(QuamocoConstants.QM_HOME_PROP_KEY);
 
         String lang = context.getLanguage();
@@ -93,10 +101,13 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         ModelDistiller md = new ModelDistiller(new ModelManager());
         md.readInQualityModels(qmFiles);
         md.buildGraph();
+
+        context.logger().atInfo().log("Quamoco Processing Graph Created");
         return md.getGraph();
     }
 
     private void connectFindings() {
+        context.logger().atInfo().log("Connecting Findings to Quamoco Processing Graph");
         graph.nodes().forEach(node -> {
             if (node instanceof FindingNode) {
                 FindingNode fn = (FindingNode) node;
@@ -111,9 +122,11 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
                 });
             }
         });
+        context.logger().atInfo().log("Findings connected to Quamoco Processing Graph");
     }
 
     private void executeQuamoco() {
+        context.logger().atInfo().log("Excecuting Quamoco Analysis Engine");
         String root = context.getArcProperty(QuamocoProperties.QUAMOCO_METRICS_ROOT);
 
         FactorNode rootNode = null;
@@ -129,9 +142,11 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         if (rootNode != null) {
             rootNode.getValue();
         }
+        context.logger().atInfo().log("Quamoco Analysis Engine Finished");
     }
 
     private void storeResults() {
+        context.logger().atInfo().log("Storing Quamoco Results");
         Map<String, FactorNode> map = Maps.newHashMap();
         List<String> keys = getQualityAspects();
 
@@ -149,14 +164,16 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
     }
 
     private void loadConfig() {
+        context.logger().atInfo().log("Loading Quamoco Configuration");
         Properties props = new Properties();
         try(FileInputStream fis = new FileInputStream(new File(QuamocoConstants.QUAMOCO_LANG_MODELS_FILE))) {
             props.load(fis);
 
             props.forEach((key, value) -> context.addArcProperty((String) key, (String) value));
         } catch (Exception e) {
-
+            context.logger().atSevere().withCause(e).log(e.getMessage());
         }
+        context.logger().atInfo().log("Finished Loading Quamoco Configuration");
     }
 
     private String[] getQMFiles(String lang) {

@@ -35,6 +35,10 @@ import lombok.extern.java.Log;
 
 import java.util.Properties;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class ArcContext {
 
     @Getter
@@ -80,6 +84,6 @@ public class ArcContext {
     }
 
     public FluentLogger logger() {
-        return log;
+        return logger;
     }
 }

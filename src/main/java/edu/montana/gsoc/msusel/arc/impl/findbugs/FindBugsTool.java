@@ -49,7 +49,7 @@ public class FindBugsTool extends RuleOnlyTool {
 
     @Override
     public RepoProvider getRepoProvider() {
-        return new FindBugsRepoProvider();
+        return new FindBugsRepoProvider(context);
     }
 
     @Override
@@ -65,16 +65,11 @@ public class FindBugsTool extends RuleOnlyTool {
         command = FindBugsCommand.builder()
                 .owner(this)
                 .toolHome(context.getArcProperty(FindBugsProperties.FB_TOOL_HOME))
-                .projectName(context.getProject().getName())
                 .reportFile(resultsFile)
-                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
-                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
-                .projectBaseDirectory(context.getProjectDirectory())
                 .create();
 
         collector = FindBugsCollector.builder()
                 .owner(this)
-                .project(context.getProject())
                 .resultsFile(resultsFile)
                 .create();
 

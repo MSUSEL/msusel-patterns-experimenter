@@ -70,6 +70,7 @@ public class GitCommand extends RepositoryCommand {
 
     @Override
     public void execute(ArcContext context) {
+        context.logger().atInfo().log("Running Git to retrieve the project");
         this.context = context;
         if (context != null) {
             this.project = context.getProject();
@@ -99,6 +100,7 @@ public class GitCommand extends RepositoryCommand {
             assert context != null;
             context.logger().atSevere().withCause(e).log(e.getMessage());
         }
+        context.logger().atInfo().log("Git execution complete");
     }
 
     @Override

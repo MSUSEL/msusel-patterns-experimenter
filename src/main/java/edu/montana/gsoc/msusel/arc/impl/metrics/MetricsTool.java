@@ -34,6 +34,10 @@ import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
 
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class MetricsTool extends MetricOnlyTool {
 
     public MetricsTool(ArcContext context) {
@@ -42,7 +46,7 @@ public class MetricsTool extends MetricOnlyTool {
 
     @Override
     public RepoProvider getRepoProvider() {
-        return new MetricsRepoProvider();
+        return new MetricsRepoProvider(context);
     }
 
     @Override

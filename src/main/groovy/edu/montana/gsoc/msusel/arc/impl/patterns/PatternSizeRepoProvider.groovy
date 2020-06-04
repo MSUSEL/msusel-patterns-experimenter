@@ -1,4 +1,4 @@
-package edu.montana.gsoc.msusel.arc.impl.patternsize
+package edu.montana.gsoc.msusel.arc.impl.patterns
 
 import edu.isu.isuese.datamodel.MetricRepository
 import edu.montana.gsoc.msusel.arc.ArcContext

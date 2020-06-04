@@ -26,37 +26,37 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pmd;
 
-import com.google.common.collect.Lists;
+import com.google.common.flogger.StackSize;
 import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.collector.FileCollector;
 import edu.montana.gsoc.msusel.arc.impl.pmd.resultsdm.Pmd;
 import lombok.Builder;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.lang.System;
-import java.util.List;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
-@Slf4j
 public class PMDCollector extends FileCollector {
 
     PMDTool owner;
 
     @Builder(buildMethodName = "create")
-    public PMDCollector(PMDTool owner, String resultsFile, Project project) {
-        super(PMDConstants.PMD_COLL_NAME, resultsFile, project);
+    public PMDCollector(PMDTool owner, String resultsFile) {
+        super(PMDConstants.PMD_COLL_NAME, resultsFile);
         this.owner = owner;
     }
 
     @Override
     public void execute(ArcContext ctx) {
+        ctx.logger().atInfo().log("Starting Collecting PMD Results");
+
+        this.project = ctx.getProject();
         try {
             JAXBContext context = JAXBContext.newInstance(Pmd.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -78,8 +78,10 @@ public class PMDCollector extends FileCollector {
                 })
             );
         } catch (JAXBException e) {
-            log.error(e.getMessage());
+            ctx.logger().atSevere().withCause(e).withStackTrace(StackSize.MEDIUM).log(e.getMessage());
         }
+
+        ctx.logger().atInfo().log("Finished Collecting PMD Results");
     }
 
     public static void main(String args[]) {

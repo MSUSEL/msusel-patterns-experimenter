@@ -41,9 +41,8 @@ public class PMDCommand extends ToolCommand {
     PMDTool owner;
 
     @Builder(buildMethodName = "create")
-    public PMDCommand(PMDTool owner, String toolHome, String projectName, String reportFile, String sourceDirectory,
-                      String binaryDirectory, String projectBaseDirectory) {
-        super(PMDConstants.PMD_CMD_NAME, toolHome, projectName, reportFile, sourceDirectory, binaryDirectory, projectBaseDirectory);
+    public PMDCommand(PMDTool owner, String toolHome, String reportFile) {
+        super(PMDConstants.PMD_CMD_NAME, toolHome, reportFile);
         this.owner = owner;
     }
 

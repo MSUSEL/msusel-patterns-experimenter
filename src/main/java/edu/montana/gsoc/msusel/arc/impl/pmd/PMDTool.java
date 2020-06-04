@@ -49,7 +49,7 @@ public class PMDTool extends RuleOnlyTool {
 
     @Override
     public RepoProvider getRepoProvider() {
-        return new PMDRepoProvider();
+        return new PMDRepoProvider(context);
     }
 
     @Override
@@ -64,16 +64,11 @@ public class PMDTool extends RuleOnlyTool {
 
         command = PMDCommand.builder()
                 .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
-                .projectName(context.getProject().getName())
                 .reportFile(resultsFile)
-                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
-                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
-                .projectBaseDirectory(context.getProjectDirectory())
                 .create();
 
         collector = PMDCollector.builder()
                 .owner(this)
-                .project(context.getProject())
                 .resultsFile(resultsFile)
                 .create();
 

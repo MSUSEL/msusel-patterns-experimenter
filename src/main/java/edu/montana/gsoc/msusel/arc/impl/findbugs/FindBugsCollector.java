@@ -50,13 +50,16 @@ public class FindBugsCollector extends FileCollector {
     FindBugsTool owner;
 
     @Builder(buildMethodName = "create")
-    public FindBugsCollector(FindBugsTool owner, String resultsFile, Project project) {
-        super(FindBugsConstants.FB_COLL_NAME, resultsFile, project);
+    public FindBugsCollector(FindBugsTool owner, String resultsFile) {
+        super(FindBugsConstants.FB_COLL_NAME, resultsFile);
         this.owner = owner;
     }
 
     @Override
     public void execute(ArcContext ctx) {
+        ctx.logger().atInfo().log("Started collecting FindBugs Results");
+
+        this.project = ctx.getProject();
         try {
             JAXBContext context = JAXBContext.newInstance(BugCollection.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
@@ -96,6 +99,8 @@ public class FindBugsCollector extends FileCollector {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
+
+        ctx.logger().atInfo().log("Finished collecting FindBugs Resutls");
     }
 
     public void setReferenceAndLineInfo(Finding finding, Component comp, SourceLine line) {

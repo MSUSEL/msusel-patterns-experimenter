@@ -1,4 +1,4 @@
-package edu.montana.gsoc.msusel.arc.impl.patternsize;
+package edu.montana.gsoc.msusel.arc.impl.patterns;
 
 /**
  * @author Isaac Griffith

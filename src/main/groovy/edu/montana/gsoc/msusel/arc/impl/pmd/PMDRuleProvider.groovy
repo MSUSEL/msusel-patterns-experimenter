@@ -8,6 +8,10 @@ import edu.montana.gsoc.msusel.arc.provider.AbstractRuleProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.xml.XmlSlurper
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class PMDRuleProvider extends AbstractRuleProvider {
 
     def config

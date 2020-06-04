@@ -39,7 +39,6 @@ import java.util.Set;
  * @author Isaac Griffith
  * @version 1.3.0
  */
-@Slf4j
 public abstract class ReportGenerator {
 
     protected Measurable parent;

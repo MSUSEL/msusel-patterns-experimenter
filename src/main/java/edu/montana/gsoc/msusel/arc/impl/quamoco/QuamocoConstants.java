@@ -26,6 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quamoco;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public interface QuamocoConstants {
 
     String QUAMOCO_CMD_NAME         = "Quamoco";

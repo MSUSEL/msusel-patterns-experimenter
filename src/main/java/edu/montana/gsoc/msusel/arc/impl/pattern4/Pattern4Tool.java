@@ -33,6 +33,10 @@ import edu.montana.gsoc.msusel.arc.tool.PatternOnlyTool;
 
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class Pattern4Tool extends PatternOnlyTool {
 
     Pattern4Command command;
@@ -44,11 +48,12 @@ public class Pattern4Tool extends PatternOnlyTool {
 
     @Override
     public List<Provider> getOtherProviders() {
-        return ImmutableList.of(new Pattern4PatternProvider());
+        return ImmutableList.of(new Pattern4PatternProvider(context));
     }
 
+    @Override
     public RepoProvider getRepoProvider() {
-        return new Pattern4RepoProvider();
+        return new Pattern4RepoProvider(context);
     }
 
     @Override
@@ -57,17 +62,12 @@ public class Pattern4Tool extends PatternOnlyTool {
 
         command = Pattern4Command.builder()
                 .toolHome(context.getArcProperty(Pattern4Properties.P4_TOOL_HOME))
-                .projectName(context.getProject().getName())
                 .reportFile(resultsFile)
-                .sourceDirectory(context.getProject().getModules().get(0).getSrcPath())
-                .binaryDirectory(context.getProject().getModules().get(0).getBinaryPath())
-                .projectBaseDirectory(context.getProjectDirectory())
                 .create();
 
         collector = Pattern4Collector.builder()
                 .owner(this)
                 .resultFile(resultsFile)
-                .project(context.getProject())
                 .create();
 
         context.registerCommand(command);

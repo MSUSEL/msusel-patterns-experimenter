@@ -8,6 +8,10 @@ import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar
 import edu.montana.gsoc.msusel.metrics.impl.*
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class MetricsToolMetricsProvider extends AbstractMetricProvider {
 
     static MetricsRegistrar registrar = new MetricsRegistrar()

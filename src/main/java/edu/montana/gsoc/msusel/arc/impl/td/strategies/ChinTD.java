@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.arc.impl.td.param.TDParams;
  * ChinTD -
  * 
  * @author Isaac Griffith
+ * @version 1.3.0
  */
 public class ChinTD extends TechnicalDebtCalcStrategy {
 

@@ -32,6 +32,7 @@ import edu.montana.gsoc.msusel.arc.impl.td.param.TDParams;
  * TechicalDebtCalcStrategy -
  * 
  * @author Isaac Griffith
+ * @version 1.3.0
  */
 public abstract class TechnicalDebtCalcStrategy {
 

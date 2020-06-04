@@ -1,5 +1,9 @@
 package edu.montana.gsoc.msusel.arc.impl.findbugs;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public interface FindBugsConstants {
 
     String FB_CMD_NAME = "FindBugs";

@@ -1,10 +1,8 @@
-package edu.montana.gsoc.msusel.arc.impl.patternsize;
+package edu.montana.gsoc.msusel.arc.impl.patterns;
 
 import edu.isu.isuese.datamodel.Measurable
 import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.PatternInstance
-import edu.isu.isuese.datamodel.Role
-import edu.isu.isuese.datamodel.RoleBinding
 import edu.isu.isuese.datamodel.RoleType
 import edu.isu.isuese.datamodel.Type;
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator

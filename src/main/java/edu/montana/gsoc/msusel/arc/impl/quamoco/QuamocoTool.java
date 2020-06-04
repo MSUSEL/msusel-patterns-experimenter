@@ -34,6 +34,10 @@ import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
 
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class QuamocoTool extends MetricOnlyTool {
 
     public QuamocoTool(ArcContext context) {

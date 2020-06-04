@@ -6,6 +6,10 @@ import edu.montana.gsoc.msusel.arc.provider.AbstractMetricProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.yaml.YamlSlurper
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class QuamocoMetricProvider extends AbstractMetricProvider {
 
     def config

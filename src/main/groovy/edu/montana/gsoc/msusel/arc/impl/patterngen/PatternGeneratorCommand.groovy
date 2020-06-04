@@ -9,6 +9,10 @@ import edu.montana.gsoc.msusel.pattern.gen.GeneratorContext
 import edu.montana.gsoc.msusel.pattern.gen.PatternManager
 import edu.montana.gsoc.msusel.pattern.gen.PluginLoader
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class PatternGeneratorCommand extends PrimaryAnalysisCommand {
 
     PatternGeneratorCommand() {

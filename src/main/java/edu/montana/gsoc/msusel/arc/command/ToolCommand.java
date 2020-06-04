@@ -38,6 +38,10 @@ import org.apache.commons.exec.Executor;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class ToolCommand implements Command {
 
     @Setter @Getter
@@ -55,23 +59,30 @@ public abstract class ToolCommand implements Command {
     @Setter
     protected String projectBaseDirectory;
 
-    public ToolCommand(String toolName, String toolHome, String projectName, String reportFile, String sourceDirectory,
-                       String binaryDirectory, String projectBaseDirectory) {
+    public ToolCommand(String toolName, String toolHome, String reportFile) {
         this.toolName = toolName;
         this.toolHome = toolHome;
-        this.projectName = projectName;
         this.reportFile = reportFile;
-        this.sourceDirectory = sourceDirectory;
-        this.binaryDirectory = binaryDirectory;
-        this.projectBaseDirectory = projectBaseDirectory;
     }
 
     public void execute(ArcContext context) {
+        context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
+
+        this.sourceDirectory = context.getProject().getModules().get(0).getSrcPath();
+        this.binaryDirectory = context.getProject().getModules().get(0).getBinaryPath();
+        this.projectBaseDirectory = context.getProjectDirectory();
+        this.projectName = context.getProject().getName();
+
         if (isRequirementsMet()) {
+            context.logger().atInfo().log("Constructing command line");
             CommandLine cmdLine = buildCommandLine();
+            context.logger().atInfo().log("Executing command");
             executeCmdLine(cmdLine, getExpectedExitValue());
+            context.logger().atInfo().log("Updating collector");
             updateCollector();
         }
+
+        context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
     }
 
     public abstract boolean isRequirementsMet();

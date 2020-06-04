@@ -34,12 +34,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class GradleCommand extends ToolCommand {
 
     @Builder(buildMethodName = "create")
-    public GradleCommand(String toolHome, String projectName, String sourceDirectory,
-                         String binaryDirectory, String projectBaseDirectory) {
-        super(GradleConstants.GRADLE_CMD_NAME, toolHome, projectName, null, sourceDirectory, binaryDirectory, projectBaseDirectory);
+    public GradleCommand(String toolHome) {
+        super(GradleConstants.GRADLE_CMD_NAME, toolHome, null);
     }
 
     @Override

@@ -32,7 +32,7 @@ import lombok.*;
 
 /**
  * @author Isaac Griffith
- * @version 1.1.1
+ * @version 1.3.0
  */
 @XStreamAlias("role")
 @Builder(buildMethodName = "create")

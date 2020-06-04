@@ -31,6 +31,10 @@ import org.apache.commons.cli.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class ExperimenterCLI {
 
     /**

@@ -4,6 +4,10 @@ import edu.isu.isuese.datamodel.MetricRepository
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class QuamocoRepoProvider extends AbstractRepoProvider {
 
     QuamocoRepoProvider(ArcContext context) {

@@ -30,6 +30,10 @@ import edu.montana.gsoc.msusel.arc.FlowPhase;
 
 import java.lang.annotation.*;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited

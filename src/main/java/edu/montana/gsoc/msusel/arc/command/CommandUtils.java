@@ -31,6 +31,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class CommandUtils {
 
     public static String normalizePathString(String path) {

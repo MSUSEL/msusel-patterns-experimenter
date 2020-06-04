@@ -38,6 +38,7 @@ import java.util.Properties;
  * "An Empirical Model of Technical Debt and Interest", MTD'11, 2011.
  * 
  * @author Isaac Griffith
+ * @version 1.3.0
  */
 public class NugrohoTD extends TechnicalDebtCalcStrategy {
 

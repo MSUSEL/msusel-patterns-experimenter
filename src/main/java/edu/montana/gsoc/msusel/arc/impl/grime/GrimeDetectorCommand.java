@@ -37,6 +37,10 @@ import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
 
 import java.util.List;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
 
     public GrimeDetectorCommand() {

@@ -25,6 +25,10 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 class Report {
 
     List<String> columns

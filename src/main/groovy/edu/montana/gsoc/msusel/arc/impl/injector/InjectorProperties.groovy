@@ -1,5 +1,9 @@
 package edu.montana.gsoc.msusel.arc.impl.injector
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 interface InjectorProperties {
 
     String GRIME_INJECT_TYPE = "arc.grime.inject.what.type"

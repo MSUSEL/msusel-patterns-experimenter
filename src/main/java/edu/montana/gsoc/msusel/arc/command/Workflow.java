@@ -26,12 +26,16 @@
  */
 package edu.montana.gsoc.msusel.arc.command;
 
+import edu.montana.gsoc.msusel.arc.ArcContext;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-@Slf4j
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 @Builder(buildMethodName = "create")
 @EqualsAndHashCode(exclude = {"phases"})
 @ToString(exclude = {"phases"})
@@ -43,18 +47,14 @@ public class Workflow {
     private List<Phase> phases;
     @Getter
     private String name;
+    private ArcContext context;
 
     public void execute() {
 
         for (Phase phase : phases) {
-            log.info(String.format("Starting phase: %s", phase.getName()));
+            context.logger().atInfo().log("Starting phase: %s", phase.getName());
             phase.execute();
-            log.info(String.format("Finished phase: %s", phase.getName()));
+            context.logger().atInfo().log("Finished phase: %s", phase.getName());
         }
-    }
-
-    public static void main(String args[])
-    {
-
     }
 }

@@ -37,6 +37,10 @@ import java.lang.reflect.Modifier;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public class Experimenter {
 
     ArcContext context;

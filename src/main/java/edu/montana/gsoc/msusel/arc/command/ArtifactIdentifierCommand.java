@@ -26,6 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.command;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class ArtifactIdentifierCommand extends AbstractCommand {
 
     public ArtifactIdentifierCommand(String name) {

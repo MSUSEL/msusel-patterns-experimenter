@@ -32,6 +32,10 @@ import edu.montana.gsoc.msusel.arc.Command;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class FileCollector implements Collector, Command {
 
     @Setter
@@ -43,10 +47,9 @@ public abstract class FileCollector implements Collector, Command {
     @Getter
     protected String name;
 
-    public FileCollector(String name, String resultsFile, Project project) {
+    public FileCollector(String name, String resultsFile) {
         this.name = name;
         this.resultsFile = resultsFile;
-        this.project = project;
     }
 
     @Override

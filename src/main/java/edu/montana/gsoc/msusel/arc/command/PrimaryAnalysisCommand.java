@@ -29,6 +29,10 @@ package edu.montana.gsoc.msusel.arc.command;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
 public abstract class PrimaryAnalysisCommand extends AbstractCommand {
 
     @Setter @Getter
