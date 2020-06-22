@@ -1,3 +1,29 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package edu.montana.gsoc.msusel.arc.impl.findbugs
 
 import edu.isu.isuese.datamodel.Priority
@@ -7,6 +33,7 @@ import edu.isu.isuese.datamodel.Tag
 import edu.montana.gsoc.msusel.arc.provider.AbstractRuleProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.xml.XmlSlurper
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -44,26 +71,29 @@ class FindBugsRuleProvider extends AbstractRuleProvider {
 
         config.rule.each { rule ->
             String ruleKey = rule.@'key'
-            String ruleName = rule.getToolName
+            String ruleName = rule.@'key'
             String description = rule.description
             String priorityName = rule.@'priority'
             Priority priority = Priority.fromValue(priorityName)
             List<Tag> tags = []
-            rule.tag.each { String tag ->
-                tags << Tag.of(tag)
-            }
 
-            if (rule.status != "DEPRECATED") {
-                Rule r = Rule.builder()
-                        .name(ruleName)
-                        .key("${repo.repoKey}:${ruleKey}")
-                        .description(description)
-                        .priority(priority)
-                        .create()
-                tags.each {
-                    r.addTag(it)
+            if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
+                rule.@tag?.each { String tag ->
+                    tags << Tag.of(tag)
                 }
-                repo.addRule(r)
+
+                if (rule.status != "DEPRECATED") {
+                    Rule r = Rule.builder()
+                            .name(ruleName)
+                            .key("${repo.repoKey}:${ruleKey}")
+                            .description(description)
+                            .priority(priority)
+                            .create()
+                    tags.each {
+                        r.addTag(it)
+                    }
+                    repo.addRule(r)
+                }
             }
         }
     }

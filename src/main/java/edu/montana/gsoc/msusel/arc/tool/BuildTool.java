@@ -24,30 +24,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.gradle;
+package edu.montana.gsoc.msusel.arc.tool;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDProperties;
-import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
-public class GradleTool extends CommandOnlyTool {
+public abstract class BuildTool extends CommandOnlyTool {
 
-    GradleCommand command;
-
-    public GradleTool(ArcContext context) {
+    public BuildTool(ArcContext context) {
         super(context);
     }
 
-    @Override
-    public void init() {
-        command = GradleCommand.builder()
-                .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
-                .create();
-
-        context.registerCommand(command);
-    }
+    public abstract String buildFileName();
 }

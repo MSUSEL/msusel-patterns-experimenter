@@ -42,11 +42,11 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
     }
 
     @Override
-    def loadData() {
+    void loadData() {
     }
 
     @Override
-    def updateDatabase() {
+    void updateDatabase() {
         Metric metric = Metric.findFirst("metricKey = ?", "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.TD_MEASURE_NAME}")
         if (!metric) {
             metric = Metric.builder()

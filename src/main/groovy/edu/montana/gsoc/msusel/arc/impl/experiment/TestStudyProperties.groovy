@@ -24,54 +24,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.maven;
+package edu.montana.gsoc.msusel.arc.impl.experiment
 
-import edu.montana.gsoc.msusel.arc.command.ToolCommand;
-import lombok.Builder;
-import org.apache.commons.exec.CommandLine;
+interface TestStudyProperties {
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public class MavenCommand extends ToolCommand {
-
-    @Builder(buildMethodName = "create")
-    public MavenCommand(String toolHome) {
-        super(MavenConstants.MVN_CMD_NAME, toolHome, null);
-    }
-
-    @Override
-    public boolean isRequirementsMet() {
-        Path pom = Paths.get(projectBaseDirectory, "pom.xml");
-        return Files.exists(pom);
-    }
-
-    @Override
-    public CommandLine buildCommandLine() {
-        return new CommandLine("mvn")
-                .addArgument("clean")
-                .addArgument("compile")
-                .addArgument("package")
-                .addArgument("-Dmaven.test.skip=true");
-    }
-
-    @Override
-    protected void updateCollector() {
-
-    }
-
-    @Override
-    protected int getExpectedExitValue() {
-        return MavenConstants.MVN_CMD_EXIT_VALUE;
-    }
-
-    @Override
-    public String getToolName() {
-        return MavenConstants.MVN_CMD_NAME;
-    }
+    String GHSEARCH = "arc.test.ghsearch"
+    String GIT      = "arc.test.git"
+    String JAI      = "arc.test.jai"
+    String JDI      = "arc.test.jdi"
+    String BUILD    = "arc.test.build"
+    String FB       = "arc.test.findbugs"
+    String PMD      = "arc.test.pmd"
+    String P4       = "arc.test.pattern4"
+    String PC       = "arc.test.coalesce"
+    String PS       = "arc.test.pattern_size"
+    String GRIME    = "arc.test.grime"
+    String METRICS  = "arc.test.metrics"
+    String TD       = "arc.test.td"
+    String QMOOD    = "arc.test.qmood"
+    String QUAMOCO  = "arc.test.quamoco"
 }

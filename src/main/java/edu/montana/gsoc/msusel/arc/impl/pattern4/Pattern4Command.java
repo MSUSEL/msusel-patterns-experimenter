@@ -26,10 +26,8 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4;
 
-import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import edu.montana.gsoc.msusel.arc.command.CommandUtils;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool;
+import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
@@ -66,12 +64,12 @@ public class Pattern4Command extends ToolCommand {
     }
 
     @Override
-    protected void updateCollector() {
+    public void updateCollector() {
         owner.collector.setResultsFile(reportFile);
     }
 
     @Override
-    protected int getExpectedExitValue() {
+    public int getExpectedExitValue() {
         return Pattern4Constants.PATTERN4_EXIT_VALUE;
     }
 }

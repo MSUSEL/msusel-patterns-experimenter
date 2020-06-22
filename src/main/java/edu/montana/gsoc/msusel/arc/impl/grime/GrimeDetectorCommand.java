@@ -60,9 +60,9 @@ public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
 
         context.logger().atInfo().log("Starting Grime Detection");
         for (GrimeDetector detector : detectors) {
-            context.logger().atInfo().log("Detecting %s Started", detector.getClass().getSimpleName());
+            context.logger().atInfo().log(String.format("Detecting %s Started", detector.getClass().getSimpleName()));
             project.getPatternInstances().forEach(detector::detect);
-            context.logger().atInfo().log("Detecting %s Complete", detector.getClass().getSimpleName());
+            context.logger().atInfo().log(String.format("Detecting %s Complete", detector.getClass().getSimpleName()));
         }
         context.logger().atInfo().log("Grime Detection Complete");
     }

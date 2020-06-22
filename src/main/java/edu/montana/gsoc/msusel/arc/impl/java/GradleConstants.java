@@ -24,18 +24,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patterns;
+package edu.montana.gsoc.msusel.arc.impl.java;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
-public interface ArcPatternConstants {
+public interface GradleConstants {
 
-    String PATTERN_SIZE_CMD_NAME     = "Pattern Size Detector";
-    String PATTERN_SIZE_REPO_KEY     = "isuese:pattern-size";
-    String PATTERN_SIZE_REPO_NAME    = "ISUESE Pattern Size Metric";
-
-    String PATTERN_CHAIN_CMD_NAME    = "Pattern Chain Detector";
-    String PATTERN_COALESCE_CMD_NAME = "Pattern Coalescence Detector";
+    String GRADLE_CMD_NAME = "Gradle";
+    int GRADLE_CMD_EXIT_VALUE = 0;
 }

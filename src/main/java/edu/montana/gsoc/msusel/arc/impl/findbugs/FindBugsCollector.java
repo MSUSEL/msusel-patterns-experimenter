@@ -69,27 +69,29 @@ public class FindBugsCollector extends FileCollector {
 
             List<Finding> findings = Lists.newArrayList();
             bugColl.getBugInstance().forEach(inst -> {
-                Rule rule = Rule.findFirst("ruleKey = ?", "findbugs:" + inst.getType());
-                Finding finding = Finding.of(inst.getType());
+                Rule rule = Rule.findFirst("name = ?", inst.getType());
+                if (rule != null) {
+                    ctx.logger().atInfo().log("Rule: " + rule.getKey());
+                    Finding finding = Finding.of(rule.getKey());
 
-                inst.getClazzOrTypeOrMethod().forEach(obj -> {
-                    if (obj instanceof BugCollection.BugInstance.Class) {
-                        BugCollection.BugInstance.Class clazz = (BugCollection.BugInstance.Class) obj;
-                        Type type = project.findTypeByQualifiedName(clazz.getClassname());
-                        setReferenceAndLineInfo(finding, type, clazz.getSourceLine());
-                    } else if (obj instanceof BugCollection.BugInstance.Method) {
-                        BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
-                        Type type = project.findTypeByQualifiedName(meth.getClassname());
-                        Method method = type.findMethodBySignature(meth.getSignature());
-                        setReferenceAndLineInfo(finding, method, meth.getSourceLine());
-                    } else if (obj instanceof SourceLine) {
-                        SourceLine line = (SourceLine) obj;
-                        Type type = project.findTypeByQualifiedName(line.getClassname());
-                        setReferenceAndLineInfo(finding, type, line);
-                    }
-                });
-                findings.add(finding);
-                rule.addFinding(finding);
+                    inst.getClazzOrTypeOrMethod().forEach(obj -> {
+                        if (obj instanceof BugCollection.BugInstance.Class) {
+                            BugCollection.BugInstance.Class clazz = (BugCollection.BugInstance.Class) obj;
+                            Type type = project.findTypeByQualifiedName(clazz.getClassname());
+                            setReferenceAndLineInfo(finding, type, clazz.getSourceLine());
+                        } else if (obj instanceof BugCollection.BugInstance.Method) {
+                            BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
+                            Type type = project.findTypeByQualifiedName(meth.getClassname());
+                            Method method = type.findMethodBySignature(meth.getSignature());
+                            setReferenceAndLineInfo(finding, method, meth.getSourceLine());
+                        } else if (obj instanceof SourceLine) {
+                            SourceLine line = (SourceLine) obj;
+                            Type type = project.findTypeByQualifiedName(line.getClassname());
+                            setReferenceAndLineInfo(finding, type, line);
+                        }
+                    });
+                    findings.add(finding);
+                }
             });
 
             System.out.println("Findings Created: " + findings.size());

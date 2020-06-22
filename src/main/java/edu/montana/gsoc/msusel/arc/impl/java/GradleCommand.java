@@ -24,18 +24,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patterns;
+package edu.montana.gsoc.msusel.arc.impl.java;
+
+import edu.montana.gsoc.msusel.arc.command.ToolCommand;
+import lombok.Builder;
+import org.apache.commons.exec.CommandLine;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
-public interface ArcPatternConstants {
+public class GradleCommand extends ToolCommand {
 
-    String PATTERN_SIZE_CMD_NAME     = "Pattern Size Detector";
-    String PATTERN_SIZE_REPO_KEY     = "isuese:pattern-size";
-    String PATTERN_SIZE_REPO_NAME    = "ISUESE Pattern Size Metric";
+    @Builder(buildMethodName = "create")
+    public GradleCommand(String toolHome) {
+        super(GradleConstants.GRADLE_CMD_NAME, toolHome, null);
+    }
 
-    String PATTERN_CHAIN_CMD_NAME    = "Pattern Chain Detector";
-    String PATTERN_COALESCE_CMD_NAME = "Pattern Coalescence Detector";
+    @Override
+    public boolean isRequirementsMet() {
+        Path bg = Paths.get(projectBaseDirectory, "build.gradle");
+        Path gw = Paths.get(projectBaseDirectory, "gradlew");
+        boolean executable = Files.isExecutable(gw);
+        return Files.exists(bg) && Files.exists(gw) && executable;
+    }
+
+    @Override
+    public CommandLine buildCommandLine() {
+        CommandLine cmdLine = new CommandLine("gradle")
+                .addArgument("clean")
+                .addArgument("compileJava");
+
+        return cmdLine;
+    }
+
+    @Override
+    public void updateCollector() {
+
+    }
+
+    @Override
+    public int getExpectedExitValue() {
+        return GradleConstants.GRADLE_CMD_EXIT_VALUE;
+    }
+
+    @Override
+    public String getToolName() {
+        return GradleConstants.GRADLE_CMD_NAME;
+    }
 }

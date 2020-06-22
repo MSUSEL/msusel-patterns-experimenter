@@ -65,10 +65,7 @@ public class Pattern4Tool extends PatternOnlyTool {
                 .reportFile(resultsFile)
                 .create();
 
-        collector = Pattern4Collector.builder()
-                .owner(this)
-                .resultFile(resultsFile)
-                .create();
+        collector = new Pattern4Collector(this, resultsFile);
 
         context.registerCommand(command);
         context.registerCollector(collector);

@@ -24,30 +24,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.maven;
+package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDProperties;
-import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool;
+import edu.montana.gsoc.msusel.arc.command.ArtifactIdentifierCommand;
+import edu.montana.gsoc.msusel.datamodel.parsers.JavaArtifactIdentifier;
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public class MavenTool extends CommandOnlyTool {
+public class JavaDirectoryIdentifier extends ArtifactIdentifierCommand {
 
-    private MavenCommand command;
-
-    public MavenTool(ArcContext context) {
-        super(context);
+    public JavaDirectoryIdentifier() {
+        super(JavaConstants.JAVA_DIR_IDENT_CMD_NAME);
     }
 
     @Override
-    public void init() {
-        command = MavenCommand.builder()
-                .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
-                .create();
+    public void execute(ArcContext context) {
+        context.logger().atInfo().log("Setting project paths");
+        JavaArtifactIdentifier jai = new JavaArtifactIdentifier(context.logger());
+        jai.setProj(context.getProject());
+        jai.setProjectPaths();
+    }
 
-        context.registerCommand(command);
+    @Override
+    public String getToolName() {
+        return JavaConstants.JAVA_DIR_IDENT_CMD_NAME;
     }
 }

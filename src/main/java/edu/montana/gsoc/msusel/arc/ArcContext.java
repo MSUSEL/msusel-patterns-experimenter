@@ -26,13 +26,19 @@
  */
 package edu.montana.gsoc.msusel.arc;
 
+import com.google.common.collect.Maps;
 import com.google.common.flogger.FluentLogger;
 import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.datamodel.util.DBManager;
+import edu.montana.gsoc.msusel.arc.db.DbProperties;
+import groovy.util.logging.Log4j2;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.flogger.Flogger;
 import lombok.extern.java.Log;
+import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -44,16 +50,21 @@ public class ArcContext {
     @Getter
     String language;
 
-    @Getter
+    @Getter @Setter
     Project project;
+
+    Map<String, Command> commandMap;
+    Map<String, Collector> collectorMap;
 
     @Setter
     private Properties arcProperties;
 
-    private FluentLogger logger;
+    Logger logger;
 
-    public ArcContext(FluentLogger logger) {
+    public ArcContext(Logger logger) {
         this.logger = logger;
+        commandMap = Maps.newHashMap();
+        collectorMap = Maps.newHashMap();
     }
 
     public String getArcProperty(String prop) {
@@ -65,10 +76,21 @@ public class ArcContext {
     }
 
     public void registerCommand(Command command) {
-
+        if (command != null)
+            commandMap.put(command.getToolName(), command);
     }
 
     public void registerCollector(Collector collector) {
+        if (collector != null)
+            collectorMap.put(collector.getName(), collector);
+    }
+
+    public Command getRegisteredCommand(String name) {
+        return commandMap.get(name);
+    }
+
+    public Collector getRegisteredCollector(String name) {
+        return collectorMap.get(name);
     }
 
     public void addArcProperty(String key, String value) {
@@ -80,10 +102,25 @@ public class ArcContext {
     }
 
     public String getProjectDirectory() {
-        return null;
+        if (project != null) {
+            return project.getFullPath();
+        } else {
+            return null;
+        }
     }
 
-    public FluentLogger logger() {
+    public Logger logger() {
         return logger;
+    }
+
+    public void open() {
+        DBManager.getInstance().open(getArcProperty(DbProperties.DB_DRIVER),
+                getArcProperty(DbProperties.DB_URL),
+                getArcProperty(DbProperties.DB_USER),
+                getArcProperty(DbProperties.DB_PASS));
+    }
+
+    public void close() {
+        DBManager.getInstance().close();
     }
 }

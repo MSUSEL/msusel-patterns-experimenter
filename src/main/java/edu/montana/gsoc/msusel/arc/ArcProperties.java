@@ -32,5 +32,7 @@ package edu.montana.gsoc.msusel.arc;
  */
 public interface ArcProperties {
 
-    String TOOL_OUTPUT_DIR = "tool.output.dir";
+    String TOOL_OUTPUT_DIR = "arc.tool.output.dir";
+    String BASE_DIRECTORY  = "arc.base.dir";
+    String ARC_HOME_DIR    = "arc.home.dir";
 }

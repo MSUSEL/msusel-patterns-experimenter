@@ -46,28 +46,27 @@ class Pattern4RepoProvider extends AbstractRepoProvider {
     }
 
     @Override
-    def loadData() {
+    void loadData() {
         config = new XmlSlurper()
                 .parseText(PMDRepoProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).getText('UTF-8'))
     }
 
     @Override
-    def updateDatabase() {
-        config.patterns.each {
-            createPatternRepo(it)
-        }
+    void updateDatabase() {
+        createPatternRepo(config)
     }
 
-    private void createPatternRepo(patterns) {
-        String repoName = patterns.@repo
-        String toolName = patterns.@tool
+    private void createPatternRepo(data) {
+        String repoName = data.@repo
+        String toolName = data.@tool
 
         PatternRepository repo = PatternRepository.findFirst("repoKey = ?", repoName)
-        if (!repo)
+        if (!repo) {
             PatternRepository.builder()
                     .name(repoName)
                     .key(repoName)
-                    .toolName(toolName)
+                    //.toolName(toolName)
                     .create()
+        }
     }
 }

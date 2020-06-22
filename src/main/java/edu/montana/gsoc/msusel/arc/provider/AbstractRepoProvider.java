@@ -34,7 +34,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext;
  */
 public abstract class AbstractRepoProvider implements RepoProvider {
 
-    ArcContext context;
+    protected ArcContext context;
 
     public AbstractRepoProvider(ArcContext context) {
         this.context = context;
@@ -42,9 +42,9 @@ public abstract class AbstractRepoProvider implements RepoProvider {
 
     @Override
     public void load() {
-        context.logger().atInfo().log("%s: loading data", this.getClass().getSimpleName());
+        context.logger().atInfo().log(String.format("%s: loading data", this.getClass().getSimpleName()));
         loadData();
-        context.logger().atInfo().log("%s: updating the database", this.getClass().getSimpleName());
+        context.logger().atInfo().log(String.format("%s: updating the database", this.getClass().getSimpleName()));
         updateDatabase();
     }
 }

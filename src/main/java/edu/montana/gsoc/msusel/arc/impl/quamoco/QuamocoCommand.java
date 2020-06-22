@@ -1,21 +1,21 @@
 /**
  * The MIT License (MIT)
- * <p>
+ *
  * MSUSEL Arc Framework
  * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
  * Software Engineering Laboratory and Idaho State University, Informatics and
  * Computer Science, Empirical Software Engineering Laboratory
- * <p>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * <p>
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,14 +35,12 @@ import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.FlowPhase;
 import edu.montana.gsoc.msusel.arc.anot.Phase;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
+import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
 import edu.montana.gsoc.msusel.quamoco.distiller.ModelDistiller;
 import edu.montana.gsoc.msusel.quamoco.distiller.ModelManager;
 import edu.montana.gsoc.msusel.quamoco.distiller.QuamocoContext;
 import edu.montana.gsoc.msusel.quamoco.graph.edge.Edge;
-import edu.montana.gsoc.msusel.quamoco.graph.node.FactorNode;
-import edu.montana.gsoc.msusel.quamoco.graph.node.Finding;
-import edu.montana.gsoc.msusel.quamoco.graph.node.FindingNode;
-import edu.montana.gsoc.msusel.quamoco.graph.node.Node;
+import edu.montana.gsoc.msusel.quamoco.graph.node.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,9 +71,13 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         loadConfig();
 
         QuamocoContext.instance().setProject(context.getProject());
+        QuamocoContext.instance().setMetricRepoKey("arc_metrics");
 
         // Build graph
         graph = buildGraph();
+
+        // Connect Values
+        //connectValues(); Not needed as these are all normalization measures and handled by the extents classes
 
         // Connect Issues
         connectFindings();
@@ -105,6 +107,25 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         context.logger().atInfo().log("Quamoco Processing Graph Created");
         return md.getGraph();
     }
+
+//    private void connectValues() {
+//        context.logger().atInfo().log("Connecting Values to Quamoco Processing Graph");
+//
+//        graph.nodes().forEach(node -> {
+//            if (node instanceof ValueNode) {
+//                ValueNode vn = (ValueNode) node;
+//
+//                MetricsRegistrar reg = MetricsRegistrar.instances.get(QuamocoContext.instance().getMetricRepoKey())
+//                String handle = reg.getHandle(vn.getMetric());
+//                String repo = QuamocoContext.instance().getMetricRepoKey();
+//
+//                List<Double> values = Measure.getAllClassValues(context.getProject(), repo, handle);
+//                values.forEach(vn::addValue);
+//            }
+//        });
+//
+//        context.logger().atInfo().log("Values connected to Quamoco Processing Graph");
+//    }
 
     private void connectFindings() {
         context.logger().atInfo().log("Connecting Findings to Quamoco Processing Graph");
@@ -171,7 +192,7 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
 
             props.forEach((key, value) -> context.addArcProperty((String) key, (String) value));
         } catch (Exception e) {
-            context.logger().atSevere().withCause(e).log(e.getMessage());
+            context.logger().atError().withThrowable(e).log(e.getMessage());
         }
         context.logger().atInfo().log("Finished Loading Quamoco Configuration");
     }

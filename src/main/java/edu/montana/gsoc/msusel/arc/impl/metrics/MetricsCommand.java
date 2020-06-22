@@ -43,11 +43,11 @@ public class MetricsCommand extends PrimaryAnalysisCommand {
     public void execute(ArcContext context) {
         ArcMetricsTool tool = new ArcMetricsTool(context);
 
-        context.logger().atInfo().log("Initializing Tool: %s", getToolName());
+        context.logger().atInfo().log(String.format("Initializing Tool: %s", getToolName()));
         tool.init();
 
-        context.logger().atInfo().log("Executing Tool: %s", getToolName());
+        context.logger().atInfo().log(String.format("Executing Tool: %s", getToolName()));
         tool.exec();
-        context.logger().atInfo().log("Execution Complete: %s", getToolName());
+        context.logger().atInfo().log(String.format("Execution Complete: %s", getToolName()));
     }
 }

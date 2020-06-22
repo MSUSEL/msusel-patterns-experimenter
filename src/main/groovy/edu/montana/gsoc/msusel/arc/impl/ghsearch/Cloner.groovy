@@ -1,8 +1,9 @@
 /**
  * The MIT License (MIT)
  *
- * ISUESE Repo Research Tools
- * Copyright (c) 2015-2019 Idaho State University, Informatics and
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
  * Computer Science, Empirical Software Engineering Laboratory
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

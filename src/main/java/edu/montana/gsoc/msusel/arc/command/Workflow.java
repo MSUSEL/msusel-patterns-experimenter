@@ -52,9 +52,9 @@ public class Workflow {
     public void execute() {
 
         for (Phase phase : phases) {
-            context.logger().atInfo().log("Starting phase: %s", phase.getName());
+            context.logger().atInfo().log(String.format("Starting phase: %s", phase.getName()));
             phase.execute();
-            context.logger().atInfo().log("Finished phase: %s", phase.getName());
+            context.logger().atInfo().log(String.format("Finished phase: %s", phase.getName()));
         }
     }
 }

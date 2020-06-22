@@ -1,17 +1,46 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
 ## Quamoco
 
 Java
 ---
-[X] #Statements
-[X] #FieldDeclarations
-[X] #Methods
-[X] #LocalVariableDeclarations
+[X] Java Basic Metrics -- #Statements
+[X] Java Basic Metrics -- #FieldDeclarations
+[X] Java Basic Metrics -- #Methods
+[X] Java Basic Metrics -- #LocalVariableDeclarations
+[X] Java Basic Metrics -- #Classes
+[X] Java Basic Metrics -- #Types
 
 Object
 ---
 [X] NOM
 [X] NOF
-[ ] NOV
+[X] NOV
 [X] NOS
 
 Root
@@ -45,3 +74,42 @@ Root
 [X] ANA
 
 Move all unneeded classes into a zip file backup and store in backup folder
+
+## Other - understand_java
+
+JavaDoc Analysis -- Insufficient Comment
+JavaDoc Analysis -- Missing Documentation
+Java Code Structure Analysis -- Overly Long File
+Java Code Structure Analysis -- NestingDepthExceeded
+Java Clone Detection -- Overhead -> Root:Cloning overhead
+Java Clone Detection -- UnitCoverage -> Root:Clone coverage
+
+## Other Findings
+
+### From object.qm
+Handled by FB: Mutable object declared as constant -- Check if there are constant fields that refer to arrays. Despite the constant declaration, the referenced array could be modified.
+Handled by FB: Non constant and static -- This rule warns if a non-constant public static field is found. In a multi-threaded environment access to those fields must be synchronized.
+Handled by PMD: Statically unused -- A method parameter is unused, if its value is never accessed.
+Handled by PMD: Statically unused -- Checks whether a private method is unused.
+Handled by PMD: Statically unused -- Checks whether a private field is unused.
+
+
+### Root - Manual
+Proportion of misspelled and cryptic identifiers
+Proportion of statically unused non-private subroutines
+Proportion of missing or incomplete comments
+Proportion of helpful comments
+Proportion of meaningless and misleading identifiers
+Proportion of identifiers in default language
+Proportion of identifiers that are synonyms
+Proportion of outdated comments
+
+### Root
+Encoding Check -- Invalid Character
+Language Count -- Number of different natural languages in comments
+
+## Rule Repositories
+findsecbugs
+fb-contrib
+findbugs
+pmd

@@ -24,7 +24,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.gradle;
+package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
@@ -38,43 +38,40 @@ import java.nio.file.Paths;
  * @author Isaac Griffith
  * @version 1.3.0
  */
-public class GradleCommand extends ToolCommand {
+public class MavenCommand extends ToolCommand {
 
     @Builder(buildMethodName = "create")
-    public GradleCommand(String toolHome) {
-        super(GradleConstants.GRADLE_CMD_NAME, toolHome, null);
+    public MavenCommand(String toolHome) {
+        super(MavenConstants.MVN_CMD_NAME, toolHome, null);
     }
 
     @Override
     public boolean isRequirementsMet() {
-        Path bg = Paths.get(projectBaseDirectory, "build.gradle");
-        Path gw = Paths.get(projectBaseDirectory, "gradlew");
-        boolean executable = Files.isExecutable(gw);
-        return Files.exists(bg) && Files.exists(gw) && executable;
+        Path pom = Paths.get(projectBaseDirectory, "pom.xml"); // FIXME
+        return Files.exists(pom);
     }
 
     @Override
     public CommandLine buildCommandLine() {
-        CommandLine cmdLine = new CommandLine("./gradlew")
+        return new CommandLine("mvn")
                 .addArgument("clean")
                 .addArgument("compile")
-                .addArgument("package");
-
-        return cmdLine;
+                .addArgument("package")
+                .addArgument("-Dmaven.test.skip=true");
     }
 
     @Override
-    protected void updateCollector() {
+    public void updateCollector() {
 
     }
 
     @Override
-    protected int getExpectedExitValue() {
-        return GradleConstants.GRADLE_CMD_EXIT_VALUE;
+    public int getExpectedExitValue() {
+        return MavenConstants.MVN_CMD_EXIT_VALUE;
     }
 
     @Override
     public String getToolName() {
-        return GradleConstants.GRADLE_CMD_NAME;
+        return MavenConstants.MVN_CMD_NAME;
     }
 }

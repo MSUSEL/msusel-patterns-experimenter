@@ -28,8 +28,7 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.ArtifactIdentifierCommand;
-import edu.montana.gsoc.msusel.datamodel.parsers.JavaArtifactIdentifier;
-import edu.montana.gsoc.msusel.datamodel.parsers.JavaModelBuilder;
+import edu.montana.gsoc.msusel.datamodel.parsers.JavaDirector;
 
 /**
  * @author Isaac Griffith
@@ -44,8 +43,8 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
     @Override
     public void execute(ArcContext context) {
         context.logger().atInfo().log("Java Artifact Identification Started");
-        JavaModelBuilder builder = new JavaModelBuilder(context.logger());
-        builder.build(context.getProject(), context.getProjectDirectory());
+        JavaDirector director = new JavaDirector(context.getProject(), context.logger());
+        director.build(context.getProject().getFullPath());
         context.logger().atInfo().log("Java Artifact Identification Complete");
     }
 

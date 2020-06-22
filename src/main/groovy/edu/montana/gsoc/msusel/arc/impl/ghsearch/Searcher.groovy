@@ -1,8 +1,9 @@
 /**
  * The MIT License (MIT)
  *
- * ISUESE Repo Research Tools
- * Copyright (c) 2015-2019 Idaho State University, Informatics and
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
  * Computer Science, Empirical Software Engineering Laboratory
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -192,10 +193,8 @@ class Searcher implements CLIProcessor {
         json = json.substring(0, json.length() - 1)
         json += "}"
 
-        try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(p, StandardCharsets.UTF_8))) {
+        p.toFile().withWriter { pw ->
             pw.println(json)
-        } catch (IOException e) {
-            e.printStackTrace()
         }
     }
 }

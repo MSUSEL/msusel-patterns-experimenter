@@ -24,53 +24,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.findbugs;
+package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
-import edu.montana.gsoc.msusel.arc.command.CommandUtils;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public class FindBugsCommand extends ToolCommand {
+import java.io.File;
 
-    FindBugsTool owner;
+public class JavaBuildCommand extends ToolCommand {
+
+    ToolCommand command;
+    ToolCommand gradleCmd;
+    ToolCommand mavenCmd;
+    ToolCommand basicJavaCmd;
 
     @Builder(buildMethodName = "create")
-    public FindBugsCommand(FindBugsTool owner, String toolHome, String reportFile) {
-        super(FindBugsConstants.FB_CMD_NAME, toolHome, reportFile);
-        this.owner = owner;
+    public JavaBuildCommand() {
+        super(JavaConstants.JAVA_BUILD_CMD_NAME, null, null);
+
+        gradleCmd = GradleCommand.builder().create();
+        mavenCmd = MavenCommand.builder().create();
+        basicJavaCmd = BasicJavaCommand.builder().create();
+    }
+
+    private void selectCommand() {
+        String projDir = context.getProjectDirectory();
+        File dir = new File(projDir);
+        File gradle = new File(dir, "build.gradle");
+        File maven = new File(dir, "pom.xml");
+        if (gradle.exists()) {
+            command = gradleCmd;
+        } else if (maven.exists()) {
+            command = mavenCmd;
+        } else {
+            command = basicJavaCmd;
+        }
     }
 
     @Override
     public boolean isRequirementsMet() {
-        return CommandUtils.verifyFileExists(toolHome, "lib/spotbugs.jar");
+        return true;
     }
 
     @Override
     public CommandLine buildCommandLine() {
-        return new CommandLine("java")
-            .addArgument("-jar")
-            .addArgument(CommandUtils.normalizePathString(toolHome) + "lib/spotbugs.jar")
-            .addArgument("-projectName")
-            .addArgument(projectName)
-            .addArgument("-effort:default")
-            .addArgument("-xml")
-            .addArgument("-output")
-            .addArgument(reportFile)
-            .addArgument(binaryDirectory);
+        selectCommand();
+
+        command.setSourceDirectory(context.getProject().getModules().get(0).getSrcPath());
+        command.setBinaryDirectory(context.getProject().getModules().get(0).getBinaryPath());
+        command.setProjectBaseDirectory(context.getProjectDirectory());
+        command.setProjectName(context.getProject().getName());
+
+        return command.buildCommandLine();
     }
 
     @Override
     public void updateCollector() {
-        owner.collector.setResultsFile(reportFile);
+        command.updateCollector();
     }
 
     @Override
     public int getExpectedExitValue() {
-        return FindBugsConstants.FB_CMD_EXIT_VALUE;
+        return command.getExpectedExitValue();
     }
 }

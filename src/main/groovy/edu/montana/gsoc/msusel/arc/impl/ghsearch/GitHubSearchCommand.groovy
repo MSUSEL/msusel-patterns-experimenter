@@ -1,8 +1,9 @@
 /**
  * The MIT License (MIT)
  *
- * ISUESE Repo Research Tools
- * Copyright (c) 2015-2019 Idaho State University, Informatics and
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
  * Computer Science, Empirical Software Engineering Laboratory
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -41,12 +42,16 @@ package edu.montana.gsoc.msusel.arc.impl.ghsearch
 
 import com.google.common.collect.Lists
 import com.google.common.flogger.StackSize
+import edu.isu.isuese.datamodel.Module
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.SCM
 import edu.isu.isuese.datamodel.SCMType
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.ArcProperties
+import edu.montana.gsoc.msusel.arc.command.CommandUtils
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand
+import groovyx.gpars.GParsPool
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHTag
 import org.kohsuke.github.GitHub
@@ -69,6 +74,7 @@ class GitHubSearchCommand extends RepositoryCommand {
 
     @Override
     void execute(ArcContext context) {
+        this.context = context
         context.logger().atInfo().log("Searching GitHub for projects")
 
         authenticate()
@@ -96,15 +102,16 @@ class GitHubSearchCommand extends RepositoryCommand {
 
     List<System> findProjects() {
         context.logger().atInfo().log("Searching...")
+        int maxSys = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_SYS))
         int maxProj = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_PROJ))
         int minSize = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MIN_SIZE))
         int maxSize = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_SIZE))
         int minStars = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MIN_STARS))
         int minTags = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MIN_TAGS))
 
-        final int[] numProj = {0}
-
         List<System> systems = Lists.newCopyOnWriteArrayList()
+
+        int numSys = 0
 
         if (github != null) {
             PagedSearchIterable<GHRepository> repos = github.searchRepositories()
@@ -119,42 +126,62 @@ class GitHubSearchCommand extends RepositoryCommand {
                     try {
                         List<GHTag> tags = repo.listTags().withPageSize(10).asList()
                         if (tags.size() >= minTags) {
-                            System sys = System.builder()
-                                    .name(repo.getName())
-                                    .key(repo.getName())
-                                    .create()
-                            sys.saveIt()
-                            systems.add(sys)
-
-                            tags.forEach(tag -> {
-                                Project p = Project.builder()
+                            if (!System.findFirst("sysKey = ?", repo.getName())) {
+                                System sys = System.builder()
                                         .name(repo.getName())
-                                        .version(tag.getName())
-                                        .projKey(repo.getName() + ":" + tag.getName())
+                                        .key(repo.getName())
+                                        .basePath(CommandUtils.normalizePathString(context.getArcProperty(ArcProperties.BASE_DIRECTORY)) + repo.getName())
                                         .create()
-                                p.saveIt()
-                                sys.addProject(p)
-                                numProj[0] += 1
+                                sys.saveIt()
+                                systems.add(sys)
 
-                                SCM scm = SCM.builder()
-                                        .name(repo.getName())
-                                        .url(repo.getHtmlUrl().toString())
-                                        .type(SCMType.GIT)
-                                        .tag(tag.getName())
-                                        .create()
-                                scm.saveIt()
-                                p.addSCM(scm)
-                            })
+                                numSys += 1
+                                int numProj = 0
+                                for(GHTag tag : tags) {
+                                    Project p = Project.builder()
+                                            .name(repo.getName())
+                                            .version(tag.getName())
+                                            .projKey(repo.getName() + ":" + tag.getName())
+                                            .relPath(tag.getName())
+                                            .create()
+                                    p.saveIt()
+                                    sys.addProject(p)
+                                    numProj += 1
+
+                                    context.logger().atInfo().log("Found Project: " + p.getProjectKey())
+
+                                    SCM scm = SCM.builder()
+                                            .name(repo.getName())
+                                            .url(repo.getHtmlUrl().toString())
+                                            .type(SCMType.GIT)
+                                            .tag(tag.getName())
+                                            .create()
+                                    scm.saveIt()
+                                    p.addSCM(scm)
+
+                                    Module mod = Module.builder()
+                                            .name("default")
+                                            .relPath("")
+                                            .moduleKey("default")
+                                            .create()
+
+                                    p.addModule(mod)
+
+                                    if (numProj >= maxProj)
+                                        break
+                                }
+
+                                if (numSys >= maxSys)
+                                    break
+                            }
                         }
-                        if (numProj[0] > maxProj)
-                            break
                     } catch (IOException e) {
                         e.printStackTrace()
                     }
                 }
             }
 
-            context.logger().atInfo().log("Repos Found: %d", numProj[0])
+            context.logger().atInfo().log(String.format("Repos Found: %d", numSys))
         }
 
         return systems

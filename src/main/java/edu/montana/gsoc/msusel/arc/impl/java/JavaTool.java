@@ -42,5 +42,6 @@ public class JavaTool extends CommandOnlyTool {
     @Override
     public void init() {
         context.registerCommand(new JavaAICommand());
+        context.registerCommand(new JavaBuildCommand());
     }
 }

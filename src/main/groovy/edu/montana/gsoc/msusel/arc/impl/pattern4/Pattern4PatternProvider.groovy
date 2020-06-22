@@ -1,3 +1,29 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package edu.montana.gsoc.msusel.arc.impl.pattern4
 
 import com.google.common.collect.HashBasedTable
@@ -9,6 +35,7 @@ import edu.isu.isuese.datamodel.RoleType
 import edu.montana.gsoc.msusel.arc.provider.AbstractPatternProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.xml.XmlSlurper
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -27,15 +54,13 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
     @Override
     void loadData() {
         def slurper = new XmlSlurper()
-        data = slurper.parseText(Pattern4PatternProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).text)
+        data = slurper.parseText(Pattern4PatternProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).getText("UTF-8"))
     }
 
     @Override
     void updateDatabase() {
-        data.patterns.each {
-            repository = findPatternRepo(data.patterns)
-            createPatterns(data.patterns.pattern)
-        }
+        repository = findPatternRepo(data)
+        createPatterns(data)
     }
 
     String rbmlNameFor(String pattern4Name) {
@@ -46,20 +71,27 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
         return rolePattern4Rbml.get(patternName, pattern4Name)
     }
 
-    PatternRepository findPatternRepo(patterns) {
-        String repoName = patterns.@repo
+    PatternRepository findPatternRepo(data) {
+        String repoName = data.@repo
 
         PatternRepository.findFirst("repoKey = ?", repoName)
     }
 
-    void createPatterns(patterns) {
-        patterns.each {
+    void createPatterns(data) {
+        data.pattern.each {
             String name = it.@gofName
             String pattern4Name = it.@pattern4Name
+            String family = it.@family
 
-            Pattern pattern = repository.getPatterns().find { p -> p.name == name }
+            println "Pattern Name: $name"
+
+            Pattern pattern = Pattern.findFirst("patternKey = ?", repository.getRepoKey() + ":" + name)
             if (!pattern) {
-                pattern = Pattern.builder().name(name).key("${repository.getRepoKey()}:$name").create()
+                pattern = Pattern.builder()
+                        .name(name)
+                        .key("${repository.getRepoKey()}:$name")
+                        .family(family)
+                        .create()
                 repository.addPattern(pattern)
             }
 
@@ -75,7 +107,7 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
             String rbmlName = it.@rbmlName
             String pattern4Name = it.@pattern4Name
             String type = it.@elementType
-            boolean mand = Boolean.parseBoolean(it.@mandatory)
+            boolean mand = Boolean.parseBoolean((String) it.@mandatory)
 
             Role role = pattern.getRoles().find { r -> r.getName() == rbmlName }
             if (!role) {
@@ -94,7 +126,7 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
     }
 
     RoleType roleTypeFromElementType(String elementType) {
-        switch(elementType) {
+        switch (elementType) {
             case "CLASS": return RoleType.CLASSIFIER
             case "FIELD": return RoleType.STRUCT_FEAT
             case "METHOD": return RoleType.BEHAVE_FEAT

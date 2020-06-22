@@ -1,5 +1,5 @@
 <patterns repo="gof" tool="pattern4">
-    <pattern gofName="Abstract Factory">
+    <pattern gofName="Abstract Factory" family="Creational">
         <role rbmlName="AbstractFactory" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteFactory" elementType="CLASS" mandatory="true"/>
         <role rbmlName="CreateProduct()" elementType="METHOD" mandatory="true"/>
@@ -8,7 +8,7 @@
         <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
     </pattern>
     <!-- Review Adapter RBML this -->
-    <pattern gofName="Adapter" pattern4Name="(Object)Adapter">
+    <pattern gofName="Adapter" pattern4Name="(Object)Adapter" family="Structural">
         <role rbmlName="Adaptee" pattern4Name="Adaptee" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Adapter" pattern4Name="Adapter" elementType="CLASS" mandatory="true"/>
         <role rbmlName="targ" pattern4Name="adaptee" elementType="FIELD" mandatory="true"/>
@@ -18,7 +18,7 @@
         <role rbmlName="TargetRequest()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
     </pattern>
-    <pattern gofName="Bridge" pattern4Name="Bridge">
+    <pattern gofName="Bridge" pattern4Name="Bridge" family="Structural">
         <role rbmlName="ConcreteImplementor" pattern4Name="Implementor" elementType="CLASS" mandatory="true"/>
         <role rbmlName="AbstractImplementor" elementType="CLASS" mandatory="false"/>
         <role rbmlName="ConcreteAbstraction" pattern4Name="Abstraction" elementType="CLASS" mandatory="true"/>
@@ -26,7 +26,7 @@
         <role rbmlName="imp" pattern4Name="implementor" elementType="FIELD" mandatory="true"/>
         <role rbmlName="Operation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Builder">
+    <pattern gofName="Builder" family="Creational">
         <role rbmlName="ConcreteBuilder" elementType="CLASS" mandatory="true"/>
         <role rbmlName="AbstractBuilder" elementType="CLASS" mandatory="false"/>
         <role rbmlName="BuildPart()" elementType="METHOD" mandatory="true"/>
@@ -37,14 +37,14 @@
         <role rbmlName="Construct()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="build" elementType="FIELD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Chain of Responsibility" pattern4Name="Chain of Responsibility">
+    <pattern gofName="Chain of Responsibility" pattern4Name="Chain of Responsibility" family="Behavioral">
         <role rbmlName="ConcreteHandler" pattern4Name="Handler" elementType="CLASS" mandatory="true"/>
         <role rbmlName="AbstractHandler" elementType="CLASS" mandatory="false"/>
         <role rbmlName="succ" pattern4Name="successor" elementType="FIELD" mandatory="true"/>
         <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
         <role rbmlName="hand" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Command" pattern4Name="Command">
+    <pattern gofName="Command" pattern4Name="Command" family="Behavioral">
         <role rbmlName="ConcreteCommand" pattern4Name="Adapter/ConcreteCommand" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Receiver" pattern4Name="Adaptee/Receiver" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Execute()" pattern4Name="Request()/Execute()" elementType="METHOD" mandatory="true"/>
@@ -57,7 +57,7 @@
         <role rbmlName="c" elementType="FIELD" mandatory="false"/>
     </pattern>
     <!-- Review RBML -->
-    <pattern gofName="Composite" pattern4Name="Composite">
+    <pattern gofName="Composite" pattern4Name="Composite" family="Structural">
         <role rbmlName="Leaf" pattern4Name="Component" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteComposite" pattern4Name="Composite" elementType="CLASS" mandatory="true"/>
         <role rbmlName="LeafOperation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
@@ -68,7 +68,7 @@
         <role rbmlName="children" elementType="FIELD" mandatory="false"/>
     </pattern>
     <!-- Fix RBML behaviors and state are defined incorrectly -->
-    <pattern gofName="Decorator" pattern4Name="Decorator">
+    <pattern gofName="Decorator" pattern4Name="Decorator" family="Structural">
         <role rbmlName="ConcreteComponent" pattern4Name="Component" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteDecorator" pattern4Name="Decorator" elementType="CLASS" mandatory="true"/>
         <role rbmlName="absComp" pattern4Name="component" elementType="FIELD" mandatory="true"/>
@@ -77,19 +77,19 @@
         <role rbmlName="addedState" elementType="FIELD" mandatory="false"/>
         <role rbmlName="AddedBehavior()" elementType="METHOD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Facade">
+    <pattern gofName="Facade" family="Structural">
         <role rbmlName="Facade" elementType="CLASS" mandatory="true"/>
         <role rbmlName="SystemClass" elementType="CLASS" mandatory="true"/>
         <role rbmlName="sys" elementType="FIELD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Factory Method" pattern4Name="Factory Method">
+    <pattern gofName="Factory Method" pattern4Name="Factory Method" family="Creational">
         <role rbmlName="ConcreteCreator" pattern4Name="Creator" elementType="CLASS" mandatory="true"/>
         <role rbmlName="FactoryMethod()" pattern4Name="FactoryMethod()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractCreator" elementType="CLASS" mandatory="false"/>
         <role rbmlName="AbstractProduct" elementType="CLASS" mandatory="false"/>
         <role rbmlName="ConcreteProduct" elementType="CLASS" mandatory="false"/>
     </pattern>
-    <pattern gofName="Flyweight">
+    <pattern gofName="Flyweight" family="Structural">
         <role rbmlName="ConcreteFlyweight" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Operation()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractFlyweight" elementType="CLASS" mandatory="false"/>
@@ -101,7 +101,7 @@
         <role rbmlName="cfw" elementType="FIELD" mandatory="true"/>
         <role rbmlName="ufw" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Interpreter">
+    <pattern gofName="Interpreter" family="Behavioral">
         <role rbmlName="ConcreteTerminalExpr" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Interpret()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractTerminalExpr" elementType="CLASS" mandatory="false"/>
@@ -112,7 +112,7 @@
         <role rbmlName="ex" elementType="FIELD" mandatory="false"/>
         <role rbmlName="con" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Iterator">
+    <pattern gofName="Iterator" family="Behavioral">
         <role rbmlName="Item" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteAggregate" elementType="CLASS" mandatory="true"/>
         <role rbmlName="AbstractAggregate" elementType="CLASS" mandatory="false"/>
@@ -127,7 +127,7 @@
         <role rbmlName="iter" elementType="FIELD" mandatory="true"/>
         <role rbmlName="itm" elementType="FIELD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Mediator">
+    <pattern gofName="Mediator" family="Behavioral">
         <role rbmlName="ConcreteMediator" elementType="CLASS" mandatory="true"/>
         <role rbmlName="AbstractMediator" elementType="CLASS" mandatory="false"/>
         <role rbmlName="ConcreteColleague" elementType="CLASS" mandatory="true"/>
@@ -135,7 +135,7 @@
         <role rbmlName="col" elementType="FIELD" mandatory="true"/>
         <role rbmlName="cm" elementType="FIELD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Memento">
+    <pattern gofName="Memento" family="Behavioral">
         <role rbmlName="Originator" elementType="CLASS" mandatory="true"/>
         <role rbmlName="SetMemento()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="CreateMemento()" elementType="METHOD" mandatory="true"/>
@@ -146,7 +146,7 @@
         <role rbmlName="CareTaker" elementType="CLASS" mandatory="false"/>
         <role rbmlName="memento" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Observer" pattern4Name="Observer">
+    <pattern gofName="Observer" pattern4Name="Observer" family="Behavioral">
         <role rbmlName="ConcreteSubject" pattern4Name="Subject" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteObserver" pattern4Name="Observer" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Notify()" pattern4Name="Notify()" elementType="METHOD" mandatory="true"/>
@@ -161,7 +161,7 @@
         <role rbmlName="observerState" elementType="FIELD" mandatory="false"/>
         <role rbmlName="obs" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Prototype" pattern4Name="Prototype">
+    <pattern gofName="Prototype" pattern4Name="Prototype" family="Creational">
         <role rbmlName="ConcretePrototype" pattern4Name="Prototype" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Client" pattern4Name="Client" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Operation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
@@ -170,19 +170,19 @@
         <role rbmlName="proto" elementType="FIELD" mandatory="false"/>
     </pattern>
     <!-- Missing RBML for Proxy? -->
-    <pattern gofName="Proxy" pattern4Name="Proxy">
+    <pattern gofName="Proxy" pattern4Name="Proxy" family="Structural">
         <role rbmlName="" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
         <role rbmlName="" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
         <role rbmlName="" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Proxy2" pattern4Name="Proxy2">
+    <pattern gofName="Proxy2" pattern4Name="Proxy2" family="Structural">
         <role rbmlName="" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
         <role rbmlName="" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
         <role rbmlName="" pattern4Name="Subject" elementType="CLASS" mandatory="true"/>
         <role rbmlName="" pattern4Name="subject" elementType="FIELD" mandatory="true"/>
         <role rbmlName="" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
     </pattern>
-    <pattern gofName="Singleton" pattern4Name="Singleton">
+    <pattern gofName="Singleton" pattern4Name="Singleton" family="Creational">
         <role rbmlName="ConcreteSingleton" pattern4Name="Singleton" elementType="CLASS" mandatory="true"/>
         <role rbmlName="uniqueInstance" pattern4Name="uniqueInstance" elementType="FIELD" mandatory="true"/>
         <role rbmlName="AbstractSingleton" elementType="CLASS" mandatory="false"/>
@@ -191,7 +191,7 @@
         <role rbmlName="GetData()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="singletonData" elementType="FIELD" mandatory="false"/>
     </pattern>
-    <pattern gofName="State" pattern4Name="State">
+    <pattern gofName="State" pattern4Name="State" family="Behavioral">
         <role rbmlName="Context" pattern4Name="Context" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteState" pattern4Name="State" elementType="CLASS" mandatory="true"/>
         <role rbmlName="currentState" pattern4Name="state" elementType="FIELD" mandatory="true"/>
@@ -199,7 +199,7 @@
         <role rbmlName="AbstractState" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Handle()" elementType="METHOD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Strategy" pattern4Name="Strategy">
+    <pattern gofName="Strategy" pattern4Name="Strategy" family="Behavioral">
         <role rbmlName="ConcreteStrategy" pattern4Name="Strategy" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Context" pattern4Name="Context" elementType="CLASS" mandatory="true"/>
         <role rbmlName="strat" pattern4Name="strategy" elementType="FIELD" mandatory="true"/>
@@ -210,13 +210,13 @@
         <role rbmlName="StrategyOp()" elementType="METHOD" mandatory="false"/>
     </pattern>
     <!-- Fix operation definitions in RBML -->
-    <pattern gofName="Template Method" pattern4Name="Template Method">
+    <pattern gofName="Template Method" pattern4Name="Template Method" family="Behavioral">
         <role rbmlName="AbstractTemplate" pattern4Name="AbstractClass" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Operation()" pattern4Name="TemplateMethod()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="ConcreteTemplate" elementType="CLASS" mandatory="false"/>
         <role rbmlName="PrimitiveOp()" elementType="METHOD" mandatory="false"/>
     </pattern>
-    <pattern gofName="Visitor" pattern4Name="Visitor">
+    <pattern gofName="Visitor" pattern4Name="Visitor" family="Behavioral">
         <role rbmlName="ConcreteVisitor" pattern4Name="Visitor" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteElement" pattern4Name="ConcreteElement" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Accept()" pattern4Name="Accept()" elementType="METHOD" mandatory="true"/>

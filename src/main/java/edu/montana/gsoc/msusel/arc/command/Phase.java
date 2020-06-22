@@ -45,17 +45,18 @@ import java.util.List;
 public class Phase {
 
     @Singular
-    private List<Command> commands;
+    private List<String> commands;
     @Getter
     private String name;
     private ArcContext context;
 
     public void execute() {
 
-        for (Command cmd : commands) {
-            context.logger().atInfo().log("Starting %s command:", cmd.getToolName());
-            //cmd.execute();
-            context.logger().atInfo().log("Finished %s command.", cmd.getToolName());
+        for (String cmdName : commands) {
+            context.logger().atInfo().log(String.format("Starting %s command:", cmdName));
+            Command cmd = context.getRegisteredCommand(cmdName);
+            cmd.execute(context);
+            context.logger().atInfo().log(String.format("Finished %s command.", cmdName));
         }
     }
 

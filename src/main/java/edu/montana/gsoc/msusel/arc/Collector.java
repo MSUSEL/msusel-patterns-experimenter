@@ -31,4 +31,8 @@ package edu.montana.gsoc.msusel.arc;
  * @version 1.3.0
  */
 public interface Collector {
+
+    String getName();
+
+    void execute(ArcContext ctx);
 }

@@ -63,9 +63,9 @@ class Pattern4Collector extends FileCollector {
         Project proj = (Project) xstream.fromXML(new File(this.resultsFile))
 
         // for each pattern instance's roles we need to modify the key to be consistent with the current keying scheme
-        proj.getPatterns().forEach(pattern -> {
-            pattern.getInstances().forEach(instance -> {
-                instance.getRoles().forEach(role -> {
+        proj.getPatterns().each {pattern ->
+            pattern.getInstances().each {instance ->
+                instance.getRoles().each {role ->
                     String name = role.getElement()
 
                     def group = ((String) it =~ /((\w+\b\.)+)((\w+)(\$(\w+))?)((::)?)((\w+)\(.*\))?/)
@@ -78,10 +78,10 @@ class Pattern4Collector extends FileCollector {
                         println "Method Name: ${group[0][10]}"
                     }
 
-                    mediator.findComponentByName(name)
-                })
-            })
-        })
+                    //mediator.findComponentByName(name) FIXME
+                }
+            }
+        }
 
         context.logger().atInfo().log("Finished Collecting Pattern4 reported patterns.")
     }

@@ -70,12 +70,12 @@ public class PMDCommand extends ToolCommand {
     }
 
     @Override
-    protected void updateCollector() {
+    public void updateCollector() {
         owner.collector.setResultsFile(reportFile);
     }
 
     @Override
-    protected int getExpectedExitValue() {
+    public int getExpectedExitValue() {
         return PMDConstants.PMD_CMD_EXIT_VALUE;
     }
 }

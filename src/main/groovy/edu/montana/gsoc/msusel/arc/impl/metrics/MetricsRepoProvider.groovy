@@ -42,11 +42,11 @@ class MetricsRepoProvider extends AbstractRepoProvider {
     }
 
     @Override
-    def loadData() {
+    void loadData() {
     }
 
     @Override
-    def updateDatabase() {
+    void updateDatabase() {
         MetricRepository.findOrCreateIt("repoKey", MetricsConstants.METRICS_REPO_KEY, "name", MetricsConstants.METRICS_REPO_NAME, "toolName", MetricsConstants.METRICS_TOOL_NAME)
     }
 }

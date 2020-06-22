@@ -78,7 +78,7 @@ public class PMDCollector extends FileCollector {
                 })
             );
         } catch (JAXBException e) {
-            ctx.logger().atSevere().withCause(e).withStackTrace(StackSize.MEDIUM).log(e.getMessage());
+            ctx.logger().atError().withThrowable(e).log(e.getMessage());
         }
 
         ctx.logger().atInfo().log("Finished Collecting PMD Results");

@@ -24,18 +24,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patterns;
+package edu.montana.gsoc.msusel.arc.impl.java;
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public interface ArcPatternConstants {
+import edu.isu.isuese.datamodel.File;
+import edu.isu.isuese.datamodel.FileType;
+import edu.montana.gsoc.msusel.arc.ArcContext;
+import edu.montana.gsoc.msusel.arc.command.ToolCommand;
+import lombok.Builder;
+import org.apache.commons.exec.CommandLine;
 
-    String PATTERN_SIZE_CMD_NAME     = "Pattern Size Detector";
-    String PATTERN_SIZE_REPO_KEY     = "isuese:pattern-size";
-    String PATTERN_SIZE_REPO_NAME    = "ISUESE Pattern Size Metric";
+import java.util.List;
 
-    String PATTERN_CHAIN_CMD_NAME    = "Pattern Chain Detector";
-    String PATTERN_COALESCE_CMD_NAME = "Pattern Coalescence Detector";
+public class BasicJavaCommand extends ToolCommand {
+
+    ArcContext context;
+
+    @Builder(buildMethodName = "create")
+    public BasicJavaCommand() {
+        super("JavaC", "", "");
+    }
+
+    @Override
+    public boolean isRequirementsMet() {
+        return true;
+    }
+
+    @Override
+    public CommandLine buildCommandLine() {
+        CommandLine cmdLine = new CommandLine("javac");
+        List<File> files = context.getProject().getFilesByType(FileType.SOURCE);
+        files.forEach(file -> cmdLine.addArgument(file.getName()));
+
+        return cmdLine;
+    }
+
+    @Override
+    public void updateCollector() {
+
+    }
+
+    @Override
+    public int getExpectedExitValue() {
+        return 0;
+    }
 }

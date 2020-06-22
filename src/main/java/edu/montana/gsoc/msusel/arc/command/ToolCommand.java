@@ -58,6 +58,7 @@ public abstract class ToolCommand implements Command {
     protected String binaryDirectory;
     @Setter
     protected String projectBaseDirectory;
+    protected ArcContext context;
 
     public ToolCommand(String toolName, String toolHome, String reportFile) {
         this.toolName = toolName;
@@ -66,6 +67,7 @@ public abstract class ToolCommand implements Command {
     }
 
     public void execute(ArcContext context) {
+        this.context = context;
         context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
 
         this.sourceDirectory = context.getProject().getModules().get(0).getSrcPath();
@@ -87,11 +89,11 @@ public abstract class ToolCommand implements Command {
 
     public abstract boolean isRequirementsMet();
 
-    protected abstract CommandLine buildCommandLine();
+    public abstract CommandLine buildCommandLine();
 
-    protected abstract void updateCollector();
+    public abstract void updateCollector();
 
-    protected abstract int getExpectedExitValue();
+    public abstract int getExpectedExitValue();
 
     private void executeCmdLine(CommandLine cmdLine, int expectedExitValue) {
         DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();

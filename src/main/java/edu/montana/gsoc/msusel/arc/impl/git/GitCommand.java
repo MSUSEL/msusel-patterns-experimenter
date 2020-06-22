@@ -74,7 +74,7 @@ public class GitCommand extends RepositoryCommand {
         this.context = context;
         if (context != null) {
             this.project = context.getProject();
-            this.repoDir = context.getProjectDirectory();
+            this.repoDir = context.getProject().getFullPath();
             this.username = context.getArcProperty(GitProperties.GIT_USERNAME);
             this.password = context.getArcProperty(GitProperties.GIT_PASSWORD);
         }
@@ -90,15 +90,13 @@ public class GitCommand extends RepositoryCommand {
             assert git != null;
 
             if (tag != null && !tag.isEmpty()) {
-                assert context != null;
                 context.logger().atInfo().log("Checking out Tag");
-                git.checkout().setName(tag).call();
+                git.checkout().setName("refs/tags/" + tag).call();
             }
 
             closeRepository(git);
         } catch (GitAPIException | IOException e) {
-            assert context != null;
-            context.logger().atSevere().withCause(e).log(e.getMessage());
+            context.logger().atError().withThrowable(e).log(e.getMessage());
         }
         context.logger().atInfo().log("Git execution complete");
     }
@@ -110,13 +108,20 @@ public class GitCommand extends RepositoryCommand {
 
     private Git cloneRepository() throws GitAPIException {
         context.logger().atInfo().log("Cloning Repo");
-        Git git = Git.cloneRepository()
+        context.logger().atInfo().log("Project: " + project.getProjectKey());
+        context.logger().atInfo().log("Git URL: " + project.getSCM(SCMType.GIT).getURL());
+        context.logger().atInfo().log("Project Path: " + project.getFullPath());
+        File file = new File(project.getFullPath());
+        if (!file.exists()) {
+            file.mkdirs();
+            file.mkdir();
+        }
+
+        return Git.cloneRepository()
                 .setURI(project.getSCM(SCMType.GIT).getURL())
-                .setDirectory(new File(repoDir))
+                .setDirectory(new File(project.getFullPath()))
                 .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
                 .call();
-
-        return git;
     }
 
     private Git openRepository() throws IOException {

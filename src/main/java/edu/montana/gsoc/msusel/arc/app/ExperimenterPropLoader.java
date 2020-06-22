@@ -49,10 +49,10 @@ public class ExperimenterPropLoader {
             try (BufferedReader br = Files.newBufferedReader(p)) {
                 prop.load(br);
             } catch (IOException e) {
-                log.error("Could not load Experimenter Properties file");
+                //log.error("Could not load Experimenter Properties file");
             }
         } else {
-            log.warn("Could not find Experiment propertes in directory: " + p.toString());
+            //log.warn("Could not find Experiment propertes in directory: " + p.toString());
         }
 
         return prop;
