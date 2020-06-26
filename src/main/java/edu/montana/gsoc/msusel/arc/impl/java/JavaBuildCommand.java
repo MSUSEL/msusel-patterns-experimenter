@@ -50,6 +50,7 @@ public class JavaBuildCommand extends ToolCommand {
 
     private void selectCommand() {
         String projDir = context.getProjectDirectory();
+        context.logger().atInfo().log("Project Directory: " + projDir);
         File dir = new File(projDir);
         File gradle = new File(dir, "build.gradle");
         File maven = new File(dir, "pom.xml");

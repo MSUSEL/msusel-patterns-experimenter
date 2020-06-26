@@ -43,5 +43,6 @@ public class JavaTool extends CommandOnlyTool {
     public void init() {
         context.registerCommand(new JavaAICommand());
         context.registerCommand(new JavaBuildCommand());
+        context.registerCommand(new JavaDirectoryIdentifier());
     }
 }

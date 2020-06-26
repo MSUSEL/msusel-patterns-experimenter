@@ -94,6 +94,9 @@ public class ArcContext {
     }
 
     public void addArcProperty(String key, String value) {
+        if (arcProperties == null) {
+            arcProperties = new Properties();
+        }
         arcProperties.setProperty(key, value);
     }
 

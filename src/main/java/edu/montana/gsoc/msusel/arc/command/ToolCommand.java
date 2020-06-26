@@ -79,12 +79,13 @@ public abstract class ToolCommand implements Command {
             context.logger().atInfo().log("Constructing command line");
             CommandLine cmdLine = buildCommandLine();
             context.logger().atInfo().log("Executing command");
+            context.logger().atInfo().log("Command Line: " + cmdLine.toString());
             executeCmdLine(cmdLine, getExpectedExitValue());
             context.logger().atInfo().log("Updating collector");
             updateCollector();
         }
 
-        context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
+        context.logger().atInfo().log("Finished Executing " + getToolName() + " Analysis");
     }
 
     public abstract boolean isRequirementsMet();

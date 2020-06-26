@@ -95,7 +95,7 @@ class GitHubSearchCommand extends RepositoryCommand {
             github = GitHub.connect(context.getArcProperty(GitHubSearchProperties.GIT_HUB_USER),
                     context.getArcProperty(GitHubSearchProperties.GIT_HUB_TOKEN))
         } catch (IOException e) {
-            context.logger().atSevere().withCause(e).withStackTrace(StackSize.MEDIUM).log(e.getMessage())
+            context.logger().atError().withThrowable(e).log(e.getMessage())
         }
         context.logger().atInfo().log("Authenticated to GitHub")
     }
@@ -158,14 +158,6 @@ class GitHubSearchCommand extends RepositoryCommand {
                                             .create()
                                     scm.saveIt()
                                     p.addSCM(scm)
-
-                                    Module mod = Module.builder()
-                                            .name("default")
-                                            .relPath("")
-                                            .moduleKey("default")
-                                            .create()
-
-                                    p.addModule(mod)
 
                                     if (numProj >= maxProj)
                                         break
