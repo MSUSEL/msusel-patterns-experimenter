@@ -72,8 +72,8 @@ public class JavaBuildCommand extends ToolCommand {
     public CommandLine buildCommandLine() {
         selectCommand();
 
-        command.setSourceDirectory(context.getProject().getModules().get(0).getSrcPath());
-        command.setBinaryDirectory(context.getProject().getModules().get(0).getBinaryPath());
+        command.setSourceDirectory(context.getProject().getSrcPath());
+        command.setBinaryDirectory(context.getProject().getBinaryPath());
         command.setProjectBaseDirectory(context.getProjectDirectory());
         command.setProjectName(context.getProject().getName());
 

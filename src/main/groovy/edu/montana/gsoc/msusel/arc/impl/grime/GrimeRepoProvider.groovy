@@ -46,6 +46,8 @@ class GrimeRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         RuleProvider.instance.repository()
+        context.close()
     }
 }

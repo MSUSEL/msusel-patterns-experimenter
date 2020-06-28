@@ -46,11 +46,13 @@ class PatternSizeRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         MetricRepository repo = MetricRepository.findFirst("repoKey = ? AND name = ?", ArcPatternConstants.PATTERN_SIZE_REPO_KEY, ArcPatternConstants.PATTERN_SIZE_REPO_NAME)
         if (!repo)
             MetricRepository.builder()
                     .key(ArcPatternConstants.PATTERN_SIZE_REPO_KEY)
                     .name(ArcPatternConstants.PATTERN_SIZE_REPO_NAME)
                     .create()
+        context.close()
     }
 }

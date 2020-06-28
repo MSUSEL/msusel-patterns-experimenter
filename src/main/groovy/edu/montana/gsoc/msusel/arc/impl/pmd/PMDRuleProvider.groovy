@@ -55,26 +55,32 @@ class PMDRuleProvider extends AbstractRuleProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         RuleRepository repo = RuleRepository.findFirst("repoKey = ?", "pmd")
+        context.close()
 
-        config.rule.each { rule ->
-            String ruleKey = rule.@key
-            String ruleName = rule.@key
-            String priorityName = rule.priority
-            Priority priority = Priority.fromValue(priorityName)
-            String tag = rule.tag
+        GParsPool.withPool {
+            config.rule.eachParallel { rule ->
+                String ruleKey = rule.@key
+                String ruleName = rule.@key
+                String priorityName = rule.priority
+                Priority priority = Priority.fromValue(priorityName)
+                String tag = rule.tag
 
-            if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
-                if (rule.status != "DEPRECATED" || ruleExists(repo, ruleKey)) {
-                    Rule r = Rule.builder()
-                            .name(ruleName)
-                            .key("${repo.repoKey}:${ruleKey}")
-                            .description()
-                            .priority(priority)
-                            .create()
-                    r.addTag(Tag.of(tag))
-                    repo.addRule(r)
+                context.open()
+                if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
+                    if (rule.status != "DEPRECATED" || ruleExists(repo, ruleKey)) {
+                        Rule r = Rule.builder()
+                                .name(ruleName)
+                                .key("${repo.repoKey}:${ruleKey}")
+                                .description()
+                                .priority(priority)
+                                .create()
+                        r.addTag(Tag.of(tag))
+                        repo.addRule(r)
+                    }
                 }
+                context.close()
             }
         }
     }

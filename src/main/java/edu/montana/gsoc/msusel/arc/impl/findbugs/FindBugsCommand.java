@@ -61,7 +61,7 @@ public class FindBugsCommand extends ToolCommand {
             .addArgument("-xml")
             .addArgument("-output")
             .addArgument(reportFile)
-            .addArgument(binaryDirectory);
+            .addArgument(CommandUtils.normalizePathString(projectBaseDirectory) + binaryDirectory);
     }
 
     @Override

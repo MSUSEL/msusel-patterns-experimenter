@@ -59,7 +59,7 @@ public class FindBugsTool extends RuleOnlyTool {
 
     @Override
     public void init() {
-        String resultsFile = CommandUtils.normalizePathString(context.getArcProperty(ArcProperties.TOOL_OUTPUT_DIR)) +
+        String resultsFile = CommandUtils.normalizePathString(context.getReportDirectory()) +
                 FindBugsConstants.REPORT_FILE_NAME;
 
         command = FindBugsCommand.builder()

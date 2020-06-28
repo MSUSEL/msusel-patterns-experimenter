@@ -46,6 +46,8 @@ class QuamocoRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         MetricRepository.findOrCreateIt("repoKey", QuamocoConstants.QUAMOCO_REPO_KEY, "name", QuamocoConstants.QUAMOCO_REPO_NAME, "toolName", QuamocoConstants.QUAMOCO_TOOL_NAME)
+        context.close()
     }
 }

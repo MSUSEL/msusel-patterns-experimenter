@@ -74,6 +74,12 @@
             <version>1.3.0-idg</version>
         </dependency>
 
+        <dependency>
+            <groupId>edu.montana.gsoc.msusel</groupId>
+            <artifactId>msusel-config</artifactId>
+            <version>1.3.0-idg</version>
+        </dependency>
+
         <!-- SikuliX UI Automation -->
 <!--        <dependency>-->
 <!--            <groupId>com.sikulix</groupId>-->

@@ -47,6 +47,7 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         Metric metric = Metric.findFirst("metricKey = ?", "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.TD_MEASURE_NAME}")
         if (!metric) {
             metric = Metric.builder()
@@ -56,10 +57,13 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
                     .create()
             repository.addMetric(metric)
         }
+        context.close()
     }
 
     @Override
     void initRepository() {
+        context.open()
         repository = MetricRepository.findFirst("repoKey = ?", TechDebtConstants.TD_REPO_KEY)
+        context.close()
     }
 }

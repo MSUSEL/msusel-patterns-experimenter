@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.arc.provider.AbstractMetricProvider
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar
 import edu.montana.gsoc.msusel.metrics.impl.*
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -53,15 +54,21 @@ class QMoodMetricProvider extends AbstractMetricProvider {
 
     @Override
     void updateDatabase() {
-        registrar.getPrimaryEvaluators().each {
-            it.toMetric(repository)
+        GParsPool.withPool(8) {
+            registrar.getPrimaryEvaluators().eachParallel {
+                context.open()
+                it.toMetric(repository)
+                context.close()
+            }
         }
     }
 
     @Override
     void initRepository() {
+        context.open()
         repository = MetricRepository.findFirst("repoKey = ?", QMoodConstants.QMOOD_REPO_KEY)
         registrar = new MetricsRegistrar(repository)
+        context.close()
     }
 
     void registerMetrics() {

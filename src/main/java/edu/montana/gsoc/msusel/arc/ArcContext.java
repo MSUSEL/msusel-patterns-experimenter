@@ -27,15 +27,12 @@
 package edu.montana.gsoc.msusel.arc;
 
 import com.google.common.collect.Maps;
-import com.google.common.flogger.FluentLogger;
 import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.datamodel.util.DBCredentials;
 import edu.isu.isuese.datamodel.util.DBManager;
 import edu.montana.gsoc.msusel.arc.db.DbProperties;
-import groovy.util.logging.Log4j2;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.flogger.Flogger;
-import lombok.extern.java.Log;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
@@ -106,7 +103,16 @@ public class ArcContext {
 
     public String getProjectDirectory() {
         if (project != null) {
-            return project.getFullPath();
+            String path = "";
+            if (!DBManager.instance.isOpen())
+            {
+                open();
+                path = project.getFullPath();
+                close();
+            } else
+                path = project.getFullPath();
+
+            return path;
         } else {
             return null;
         }
@@ -117,13 +123,24 @@ public class ArcContext {
     }
 
     public void open() {
-        DBManager.getInstance().open(getArcProperty(DbProperties.DB_DRIVER),
-                getArcProperty(DbProperties.DB_URL),
-                getArcProperty(DbProperties.DB_USER),
-                getArcProperty(DbProperties.DB_PASS));
+        DBManager.getInstance().open(getDBCreds());
     }
 
     public void close() {
         DBManager.getInstance().close();
+    }
+
+    public String getReportDirectory() {
+        return getArcProperty(ArcProperties.TOOL_OUTPUT_DIR);
+    }
+
+    public DBCredentials getDBCreds() {
+        return DBCredentials.builder()
+                .type(getArcProperty(DbProperties.DB_TYPE))
+                .driver(getArcProperty(DbProperties.DB_DRIVER))
+                .url(getArcProperty(DbProperties.DB_URL))
+                .user(getArcProperty(DbProperties.DB_USER))
+                .pass(getArcProperty(DbProperties.DB_PASS))
+                .create();
     }
 }

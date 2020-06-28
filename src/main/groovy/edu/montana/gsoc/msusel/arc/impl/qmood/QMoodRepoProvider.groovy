@@ -47,6 +47,8 @@ class QMoodRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         MetricRepository.findOrCreateIt("repoKey", QMoodConstants.QMOOD_REPO_KEY, "name", QMoodConstants.QMOOD_REPO_NAME, "toolName", QMoodConstants.QMOOD_TOOL_NAME)
+        context.close()
     }
 }

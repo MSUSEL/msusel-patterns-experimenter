@@ -54,42 +54,57 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @Log4j2
-public class ExperimentalTest extends DBSpec {
+public class ExperimentalTest {
 
     ArcContext context;
 
     @BeforeEach
     public void setup() {
         context = new ArcContext(log);
-        StudyManager studyManager = new StudyManager(context);
 
-        String base = "data/test_proj";
+        String base = "/home/git/msusel/msusel-patterns-experimenter/data/test_proj";
 
         // Load Configuration
         context.addArcProperty(ArcProperties.ARC_HOME_DIR, ".");
         context.addArcProperty(FindBugsProperties.FB_TOOL_HOME, "/home/grifisaa/bin/detectors/spotbugs-4.0.3/");
         context.addArcProperty(Pattern4Properties.P4_TOOL_HOME, "/home/grifisaa/bin/detectors/pattern4/");
         context.addArcProperty(PMDProperties.PMD_TOOL_HOME, "/home/grifisaa/bin/detectors/pmd-bin-6.24.0/");
-        context.addArcProperty(ArcProperties.TOOL_OUTPUT_DIR, "data/tool_output/");
+        context.addArcProperty(ArcProperties.TOOL_OUTPUT_DIR, "/home/git/msusel/msusel-patterns-experimenter/data/tool_output/");
         context.addArcProperty(ArcProperties.BASE_DIRECTORY, base);
+        context.addArcProperty("arc.db.driver", "org.sqlite.JDBC");
+        context.addArcProperty("arc.db.url", "jdbc:sqlite:data/test.db");
+        context.addArcProperty("arc.db.type", "sqlite");
+        context.addArcProperty("arc.db.user", "arc");
+        context.addArcProperty("arc.db.pass", "arc");
 
         ToolsLoader toolLoader = new ToolsLoader();
         toolLoader.loadTools(context);
 
         // construct Project elements
+        context.open();
         System sys = System.builder().name("test_proj").key("test_proj").basePath(base).create();
         Project proj = Project.builder().name("test_proj").projKey("test_proj").relPath("").version("1.0").create();
-        Module mod = Module.builder().name("default").moduleKey("default").relPath("").srcPath("src/main/java").testPath("src/main/test").create();
 
-        proj.addModule(mod);
         sys.addProject(proj);
-        mod.updateKey();
-        proj.updateKeys(sys.getKey());
+        proj.updateKeys();
+        context.setProject(proj);
+        context.close();
     }
 
     @Test
     public void test() {
         EmpiricalStudy empiricalStudy = new TestStudy(context);
+        empiricalStudy.execute();
+    }
+
+    @Test
+    public void testFindBugs() {
+        context.open();
+        context.getProject().setSrcPath(new String[]{"src/main/java"});
+        context.getProject().setBinPath(new String[]{"build/classes/java/main"});
+        context.close();
+
+        EmpiricalStudy empiricalStudy = new FindBugsOnly(context);
         empiricalStudy.execute();
     }
 }

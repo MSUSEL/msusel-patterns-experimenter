@@ -67,7 +67,9 @@ class FindBugsRuleProvider extends AbstractRuleProvider {
     }
 
     private process(String repoName, String repoKey, config) {
+        context.open()
         RuleRepository repo = RuleRepository.findFirst("repoKey = ?", repoKey)
+        context.close()
 
         config.rule.each { rule ->
             String ruleKey = rule.@'key'
@@ -77,6 +79,7 @@ class FindBugsRuleProvider extends AbstractRuleProvider {
             Priority priority = Priority.fromValue(priorityName)
             List<Tag> tags = []
 
+            context.open()
             if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
                 rule.@tag?.each { String tag ->
                     tags << Tag.of(tag)
@@ -95,6 +98,7 @@ class FindBugsRuleProvider extends AbstractRuleProvider {
                     repo.addRule(r)
                 }
             }
+            context.close()
         }
     }
 }

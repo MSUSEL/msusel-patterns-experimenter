@@ -32,6 +32,7 @@ import edu.montana.gsoc.msusel.arc.ArcProperties
 import edu.montana.gsoc.msusel.arc.provider.AbstractMetricProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
 import groovy.yaml.YamlSlurper
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -53,24 +54,30 @@ class QuamocoMetricProvider extends AbstractMetricProvider {
     }
 
     void initRepository() {
+        context.open()
         repository = MetricRepository.findFirst("repoKey = ?", QuamocoConstants.QUAMOCO_REPO_KEY)
+        context.close()
     }
 
     void updateDatabase() {
         String root = config.metrics.root
         context.addArcProperty(QuamocoProperties.QUAMOCO_METRICS_ROOT, root)
 
-        config.metrics.each { Map<String, String> map ->
-            Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${map.name}")
-            if (!metric) {
-                metric = Metric.builder()
-                        .key("${repository.getRepoKey()}:$map.name")
-                        .handle(map.handle)
-                        .name(map.name)
-                        .description(map.description)
-                        .evaluator()
-                        .create()
-                repository.addMetric(metric)
+        GParsPool.withPool(8) {
+            config.metrics.eachParallel { Map<String, String> map ->
+                context.open()
+                Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${map.name}")
+                if (!metric) {
+                    metric = Metric.builder()
+                            .key("${repository.getRepoKey()}:$map.name")
+                            .handle(map.handle)
+                            .name(map.name)
+                            .description(map.description)
+                            .evaluator()
+                            .create()
+                    repository.addMetric(metric)
+                }
+                context.close()
             }
         }
     }

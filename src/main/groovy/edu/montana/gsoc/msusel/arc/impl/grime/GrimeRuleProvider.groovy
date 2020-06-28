@@ -46,6 +46,8 @@ class GrimeRuleProvider extends AbstractRuleProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         RuleProvider.instance.rules()
+        context.close()
     }
 }

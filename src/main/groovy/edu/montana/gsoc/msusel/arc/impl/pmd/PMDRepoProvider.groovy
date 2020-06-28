@@ -49,8 +49,10 @@ class PMDRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         RuleRepository repo = RuleRepository.findFirst("repoKey = ?", PMDConstants.REPO_KEY)
         if (!repo)
             RuleRepository.builder().name("PMD").key("pmd").create()
+        context.close()
     }
 }

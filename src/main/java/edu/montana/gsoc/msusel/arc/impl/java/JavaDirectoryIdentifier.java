@@ -39,9 +39,8 @@ public class JavaDirectoryIdentifier extends ArtifactIdentifierCommand {
     @Override
     public void execute(ArcContext context) {
         context.logger().atInfo().log("Setting project paths");
-        JavaArtifactIdentifier jai = new JavaArtifactIdentifier(context.logger());
-        jai.setProj(context.getProject());
-        jai.setProjectPaths();
+        JavaPathsDetector detector = new JavaPathsDetector(context);
+        detector.detect();
     }
 
     @Override

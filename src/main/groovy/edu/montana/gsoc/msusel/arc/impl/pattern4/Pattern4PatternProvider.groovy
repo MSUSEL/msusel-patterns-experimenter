@@ -74,31 +74,39 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
     PatternRepository findPatternRepo(data) {
         String repoName = data.@repo
 
-        PatternRepository.findFirst("repoKey = ?", repoName)
+        context.open()
+        PatternRepository repo = PatternRepository.findFirst("repoKey = ?", repoName)
+        context.close()
+
+        return repo
     }
 
     void createPatterns(data) {
-        data.pattern.each {
-            String name = it.@gofName
-            String pattern4Name = it.@pattern4Name
-            String family = it.@family
+        GParsPool.withPool {
+            data.pattern.eachParallel {
+                String name = it.@gofName
+                String pattern4Name = it.@pattern4Name
+                String family = it.@family
 
-            println "Pattern Name: $name"
+                println "Pattern Name: $name"
 
-            Pattern pattern = Pattern.findFirst("patternKey = ?", repository.getRepoKey() + ":" + name)
-            if (!pattern) {
-                pattern = Pattern.builder()
-                        .name(name)
-                        .key("${repository.getRepoKey()}:$name")
-                        .family(family)
-                        .create()
-                repository.addPattern(pattern)
+                context.open()
+                Pattern pattern = Pattern.findFirst("patternKey = ?", repository.getRepoKey() + ":" + name)
+                if (!pattern) {
+                    pattern = Pattern.builder()
+                            .name(name)
+                            .key("${repository.getRepoKey()}:$name")
+                            .family(family)
+                            .create()
+                    repository.addPattern(pattern)
+                }
+                context.close()
+
+                if (name && pattern4Name)
+                    pattern4rbml[pattern4Name] = name
+
+                createRoles(pattern, it.role)
             }
-
-            if (name && pattern4Name)
-                pattern4rbml[pattern4Name] = name
-
-            createRoles(pattern, it.role)
         }
     }
 
@@ -109,6 +117,7 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
             String type = it.@elementType
             boolean mand = Boolean.parseBoolean((String) it.@mandatory)
 
+            context.open()
             Role role = pattern.getRoles().find { r -> r.getName() == rbmlName }
             if (!role) {
                 role = Role.builder()
@@ -122,6 +131,8 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
 
             if (rbmlName && pattern4Name)
                 rolePattern4Rbml.put(pattern.getName(), pattern4Name, rbmlName)
+
+            context.close()
         }
     }
 

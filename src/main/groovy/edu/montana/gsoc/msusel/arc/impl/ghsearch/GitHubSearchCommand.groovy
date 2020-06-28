@@ -121,6 +121,7 @@ class GitHubSearchCommand extends RepositoryCommand {
                     .list()
                     .withPageSize(100)
 
+            context.open()
             for (GHRepository repo : repos) {
                 if (repo.getSize() > minSize && repo.getSize() < maxSize) {
                     try {
@@ -172,6 +173,7 @@ class GitHubSearchCommand extends RepositoryCommand {
                     }
                 }
             }
+            context.close()
 
             context.logger().atInfo().log(String.format("Repos Found: %d", numSys))
         }

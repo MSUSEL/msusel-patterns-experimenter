@@ -60,6 +60,7 @@ class Pattern4RepoProvider extends AbstractRepoProvider {
         String repoName = data.@repo
         String toolName = data.@tool
 
+        context.open()
         PatternRepository repo = PatternRepository.findFirst("repoKey = ?", repoName)
         if (!repo) {
             PatternRepository.builder()
@@ -68,5 +69,6 @@ class Pattern4RepoProvider extends AbstractRepoProvider {
                     //.toolName(toolName)
                     .create()
         }
+        context.close()
     }
 }

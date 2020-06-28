@@ -56,6 +56,7 @@ class PatternSizeMetricProvider extends AbstractMetricProvider {
         String desc = mdef.description()
         String key = ArcPatternConstants.PATTERN_SIZE_REPO_KEY + ":" + handle
 
+        context.open()
         if (!Metric.findFirst("metricKey = ?", key)) {
             Metric metric = Metric.builder()
                     .name(name)
@@ -66,10 +67,13 @@ class PatternSizeMetricProvider extends AbstractMetricProvider {
                     .create()
             repository.addMetric(metric)
         }
+        context.close()
     }
 
     @Override
     void initRepository() {
+        context.open()
         this.repository = MetricRepository.findFirst("repoKey = ?", ArcPatternConstants.PATTERN_SIZE_REPO_KEY)
+        context.close()
     }
 }

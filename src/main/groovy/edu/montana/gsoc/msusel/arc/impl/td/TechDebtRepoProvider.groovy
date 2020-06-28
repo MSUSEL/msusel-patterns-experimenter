@@ -46,6 +46,8 @@ class TechDebtRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         MetricRepository.findOrCreateIt("repoKey", TechDebtConstants.TD_REPO_KEY, "name", TechDebtConstants.TD_REPO_NAME, "toolName", TechDebtConstants.TD_TOOL_NAME)
+        context.close()
     }
 }

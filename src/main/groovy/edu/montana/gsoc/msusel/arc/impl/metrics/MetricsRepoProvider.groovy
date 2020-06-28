@@ -47,6 +47,8 @@ class MetricsRepoProvider extends AbstractRepoProvider {
 
     @Override
     void updateDatabase() {
+        context.open()
         MetricRepository.findOrCreateIt("repoKey", MetricsConstants.METRICS_REPO_KEY, "name", MetricsConstants.METRICS_REPO_NAME, "toolName", MetricsConstants.METRICS_TOOL_NAME)
+        context.close()
     }
 }

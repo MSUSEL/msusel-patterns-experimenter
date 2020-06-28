@@ -54,6 +54,7 @@ class FindBugsRepoProvider extends AbstractRepoProvider {
     }
 
     private process(String repoName, String repoKey) {
+        context.open()
         RuleRepository repo = RuleRepository.findFirst("repoKey = ?", repoKey)
         if (!repo) {
             RuleRepository.builder()
@@ -61,5 +62,6 @@ class FindBugsRepoProvider extends AbstractRepoProvider {
                     .key(repoKey)
                     .create()
         }
+        context.close()
     }
 }
