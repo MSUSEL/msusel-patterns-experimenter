@@ -30,6 +30,7 @@ import edu.isu.isuese.datamodel.System;
 import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
+import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
 
 public class FindBugOnly extends EmpiricalStudy {
 
@@ -60,8 +61,10 @@ public class FindBugOnly extends EmpiricalStudy {
         Command jdi = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME);
         Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME);
         Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
+        Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
 
         Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
+        Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
 
         System sys = null;
 
@@ -76,7 +79,9 @@ public class FindBugOnly extends EmpiricalStudy {
         build.execute(getContext());
         java.execute(getContext());
         jdi.execute(getContext());
-        findbugs.execute(getContext());
-        fbColl.execute(getContext());
+//        findbugs.execute(getContext());
+//        fbColl.execute(getContext());
+        pmd.execute(getContext());
+        pmdColl.execute(getContext());
     }
 }

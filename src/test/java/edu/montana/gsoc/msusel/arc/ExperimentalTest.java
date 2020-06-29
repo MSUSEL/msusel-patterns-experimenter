@@ -89,7 +89,7 @@ public class ExperimentalTest {
             sys = System.findFirst("name = ?", "test_proj");
 
         Project proj;
-        if (sys.hasProjectWithName("test_proj"))
+        if (!sys.hasProjectWithName("test_proj"))
             proj = Project.builder().name("test_proj").projKey("test_proj").relPath("").version("1.0").create();
         else
             proj = sys.getProjectByName("test_proj");

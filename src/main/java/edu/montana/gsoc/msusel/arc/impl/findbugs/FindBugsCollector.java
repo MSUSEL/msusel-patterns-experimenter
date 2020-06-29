@@ -73,42 +73,46 @@ public class FindBugsCollector extends FileCollector {
                 Rule rule = Rule.findFirst("name = ?", inst.getType());
                 ctx.close();
                 if (rule != null) {
-                    ctx.logger().atInfo().log("Rule: " + rule.getKey());
                     ctx.open();
-                    Finding finding = Finding.of(rule.getKey());
-                    ctx.close();
+                    ctx.logger().atInfo().log("Rule: " + rule.getKey());
+                                        ctx.close();
 
                     inst.getClazzOrTypeOrMethod().forEach(obj -> {
+                        Finding finding = null;
                         if (obj instanceof BugCollection.BugInstance.Class) {
                             BugCollection.BugInstance.Class clazz = (BugCollection.BugInstance.Class) obj;
                             ctx.open();
-                            ctx.logger().atInfo().log("Bug Instance Location: " + clazz.getClassname());
+                            ctx.logger().atInfo().log("Class Bug Instance Location: " + clazz.getClassname());
                             Type type = project.findTypeByQualifiedName(clazz.getClassname());
+                            if (!rule.hasFindingOn(type))
+                                finding = Finding.of(rule.getKey());
                             ctx.close();
                             setReferenceAndLineInfo(ctx, finding, type, clazz.getSourceLine());
+                            if (finding != null)
+                                findings.add(finding);
                         } else if (obj instanceof BugCollection.BugInstance.Method) {
                             BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
                             ctx.open();
+                            ctx.logger().atInfo().log("Method Bug Instance Location: " + meth.getName());
                             Type type = project.findTypeByQualifiedName(meth.getClassname());
-                            Method method = type.findMethodBySignature(meth.getSignature());
+                            Method method = type.getMethodWithName(meth.getName());
+                            if (!rule.hasFindingOn(method))
+                                finding = Finding.of(rule.getKey());
                             ctx.close();
                             setReferenceAndLineInfo(ctx, finding, method, meth.getSourceLine());
-                        } else if (obj instanceof SourceLine) {
-                            SourceLine line = (SourceLine) obj;
-                            ctx.open();
-                            Type type = project.findTypeByQualifiedName(line.getClassname());
-                            ctx.close();
-                            setReferenceAndLineInfo(ctx, finding, type, line);
+                            if (finding != null)
+                                findings.add(finding);
                         }
                     });
-                    findings.add(finding);
                 }
             });
 
             ctx.logger().atInfo().log("Findings Created: " + findings.size());
+            ctx.open();
             for (Finding f : findings) {
                 System.out.println("\t" + f);
             }
+            ctx.close();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
@@ -117,10 +121,12 @@ public class FindBugsCollector extends FileCollector {
     }
 
     public void setReferenceAndLineInfo(ArcContext ctx, Finding finding, Component comp, SourceLine line) {
-        ctx.open();
-        finding.on(comp);
-        ctx.close();
-        setStartAndEnd(ctx, finding, line);
+        if (finding != null && comp != null) {
+            ctx.open();
+            finding.on(comp);
+            ctx.close();
+            setStartAndEnd(ctx, finding, line);
+        }
     }
 
     public void setStartAndEnd(ArcContext ctx, Finding finding, SourceLine line) {
