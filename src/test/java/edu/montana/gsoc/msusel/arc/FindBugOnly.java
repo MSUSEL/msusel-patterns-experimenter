@@ -26,20 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc;
 
-import edu.isu.isuese.datamodel.Project;
 import edu.isu.isuese.datamodel.System;
 import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
-import org.javalite.activejdbc.Model;
-import org.testng.collections.Lists;
 
-import java.util.ArrayList;
-import java.util.List;
+public class FindBugOnly extends EmpiricalStudy {
 
-public class FindBugsOnly extends EmpiricalStudy {
-
-    public FindBugsOnly(ArcContext context) {
+    public FindBugOnly(ArcContext context) {
         super("FBOnly", "A Test Empirical Study", context);
     }
 

@@ -82,8 +82,17 @@ public class ExperimentalTest {
 
         // construct Project elements
         context.open();
-        System sys = System.builder().name("test_proj").key("test_proj").basePath(base).create();
-        Project proj = Project.builder().name("test_proj").projKey("test_proj").relPath("").version("1.0").create();
+        System sys;
+        if (System.findFirst("name = ?", "test_proj") == null)
+            sys = System.builder().name("test_proj").key("test_proj").basePath(base).create();
+        else
+            sys = System.findFirst("name = ?", "test_proj");
+
+        Project proj;
+        if (sys.hasProjectWithName("test_proj"))
+            proj = Project.builder().name("test_proj").projKey("test_proj").relPath("").version("1.0").create();
+        else
+            proj = sys.getProjectByName("test_proj");
 
         sys.addProject(proj);
         proj.updateKeys();
@@ -104,7 +113,7 @@ public class ExperimentalTest {
         context.getProject().setBinPath(new String[]{"build/classes/java/main"});
         context.close();
 
-        EmpiricalStudy empiricalStudy = new FindBugsOnly(context);
+        EmpiricalStudy empiricalStudy = new FindBugOnly(context);
         empiricalStudy.execute();
     }
 }

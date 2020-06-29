@@ -65,36 +65,47 @@ public class FindBugsCollector extends FileCollector {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             BugCollection bugColl = (BugCollection) unmarshaller.unmarshal(new File(resultsFile));
-            System.out.println("Instances Found: " + bugColl.getBugInstance().size());
+            ctx.logger().atInfo().log("Instances Found: " + bugColl.getBugInstance().size());
 
             List<Finding> findings = Lists.newArrayList();
             bugColl.getBugInstance().forEach(inst -> {
+                ctx.open();
                 Rule rule = Rule.findFirst("name = ?", inst.getType());
+                ctx.close();
                 if (rule != null) {
                     ctx.logger().atInfo().log("Rule: " + rule.getKey());
+                    ctx.open();
                     Finding finding = Finding.of(rule.getKey());
+                    ctx.close();
 
                     inst.getClazzOrTypeOrMethod().forEach(obj -> {
                         if (obj instanceof BugCollection.BugInstance.Class) {
                             BugCollection.BugInstance.Class clazz = (BugCollection.BugInstance.Class) obj;
+                            ctx.open();
+                            ctx.logger().atInfo().log("Bug Instance Location: " + clazz.getClassname());
                             Type type = project.findTypeByQualifiedName(clazz.getClassname());
-                            setReferenceAndLineInfo(finding, type, clazz.getSourceLine());
+                            ctx.close();
+                            setReferenceAndLineInfo(ctx, finding, type, clazz.getSourceLine());
                         } else if (obj instanceof BugCollection.BugInstance.Method) {
                             BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
+                            ctx.open();
                             Type type = project.findTypeByQualifiedName(meth.getClassname());
                             Method method = type.findMethodBySignature(meth.getSignature());
-                            setReferenceAndLineInfo(finding, method, meth.getSourceLine());
+                            ctx.close();
+                            setReferenceAndLineInfo(ctx, finding, method, meth.getSourceLine());
                         } else if (obj instanceof SourceLine) {
                             SourceLine line = (SourceLine) obj;
+                            ctx.open();
                             Type type = project.findTypeByQualifiedName(line.getClassname());
-                            setReferenceAndLineInfo(finding, type, line);
+                            ctx.close();
+                            setReferenceAndLineInfo(ctx, finding, type, line);
                         }
                     });
                     findings.add(finding);
                 }
             });
 
-            System.out.println("Findings Created: " + findings.size());
+            ctx.logger().atInfo().log("Findings Created: " + findings.size());
             for (Finding f : findings) {
                 System.out.println("\t" + f);
             }
@@ -102,20 +113,28 @@ public class FindBugsCollector extends FileCollector {
             e.printStackTrace();
         }
 
-        ctx.logger().atInfo().log("Finished collecting FindBugs Resutls");
+        ctx.logger().atInfo().log("Finished collecting FindBugs Results");
     }
 
-    public void setReferenceAndLineInfo(Finding finding, Component comp, SourceLine line) {
+    public void setReferenceAndLineInfo(ArcContext ctx, Finding finding, Component comp, SourceLine line) {
+        ctx.open();
         finding.on(comp);
-        setStartAndEnd(finding, line);
+        ctx.close();
+        setStartAndEnd(ctx, finding, line);
     }
 
-    public void setStartAndEnd(Finding finding, SourceLine line) {
+    public void setStartAndEnd(ArcContext ctx, Finding finding, SourceLine line) {
         if (line != null) {
-            if (line.getStart() != null)
+            if (line.getStart() != null) {
+                ctx.open();
                 finding.setStart(line.getStart());
-            if (line.getEnd() != null)
+                ctx.close();
+            }
+            if (line.getEnd() != null) {
+                ctx.open();
                 finding.setEnd(line.getEnd());
+                ctx.close();
+            }
         }
     }
 
