@@ -70,9 +70,9 @@ public abstract class ToolCommand implements Command {
         this.context = context;
         context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
 
-        this.sourceDirectory = context.getProject().getSrcPath();
-        this.binaryDirectory = context.getProject().getBinaryPath();
         this.projectBaseDirectory = context.getProjectDirectory();
+        this.sourceDirectory = CommandUtils.normalizePathString(projectBaseDirectory) + context.getProject().getSrcPath();
+        this.binaryDirectory = CommandUtils.normalizePathString(projectBaseDirectory) + context.getProject().getBinaryPath();
         this.projectName = context.getProject().getName();
 
         if (isRequirementsMet()) {

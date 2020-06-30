@@ -34,7 +34,7 @@ public interface PMDConstants {
 
     String REPORT_FILE_NAME = "pmd_results.xml";
 
-    String PMD_CONFIG_PATH = "/edu/montana/gsoc/msusel/arc/impl/pmd/rules.xml";
+    String PMD_CONFIG_PATH = "/edu/montana/gsoc/msusel/arc/impl/pmd/pmd_rules.xml";
 
     String REPO_KEY = "pmd";
 }

@@ -67,14 +67,16 @@ public class PMDCollector extends FileCollector {
 
             pmd.getFile().forEach(file ->
                 file.getViolation().forEach(v -> {
-                    Rule rule = Rule.findFirst("pmd:" + v.getRule());
-                    File f = ctx.getProject().getFile(file.getName());
-                    Type t = f.getTypeByName(v.getClazz());
+                    ctx.open();
+                    Namespace ns = ctx.getProject().findNamespace(v.getPackage());
+                    Rule rule = Rule.findFirst("ruleKey = ?", "pmd:" + v.getRule());
+                    Type t = ns.getTypeByName(v.getClazz());
                     if (t != null) {
                         Member m = t.findMemberInRange(v.getBeginline().intValue(), v.getEndline().intValue());
                         Finding finding = Finding.of(rule.getKey()).on(m);
                         rule.addFinding(finding);
                     }
+                    ctx.close();
                 })
             );
         } catch (JAXBException e) {

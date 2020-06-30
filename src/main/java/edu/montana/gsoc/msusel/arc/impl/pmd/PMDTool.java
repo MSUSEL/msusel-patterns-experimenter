@@ -63,6 +63,7 @@ public class PMDTool extends RuleOnlyTool {
                 PMDConstants.REPORT_FILE_NAME;
 
         command = PMDCommand.builder()
+                .owner(this)
                 .toolHome(context.getArcProperty(PMDProperties.PMD_TOOL_HOME))
                 .reportFile(resultsFile)
                 .create();

@@ -94,8 +94,9 @@ public class FindBugsCollector extends FileCollector {
                             BugCollection.BugInstance.Method meth = (BugCollection.BugInstance.Method) obj;
                             ctx.open();
                             ctx.logger().atInfo().log("Method Bug Instance Location: " + meth.getName());
-                            Type type = project.findTypeByQualifiedName(meth.getClassname());
+                            Type type = project.findTypeByQualifiedName(meth.getClassname()); // TODO Verify it finds the component, also <init> maps to constructor
                             Method method = type.getMethodWithName(meth.getName());
+                            Member member = type.findMemberInRange(meth.getSourceLine().getStart(), meth.getSourceLine().getEnd());
                             if (!rule.hasFindingOn(method))
                                 finding = Finding.of(rule.getKey());
                             ctx.close();
