@@ -70,11 +70,19 @@ public class PMDCollector extends FileCollector {
                     ctx.open();
                     Namespace ns = ctx.getProject().findNamespace(v.getPackage());
                     Rule rule = Rule.findFirst("ruleKey = ?", "pmd:" + v.getRule());
+                    ctx.logger().atInfo().log("Looking for type: " + v.getClazz());
                     Type t = ns.getTypeByName(v.getClazz());
                     if (t != null) {
-                        Member m = t.findMemberInRange(v.getBeginline().intValue(), v.getEndline().intValue());
-                        Finding finding = Finding.of(rule.getKey()).on(m);
-                        rule.addFinding(finding);
+                        if (v.getMethod() != null) {
+                            Method m = t.getMethodWithName(v.getMethod());
+                            ctx.logger().atInfo().log("Looking for method: " + v.getMethod());
+                            Finding finding = Finding.of(rule.getKey()).on(m);
+                            rule.addFinding(finding);
+                        }
+                        else {
+                            Finding finding = Finding.of(rule.getKey()).on(t);
+                            rule.addFinding(finding);
+                        }
                     }
                     ctx.close();
                 })

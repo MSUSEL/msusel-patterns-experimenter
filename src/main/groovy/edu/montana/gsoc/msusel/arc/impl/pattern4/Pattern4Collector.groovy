@@ -26,18 +26,26 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4
 
-import com.thoughtworks.xstream.XStream
-import com.thoughtworks.xstream.io.xml.DomDriver
+import edu.isu.isuese.datamodel.Component
+import edu.isu.isuese.datamodel.Field
+import edu.isu.isuese.datamodel.Method
+import edu.isu.isuese.datamodel.Pattern
+import edu.isu.isuese.datamodel.PatternInstance
+import edu.isu.isuese.datamodel.Reference
+import edu.isu.isuese.datamodel.Role
+import edu.isu.isuese.datamodel.RoleBinding
+import edu.isu.isuese.datamodel.Type
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.collector.FileCollector
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Pattern
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Role
-import groovy.transform.builder.Builder
+import groovy.util.logging.Log4j2
+import groovy.xml.XmlSlurper
+import groovyx.gpars.GParsExecutorsPool
+import lombok.Builder
 
 import java.text.SimpleDateFormat
+import java.util.concurrent.atomic.AtomicInteger
 
+@Log4j2
 class Pattern4Collector extends FileCollector {
 
     Pattern4Tool owner
@@ -51,38 +59,92 @@ class Pattern4Collector extends FileCollector {
 
     @Override
     void execute(ArcContext context) {
-        context.logger().atInfo().log("Collecting Pattern4 reported patterns.")
+        log.atInfo().log("Collecting Pattern4 reported patterns.")
 
         this.project = context.getProject()
-        XStream xstream = new XStream(new DomDriver())
-        xstream.processAnnotations(Project.class)
-        xstream.processAnnotations(Pattern.class)
-        xstream.processAnnotations(PatternInstance.class)
-        xstream.processAnnotations(Role.class)
-
-        Project proj = (Project) xstream.fromXML(new File(this.resultsFile))
+        def data = new XmlSlurper().parseText(new File(resultsFile).text)
 
         // for each pattern instance's roles we need to modify the key to be consistent with the current keying scheme
-        proj.getPatterns().each {pattern ->
-            pattern.getInstances().each {instance ->
-                instance.getRoles().each {role ->
-                    String name = role.getElement()
+        AtomicInteger instNum = new AtomicInteger(1)
+//        GParsExecutorsPool.withPool(8) {
+            data.pattern.each { pattern ->
+                String patternName = pattern.@name
+                log.atInfo().log("Pattern: $patternName")
+                String rbmlName = this.owner.getProvider().rbmlNameFor(patternName)
+                log.atInfo().log("RBML: $rbmlName")
 
-                    def group = ((String) it =~ /((\w+\b\.)+)((\w+)(\$(\w+))?)((::)?)((\w+)\(.*\))?/)
-                    println group.count
-                    println group.hasGroup()
-                    if (group.size() > 0) {
-                        println group[0]
-                        println "Namespace: ${group[0][1]}"
-                        println "Type Name: ${group[0][3]}"
-                        println "Method Name: ${group[0][10]}"
+                context.open()
+                Pattern patt = null
+                try {
+                    patt = Pattern.find("patternKey = ?", "gof:$rbmlName").get(0)
+                } catch (IndexOutOfBoundsException ex) {}
+                context.close()
+
+                pattern.instance.each { instance ->
+                    context.open()
+                    PatternInstance inst = PatternInstance.builder()
+                            .instKey("${project.getProjectKey()}:$patternName-${instNum.getAndAdd(1)}")
+                            .create()
+                    context.close()
+
+                    log.atInfo().log("Instance")
+                    instance.role.each { role ->
+                        String roleName = role.@name
+                        String element = role.@element
+
+                        log.atInfo().log("Role: $roleName  Element: $element")
+                        String rbmlRole = this.owner.getProvider().rbmlRoleNameFor(rbmlName, roleName)
+                        log.atInfo().log("RBML Role: $rbmlRole")
+
+                        context.open()
+                        Role r = patt.getRoleByName(rbmlRole)
+                        Component comp = getComponent(element)
+                        inst.addRoleBinding(RoleBinding.of(r, Reference.to(comp)))
+                        patt.addInstance(inst)
+                        project.addPatternInstance(inst)
+                        context.close()
                     }
-
-                    //mediator.findComponentByName(name) FIXME
                 }
             }
+//        }
+
+        log.atInfo().log("Finished Collecting Pattern4 reported patterns.")
+    }
+
+    Component getComponent(String name) {
+        String typeAndNS = name
+        String member = null
+        log.atInfo().log("Name: $name")
+        if (name.contains("::")) {
+            String[] components = name.split("::")
+            typeAndNS = components[0]
+            member = components[1]
         }
 
-        context.logger().atInfo().log("Finished Collecting Pattern4 reported patterns.")
+        Type type = project.findTypeByQualifiedName(typeAndNS)
+
+        if (member) {
+            String[] memberComps = member.split(":")
+            String memberName = memberComps[0]
+
+            log.atInfo().log("Member Name: $memberName")
+
+            if (memberName.contains"(") {
+                String methodName = memberName.substring(0, memberName.indexOf("("))
+                int numParams
+                if (memberName.contains"()")
+                    numParams = 0
+                else
+                    numParams = 1 + memberName.count(",")
+
+                log.atInfo().log("Num Params: $numParams")
+
+                return type.getMethodWithNameAndNumParams(methodName, numParams)
+            } else {
+                return type.getFieldWithName(memberName)
+            }
+        } else {
+            return type
+        }
     }
 }

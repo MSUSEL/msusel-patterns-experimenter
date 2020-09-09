@@ -167,20 +167,20 @@
         <role rbmlName="Operation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractPrototype" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Clone()" elementType="METHOD" mandatory="false"/>
-        <role rbmlName="proto" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="proto" pattern4Name="prototype" elementType="FIELD" mandatory="false"/> <!-- should be mandatory -->
     </pattern>
     <!-- Missing RBML for Proxy? -->
     <pattern gofName="Proxy" pattern4Name="Proxy" family="Structural">
-        <role rbmlName="" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="RealSubject" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Proxy" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Request()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
     </pattern>
     <pattern gofName="Proxy2" pattern4Name="Proxy2" family="Structural">
-        <role rbmlName="" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="" pattern4Name="Subject" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="" pattern4Name="subject" elementType="FIELD" mandatory="true"/>
-        <role rbmlName="" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="Proxy" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="RealSubject" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Subject" pattern4Name="Subject" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="subject" pattern4Name="subject" elementType="FIELD" mandatory="true"/>
+        <role rbmlName="Request()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
     </pattern>
     <pattern gofName="Singleton" pattern4Name="Singleton" family="Creational">
         <role rbmlName="ConcreteSingleton" pattern4Name="Singleton" elementType="CLASS" mandatory="true"/>

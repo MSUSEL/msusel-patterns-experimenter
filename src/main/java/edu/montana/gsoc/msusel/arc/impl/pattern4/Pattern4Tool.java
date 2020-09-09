@@ -30,6 +30,7 @@ import com.google.common.collect.ImmutableList;
 import edu.montana.gsoc.msusel.arc.*;
 import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
 import edu.montana.gsoc.msusel.arc.tool.PatternOnlyTool;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -41,14 +42,17 @@ public class Pattern4Tool extends PatternOnlyTool {
 
     Pattern4Command command;
     Pattern4Collector collector;
+    @Getter
+    Pattern4PatternProvider provider;
 
     public Pattern4Tool(ArcContext context) {
         super(context);
+        provider = new Pattern4PatternProvider(context);
     }
 
     @Override
     public List<Provider> getOtherProviders() {
-        return ImmutableList.of(new Pattern4PatternProvider(context));
+        return ImmutableList.of(provider);
     }
 
     @Override
@@ -58,9 +62,10 @@ public class Pattern4Tool extends PatternOnlyTool {
 
     @Override
     public void init() {
-        String resultsFile = context.getArcProperty(ArcProperties.TOOL_OUTPUT_DIR) + "/" + Pattern4Constants.REPORT_FILE_NAME;
+        String resultsFile = context.getArcProperty(ArcProperties.TOOL_OUTPUT_DIR) + Pattern4Constants.REPORT_FILE_NAME;
 
         command = Pattern4Command.builder()
+                .owner(this)
                 .toolHome(context.getArcProperty(Pattern4Properties.P4_TOOL_HOME))
                 .reportFile(resultsFile)
                 .create();

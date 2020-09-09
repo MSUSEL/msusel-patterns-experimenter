@@ -29,8 +29,15 @@ package edu.montana.gsoc.msusel.arc;
 import edu.isu.isuese.datamodel.System;
 import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
+import edu.montana.gsoc.msusel.arc.impl.grime.GrimeConstants;
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
+import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants;
+import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants;
+import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants;
 import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
+import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants;
+import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants;
+import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants;
 
 public class FindBugOnly extends EmpiricalStudy {
 
@@ -62,26 +69,46 @@ public class FindBugOnly extends EmpiricalStudy {
         Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME);
         Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
         Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
+        Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
+        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
+        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
+        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
+        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
+        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
+        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
+        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
 
         Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
         Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
+        Collector p4Coll = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME);
 
         System sys = null;
 
         getContext().open();
-        sys = System.findFirst("name = ?", "test_proj");
+        sys = System.findFirst("name = ?", "huston");
         getContext().close();
 
         getContext().open();
         getContext().setProject(sys.getProjects().get(0));
         getContext().close();
 
-        build.execute(getContext());
+//        build.execute(getContext());
         java.execute(getContext());
         jdi.execute(getContext());
 //        findbugs.execute(getContext());
 //        fbColl.execute(getContext());
-        pmd.execute(getContext());
-        pmdColl.execute(getContext());
+//        pmd.execute(getContext());
+//        pmdColl.execute(getContext());
+
+        pattern4.execute(getContext());
+        p4Coll.execute(getContext());
+//        coalesce.execute(getContext());
+//        pSize.execute(getContext());
+//        grime.execute(getContext());
+
+//        metrics.execute(getContext());
+//        techdebt.execute(getContext());
+//        qmood.execute(getContext());
+//        quamoco.execute(getContext());
     }
 }

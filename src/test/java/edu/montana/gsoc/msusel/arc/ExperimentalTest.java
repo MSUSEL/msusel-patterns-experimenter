@@ -62,7 +62,7 @@ public class ExperimentalTest {
     public void setup() {
         context = new ArcContext(log);
 
-        String base = "/home/git/msusel/msusel-patterns-experimenter/data/test_proj";
+        String base = "/home/git/msusel/msusel-patterns-experimenter/data/huston";
 
         // Load Configuration
         context.addArcProperty(ArcProperties.ARC_HOME_DIR, ".");
@@ -83,16 +83,16 @@ public class ExperimentalTest {
         // construct Project elements
         context.open();
         System sys;
-        if (System.findFirst("name = ?", "test_proj") == null)
-            sys = System.builder().name("test_proj").key("test_proj").basePath(base).create();
+        if (System.findFirst("name = ?", "huston") == null)
+            sys = System.builder().name("huston").key("huston").basePath(base).create();
         else
-            sys = System.findFirst("name = ?", "test_proj");
+            sys = System.findFirst("name = ?", "huston");
 
         Project proj;
-        if (!sys.hasProjectWithName("test_proj"))
-            proj = Project.builder().name("test_proj").projKey("test_proj").relPath("").version("1.0").create();
+        if (!sys.hasProjectWithName("huston"))
+            proj = Project.builder().name("huston").projKey("huston").relPath("").version("1.0").create();
         else
-            proj = sys.getProjectByName("test_proj");
+            proj = sys.getProjectByName("huston");
 
         sys.addProject(proj);
         proj.updateKeys();
@@ -109,8 +109,8 @@ public class ExperimentalTest {
     @Test
     public void testFindBugs() {
         context.open();
-        context.getProject().setSrcPath(new String[]{"src/main/java"});
-        context.getProject().setBinPath(new String[]{"build/classes/java/main"});
+        context.getProject().setSrcPath(new String[]{"src/"});
+        context.getProject().setBinPath(new String[]{"bin/"});
         context.close();
 
         EmpiricalStudy empiricalStudy = new FindBugOnly(context);

@@ -67,8 +67,8 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
         return pattern4rbml[pattern4Name]
     }
 
-    String rbmlRoleNameFor(String patternName, String pattern4Name) {
-        return rolePattern4Rbml.get(patternName, pattern4Name)
+    String rbmlRoleNameFor(String patternName, String p4RoleName) {
+        return rolePattern4Rbml.get(patternName, p4RoleName)
     }
 
     PatternRepository findPatternRepo(data) {
