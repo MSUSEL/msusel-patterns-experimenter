@@ -149,8 +149,7 @@ class CommandLineInterface {
         cli.v(longOpt: 'version', 'Print the version information')
         cli.D(args: 2, valueSeparator: '=', argName: 'property=value', 'use value for given property')
 //        cli.l(longOpt: 'log', args: 1, argName: 'file', 'Name of the log file to log to')
-        cli.e(longOpt: 'empirical-study', 
-                , "Name of the study to execute, available studies: ${manager.studies.keySet().join(', ')}")
+        cli.e(longOpt: 'empirical-study', "Name of the study to execute, available studies: ${manager.studies.keySet().join(', ')}")
 
         context.logger().atInfo().log("Completed CLI Initialization")
     }
