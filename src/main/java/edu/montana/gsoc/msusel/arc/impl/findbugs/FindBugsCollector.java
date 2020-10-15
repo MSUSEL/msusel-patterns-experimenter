@@ -98,15 +98,17 @@ public class FindBugsCollector extends FileCollector {
                             System.out.println("Method: " + meth.getName());
                             System.out.println("Method Class Name: " + meth.getClassname());
                             Type type = project.findTypeByQualifiedName(meth.getClassname()); // TODO Verify it finds the component, also <init> maps to constructor
-                            System.out.println("Type: " + type); // Type is null, need to investigate findTypeByQualifiedName
-                            Method method = type.getMethodWithName(meth.getName());
-                            Member member = type.findMemberInRange(meth.getSourceLine().getStart(), meth.getSourceLine().getEnd());
-                            if (!rule.hasFindingOn(method))
-                                finding = Finding.of(rule.getKey());
-                            ctx.close();
-                            setReferenceAndLineInfo(ctx, finding, method, meth.getSourceLine());
-                            if (finding != null)
-                                findings.add(finding);
+                            if (type != null) {
+                                System.out.println("Type: " + type); // Type is null, need to investigate findTypeByQualifiedName
+                                Method method = type.getMethodWithName(meth.getName());
+                                Member member = type.findMemberInRange(meth.getSourceLine().getStart(), meth.getSourceLine().getEnd());
+                                if (!rule.hasFindingOn(method))
+                                    finding = Finding.of(rule.getKey());
+                                ctx.close();
+                                setReferenceAndLineInfo(ctx, finding, method, meth.getSourceLine());
+                                if (finding != null)
+                                    findings.add(finding);
+                            }
                         }
                     });
                 }
