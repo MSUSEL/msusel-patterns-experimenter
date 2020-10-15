@@ -70,13 +70,13 @@ public class FindBugOnly extends EmpiricalStudy {
         Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
         Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
         Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
-        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
-        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
-        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
-        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
-        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
-        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
-        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
+//        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
+//        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
+//        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
+//        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
+//        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
+//        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
+//        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
 
         Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
         Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
@@ -95,8 +95,8 @@ public class FindBugOnly extends EmpiricalStudy {
 //        build.execute(getContext());
         java.execute(getContext());
         jdi.execute(getContext());
-//        findbugs.execute(getContext());
-//        fbColl.execute(getContext());
+        findbugs.execute(getContext());
+        fbColl.execute(getContext());
 //        pmd.execute(getContext());
 //        pmdColl.execute(getContext());
 

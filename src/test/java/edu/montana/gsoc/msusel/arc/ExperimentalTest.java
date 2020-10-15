@@ -102,6 +102,11 @@ public class ExperimentalTest {
 
     @Test
     public void test() {
+        context.open();
+        context.getProject().setSrcPath(new String[]{"src/"});
+        context.getProject().setBinPath(new String[]{"bin/"});
+        context.close();
+
         EmpiricalStudy empiricalStudy = new TestStudy(context);
         empiricalStudy.execute();
     }

@@ -70,10 +70,10 @@ class TestStudy extends EmpiricalStudy {
         Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME);
         Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
         Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
-        Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
-        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
-        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
-        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
+//        Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
+//        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
+//        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
+//        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
         Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
         Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
         Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
@@ -82,26 +82,34 @@ class TestStudy extends EmpiricalStudy {
         Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
         Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
 
-        for (Model sys : System.findAll()) {
+        System sys = null;
+
+        getContext().open();
+        sys = System.findFirst("name = ?", "huston");
+        getContext().close();
+//        for (Model sys : System.findAll()) {
+            getContext().open();
             getContext().setProject(((System) sys).getProjects().get(0));
-            build.execute(getContext());
+            getContext().close();
+
+//            build.execute(getContext());
             java.execute(getContext());
-            jdi.execute(getContext());
+//            jdi.execute(getContext());
 
             findbugs.execute(getContext());
             fbColl.execute(getContext());
             pmd.execute(getContext());
             pmdColl.execute(getContext());
 
-            pattern4.execute(getContext());
-            coalesce.execute(getContext());
-            pSize.execute(getContext());
-            grime.execute(getContext());
+//            pattern4.execute(getContext());
+//            coalesce.execute(getContext());
+//            pSize.execute(getContext());
+//            grime.execute(getContext());
 
             metrics.execute(getContext());
             techdebt.execute(getContext());
             qmood.execute(getContext());
             quamoco.execute(getContext());
-        }
+//        }
     }
 }
