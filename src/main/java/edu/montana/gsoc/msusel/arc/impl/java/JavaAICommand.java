@@ -43,7 +43,7 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
     @Override
     public void execute(ArcContext context) {
         context.logger().atInfo().log("Java Artifact Identification Started");
-        JavaDirector director = new JavaDirector(context.getProject(), context.logger(), context.getDBCreds());
+        JavaDirector director = new JavaDirector(context.getProject(), context.logger(), context.getDBCreds(), true);
         context.open();
         String path = context.getProject().getFullPath();
         context.close();

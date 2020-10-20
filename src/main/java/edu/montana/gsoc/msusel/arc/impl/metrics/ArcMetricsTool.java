@@ -63,9 +63,11 @@ public class ArcMetricsTool {
     public void exec() {
         Project proj = context.getProject();
         context.logger().atInfo().log("Measuring Primary Metrics");
+        context.open();
         evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
         context.logger().atInfo().log("Measuring Secondary Metrics");
         secondaryList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
+        context.close();
     }
 
     private void streamAndMeasureMethods(Type type) {
