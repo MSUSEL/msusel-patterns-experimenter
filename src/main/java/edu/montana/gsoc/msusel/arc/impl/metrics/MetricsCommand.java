@@ -37,6 +37,7 @@ public class MetricsCommand extends PrimaryAnalysisCommand {
 
     public MetricsCommand() {
         super(MetricsConstants.METRICS_CMD_NAME);
+        this.setToolName(MetricsConstants.METRICS_CMD_NAME);
     }
 
     @Override
