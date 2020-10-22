@@ -54,6 +54,7 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
     @Override
     public void execute(ArcContext context) {
         context.logger().atInfo().log("Executing TechDebt Analysis");
+        context.open();
         List<Rule> rules = Rule.findAll();
 
         List<Rule> high = Lists.newArrayList();
@@ -87,5 +88,6 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
                 .on(context.getProject())
                 .withValue(value);
         context.logger().atInfo().log("Finished TechDebt Analysis");
+        context.close();
     }
 }

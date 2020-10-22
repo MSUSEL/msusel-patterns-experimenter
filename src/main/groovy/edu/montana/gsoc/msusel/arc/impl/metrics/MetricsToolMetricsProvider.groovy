@@ -26,14 +26,12 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics
 
-
 import edu.isu.isuese.datamodel.MetricRepository
-import edu.montana.gsoc.msusel.arc.provider.AbstractMetricProvider
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.provider.AbstractMetricProvider
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar
 import edu.montana.gsoc.msusel.metrics.impl.*
-import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -54,12 +52,15 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
 
     @Override
     void updateDatabase() {
-        GParsPool.withPool {
-            registrar.getPrimaryEvaluators().eachParallel {
-                context.open()
-                it.toMetric(repository)
-                context.close()
-            }
+        registrar.getPrimaryEvaluators().each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
+        }
+        registrar.getSecondaryEvaluators().each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
         }
     }
 
