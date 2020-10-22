@@ -62,7 +62,6 @@ public class PMDCollector extends FileCollector {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             Pmd pmd = (Pmd) unmarshaller.unmarshal(new java.io.File(resultsFile));
-            System.out.println("Files: " + pmd.getFile().size());
             pmd.getFile().forEach(f -> System.out.println("File: " + f.getName() + " has " + f.getViolation().size() + " findings"));
 
             pmd.getFile().forEach(file ->
@@ -70,12 +69,10 @@ public class PMDCollector extends FileCollector {
                     ctx.open();
                     Namespace ns = ctx.getProject().findNamespace(v.getPackage());
                     Rule rule = Rule.findFirst("ruleKey = ?", "pmd:" + v.getRule());
-                    ctx.logger().atInfo().log("Looking for type: " + v.getClazz());
                     Type t = ns.getTypeByName(v.getClazz());
                     if (t != null) {
                         if (v.getMethod() != null) {
                             Method m = t.getMethodWithName(v.getMethod());
-                            ctx.logger().atInfo().log("Looking for method: " + v.getMethod());
                             Finding finding = Finding.of(rule.getKey()).on(m);
                             rule.addFinding(finding);
                         }

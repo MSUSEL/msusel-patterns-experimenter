@@ -46,11 +46,13 @@ public class QMoodCommand extends SecondaryAnalysisCommand {
     public void execute(ArcContext context) {
         context.logger().atInfo().log("Starting QMOOD Analysis");
 
+        context.open();
         provider.getRegistrar().getPrimaryEvaluators().forEach(metricEvaluator ->
                 metricEvaluator.measure(context.getProject()));
 
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator ->
                 metricEvaluator.measure(context.getProject()));
+        context.close();
 
         context.logger().atInfo().log("Finished QMOOD Analysis");
     }

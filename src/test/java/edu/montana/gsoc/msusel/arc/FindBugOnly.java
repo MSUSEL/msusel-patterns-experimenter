@@ -108,8 +108,8 @@ public class FindBugOnly extends EmpiricalStudy {
         getContext().logger().atInfo().log("metrics: " + metrics);
 
         metrics.execute(getContext());
-        techdebt.execute(getContext());
-//        qmood.execute(getContext());
+//        techdebt.execute(getContext());
+        qmood.execute(getContext());
 //        quamoco.execute(getContext());
     }
 }
