@@ -64,7 +64,8 @@ class ReusabilityEvaluator extends MetricEvaluator {
     def measure(Measurable node) {
         if (node instanceof Project) {
             Project proj = (Project) node
-            List<Double> vals = Measure.getAllClassValues(proj, "${QMoodConstants.QMOOD_REPO_KEY}:QMREUSE")
+
+            List<Double> vals = Measure.getAllClassValues(proj, QMoodConstants.QMOOD_REPO_KEY, "QMREUSE")
             double value = 0
             if (proj.getAllTypes())
                 value = vals.sum() / proj.getAllTypes().size()

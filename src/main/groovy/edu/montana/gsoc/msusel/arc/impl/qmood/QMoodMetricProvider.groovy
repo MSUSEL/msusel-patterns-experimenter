@@ -54,13 +54,18 @@ class QMoodMetricProvider extends AbstractMetricProvider {
 
     @Override
     void updateDatabase() {
-        GParsPool.withPool(8) {
-            registrar.getPrimaryEvaluators().eachParallel {
-                context.open()
-                it.toMetric(repository)
-                context.close()
-            }
+//        GParsPool.withPool(8) {
+        registrar.getPrimaryEvaluators().each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
         }
+        registrar.getSecondaryEvaluators().each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
+        }
+//        }
     }
 
     @Override

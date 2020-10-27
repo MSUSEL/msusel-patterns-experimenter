@@ -59,7 +59,8 @@ class UnderstandabilityEvaluator extends MetricEvaluator {
     def measure(Measurable node) {
         if (node instanceof Project) {
             Project proj = (Project) node
-            List<Double> vals = Measure.getAllClassValues(proj, "${QMoodConstants.QMOOD_REPO_KEY}:QMUNDER")
+
+            List<Double> vals = Measure.getAllClassValues(proj, QMoodConstants.QMOOD_REPO_KEY, "QMUNDER")
             double value = 0
             if (proj.getAllTypes())
                 value = vals.sum() / proj.getAllTypes().size()

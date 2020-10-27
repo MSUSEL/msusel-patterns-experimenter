@@ -64,7 +64,8 @@ class FunctionalityEvaluator extends MetricEvaluator {
     def measure(Measurable node) {
         if (node instanceof Project) {
             Project proj = (Project) node
-            List<Double> vals = Measure.getAllClassValues(proj, "${QMoodConstants.QMOOD_REPO_KEY}:QMFUNC")
+
+            List<Double> vals = Measure.getAllClassValues(proj, QMoodConstants.QMOOD_REPO_KEY, "QMFUNC")
             double value = 0
             if (proj.getAllTypes())
                 value = vals.sum() / proj.getAllTypes().size()
