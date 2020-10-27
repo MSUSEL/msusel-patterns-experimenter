@@ -64,43 +64,48 @@ public class ArcMetricsTool {
         Project proj = context.getProject();
         context.logger().atInfo().log("Measuring Primary Metrics");
         context.open();
-        evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
+        streamAndMeasureProject(proj, evaluatorList);
         context.logger().atInfo().log("Measuring Secondary Metrics");
-        secondaryList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
+        streamAndMeasureProject(proj, secondaryList);
         context.close();
     }
 
-    private void streamAndMeasureMethods(Type type) {
+    private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
         type.getAllMethods().forEach(method -> {
             evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(method));
         });
     }
 
-    private void streamAndMeasureTypes(File file) {
+    private void streamAndMeasureTypes(File file, List<MetricEvaluator> evaluatorList) {
         file.getAllTypes().forEach(type -> {
-            streamAndMeasureMethods(type);
+            streamAndMeasureMethods(type, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(type));
         });
     }
 
-    private void streamAndMeasureFiles(Namespace ns) {
+    private void streamAndMeasureFiles(Namespace ns, List<MetricEvaluator> evaluatorList) {
         ns.getFiles().forEach(file -> {
-            streamAndMeasureTypes(file);
+            streamAndMeasureTypes(file, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(file));
         });
     }
 
-    private void streamAndMeasureNamespaces(Module module) {
+    private void streamAndMeasureNamespaces(Module module, List<MetricEvaluator> evaluatorList) {
         module.getNamespaces().forEach(ns -> {
-            streamAndMeasureFiles(ns);
+            streamAndMeasureFiles(ns, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(ns));
         });
     }
 
-    private void streamAndMeasureModules(Project project) {
+    private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
         project.getModules().forEach(mod -> {
-            streamAndMeasureNamespaces(mod);
+            streamAndMeasureNamespaces(mod, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(mod));
         });
+    }
+
+    private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList) {
+        streamAndMeasureModules(proj, evaluatorList);
+        evaluatorList.forEach(metricEvaluator -> metricEvaluator.measure(proj));
     }
 }
