@@ -64,7 +64,7 @@ public class FindBugOnly extends EmpiricalStudy {
     }
 
     public void executeStudy() {
-
+        getContext().addArcProperty("quamoco.models.dir", "config/quamoco/models");
 
         Command java = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME);
         Command jdi = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME);

@@ -73,6 +73,8 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         QuamocoContext.instance().setProject(context.getProject());
         QuamocoContext.instance().setMetricRepoKey("arc_metrics");
 
+        context.open();
+
         // Build graph
         graph = buildGraph();
 
@@ -88,6 +90,8 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         // Store Results
         storeResults();
 
+        context.close();
+
         context.logger().atInfo().log("Finished Quamoco Analysis");
     }
 
@@ -98,8 +102,12 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         String lang = context.getLanguage();
 
         String[] qmFiles = getQMFiles(lang.toLowerCase());
-        for (int i = 0; i < qmFiles.length; i++)
+        for (int i = 0; i < qmFiles.length; i++) {
+            System.out.println("QMFile[" + i + "]: " + qmFiles[i]);
+            System.out.println("baseDir: " + baseDir);
             qmFiles[i] = Paths.get(baseDir, qmFiles[i]).toAbsolutePath().toString();
+            System.out.println("QMFile[" + i + "]: " + qmFiles[i]);
+        }
         ModelDistiller md = new ModelDistiller(new ModelManager());
         md.readInQualityModels(qmFiles);
         md.buildGraph();
