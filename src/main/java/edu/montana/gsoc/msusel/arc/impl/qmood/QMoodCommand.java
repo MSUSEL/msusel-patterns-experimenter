@@ -56,6 +56,8 @@ public class QMoodCommand extends SecondaryAnalysisCommand {
         });
 
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
+            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+            context.logger().atInfo().log("Metric: " + mdef.name());
             context.getProject().getAllTypes().forEach(metricEvaluator::measure);
             metricEvaluator.measure(context.getProject());
         });

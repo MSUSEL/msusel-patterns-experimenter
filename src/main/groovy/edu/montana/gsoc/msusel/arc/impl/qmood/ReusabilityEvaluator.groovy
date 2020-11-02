@@ -72,10 +72,10 @@ class ReusabilityEvaluator extends MetricEvaluator {
             Measure.of("${QMoodConstants.QMOOD_REPO_KEY}:QMREUSE").on(node).withValue(value)
         }
         else if (node instanceof Type) {
-            double coupling   = Measure.valueFor(QMoodConstants.QMOOD_REPO_KEY, "DCC", node)
-            double cohesion   = Measure.valueFor(QMoodConstants.QMOOD_REPO_KEY, "CAM", node)
-            double messaging  = Measure.valueFor(QMoodConstants.QMOOD_REPO_KEY, "CIS", node)
-            double designSize = Measure.valueFor(QMoodConstants.QMOOD_REPO_KEY, "DSC", node)
+            double coupling   = Measure.retrieve(node, QMoodConstants.QMOOD_REPO_KEY + ":DCC")?.getValue() ?: 0
+            double cohesion   = Measure.retrieve(node, QMoodConstants.QMOOD_REPO_KEY + ":CAM")?.getValue() ?: 0
+            double messaging  = Measure.retrieve(node, QMoodConstants.QMOOD_REPO_KEY + ":CIS")?.getValue() ?: 0
+            double designSize = Measure.retrieve(node, QMoodConstants.QMOOD_REPO_KEY + ":DSC")?.getValue() ?: 0
 
             def factors = [
                     [-0.25, coupling],
