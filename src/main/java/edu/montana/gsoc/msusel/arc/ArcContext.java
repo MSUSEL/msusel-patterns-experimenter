@@ -44,7 +44,7 @@ import java.util.Properties;
  */
 public class ArcContext {
 
-    @Getter
+    @Getter @Setter
     String language;
 
     @Getter @Setter

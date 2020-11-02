@@ -97,7 +97,7 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
 
         String lang = context.getLanguage();
 
-        String[] qmFiles = getQMFiles(lang);
+        String[] qmFiles = getQMFiles(lang.toLowerCase());
         for (int i = 0; i < qmFiles.length; i++)
             qmFiles[i] = Paths.get(baseDir, qmFiles[i]).toAbsolutePath().toString();
         ModelDistiller md = new ModelDistiller(new ModelManager());
@@ -186,8 +186,16 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
 
     private void loadConfig() {
         context.logger().atInfo().log("Loading Quamoco Configuration");
-        Properties props = new Properties();
         try(FileInputStream fis = new FileInputStream(new File(QuamocoConstants.QUAMOCO_LANG_MODELS_FILE))) {
+            Properties props = new Properties();
+            props.load(fis);
+
+            props.forEach((key, value) -> context.addArcProperty((String) key, (String) value));
+        } catch (Exception e) {
+            context.logger().atError().withThrowable(e).log(e.getMessage());
+        }
+        try(FileInputStream fis = new FileInputStream(new File(QuamocoConstants.QUAMOCO_METRICS_FILE))) {
+            Properties props = new Properties();
             props.load(fis);
 
             props.forEach((key, value) -> context.addArcProperty((String) key, (String) value));

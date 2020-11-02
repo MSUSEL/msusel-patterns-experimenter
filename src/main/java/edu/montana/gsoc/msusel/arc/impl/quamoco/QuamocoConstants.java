@@ -35,6 +35,7 @@ public interface QuamocoConstants {
     String QUAMOCO_CMD_NAME         = "Quamoco";
     String QM_HOME_PROP_KEY         = "quamoco.models.dir";
     String QUAMOCO_LANG_MODELS_FILE = "config/quamoco/languages.properties";
+    String QUAMOCO_METRICS_FILE     = "config/quamoco/metrics.properties";
     String QUAMOCO_CONFIG_DIR       = "config/quamoco/";
     String QUAMOCO_REPO_NAME        = "arc-quamoco";
     String QUAMOCO_REPO_KEY         = "arc-quamoco";

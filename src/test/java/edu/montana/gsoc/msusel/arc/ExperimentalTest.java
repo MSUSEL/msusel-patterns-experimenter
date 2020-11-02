@@ -61,6 +61,7 @@ public class ExperimentalTest {
     @BeforeEach
     public void setup() {
         context = new ArcContext(log);
+        context.setLanguage("java");
 
         String base = "/home/git/msusel/msusel-patterns-experimenter/data/huston";
 

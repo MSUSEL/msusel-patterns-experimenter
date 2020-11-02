@@ -64,6 +64,8 @@ public class FindBugOnly extends EmpiricalStudy {
     }
 
     public void executeStudy() {
+
+
         Command java = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME);
         Command jdi = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME);
         Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME);
@@ -109,7 +111,7 @@ public class FindBugOnly extends EmpiricalStudy {
 
         metrics.execute(getContext());
 //        techdebt.execute(getContext());
-        qmood.execute(getContext());
-//        quamoco.execute(getContext());
+//        qmood.execute(getContext());
+        quamoco.execute(getContext());
     }
 }
