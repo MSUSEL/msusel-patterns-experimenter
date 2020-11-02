@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.impl.qmood;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
+import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition;
 
 /**
  * @author Isaac Griffith
@@ -48,6 +49,8 @@ public class QMoodCommand extends SecondaryAnalysisCommand {
 
         context.open();
         provider.getRegistrar().getPrimaryEvaluators().forEach(metricEvaluator -> {
+            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+            context.logger().atInfo().log("Metric: " + mdef.name());
             context.getProject().getAllTypes().forEach(metricEvaluator::measure);
             metricEvaluator.measure(context.getProject());
         });
