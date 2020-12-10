@@ -97,6 +97,8 @@ class Pattern4Collector extends FileCollector {
                         log.atInfo().log("RBML Role: $rbmlRole")
 
                         context.open()
+                        log.atInfo().log("RoleName: $roleName")
+                        log.atInfo().log("Looking for: $rbmlRole")
                         Role r = patt.getRoleByName(rbmlRole)
                         Component comp = getComponent(element)
                         inst.addRoleBinding(RoleBinding.of(r, Reference.to(comp)))

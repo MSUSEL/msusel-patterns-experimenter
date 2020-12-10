@@ -23,9 +23,9 @@
     </pattern>
 
     <pattern name="Command">
-        <role name="Adapter/ConcreteCommand" elementType="CLASS"/>
-        <role name="Adaptee/Receiver" elementType="CLASS"/>
-        <role name="Request()/Execute()" elementType="METHOD"/>
+        <role name="ConcreteCommand" elementType="CLASS"/>
+        <role name="Receiver" elementType="CLASS"/>
+        <role name="Execute()" elementType="METHOD"/>
     </pattern>
 
     <pattern name="Composite">

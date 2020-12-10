@@ -45,14 +45,17 @@
         <role rbmlName="hand" elementType="FIELD" mandatory="false"/>
     </pattern>
     <pattern gofName="Command" pattern4Name="Command" family="Behavioral">
-        <role rbmlName="ConcreteCommand" pattern4Name="Adapter/ConcreteCommand" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="Receiver" pattern4Name="Adaptee/Receiver" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="Execute()" pattern4Name="Request()/Execute()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="ConcreteCommand" pattern4Name="Adapter" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="ConcreteCommand" pattern4Name="ConcreteCommand" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Receiver" pattern4Name="Adaptee" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Receiver" pattern4Name="Receiver" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Execute()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="Execute()" pattern4Name="Execute()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="Action()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="AbstractCommand" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Invoker" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
-        <role rbmlName="rcvr" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="rcvr" pattern4Name="receiver" elementType="FIELD" mandatory="false"/>
         <role rbmlName="cond" elementType="FIELD" mandatory="false"/>
         <role rbmlName="c" elementType="FIELD" mandatory="false"/>
     </pattern>
