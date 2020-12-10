@@ -133,7 +133,7 @@ class Pattern4Collector extends FileCollector {
 
         Type type = project.findTypeByQualifiedName(typeAndNS)
 
-        if (member) {
+        if (member && type) {
             String[] memberComps = member.split(":")
             String memberName = memberComps[0]
 
