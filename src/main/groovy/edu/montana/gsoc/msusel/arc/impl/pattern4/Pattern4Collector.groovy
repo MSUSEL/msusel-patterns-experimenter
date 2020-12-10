@@ -101,11 +101,19 @@ class Pattern4Collector extends FileCollector {
                         log.atInfo().log("Looking for: $rbmlRole")
                         Role r = patt.getRoleByName(rbmlRole)
                         Component comp = getComponent(element)
-                        inst.addRoleBinding(RoleBinding.of(r, Reference.to(comp)))
-                        patt.addInstance(inst)
-                        project.addPatternInstance(inst)
+                        if (!r || !comp) {
+                            log.atInfo().log("r = $r")
+                            log.atInfo().log("comp = $comp")
+                        } else {
+                            inst.addRoleBinding(RoleBinding.of(r, Reference.to(comp))) // figure out why comp is null
+                        }
                         context.close()
                     }
+
+                    context.open()
+                    patt.addInstance(inst)
+                    project.addPatternInstance(inst)
+                    context.close()
                 }
             }
 //        }
