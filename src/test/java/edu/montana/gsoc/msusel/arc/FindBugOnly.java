@@ -72,7 +72,8 @@ public class FindBugOnly extends EmpiricalStudy {
 //        Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
 //        Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
         Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
-//        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
+        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
+//        Command chaining = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME);
 //        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
 //        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
 //        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
@@ -94,24 +95,42 @@ public class FindBugOnly extends EmpiricalStudy {
         getContext().setProject(sys.getProjects().get(0));
         getContext().close();
 
+        // Java
 //        build.execute(getContext());
         java.execute(getContext());
         jdi.execute(getContext());
+
+        // SpotBugs
 //        findbugs.execute(getContext());
 //        fbColl.execute(getContext());
+
+        // PMD
 //        pmd.execute(getContext());
 //        pmdColl.execute(getContext());
 
+        // Pattern 4
         pattern4.execute(getContext());
         p4Coll.execute(getContext());
-//        coalesce.execute(getContext());
+
+        // Patterns
+        coalesce.execute(getContext());
+//        chaining.execute(getContext());
 //        pSize.execute(getContext());
+
+        // Grime
 //        grime.execute(getContext());
 //        getContext().logger().atInfo().log("metrics: " + metrics);
 
+        // Metrics
 //        metrics.execute(getContext());
+
+        // TechDebt
 //        techdebt.execute(getContext());
+
+        // QMood
 //        qmood.execute(getContext());
+
+        // Quamoco
 //        quamoco.execute(getContext());
     }
 }

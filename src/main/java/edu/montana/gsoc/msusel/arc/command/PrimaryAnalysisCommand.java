@@ -50,5 +50,6 @@ public abstract class PrimaryAnalysisCommand extends AbstractCommand {
 
     public PrimaryAnalysisCommand(String name) {
         super(name);
+        this.toolName = name;
     }
 }

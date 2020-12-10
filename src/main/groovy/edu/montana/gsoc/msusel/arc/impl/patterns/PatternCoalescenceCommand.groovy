@@ -46,9 +46,12 @@ class PatternCoalescenceCommand extends PrimaryAnalysisCommand {
     void execute(ArcContext context) {
         context.logger().atInfo().log("Starting Pattern Coalescence")
         Coalescence coal = new Coalescence()
+
+        context.open()
         List<PatternInstance> insts = Lists.newArrayList(context.getProject().getPatternInstances())
 
         coal.coalesce(insts)
+        context.close()
 
         context.logger().atInfo().log("Patterns Coalesced")
     }

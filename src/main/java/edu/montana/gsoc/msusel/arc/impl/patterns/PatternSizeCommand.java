@@ -46,7 +46,9 @@ public class PatternSizeCommand extends SecondaryAnalysisCommand {
         Project project = context.getProject();
         PatternSizeEvaluator eval = new PatternSizeEvaluator();
 
+        context.open();
         project.getPatternInstances().forEach(eval::measure);
+        context.close();
         context.logger().atInfo().log("Finished Pattern Size Analysis");
     }
 }

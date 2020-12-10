@@ -76,7 +76,7 @@ class PatternSizeEvaluator extends MetricEvaluator {
                 }
             }
 
-            Measure.of(null).on(inst).withValue(size)
+            Measure.of(ArcPatternConstants.PATTERN_SIZE_REPO_KEY + ":" + "PS").on(inst).withValue(size)
         }
 
         size
