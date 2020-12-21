@@ -7,16 +7,19 @@
         <role rbmlName="ConcreteProduct" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
     </pattern>
-    <!-- Review Adapter RBML this -->
     <pattern gofName="Adapter" pattern4Name="(Object)Adapter" family="Structural">
-        <role rbmlName="Adaptee" pattern4Name="Adaptee" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="Adapter" pattern4Name="Adapter" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="targ" pattern4Name="adaptee" elementType="FIELD" mandatory="true"/>
-        <role rbmlName="Request()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
-        <role rbmlName="SpecificRequest()" elementType="METHOD" mandatory="false"/>
+        <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Target" elementType="CLASS" mandatory="false"/>
         <role rbmlName="TargetRequest()" elementType="METHOD" mandatory="false"/>
-        <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="ConcreteAdapter" pattern4Name="Adapter" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="Request()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="AbstractAdapter" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="Adaptee" pattern4Name="Adaptee" elementType="CLASS" mandatory="true"/>
+        <role rbmlName="SpecificRequest()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="clnt" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="targ" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="adapter" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="adaptee" pattern4Name="adaptee" elementType="FIELD" mandatory="false"/>
     </pattern>
     <pattern gofName="Bridge" pattern4Name="Bridge" family="Structural">
         <role rbmlName="ConcreteImplementor" pattern4Name="Implementor" elementType="CLASS" mandatory="true"/>
@@ -63,14 +66,19 @@
     <pattern gofName="Composite" pattern4Name="Composite" family="Structural">
         <role rbmlName="Leaf" pattern4Name="Component" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteComposite" pattern4Name="Composite" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="LeafOperation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
+        <role rbmlName="ConcreteOperation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="Operation()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="Add()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="Remove()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="GetChild()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="children" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="Client" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="clnt" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="cmpt" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="parent" elementType="FIELD" mandatory="false"/>
+        <role rbmlName="Leaf" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="LeafOperation()" elementType="METHOD" mandatory="false"/>
     </pattern>
-    <!-- Fix RBML behaviors and state are defined incorrectly -->
     <pattern gofName="Decorator" pattern4Name="Decorator" family="Structural">
         <role rbmlName="ConcreteComponent" pattern4Name="Component" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteDecorator" pattern4Name="Decorator" elementType="CLASS" mandatory="true"/>
@@ -79,6 +87,11 @@
         <role rbmlName="OperationImpl()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="addedState" elementType="FIELD" mandatory="false"/>
         <role rbmlName="AddedBehavior()" elementType="METHOD" mandatory="false"/>
+        <role rbmlName="AbstractComponent" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="AbstractDecorator" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="Component" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="Decorator" elementType="CLASS" mandatory="false"/>
+        <role rbmlName="absDec" elementType="FIELD" mandatory="false"/>
     </pattern>
     <pattern gofName="Facade" family="Structural">
         <role rbmlName="Facade" elementType="CLASS" mandatory="true"/>
@@ -170,9 +183,8 @@
         <role rbmlName="Operation()" pattern4Name="Operation()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractPrototype" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Clone()" elementType="METHOD" mandatory="false"/>
-        <role rbmlName="proto" pattern4Name="prototype" elementType="FIELD" mandatory="false"/> <!-- should be mandatory -->
+        <role rbmlName="proto" pattern4Name="prototype" elementType="FIELD" mandatory="true"/>
     </pattern>
-    <!-- Missing RBML for Proxy? -->
     <pattern gofName="Proxy" pattern4Name="Proxy" family="Structural">
         <role rbmlName="RealSubject" pattern4Name="RealSubject" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Proxy" pattern4Name="Proxy" elementType="CLASS" mandatory="true"/>
@@ -212,7 +224,6 @@
         <role rbmlName="Operation()" elementType="METHOD" mandatory="false"/>
         <role rbmlName="StrategyOp()" elementType="METHOD" mandatory="false"/>
     </pattern>
-    <!-- Fix operation definitions in RBML -->
     <pattern gofName="Template Method" pattern4Name="Template Method" family="Behavioral">
         <role rbmlName="AbstractTemplate" pattern4Name="AbstractClass" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Operation()" pattern4Name="TemplateMethod()" elementType="METHOD" mandatory="true"/>
