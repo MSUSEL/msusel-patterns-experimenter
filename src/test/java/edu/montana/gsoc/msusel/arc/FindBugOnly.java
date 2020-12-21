@@ -74,8 +74,8 @@ public class FindBugOnly extends EmpiricalStudy {
         Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
         Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
 //        Command chaining = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME);
-//        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
-//        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
+        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
+        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
 //        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
 //        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
 //        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
@@ -115,10 +115,10 @@ public class FindBugOnly extends EmpiricalStudy {
         // Patterns
         coalesce.execute(getContext());
 //        chaining.execute(getContext());
-//        pSize.execute(getContext());
+        pSize.execute(getContext());
 
         // Grime
-//        grime.execute(getContext());
+        grime.execute(getContext());
 //        getContext().logger().atInfo().log("metrics: " + metrics);
 
         // Metrics
