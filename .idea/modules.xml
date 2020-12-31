@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/msusel-arc-framework.iml" filepath="$PROJECT_DIR$/msusel-arc-framework.iml" />
       <module fileurl="file://$PROJECT_DIR$/msusel-arc-framework (1).iml" filepath="$PROJECT_DIR$/msusel-arc-framework (1).iml" />
       <module fileurl="file://$PROJECT_DIR$/msusel-arc-framework (2).iml" filepath="$PROJECT_DIR$/msusel-arc-framework (2).iml" />
     </modules>

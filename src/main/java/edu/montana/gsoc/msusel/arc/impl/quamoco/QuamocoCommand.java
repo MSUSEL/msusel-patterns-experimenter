@@ -35,7 +35,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.FlowPhase;
 import edu.montana.gsoc.msusel.arc.anot.Phase;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
-import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
+import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants;
 import edu.montana.gsoc.msusel.quamoco.distiller.ModelDistiller;
 import edu.montana.gsoc.msusel.quamoco.distiller.ModelManager;
 import edu.montana.gsoc.msusel.quamoco.distiller.QuamocoContext;
@@ -71,7 +71,7 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
         loadConfig();
 
         QuamocoContext.instance().setProject(context.getProject());
-        QuamocoContext.instance().setMetricRepoKey("arc_metrics");
+        QuamocoContext.instance().setMetricRepoKey(MetricsConstants.METRICS_REPO_KEY);
 
         context.open();
 

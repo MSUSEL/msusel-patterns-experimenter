@@ -69,20 +69,20 @@ public class FindBugOnly extends EmpiricalStudy {
         Command java = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME);
         Command jdi = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME);
         Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME);
-//        Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
-//        Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
+        Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME);
+        Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME);
         Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME);
         Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
 //        Command chaining = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME);
         Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
         Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
-//        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
+        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
 //        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
 //        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
-//        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
+        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
 
-//        Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
-//        Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
+        Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME);
+        Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME);
         Collector p4Coll = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME);
 
         System sys = null;
@@ -101,12 +101,12 @@ public class FindBugOnly extends EmpiricalStudy {
         jdi.execute(getContext());
 
         // SpotBugs
-//        findbugs.execute(getContext());
-//        fbColl.execute(getContext());
+        findbugs.execute(getContext());
+        fbColl.execute(getContext());
 
         // PMD
-//        pmd.execute(getContext());
-//        pmdColl.execute(getContext());
+        pmd.execute(getContext());
+        pmdColl.execute(getContext());
 
         // Pattern 4
         pattern4.execute(getContext());
@@ -118,11 +118,11 @@ public class FindBugOnly extends EmpiricalStudy {
         pSize.execute(getContext());
 
         // Grime
-        grime.execute(getContext());
+//        grime.execute(getContext());
 //        getContext().logger().atInfo().log("metrics: " + metrics);
 
         // Metrics
-//        metrics.execute(getContext());
+        metrics.execute(getContext());
 
         // TechDebt
 //        techdebt.execute(getContext());
@@ -131,6 +131,6 @@ public class FindBugOnly extends EmpiricalStudy {
 //        qmood.execute(getContext());
 
         // Quamoco
-//        quamoco.execute(getContext());
+        quamoco.execute(getContext());
     }
 }
