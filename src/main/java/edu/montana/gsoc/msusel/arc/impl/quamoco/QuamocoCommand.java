@@ -189,7 +189,7 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
     }
 
     private Finding createFinding(edu.isu.isuese.datamodel.Finding finding) {
-        return new Finding(finding.getReferences().get(0).getReferencedComponent(context.getProject()), finding.getParentRule().getKey(), finding.getParentRule().getName());
+        return new ComponentFinding(finding.getReferences().get(0).getReferencedComponent(context.getProject()), finding.getParentRule().getKey(), finding.getParentRule().getName());
     }
 
     private void loadConfig() {
