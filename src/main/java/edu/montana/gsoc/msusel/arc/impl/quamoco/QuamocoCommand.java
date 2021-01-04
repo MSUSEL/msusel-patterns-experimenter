@@ -189,10 +189,6 @@ public class QuamocoCommand extends SecondaryAnalysisCommand {
     }
 
     private Finding createFinding(edu.isu.isuese.datamodel.Finding finding) {
-        System.out.println("arg1: " + finding.getReferences().get(0).getReferencedComponent(context.getProject()));
-        System.out.println("arg1 name: " + finding.getReferences().get(0).getRefKey());
-        System.out.println("arg2: " + finding.getParentRule().getKey());
-        System.out.println("arg3: " + finding.getParentRule().getName());
         return new ComponentFinding(finding.getReferences().get(0).getReferencedComponent(context.getProject()), finding.getParentRule().getKey(), finding.getParentRule().getName());
     }
 
