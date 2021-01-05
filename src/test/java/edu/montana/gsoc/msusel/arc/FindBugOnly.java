@@ -118,11 +118,11 @@ public class FindBugOnly extends EmpiricalStudy {
         pSize.execute(getContext());
 
         // Grime
-//        grime.execute(getContext());
-//        getContext().logger().atInfo().log("metrics: " + metrics);
+        grime.execute(getContext());
+        getContext().logger().atInfo().log("metrics: " + metrics);
 
         // Metrics
-        metrics.execute(getContext());
+//        metrics.execute(getContext());
 
         // TechDebt
 //        techdebt.execute(getContext());
@@ -131,6 +131,6 @@ public class FindBugOnly extends EmpiricalStudy {
 //        qmood.execute(getContext());
 
         // Quamoco
-        quamoco.execute(getContext());
+//        quamoco.execute(getContext());
     }
 }
