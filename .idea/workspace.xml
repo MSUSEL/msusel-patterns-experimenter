@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeDetectorCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeDetectorCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/migrations/20181120060107_create_test_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/migrations/20181120060107_create_test_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +101,7 @@
       <workItem from="1610728940236" duration="15519000" />
       <workItem from="1611300344599" duration="270000" />
       <workItem from="1611780384827" duration="2373000" />
-      <workItem from="1614584022686" duration="5503000" />
+      <workItem from="1614584022686" duration="8663000" />
     </task>
     <servers />
   </component>
