@@ -26,30 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc;
 
-import edu.isu.isuese.datamodel.Module;
 import edu.isu.isuese.datamodel.Project;
 import edu.isu.isuese.datamodel.System;
 import edu.montana.gsoc.msusel.arc.app.ToolsLoader;
 import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
-import edu.montana.gsoc.msusel.arc.impl.experiment.StudyManager;
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsProperties;
-import edu.montana.gsoc.msusel.arc.impl.ghsearch.GitHubSearchConstants;
-import edu.montana.gsoc.msusel.arc.impl.git.GitConstants;
-import edu.montana.gsoc.msusel.arc.impl.grime.GrimeConstants;
-import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Properties;
-import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
 import edu.montana.gsoc.msusel.arc.impl.pmd.PMDProperties;
-import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants;
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants;
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants;
 import lombok.extern.log4j.Log4j2;
-import org.javalite.activejdbc.Model;
-import org.javalite.activejdbc.test.DBSpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
