@@ -53,8 +53,8 @@ public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
 
         context.logger().atInfo().log("Initializing Grime Detectors");
         List<GrimeDetector> detectors = Lists.newArrayList(
-                new ClassGrimeDetector(),
-                new ModularGrimeDetector(),
+//                new ClassGrimeDetector(),
+//                new ModularGrimeDetector(),
                 new OrgGrimeDetector()
         );
 
