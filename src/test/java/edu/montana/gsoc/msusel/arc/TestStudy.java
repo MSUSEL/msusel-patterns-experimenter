@@ -75,7 +75,7 @@ class TestStudy extends EmpiricalStudy {
 //        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME);
 //        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
 //        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
-//        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
+        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
         Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
         Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
         Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
@@ -97,18 +97,18 @@ class TestStudy extends EmpiricalStudy {
             java.execute(getContext());
 //            jdi.execute(getContext());
 
-//            findbugs.execute(getContext());
-//            fbColl.execute(getContext());
-//            pmd.execute(getContext());
-//            pmdColl.execute(getContext());
+            findbugs.execute(getContext());
+            fbColl.execute(getContext());
+            pmd.execute(getContext());
+            pmdColl.execute(getContext());
 
 //            pattern4.execute(getContext());
 //            coalesce.execute(getContext());
 //            pSize.execute(getContext());
 //            grime.execute(getContext());
 
-//            metrics.execute(getContext());
-//            techdebt.execute(getContext());
+            metrics.execute(getContext());
+            techdebt.execute(getContext());
 //            qmood.execute(getContext());
             quamoco.execute(getContext());
 //        }
