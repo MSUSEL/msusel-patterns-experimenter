@@ -38,6 +38,14 @@ class SourceInjectorExecutor {
 
     int NUM
     ArcContext context
+    Map<Integer, Tuple2<Integer, Integer>> severityMap = [
+            1 : new Tuple2(1, 5),
+            2 : new Tuple2(6, 10),
+            3 : new Tuple2(11, 15),
+            4 : new Tuple2(16, 20),
+            5 : new Tuple2(21, 25),
+            6 : new Tuple2(26, 35)
+    ]
 
     void initialize(int num, ArcContext context) {
         this.NUM = num
@@ -61,26 +69,46 @@ class SourceInjectorExecutor {
         context.open()
         System s = System.findFirst("key = ?", sys)
         Project proj
-        Pattern patt
         PatternInstance inst
+        String pattern = map.get(Constants.PatternType)
+        String grimeType = map.get(Constants.GrimeType)
+        int min = 0, max = 0
 
         if (s) {
             proj = s.getProjects().first()
+            inst = proj.getPatternInstances().first()
+            (min, max) = calculateGrimeSeverity(inst, Integer.parseInt(map.get(Constants.GrimeSeverity)))
         }
 
-        String confText = """
+        if (proj && inst) {
+            String confText = """
             where {
                 systemKey = '$sys'
-                projectKey = '$proj'
+                projectKey = '${proj.getProjectKey()}'
                 patternKey = 'gof:$pattern'
-                patternInst = '$inst'
+                patternInst = '${inst.getInstKey()}'
             }
             what {
                 type = 'grime'
                 form = '$grimeType'
-                severity = '$grimeSeverity'
+                min = $min
+                max = $max
             }
             """
-        slurper.parse(confText)
+            return slurper.parse(confText)
+        }
+        else return null
+    }
+
+    private def calculateGrimeSeverity(PatternInstance inst, int severity) {
+        if (severity == 0)
+            return [0, 0]
+
+        int size = inst.getRoleBindings().size()
+
+        int min = (int) Math.ceil((double) (severityMap[severity].v1 * size) / 100)
+        int max = (int) Math.ceil((double) (severityMap[severity].v2 * size) / 100)
+
+        return [min, max]
     }
 }

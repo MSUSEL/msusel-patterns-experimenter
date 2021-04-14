@@ -26,6 +26,8 @@
  */
 package edu.montana.gsoc.msusel.arc.app
 
+import com.google.common.collect.Table
+import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
@@ -36,6 +38,15 @@ import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
 
 class ExperimentPhaseOne extends EmpiricalStudy {
+
+    Table<String, String, String> results
+    Command java
+    Command jdi
+    Command build
+    Command pattern4
+    Command coalesce
+    Command pSize
+    Collector p4Coll
 
     ExperimentPhaseOne(ArcContext context) {
         super("Experiment Phase One", "A Test Empirical Study", context)
@@ -50,46 +61,37 @@ class ExperimentPhaseOne extends EmpiricalStudy {
 
     @Override
     void initWorkflow() {
-
+        java     = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
+        jdi      = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
+        build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
+        pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
+        p4Coll   = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME);
+        coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME)
+        pSize    = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME)
     }
 
     @Override
-    void initReport() {
-
-    }
+    void initReport() {}
 
     void executeStudy() {
-        getContext().addArcProperty("quamoco.models.dir", "config/quamoco/models")
+        for (int id = 0; id < NUM; id++) {
+            String projKey = results.get("$id", Constants.Key1)
+            getContext().open()
+            getContext().setProject(Project.findFirst("projKey = ?", projKey))
+            getContext().close()
 
-        Command java = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
-        Command jdi = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
-        Command build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
-        Command pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
-        Collector p4Coll = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME);
-        Command coalesce = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_COALESCE_CMD_NAME)
-        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME)
+            // Java
+            build.execute(getContext())
+            java.execute(getContext())
+            jdi.execute(getContext())
 
-        System sys = null
+            // Pattern 4
+            pattern4.execute(getContext())
+            p4Coll.execute(getContext())
 
-        getContext().open()
-        sys = System.findFirst("name = ?", "huston")
-        getContext().close()
-
-        getContext().open()
-        getContext().setProject(sys.getProjects().get(0))
-        getContext().close()
-
-        // Java
-        build.execute(getContext())
-        java.execute(getContext())
-        jdi.execute(getContext())
-
-        // Pattern 4
-        pattern4.execute(getContext())
-        p4Coll.execute(getContext())
-
-        // Patterns
-        coalesce.execute(getContext())
-        pSize.execute(getContext())
+            // Patterns
+            coalesce.execute(getContext())
+            pSize.execute(getContext())
+        }
     }
 }

@@ -26,6 +26,8 @@
  */
 package edu.montana.gsoc.msusel.arc.app
 
+import com.google.common.collect.Table
+import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
@@ -40,6 +42,16 @@ import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants
 
 class ExperimentPhaseTwo extends EmpiricalStudy {
 
+    Table<String, String, String> results
+    Command findbugs
+    Command pmd
+    Command metrics
+    Command qmood
+    Command quamoco
+    Command techdebt
+    Collector fbColl
+    Collector pmdColl
+
     ExperimentPhaseTwo(ArcContext context) {
         super("Experiment Phase Two", "A Test Empirical Study", context)
     }
@@ -53,34 +65,31 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
 
     @Override
     void initWorkflow() {
+        getContext().addArcProperty("quamoco.models.dir", "config/quamoco/models")
 
+        findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME)
+        pmd      = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME)
+        metrics  = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
+        techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME)
+        qmood    = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME)
+        quamoco  = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME)
+        fbColl   = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME)
+        pmdColl  = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME)
     }
 
     @Override
-    void initReport() {
-
-    }
+    void initReport() { }
 
     void executeStudy() {
-        getContext().addArcProperty("quamoco.models.dir", "config/quamoco/models")
+        for (int id = 0; id < NUM; id++) {
+            runTools(results.get("$id", Constants.Key1))
+            runTools(results.get("$id", Constants.Key2))
+        }
+    }
 
-        Command findbugs = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME)
-        Command pmd = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME)
-        Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
-        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME)
-        Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME)
-        Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME)
-        Collector fbColl = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME)
-        Collector pmdColl = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME)
-
-        System sys = null
-
+    void runTools(String projKey) {
         getContext().open()
-        sys = System.findFirst("name = ?", "huston")
-        getContext().close()
-
-        getContext().open()
-        getContext().setProject(sys.getProjects().get(0))
+        getContext().setProject(Project.findFirst("projKey = ?", projKey))
         getContext().close()
 
         // SpotBugs

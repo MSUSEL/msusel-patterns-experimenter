@@ -26,20 +26,29 @@
  */
 package edu.montana.gsoc.msusel.arc.app
 
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.pattern.gen.ConfigLoader
 import edu.montana.gsoc.msusel.pattern.gen.Director
 import edu.montana.gsoc.msusel.pattern.gen.PluginLoader
 
 class PatternGeneratorExecutor {
 
-    void initialize() {
+    ArcContext context
+    String base
+    String lang
+    int NUM
+    List<String> patterns
 
+    void initialize(List<String> patterns, String base, String lang, int num) {
+        this.patterns = patterns
+        this.base = base
+        this.lang = lang
+        this.NUM = num
     }
 
     void execute() {
         PluginLoader plugins = PluginLoader.instance
         ConfigLoader loader = new ConfigLoader()
-        String base, lang
 
         File fBase = new File(base)
         fBase.mkdirs()
@@ -54,7 +63,7 @@ class PatternGeneratorExecutor {
     }
 
     ConfigObject createConfig() {
-        String config = """
+        String config = """\
         output = '$base'
         language = 'java'
         patterns = ['${patterns.join("','")}']
@@ -75,17 +84,17 @@ class PatternGeneratorExecutor {
         }
         
         db {
-            driver = ''
-            url = ''
-            user = ''
-            pass = ''
-            type = ''
+            driver = '${context.getDBCreds().driver}'
+            url = '${context.getDBCreds().url}'
+            user = '${context.getDBCreds().user}'
+            pass = '${context.getDBCreds().pass}'
+            type = '${context.getDBCreds().type}'
         }
         
         build {
-            project = ''
-            artifact = ''
-            description = ''
+            project = 'griffith-experiment-one'
+            artifact = 'piolot-experiment'
+            description = 'Pilot Experiment Generated Pattern Instance'
         }
         """
 

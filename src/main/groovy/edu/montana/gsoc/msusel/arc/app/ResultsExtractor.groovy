@@ -56,8 +56,8 @@ class ResultsExtractor {
 
     void extractSystemResults(Table<String, String, String> values) {
         for (int id = 0; id < NUM; id++) {
-            String key1 = values.get(id, "key1")
-            String key2 = values.get(id, "key2")
+            String key1 = values.get("$id", Constants.Key1)
+            String key2 = values.get("$id", Constants.Key2)
             System sys1 = System.findFirst("key = ?", key1)
             System sys2 = System.findFirst("key = ?", key2)
             measures.each {
@@ -70,9 +70,9 @@ class ResultsExtractor {
     }
 
     void extractProjectResults(Table<String, String, String> values) {
-        for (int i = 0; i < NUM; i++) {
-            String key1 = values.get(i, "key1")
-            String key2 = values.get(i, "key2")
+        for (int id = 0; id < NUM; id++) {
+            String key1 = values.get("$id", Constants.Key1)
+            String key2 = values.get("$id", Constants.Key2)
             Project sys1 = Project.findFirst("projKey = ?", key1)
             Project sys2 = Project.findFirst("projKey = ?", key2)
             measures.each {

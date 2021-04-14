@@ -31,35 +31,11 @@ import com.google.common.collect.Table
 
 class ExperimentGenerator {
 
-    List<String> grimeTypes = [
-            'pig',
-            'peag',
-            'peeg',
-            'tig',
-            'teag',
-            'teeg',
-            'dipg',
-            'disg',
-            'depg',
-            'desg',
-            'iipg',
-            'iisg',
-            'iepg',
-            'iseg',
-            'picg',
-            'pirg',
-            'pecg',
-            'perg',
-            'mpicg',
-            'mpiug',
-            'mpecg',
-            'mpeug',
-            'mticg',
-            'mticg',
-            'mtiug',
-            'mtecg',
-            'mteug'
-    ]
+    List<String> grimeTypes
+
+    void initialize(List<String> grimeTypes) {
+        this.grimeTypes = grimeTypes
+    }
 
     Table<String, String, String> generate(List<String> patternTypes) {
         Table<String, String, String> table = HashBasedTable.create()

@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.app
 
 import com.google.common.collect.Table
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.ReportingLevel
 
 class Runner {
 
@@ -41,16 +42,21 @@ class Runner {
     ExperimentPhaseOne phaseOne
     ExperimentPhaseTwo phaseTwo
     int status
+    int num
+    ConfigObject runnerConfig
 
-    Runner() {
+    Runner(ArcContext context) {
+        this.context = context
         exGen = new ExperimentGenerator()
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
         status = 1
+        num = 0
     }
 
     void run() {
+        initialize()
         generateExperimentalConfig()
         generatePatternInstances()
         executeArcExperimenterPhaseOne()
@@ -59,10 +65,15 @@ class Runner {
         extractResults()
     }
 
+    def initialize() {
+        this.runnerConfig = loadConfiguration()
+    }
+
     void generateExperimentalConfig() {
         context.logger().atInfo().log("Generating Experimental Config")
-        exGen.initialize()
+        exGen.initialize(runnerConfig.grime_types)
         results = exGen.generate()
+        num = results.rowKeySet().size()
         context.logger().atInfo().log("Finished Generating Experimental Config")
 
         resWrite.writeResults(results)
@@ -71,7 +82,7 @@ class Runner {
 
     void generatePatternInstances() {
         context.logger().atInfo().log("Generating Design Pattern Instances")
-        patternGenerator.initialize()
+        patternGenerator.initialize(runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
         patternGenerator.execute()
         context.logger().atInfo().log("Finished Generating Design Pattern Instances")
         updateStatus()
@@ -86,7 +97,8 @@ class Runner {
 
     void executeSourceCodeInjector() {
         context.logger().atInfo().log("Executing Source Code Injector")
-        injector.execute(results, comfig)
+        injector.initialize(num, context)
+        injector.execute()
         context.logger().atInfo().log("Finished Executing Source Code Injector")
 
         updateStatus()
@@ -102,19 +114,25 @@ class Runner {
 
     void extractResults() {
         context.logger().atInfo().log("Collecting Experimental Results")
-        resEx.initialize()
+        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures, num)
         resEx.extractResults(results)
         context.logger().atInfo().log("Finished Collecting Experimental Results")
         updateStatus()
     }
 
     void updateStatus() {
-        resWrite.initialize()
+        resWrite.initialize(num, runnerConfig.measures)
         resWrite.writeResults(results)
         writeStatus(status++)
     }
 
     private void writeStatus(int phase) {
 
+    }
+
+    private ConfigObject loadConfiguration() {
+        ConfigSlurper slurper = new ConfigSlurper()
+        File file = new File("config/runner.conf")
+        slurper.parse(file.text)
     }
 }
