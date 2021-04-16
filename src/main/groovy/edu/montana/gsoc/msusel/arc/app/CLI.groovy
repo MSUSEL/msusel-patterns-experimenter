@@ -29,25 +29,9 @@ package edu.montana.gsoc.msusel.arc.app
 import edu.isu.isuese.datamodel.util.DBManager
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ArcProperties
-import edu.montana.gsoc.msusel.arc.Tool
 import edu.montana.gsoc.msusel.arc.db.ConfigLoader
-import edu.montana.gsoc.msusel.arc.db.DbProperties
 import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.impl.experiment.StudyManager
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsTool
-import edu.montana.gsoc.msusel.arc.impl.ghsearch.GitHubSearchTool
-import edu.montana.gsoc.msusel.arc.impl.git.GitTool
-import edu.montana.gsoc.msusel.arc.impl.grime.GrimeTool
-import edu.montana.gsoc.msusel.arc.impl.injector.SoftwareInjectorTool
-import edu.montana.gsoc.msusel.arc.impl.java.JavaTool
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsTool
-import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Tool
-import edu.montana.gsoc.msusel.arc.impl.patterngen.PatternGeneratorTool
-import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternTool
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool
-import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodTool
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoTool
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtTool
 import groovy.cli.picocli.CliBuilder
 import groovy.cli.picocli.OptionAccessor
 import groovy.util.logging.Log4j2
@@ -64,6 +48,7 @@ class CLI {
     static void main(String[] args) {
         ArcContext context = new ArcContext(log)
         StudyManager studyManager = new StudyManager(context)
+        Runner runner = new Runner(context)
 
         // Setup CLI
         CommandLineInterface cli = CommandLineInterface.instance
@@ -93,31 +78,17 @@ class CLI {
         context.logger().atInfo().log("Command Line Arguments Processed")
 
         context.logger().atInfo().log("Verifying Database and Creating if missing")
-        DBManager.instance.checkDatabaseAndCreateIfMissing(
-                context.getArcProperty(DbProperties.DB_TYPE),
-                context.getArcProperty(DbProperties.DB_DRIVER),
-                context.getArcProperty(DbProperties.DB_URL),
-                context.getArcProperty(DbProperties.DB_USER),
-                context.getArcProperty(DbProperties.DB_PASS)
-        )
+        DBManager.instance.checkDatabaseAndCreateIfMissing(context.getDBCreds())
 
-        context.logger().atInfo().log("Opening Database Connection")
-        context.open()
-
-        // Load and register tools
-        context.logger().atInfo().log("Loading and registering tools")
-        ToolsLoader toolLoader = new ToolsLoader()
-        toolLoader.loadTools(context)
-        context.logger().atInfo().log("Tools loaded and registered")
+        runner.run()
 
         // Select experiment
-        context.logger().atInfo().log(String.format("Selecting experiment: %s", empiricalStudy.getName()))
-
-        context.logger().atInfo().log("Experiment loaded and ready to execute")
-
-        // Run the experiment
-        empiricalStudy.execute()
-        context.close()
+//        context.logger().atInfo().log(String.format("Selecting experiment: %s", empiricalStudy.getName()))
+//
+//        context.logger().atInfo().log("Experiment loaded and ready to execute")
+//
+//        // Run the experiment
+//        empiricalStudy.execute()
     }
 }
 
@@ -227,38 +198,4 @@ class CommandLineInterface {
     }
 }
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-class ToolsLoader {
 
-    void loadTools(ArcContext context) {
-        context.logger().atInfo().log("Instantiating tools")
-
-        Tool[] tools = [
-                new FindBugsTool(context),
-                new GitHubSearchTool(context),
-                new GitTool(context),
-                new GrimeTool(context),
-                new JavaTool(context),
-                new MetricsTool(context),
-                new Pattern4Tool(context),
-                new PMDTool(context),
-                new QuamocoTool(context),
-                new SoftwareInjectorTool(context),
-                new TechDebtTool(context),
-                new QMoodTool(context),
-                new ArcPatternTool(context),
-                new PatternGeneratorTool(context)
-        ]
-
-        context.logger().atInfo().log("Tools instantiated now loading repos and initializing commands")
-        tools.each {
-            it.getRepoProvider().load()
-            it.getOtherProviders()*.load()
-            it.init()
-        }
-        context.logger().atInfo().log("Finished loading tools")
-    }
-}

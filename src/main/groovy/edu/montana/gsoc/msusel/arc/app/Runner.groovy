@@ -44,6 +44,7 @@ class Runner {
     int status
     int num
     ConfigObject runnerConfig
+    SystemDropLoader sdl
 
     Runner(ArcContext context) {
         this.context = context
@@ -51,22 +52,29 @@ class Runner {
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
+        sdl = new SystemDropLoader()
         status = 1
         num = 0
     }
 
     void run() {
-        initialize()
-        generateExperimentalConfig()
-        generatePatternInstances()
-        executeArcExperimenterPhaseOne()
-        executeSourceCodeInjector()
-        executeArcExperimenterPhaseTwo()
-        extractResults()
+        if (status < 1) initialize()
+        if (status < 2) generateExperimentalConfig()
+        if (status < 3) {
+            generatePatternInstances()
+            prepareDatabaseForExperiment()
+        }
+        if (status < 4) executeArcExperimenterPhaseOne()
+        if (status < 5) executeSourceCodeInjector()
+        if (status < 6) executeArcExperimenterPhaseTwo()
+        if (status < 7) extractResults()
     }
 
     def initialize() {
         this.runnerConfig = loadConfiguration()
+        readStatus()
+        if (status <= 0)
+            resetDatabase()
     }
 
     void generateExperimentalConfig() {
@@ -82,10 +90,19 @@ class Runner {
 
     void generatePatternInstances() {
         context.logger().atInfo().log("Generating Design Pattern Instances")
-        patternGenerator.initialize(runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
+        patternGenerator.initialize(results, runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
         patternGenerator.execute()
         context.logger().atInfo().log("Finished Generating Design Pattern Instances")
         updateStatus()
+    }
+
+    void prepareDatabaseForExperiment() {
+        context.logger().atInfo().log("Preparing Database for Experiment")
+        sdl.dropOutSystemsAndProjects()
+        resetDatabase()
+        loadTools()
+        sdl.loadSystemsAndProjects()
+        context.logger().atInfo().log("Database Prepared")
     }
 
     void executeArcExperimenterPhaseOne() {
@@ -107,7 +124,7 @@ class Runner {
     void executeArcExperimenterPhaseTwo() {
         context.logger().atInfo().log("Executing Experiment Phase Two")
         phaseTwo.execute()
-        context.logger().atInfo().log("Executing Expreiment Phase Two")
+        context.logger().atInfo().log("Executing Experiment Phase Two")
 
         updateStatus()
     }
@@ -127,12 +144,33 @@ class Runner {
     }
 
     private void writeStatus(int phase) {
+        File f = new File("config/status")
+        if (f.exists() && f.isFile() && f.canRead())
+            f.text = phase
+    }
 
+    private void readStatus() {
+        File f = new File("config/status")
+        if (f.exists() && f.isFile() && f.canWrite())
+            status = Integer.parseInt(f.text)
+    }
+
+    private void resetDatabase() {
+        context.createDatabase()
     }
 
     private ConfigObject loadConfiguration() {
         ConfigSlurper slurper = new ConfigSlurper()
         File file = new File("config/runner.conf")
         slurper.parse(file.text)
+    }
+
+    private void loadTools() {
+        context.open()
+        context.logger().atInfo().log("Loading and registering tools")
+        ToolsLoader toolLoader = new ToolsLoader()
+        toolLoader.loadTools(context)
+        context.logger().atInfo().log("Tools loaded and registered")
+        context.close()
     }
 }

@@ -5,15 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/config/runner.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SystemDropLoader.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ToolsLoader.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentGenerator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentGenerator.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseOne.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseTwo.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/PatternGeneratorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/PatternGeneratorExecutor.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsExtractor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsExtractor.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/ArcContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/ArcContext.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +59,11 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="edu.montana.gsoc.msusel.arc.app" />
+    </key>
   </component>
   <component name="RunManager" selected="JUnit.ExperimentalTest.test">
     <configuration name="ExperimentalTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
@@ -181,7 +185,11 @@
       <workItem from="1617501866535" duration="597000" />
       <workItem from="1617560527236" duration="612000" />
       <workItem from="1618213115781" duration="28349000" />
-      <workItem from="1618340752374" duration="3092000" />
+      <workItem from="1618340752374" duration="11017000" />
+      <workItem from="1618476588660" duration="1704000" />
+      <workItem from="1618483299266" duration="2806000" />
+      <workItem from="1618517116837" duration="1826000" />
+      <workItem from="1618540457594" duration="596000" />
     </task>
     <servers />
   </component>

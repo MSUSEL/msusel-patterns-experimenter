@@ -130,6 +130,10 @@ public class ArcContext {
         DBManager.getInstance().close();
     }
 
+    public void createDatabase() {
+        DBManager.getInstance().createDatabase(getDBCreds());
+    }
+
     public String getReportDirectory() {
         return getArcProperty(ArcProperties.TOOL_OUTPUT_DIR);
     }
