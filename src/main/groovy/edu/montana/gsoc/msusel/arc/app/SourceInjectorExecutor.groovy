@@ -55,16 +55,19 @@ class SourceInjectorExecutor {
     void execute(Table<String, String, String> results) {
         ConfigSlurper slurper = new ConfigSlurper()
         for (int id = 0; id < NUM; id++) {
-            ConfigObject config = createConfig(slurper, results, id)
+            ConfigObject config = createConfig(slurper, results.row("$id"))
 
             context.open()
-            Director.instance.inject(config)
+            def vals = Director.instance.inject(config)
             context.close()
+
+            vals.each { col, value ->
+                results.put("$id", col, value)
+            }
         }
     }
 
-    private ConfigObject createConfig(ConfigSlurper slurper, Table<String, String, String> results, int id) {
-        Map<String, String> map = results.row("$id")
+    private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
         String sys = map[Constants.Key1]
         context.open()
         System s = System.findFirst("key = ?", sys)
@@ -95,9 +98,13 @@ class SourceInjectorExecutor {
                 max = $max
             }
             """
+            context.close()
             return slurper.parse(confText)
         }
-        else return null
+        else {
+            context.close()
+            return null
+        }
     }
 
     private def calculateGrimeSeverity(PatternInstance inst, int severity) {
