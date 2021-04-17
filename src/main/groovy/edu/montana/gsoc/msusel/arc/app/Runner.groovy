@@ -48,6 +48,7 @@ class Runner {
 
     Runner(ArcContext context) {
         this.context = context
+        patternGenerator = new PatternGeneratorExecutor()
         exGen = new ExperimentGenerator()
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
@@ -77,8 +78,8 @@ class Runner {
     def initialize() {
         this.runnerConfig = loadConfiguration()
         readStatus()
-        if (status <= 0)
-            resetDatabase()
+        //if (status <= 0)
+            //resetDatabase()
     }
 
     void generateExperimentalConfig() {
@@ -87,14 +88,12 @@ class Runner {
         results = exGen.generate()
         num = results.rowKeySet().size()
         context.logger().atInfo().log("Finished Generating Experimental Config")
-
-        resWrite.writeResults(results)
         updateStatus()
     }
 
     void generatePatternInstances() {
         context.logger().atInfo().log("Generating Design Pattern Instances")
-        patternGenerator.initialize(results, runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
+        patternGenerator.initialize(context, results, runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
         patternGenerator.execute()
         context.logger().atInfo().log("Finished Generating Design Pattern Instances")
         updateStatus()
@@ -142,7 +141,7 @@ class Runner {
     }
 
     void updateStatus() {
-        resWrite.initialize(num, runnerConfig.measures)
+        resWrite.initialize(num, runnerConfig.measures, runnerConfig.results_file)
         resWrite.writeResults(results)
         writeStatus(status++)
     }

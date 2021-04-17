@@ -34,15 +34,21 @@ class ResultsWriter {
 
     String[] MEASURES = []
     int NUM = 0
+    String file
 
-    void initialize(int num, List<String> measures) {
+    void initialize(int num, List<String> measures, String file) {
         this.NUM = num
         this.MEASURES = measures
+        this.file = file
     }
 
     void writeResults(Table<String, String, String> table) {
-        FileWriter out = new FileWriter("output.csv")
-        try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(Constants.HEADERS + MEASURES))) {
+        FileWriter out = new FileWriter(file)
+        String[] headers = Constants.HEADERS
+        MEASURES.each {
+            headers += it.split(":")[1]
+        }
+        try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(headers))) {
             for (int id = 0; id < NUM; id++) {
                 Map<String, String> row = table.row("$id")
                 List<String> rowValues = []

@@ -42,7 +42,8 @@ class PatternGeneratorExecutor {
     List<String> patterns
     Table<String, String, String> table
 
-    void initialize(Table<String, String, String> table, List<String> patterns, String base, String lang, int num) {
+    void initialize(ArcContext context, Table<String, String, String> table, List<String> patterns, String base, String lang, int num) {
+        this.context = context
         this.patterns = patterns
         this.base = base
         this.lang = lang
@@ -64,7 +65,7 @@ class PatternGeneratorExecutor {
         Director director = new Director()
         director.initialize()
         GeneratorContext context = GeneratorContext.instance
-        context.resetDb = true
+        context.resetDb = false
         context.results = table
         director.execute()
     }
@@ -82,7 +83,7 @@ class PatternGeneratorExecutor {
         srcPath = "src/main/java"
         srcExt = ".java"
         
-        license = {
+        license {
             name = 'MIT'
             year = 2021
             holder = 'Isaac D. Griffith'
