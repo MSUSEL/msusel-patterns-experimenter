@@ -63,18 +63,23 @@ class CLI {
         // Load Configuration
         context.logger().atInfo().log("Loading Configuration")
 
-        File fBase = new File((String) System.getenv("ARC_HOME"))
+        File fBase
+        if (System.getenv("ARC_HOME") == null)
+            fBase = new File(".")
+        else fBase = new File((String) System.getenv("ARC_HOME"))
         File fConfig = new File(fBase, ArcConstants.PROPERTIES_FILE)
         Properties config = loader.loadConfiguration(fConfig)
         context.setArcProperties(config)
-        context.addArcProperty(ArcProperties.ARC_HOME_DIR, System.getenv("ARC_HOME"))
+        if (System.getenv("ARC_HOME") == null)
+            context.addArcProperty(ArcProperties.ARC_HOME_DIR, ".")
+        else context.addArcProperty(ArcProperties.ARC_HOME_DIR, System.getenv("ARC_HOME"))
 
         context.logger().atInfo().log("Configuration loaded")
 
         // Process Command Line Args
         context.logger().atInfo().log("Processing Command Line Arguments")
-        (base, empiricalStudy) = cli.parse(args)
-        context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
+//        (base, empiricalStudy) = cli.parse(args)
+//        context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
         context.logger().atInfo().log("Command Line Arguments Processed")
 
         context.logger().atInfo().log("Verifying Database and Creating if missing")

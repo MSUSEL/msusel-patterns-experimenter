@@ -53,11 +53,12 @@ class Runner {
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
         sdl = new SystemDropLoader()
-        status = 1
+        status = 0
         num = 0
     }
 
     void run() {
+        long start = System.currentTimeMillis()
         if (status < 1) initialize()
         if (status < 2) generateExperimentalConfig()
         if (status < 3) {
@@ -68,6 +69,9 @@ class Runner {
         if (status < 5) executeSourceCodeInjector()
         if (status < 6) executeArcExperimenterPhaseTwo()
         if (status < 7) extractResults()
+        long end = System.currentTimeMillis()
+
+        println("Processing took a total of ${(double)(end - start) / 1000 / 60} minutes")
     }
 
     def initialize() {
