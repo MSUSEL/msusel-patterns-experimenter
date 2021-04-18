@@ -78,8 +78,8 @@ class Runner {
     def initialize() {
         this.runnerConfig = loadConfiguration()
         readStatus()
-        //if (status <= 0)
-            //resetDatabase()
+        if (status <= 0)
+            resetDatabase()
     }
 
     void generateExperimentalConfig() {
