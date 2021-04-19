@@ -53,7 +53,7 @@ class Runner {
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
-        sdl = new SystemDropLoader()
+        sdl = new SystemDropLoader(context)
         status = 0
         num = 0
     }

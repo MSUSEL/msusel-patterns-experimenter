@@ -28,16 +28,20 @@ package edu.montana.gsoc.msusel.arc.app
 
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
+import edu.montana.gsoc.msusel.arc.ArcContext
 
 class SystemDropLoader {
 
+    ArcContext context
     Map<System, List<Project>> sysProjMap
 
-    SystemDropLoader() {
+    SystemDropLoader(ArcContext context) {
         sysProjMap = [:]
+        this.context = context
     }
 
     void dropOutSystemsAndProjects() {
+        context.open()
         System.findAll().each {
             System sys = (System) it
             List<Project> projList = []
@@ -46,9 +50,11 @@ class SystemDropLoader {
             }
             sysProjMap[sys] = projList
         }
+        context.close()
     }
 
     void loadSystemsAndProjects() {
+        context.open()
         sysProjMap.each { System sys, List<Project> projList ->
             sys.thaw()
             projList.each {
@@ -58,5 +64,6 @@ class SystemDropLoader {
         }
 
         sysProjMap.clear()
+        context.close()
     }
 }
