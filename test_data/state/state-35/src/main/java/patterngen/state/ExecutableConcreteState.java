@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ExecutableConcreteState extends ScriptableAbstractState {
+public class ExecutableConcreteState extends PrioritizedAbstractState {
 
     private static ExecutableConcreteState instance;
-    private SimpleContext context;
+    private CloneableContext context;
 
 
-    private ExecutableConcreteState(SimpleContext ctx) {
+    private ExecutableConcreteState(CloneableContext ctx) {
         this.context = ctx;
     }
 
-    public static ExecutableConcreteState instance(SimpleContext ctx) {
+    public static ExecutableConcreteState instance(CloneableContext ctx) {
         if (instance == null) {
             instance = new ExecutableConcreteState(ctx);
         }
@@ -56,8 +56,8 @@ public class ExecutableConcreteState extends ScriptableAbstractState {
      *
      */
     @Override
-    public void keystroke() {
-	context.changeCurrentState(VirtualConcreteState.instance(context));
+    public void user() {
+	context.changeCurrentState(MutexConcreteState.instance(context));
     }
 
 

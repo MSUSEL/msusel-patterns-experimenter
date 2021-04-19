@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TesterConcreteState extends ThreadedAbstractState {
+public class TesterConcreteState extends AnnotationAbstractState {
 
     private static TesterConcreteState instance;
-    private TaskContext context;
+    private DatabaseContext context;
 
 
-    private TesterConcreteState(TaskContext ctx) {
+    private TesterConcreteState(DatabaseContext ctx) {
         this.context = ctx;
     }
 
-    public static TesterConcreteState instance(TaskContext ctx) {
+    public static TesterConcreteState instance(DatabaseContext ctx) {
         if (instance == null) {
             instance = new TesterConcreteState(ctx);
         }
@@ -56,8 +56,16 @@ public class TesterConcreteState extends ThreadedAbstractState {
      *
      */
     @Override
-    public void minus() {
-	context.changeCurrentState(DatabaseConcreteState.instance(context));
+    public void check() {
+	context.changeCurrentState(RasterConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void socket() {
+	context.changeCurrentState(MultipleConcreteState.instance(context));
     }
 
 

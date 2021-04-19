@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class GenericConcreteState extends DialogAbstractState {
+public class GenericConcreteState extends DatabaseState {
 
     private static GenericConcreteState instance;
-    private ValidatorContext context;
+    private AdapterContext context;
 
 
-    private GenericConcreteState(ValidatorContext ctx) {
+    private GenericConcreteState(AdapterContext ctx) {
         this.context = ctx;
     }
 
-    public static GenericConcreteState instance(ValidatorContext ctx) {
+    public static GenericConcreteState instance(AdapterContext ctx) {
         if (instance == null) {
             instance = new GenericConcreteState(ctx);
         }
@@ -56,32 +56,24 @@ public class GenericConcreteState extends DialogAbstractState {
      *
      */
     @Override
-    public void as() {
-	context.changeCurrentState(GenericConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
     public void set() {
-	context.changeCurrentState(DeviceConcreteState.instance(context));
+	context.changeCurrentState(CheckedConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void device() {
-	context.changeCurrentState(IntegerConcreteState.instance(context));
+    public void clear() {
+	context.changeCurrentState(EngineConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void pixel() {
-	context.changeCurrentState(RequestConcreteState.instance(context));
+    public void from() {
+	context.changeCurrentState(RecordConcreteState.instance(context));
     }
 
 

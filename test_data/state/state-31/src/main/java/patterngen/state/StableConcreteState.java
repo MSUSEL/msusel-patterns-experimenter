@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class StableConcreteState extends StatementAbstractState {
+public class StableConcreteState extends ExporterState {
 
     private static StableConcreteState instance;
-    private CollectionContext context;
+    private StatefulContext context;
 
 
-    private StableConcreteState(CollectionContext ctx) {
+    private StableConcreteState(StatefulContext ctx) {
         this.context = ctx;
     }
 
-    public static StableConcreteState instance(CollectionContext ctx) {
+    public static StableConcreteState instance(StatefulContext ctx) {
         if (instance == null) {
             instance = new StableConcreteState(ctx);
         }
@@ -56,8 +56,16 @@ public class StableConcreteState extends StatementAbstractState {
      *
      */
     @Override
-    public void search() {
-	context.changeCurrentState(StatelessConcreteState.instance(context));
+    public void extractor() {
+	context.changeCurrentState(HandlerConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void user() {
+	context.changeCurrentState(DirectoryConcreteState.instance(context));
     }
 
 

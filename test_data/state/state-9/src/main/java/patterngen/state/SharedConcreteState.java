@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class SharedConcreteState extends StatefulAbstractState {
+public class SharedConcreteState extends LockAbstractState {
 
     private static SharedConcreteState instance;
-    private ControllerContext context;
+    private JarContext context;
 
 
-    private SharedConcreteState(ControllerContext ctx) {
+    private SharedConcreteState(JarContext ctx) {
         this.context = ctx;
     }
 
-    public static SharedConcreteState instance(ControllerContext ctx) {
+    public static SharedConcreteState instance(JarContext ctx) {
         if (instance == null) {
             instance = new SharedConcreteState(ctx);
         }
@@ -56,8 +56,24 @@ public class SharedConcreteState extends StatefulAbstractState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(SharedConcreteState.instance(context));
+    public void contains() {
+	context.changeCurrentState(DemarshallerConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void upload() {
+	context.changeCurrentState(LegacyConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void hash() {
+	context.changeCurrentState(HelperConcreteState.instance(context));
     }
 
 

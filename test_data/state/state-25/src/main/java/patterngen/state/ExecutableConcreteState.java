@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ExecutableConcreteState extends ColumnAbstractState {
+public class ExecutableConcreteState extends NotificationState {
 
     private static ExecutableConcreteState instance;
-    private TreeContext context;
+    private FlexibleContext context;
 
 
-    private ExecutableConcreteState(TreeContext ctx) {
+    private ExecutableConcreteState(FlexibleContext ctx) {
         this.context = ctx;
     }
 
-    public static ExecutableConcreteState instance(TreeContext ctx) {
+    public static ExecutableConcreteState instance(FlexibleContext ctx) {
         if (instance == null) {
             instance = new ExecutableConcreteState(ctx);
         }
@@ -56,24 +56,8 @@ public class ExecutableConcreteState extends ColumnAbstractState {
      *
      */
     @Override
-    public void contains() {
-	context.changeCurrentState(ExecutableConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void valueof() {
-	context.changeCurrentState(ThreadsafeConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void put() {
-	context.changeCurrentState(AccumulatorConcreteState.instance(context));
+    public void file() {
+	context.changeCurrentState(CacheConcreteState.instance(context));
     }
 
 

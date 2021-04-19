@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class SharedConcreteState extends ThreadedAbstractState {
+public class SharedConcreteState extends ChannelAbstractState {
 
     private static SharedConcreteState instance;
-    private TaskContext context;
+    private DatabaseContext context;
 
 
-    private SharedConcreteState(TaskContext ctx) {
+    private SharedConcreteState(DatabaseContext ctx) {
         this.context = ctx;
     }
 
-    public static SharedConcreteState instance(TaskContext ctx) {
+    public static SharedConcreteState instance(DatabaseContext ctx) {
         if (instance == null) {
             instance = new SharedConcreteState(ctx);
         }
@@ -56,8 +56,16 @@ public class SharedConcreteState extends ThreadedAbstractState {
      *
      */
     @Override
-    public void minus() {
-	context.changeCurrentState(UserConcreteState.instance(context));
+    public void check() {
+	context.changeCurrentState(ScannerConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void socket() {
+	context.changeCurrentState(RasterConcreteState.instance(context));
     }
 
 

@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ReadableConcreteState extends AbstractAbstractState {
+public class ReadableConcreteState extends SingletonAbstractState {
 
     private static ReadableConcreteState instance;
-    private ConstraintContext context;
+    private TesterContext context;
 
 
-    private ReadableConcreteState(ConstraintContext ctx) {
+    private ReadableConcreteState(TesterContext ctx) {
         this.context = ctx;
     }
 
-    public static ReadableConcreteState instance(ConstraintContext ctx) {
+    public static ReadableConcreteState instance(TesterContext ctx) {
         if (instance == null) {
             instance = new ReadableConcreteState(ctx);
         }
@@ -56,32 +56,8 @@ public class ReadableConcreteState extends AbstractAbstractState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(CloneableConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void sequence() {
-	context.changeCurrentState(FlexibleConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void subtract() {
-	context.changeCurrentState(StatementConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void remove() {
-	context.changeCurrentState(TransactionConcreteState.instance(context));
+    public void manager() {
+	context.changeCurrentState(ClientConcreteState.instance(context));
     }
 
 

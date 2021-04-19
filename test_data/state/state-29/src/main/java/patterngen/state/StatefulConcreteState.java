@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class StatefulConcreteState extends AbstractAbstractState {
+public class StatefulConcreteState extends SingletonAbstractState {
 
     private static StatefulConcreteState instance;
-    private ConstraintContext context;
+    private TesterContext context;
 
 
-    private StatefulConcreteState(ConstraintContext ctx) {
+    private StatefulConcreteState(TesterContext ctx) {
         this.context = ctx;
     }
 
-    public static StatefulConcreteState instance(ConstraintContext ctx) {
+    public static StatefulConcreteState instance(TesterContext ctx) {
         if (instance == null) {
             instance = new StatefulConcreteState(ctx);
         }
@@ -56,32 +56,8 @@ public class StatefulConcreteState extends AbstractAbstractState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(InitializerConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void sequence() {
-	context.changeCurrentState(StatementConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void subtract() {
-	context.changeCurrentState(StatefulConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void remove() {
-	context.changeCurrentState(CharacterConcreteState.instance(context));
+    public void manager() {
+	context.changeCurrentState(DatabaseConcreteState.instance(context));
     }
 
 

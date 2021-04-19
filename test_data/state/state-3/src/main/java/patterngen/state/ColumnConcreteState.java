@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ColumnConcreteState extends SerializableState {
+public class ColumnConcreteState extends RunnableAbstractState {
 
     private static ColumnConcreteState instance;
-    private StateContext context;
+    private RecursiveContext context;
 
 
-    private ColumnConcreteState(StateContext ctx) {
+    private ColumnConcreteState(RecursiveContext ctx) {
         this.context = ctx;
     }
 
-    public static ColumnConcreteState instance(StateContext ctx) {
+    public static ColumnConcreteState instance(RecursiveContext ctx) {
         if (instance == null) {
             instance = new ColumnConcreteState(ctx);
         }
@@ -56,8 +56,24 @@ public class ColumnConcreteState extends SerializableState {
      *
      */
     @Override
-    public void subtract() {
-	context.changeCurrentState(DownloadConcreteState.instance(context));
+    public void analyzer() {
+	context.changeCurrentState(ScriptableConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void query() {
+	context.changeCurrentState(StackConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void put() {
+	context.changeCurrentState(StackConcreteState.instance(context));
     }
 
 

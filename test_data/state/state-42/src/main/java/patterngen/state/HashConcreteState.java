@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class HashConcreteState extends SequenceAbstractState {
+public class HashConcreteState extends VisitorAbstractState {
 
     private static HashConcreteState instance;
-    private MessageContext context;
+    private CacheContext context;
 
 
-    private HashConcreteState(MessageContext ctx) {
+    private HashConcreteState(CacheContext ctx) {
         this.context = ctx;
     }
 
-    public static HashConcreteState instance(MessageContext ctx) {
+    public static HashConcreteState instance(CacheContext ctx) {
         if (instance == null) {
             instance = new HashConcreteState(ctx);
         }
@@ -56,24 +56,16 @@ public class HashConcreteState extends SequenceAbstractState {
      *
      */
     @Override
-    public void filter() {
-	context.changeCurrentState(ClientConcreteState.instance(context));
+    public void with() {
+	context.changeCurrentState(ContextConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void build() {
-	context.changeCurrentState(HashConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void get() {
-	context.changeCurrentState(AbstractConcreteState.instance(context));
+    public void delegator() {
+	context.changeCurrentState(StateConcreteState.instance(context));
     }
 
 

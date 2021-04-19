@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class LocalizedConcreteState extends UserState {
+public class LocalizedConcreteState extends SecureAbstractState {
 
     private static LocalizedConcreteState instance;
-    private SimpleContext context;
+    private CloneableContext context;
 
 
-    private LocalizedConcreteState(SimpleContext ctx) {
+    private LocalizedConcreteState(CloneableContext ctx) {
         this.context = ctx;
     }
 
-    public static LocalizedConcreteState instance(SimpleContext ctx) {
+    public static LocalizedConcreteState instance(CloneableContext ctx) {
         if (instance == null) {
             instance = new LocalizedConcreteState(ctx);
         }
@@ -56,8 +56,8 @@ public class LocalizedConcreteState extends UserState {
      *
      */
     @Override
-    public void keystroke() {
-	context.changeCurrentState(ExecutableConcreteState.instance(context));
+    public void user() {
+	context.changeCurrentState(GraphConcreteState.instance(context));
     }
 
 

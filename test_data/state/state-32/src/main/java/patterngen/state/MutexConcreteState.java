@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class MutexConcreteState extends LoaderAbstractState {
+public class MutexConcreteState extends ExporterAbstractState {
 
     private static MutexConcreteState instance;
-    private ParserContext context;
+    private RowContext context;
 
 
-    private MutexConcreteState(ParserContext ctx) {
+    private MutexConcreteState(RowContext ctx) {
         this.context = ctx;
     }
 
-    public static MutexConcreteState instance(ParserContext ctx) {
+    public static MutexConcreteState instance(RowContext ctx) {
         if (instance == null) {
             instance = new MutexConcreteState(ctx);
         }
@@ -56,16 +56,16 @@ public class MutexConcreteState extends LoaderAbstractState {
      *
      */
     @Override
-    public void database() {
-	context.changeCurrentState(TokenizerConcreteState.instance(context));
+    public void preference() {
+	context.changeCurrentState(IteratorConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void context() {
-	context.changeCurrentState(InterpreterConcreteState.instance(context));
+    public void is() {
+	context.changeCurrentState(WrapperConcreteState.instance(context));
     }
 
 

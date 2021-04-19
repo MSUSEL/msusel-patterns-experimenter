@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TransactionConcreteState extends ModalAbstractState {
+public class TransactionConcreteState extends OptimizedState {
 
     private static TransactionConcreteState instance;
-    private ConstraintContext context;
+    private TesterContext context;
 
 
-    private TransactionConcreteState(ConstraintContext ctx) {
+    private TransactionConcreteState(TesterContext ctx) {
         this.context = ctx;
     }
 
-    public static TransactionConcreteState instance(ConstraintContext ctx) {
+    public static TransactionConcreteState instance(TesterContext ctx) {
         if (instance == null) {
             instance = new TransactionConcreteState(ctx);
         }
@@ -56,32 +56,8 @@ public class TransactionConcreteState extends ModalAbstractState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(TransactionConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void sequence() {
-	context.changeCurrentState(TransactionConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void subtract() {
-	context.changeCurrentState(ConnectionConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void remove() {
-	context.changeCurrentState(ObjectConcreteState.instance(context));
+    public void manager() {
+	context.changeCurrentState(IntegerConcreteState.instance(context));
     }
 
 

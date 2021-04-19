@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class AbstractConcreteState extends PreferenceState {
+public class AbstractConcreteState extends GridAbstractState {
 
     private static AbstractConcreteState instance;
-    private TreeContext context;
+    private FlexibleContext context;
 
 
-    private AbstractConcreteState(TreeContext ctx) {
+    private AbstractConcreteState(FlexibleContext ctx) {
         this.context = ctx;
     }
 
-    public static AbstractConcreteState instance(TreeContext ctx) {
+    public static AbstractConcreteState instance(FlexibleContext ctx) {
         if (instance == null) {
             instance = new AbstractConcreteState(ctx);
         }
@@ -56,24 +56,8 @@ public class AbstractConcreteState extends PreferenceState {
      *
      */
     @Override
-    public void contains() {
-	context.changeCurrentState(ViewConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void valueof() {
-	context.changeCurrentState(CounterConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void put() {
-	context.changeCurrentState(ByteConcreteState.instance(context));
+    public void file() {
+	context.changeCurrentState(TableConcreteState.instance(context));
     }
 
 

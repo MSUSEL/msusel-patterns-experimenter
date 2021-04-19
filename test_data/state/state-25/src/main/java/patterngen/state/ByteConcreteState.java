@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ByteConcreteState extends ColumnAbstractState {
+public class ByteConcreteState extends GridAbstractState {
 
     private static ByteConcreteState instance;
-    private TreeContext context;
+    private FlexibleContext context;
 
 
-    private ByteConcreteState(TreeContext ctx) {
+    private ByteConcreteState(FlexibleContext ctx) {
         this.context = ctx;
     }
 
-    public static ByteConcreteState instance(TreeContext ctx) {
+    public static ByteConcreteState instance(FlexibleContext ctx) {
         if (instance == null) {
             instance = new ByteConcreteState(ctx);
         }
@@ -56,24 +56,8 @@ public class ByteConcreteState extends ColumnAbstractState {
      *
      */
     @Override
-    public void contains() {
-	context.changeCurrentState(TaskConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void valueof() {
-	context.changeCurrentState(ExecutableConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void put() {
-	context.changeCurrentState(InternalConcreteState.instance(context));
+    public void file() {
+	context.changeCurrentState(TableConcreteState.instance(context));
     }
 
 
