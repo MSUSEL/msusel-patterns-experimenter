@@ -84,8 +84,8 @@ class Runner {
 
     void generateExperimentalConfig() {
         context.logger().atInfo().log("Generating Experimental Config")
-        exGen.initialize(runnerConfig.grime_types)
-        results = exGen.generate()
+        exGen.initialize()
+        results = exGen.generate(runnerConfig.pattern_types, runnerConfig.grime_types)
         num = results.rowKeySet().size()
         context.logger().atInfo().log("Finished Generating Experimental Config")
         updateStatus()

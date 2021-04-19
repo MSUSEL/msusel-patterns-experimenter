@@ -28,7 +28,9 @@ package edu.montana.gsoc.msusel.arc.app
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class ExperimentGenerator {
 
     void initialize() {
@@ -37,10 +39,11 @@ class ExperimentGenerator {
     Table<String, String, String> generate(List<String> patternTypes, List<String> grimeTypes) {
         Table<String, String, String> table = HashBasedTable.create()
 
+        log.info("Generating an Experiment for ${patternTypes.size() * grimeTypes.size() * 7} experimental units")
         int id = 0
         patternTypes.each { patternType ->
             grimeTypes.each {grimeType ->
-                (0..7).each {severity ->
+                (0..6).each {severity ->
                     table.put("$id", Constants.PatternType, patternType)
                     table.put("$id", Constants.GrimeType, grimeType)
                     table.put("$id", Constants.GrimeSeverity, "$severity")
