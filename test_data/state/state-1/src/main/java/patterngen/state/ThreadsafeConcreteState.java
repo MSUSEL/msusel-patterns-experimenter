@@ -25,8 +25,6 @@
  * SOFTWARE.
  */
 package patterngen.state;
-
-import patterngen.state.AbstractState;
 import java.util.*;
 
 /**
@@ -35,32 +33,48 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class AbstractContext {
+public class ThreadsafeConcreteState extends OptimizedAbstractState {
 
-    private AbstractState currentState;
+    private static ThreadsafeConcreteState instance;
+    private CollectionContext context;
 
 
-
-
-    public AbstractContext() {
-    	currentState = ServerConcreteState.instance(this);
+    private ThreadsafeConcreteState(CollectionContext ctx) {
+        this.context = ctx;
     }
 
-    public void changeCurrentState(AbstractState state) {
-        currentState = state;
-        // currentState.run();
+    public static ThreadsafeConcreteState instance(CollectionContext ctx) {
+        if (instance == null) {
+            instance = new ThreadsafeConcreteState(ctx);
+        }
+        return instance;
     }
 
-    public void set() {
-        currentState.row();
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void factoryfactory() {
+	context.changeCurrentState(ThreadsafeConcreteState.instance(context));
     }
 
-    public void is() {
-        currentState.row();
+    /**
+     *
+     */
+    @Override
+    public void build() {
+	context.changeCurrentState(ThreadsafeConcreteState.instance(context));
     }
 
-    public void encoder() {
-        currentState.row();
+    /**
+     *
+     */
+    @Override
+    public void valueof() {
+	context.changeCurrentState(FlexibleConcreteState.instance(context));
     }
+
 
 }

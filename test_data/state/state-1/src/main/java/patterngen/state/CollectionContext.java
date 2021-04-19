@@ -24,31 +24,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.app
+package patterngen.state;
 
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.Table
+import patterngen.state.CharacterState;
+import java.util.*;
 
-class ExperimentGenerator {
+/**
+ * Generated Class
+ *
+ * @author Isaac Griffith
+ * @version 1.0
+ */
+public class CollectionContext {
 
-    void initialize() {
+    private CharacterState currentState;
+
+
+
+
+    public CollectionContext() {
+    	currentState = ThreadsafeConcreteState.instance(this);
     }
 
-    Table<String, String, String> generate(List<String> patternTypes, List<String> grimeTypes) {
-        Table<String, String, String> table = HashBasedTable.create()
-
-        int id = 0
-        patternTypes.each { patternType ->
-            grimeTypes.each {grimeType ->
-                (0..7).each {severity ->
-                    table.put("$id", Constants.PatternType, patternType)
-                    table.put("$id", Constants.GrimeType, grimeType)
-                    table.put("$id", Constants.GrimeSeverity, "$severity")
-                    id++
-                }
-            }
-        }
-
-        return table
+    public void changeCurrentState(CharacterState state) {
+        currentState = state;
+        // currentState.run();
     }
+
+    public void contains() {
+        currentState.factoryfactory();
+    }
+
+    public void iterator() {
+        currentState.factoryfactory();
+    }
+
 }

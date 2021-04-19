@@ -33,32 +33,5 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ServerConcreteState extends AbstractState {
-
-    private static ServerConcreteState instance;
-    private AbstractContext context;
-
-
-    private ServerConcreteState(AbstractContext ctx) {
-        this.context = ctx;
-    }
-
-    public static ServerConcreteState instance(AbstractContext ctx) {
-        if (instance == null) {
-            instance = new ServerConcreteState(ctx);
-        }
-        return instance;
-    }
-
-    public void run() {}
-
-    /**
-     *
-     */
-    @Override
-    public void row() {
-	context.changeCurrentState(ServerConcreteState.instance(context));
-    }
-
-
+public abstract class OptimizedAbstractState extends CharacterState {
 }

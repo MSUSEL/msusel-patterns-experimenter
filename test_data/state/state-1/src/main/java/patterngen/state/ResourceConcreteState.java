@@ -24,31 +24,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.app
+package patterngen.state;
+import java.util.*;
 
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.Table
+/**
+ * Generated Class
+ *
+ * @author Isaac Griffith
+ * @version 1.0
+ */
+public class ResourceConcreteState extends OptimizedAbstractState {
 
-class ExperimentGenerator {
+    private static ResourceConcreteState instance;
+    private CollectionContext context;
 
-    void initialize() {
+
+    private ResourceConcreteState(CollectionContext ctx) {
+        this.context = ctx;
     }
 
-    Table<String, String, String> generate(List<String> patternTypes, List<String> grimeTypes) {
-        Table<String, String, String> table = HashBasedTable.create()
-
-        int id = 0
-        patternTypes.each { patternType ->
-            grimeTypes.each {grimeType ->
-                (0..7).each {severity ->
-                    table.put("$id", Constants.PatternType, patternType)
-                    table.put("$id", Constants.GrimeType, grimeType)
-                    table.put("$id", Constants.GrimeSeverity, "$severity")
-                    id++
-                }
-            }
+    public static ResourceConcreteState instance(CollectionContext ctx) {
+        if (instance == null) {
+            instance = new ResourceConcreteState(ctx);
         }
-
-        return table
+        return instance;
     }
+
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void factoryfactory() {
+	context.changeCurrentState(ThreadsafeConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void build() {
+	context.changeCurrentState(ResourceConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void valueof() {
+	context.changeCurrentState(FlexibleConcreteState.instance(context));
+    }
+
+
 }

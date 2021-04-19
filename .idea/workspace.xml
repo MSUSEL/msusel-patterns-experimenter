@@ -4,7 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="" />
+    <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/test_data/results.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/CharacterState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/CollectionContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/FlexibleConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/OptimizedAbstractState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ResourceConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ThreadsafeConcreteState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/runner.conf" beforeDir="false" afterPath="$PROJECT_DIR$/config/runner.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentGenerator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentGenerator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/AbstractContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/AbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ServerConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/test.db" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -210,7 +225,7 @@
       <workItem from="1618517116837" duration="1826000" />
       <workItem from="1618540457594" duration="3212000" />
       <workItem from="1618575326563" duration="2125000" />
-      <workItem from="1618656291671" duration="20051000" />
+      <workItem from="1618656291671" duration="21090000" />
     </task>
     <servers />
   </component>

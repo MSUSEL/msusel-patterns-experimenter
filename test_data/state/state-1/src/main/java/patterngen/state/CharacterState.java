@@ -33,10 +33,20 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class AbstractState {
+public abstract class CharacterState {
 
     /**
      * 
      */
-    public abstract void row();
+    public abstract void factoryfactory();
+
+    /**
+     * 
+     */
+    public abstract void build();
+
+    /**
+     * 
+     */
+    public abstract void valueof();
 }
