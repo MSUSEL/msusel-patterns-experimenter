@@ -29,11 +29,13 @@ package edu.montana.gsoc.msusel.arc.impl.qmood;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class QMoodCommand extends SecondaryAnalysisCommand {
 
     QMoodMetricProvider provider;
@@ -45,24 +47,24 @@ public class QMoodCommand extends SecondaryAnalysisCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Starting QMOOD Analysis");
+        log.info("Starting QMOOD Analysis");
 
         context.open();
         provider.getRegistrar().getPrimaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-            context.logger().atInfo().log("Metric: " + mdef.name());
+            log.info("Metric: " + mdef.name());
             context.getProject().getAllTypes().forEach(metricEvaluator::measure);
             metricEvaluator.measure(context.getProject());
         });
 
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-            context.logger().atInfo().log("Metric: " + mdef.name());
+            log.info("Metric: " + mdef.name());
             context.getProject().getAllTypes().forEach(metricEvaluator::measure);
             metricEvaluator.measure(context.getProject());
         });
         context.close();
 
-        context.logger().atInfo().log("Finished QMOOD Analysis");
+        log.info("Finished QMOOD Analysis");
     }
 }

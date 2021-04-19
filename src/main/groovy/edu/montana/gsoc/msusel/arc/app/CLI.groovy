@@ -61,7 +61,7 @@ class CLI {
         ConfigLoader loader = ConfigLoader.instance
 
         // Load Configuration
-        context.logger().atInfo().log("Loading Configuration")
+        log.info("Loading Configuration")
 
         File fBase
         if (System.getenv("ARC_HOME") == null)
@@ -74,23 +74,23 @@ class CLI {
             context.addArcProperty(ArcProperties.ARC_HOME_DIR, ".")
         else context.addArcProperty(ArcProperties.ARC_HOME_DIR, System.getenv("ARC_HOME"))
 
-        context.logger().atInfo().log("Configuration loaded")
+        log.info("Configuration loaded")
 
         // Process Command Line Args
-        context.logger().atInfo().log("Processing Command Line Arguments")
+        log.info("Processing Command Line Arguments")
 //        (base, empiricalStudy) = cli.parse(args)
 //        context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
-        context.logger().atInfo().log("Command Line Arguments Processed")
+        log.info("Command Line Arguments Processed")
 
-        context.logger().atInfo().log("Verifying Database and Creating if missing")
+        log.info("Verifying Database and Creating if missing")
         DBManager.instance.checkDatabaseAndCreateIfMissing(context.getDBCreds())
 
         runner.run()
 
         // Select experiment
-//        context.logger().atInfo().log(String.format("Selecting experiment: %s", empiricalStudy.getName()))
+//        log.info(String.format("Selecting experiment: %s", empiricalStudy.getName()))
 //
-//        context.logger().atInfo().log("Experiment loaded and ready to execute")
+//        log.info("Experiment loaded and ready to execute")
 //
 //        // Run the experiment
 //        empiricalStudy.execute()
@@ -102,6 +102,7 @@ class CLI {
  * @version 1.3.0
  */
 @Singleton
+@Log4j2
 class CommandLineInterface {
 
     CliBuilder cli
@@ -109,7 +110,7 @@ class CommandLineInterface {
     StudyManager manager
 
     void initialize() {
-        context.logger().atInfo().log("Initializing CLI")
+        log.info("Initializing CLI")
 
         cli = new CliBuilder(
                 usage: "arc [options] <base>",
@@ -127,11 +128,11 @@ class CommandLineInterface {
 //        cli.l(longOpt: 'log', args: 1, argName: 'file', 'Name of the log file to log to')
         cli.e(longOpt: 'empirical-study', "Name of the study to execute, available studies: ${manager.studies.keySet().join(', ')}")
 
-        context.logger().atInfo().log("Completed CLI Initialization")
+        log.info("Completed CLI Initialization")
     }
 
     def parse(args) {
-        context.logger().atInfo().log("started parsing command line arguments")
+        log.info("started parsing command line arguments")
 
         OptionAccessor options = cli.parse(args)
 
@@ -188,16 +189,16 @@ class CommandLineInterface {
                 empiricalStudy = manager.studies[studyName]
             else
             {
-                context.logger().atError().log(String.format("Empirical Study, %s, is unknown. Failed to execute study runner.", studyName))
+                log.error(String.format("Empirical Study, %s, is unknown. Failed to execute study runner.", studyName))
                 System.exit(1)
             }
         }
         else {
-            context.logger().atError().log("No empirical study specified. Failed to execute study runner.")
+            log.error("No empirical study specified. Failed to execute study runner.")
             System.exit(1)
         }
 
-        context.logger().atInfo().log("Completed parsing command line arguments")
+        log.info("Completed parsing command line arguments")
 
         return [base, empiricalStudy]
     }

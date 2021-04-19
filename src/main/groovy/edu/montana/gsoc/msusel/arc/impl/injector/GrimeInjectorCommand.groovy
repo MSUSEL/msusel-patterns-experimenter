@@ -30,11 +30,13 @@ package edu.montana.gsoc.msusel.arc.impl.injector
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand
 import edu.montana.gsoc.msusel.inject.Director
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class GrimeInjectorCommand extends SecondaryAnalysisCommand {
 
     GrimeInjectorCommand() {
@@ -43,9 +45,9 @@ class GrimeInjectorCommand extends SecondaryAnalysisCommand {
 
     @Override
     void execute(ArcContext context) {
-        context.logger().atInfo().log("Starting Grime Injection")
+        log.info("Starting Grime Injection")
 
-        context.logger().atInfo().log("Setting up Grime Injection Configuration")
+        log.info("Setting up Grime Injection Configuration")
         String configString = """\
             where {
                 systemKey = '${context.getProject().getParentSystem().getKey()}'
@@ -64,10 +66,10 @@ class GrimeInjectorCommand extends SecondaryAnalysisCommand {
         ConfigSlurper slurper = new ConfigSlurper()
         def config = slurper.parse(configString)
 
-        context.logger().atInfo().log("Grime Injection Configuration Complete")
+        log.info("Grime Injection Configuration Complete")
 
-        context.logger().atInfo().log("Injecting grime")
+        log.info("Injecting grime")
         Director.instance.inject(config)
-        context.logger().atInfo().log("Grime Inject Complete")
+        log.info("Grime Inject Complete")
     }
 }

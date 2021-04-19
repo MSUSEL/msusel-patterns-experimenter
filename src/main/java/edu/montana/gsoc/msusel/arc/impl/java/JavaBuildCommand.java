@@ -28,10 +28,12 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.exec.CommandLine;
 
 import java.io.File;
 
+@Log4j2
 public class JavaBuildCommand extends ToolCommand {
 
     ToolCommand command;
@@ -50,15 +52,18 @@ public class JavaBuildCommand extends ToolCommand {
 
     private void selectCommand() {
         String projDir = context.getProjectDirectory();
-        context.logger().atInfo().log("Project Directory: " + projDir);
+        log.info("Project Directory: " + projDir);
         File dir = new File(projDir);
         File gradle = new File(dir, "build.gradle");
         File maven = new File(dir, "pom.xml");
         if (gradle.exists()) {
+            log.info("Selected Gradle for the Build");
             command = gradleCmd;
         } else if (maven.exists()) {
+            log.info("Selected Maven for the Build");
             command = mavenCmd;
         } else {
+            log.info("Selected Generic JavaC for the Build");
             command = basicJavaCmd;
         }
     }

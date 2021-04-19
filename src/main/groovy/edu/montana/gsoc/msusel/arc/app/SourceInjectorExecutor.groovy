@@ -70,7 +70,7 @@ class SourceInjectorExecutor {
     private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
         String sys = map[Constants.Key1]
         context.open()
-        System s = System.findFirst("key = ?", sys)
+        System s = System.findFirst("sysKey = ?", sys)
         Project proj
         PatternInstance inst
         String pattern = map.get(Constants.PatternType)

@@ -51,6 +51,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ArcProperties
 import edu.montana.gsoc.msusel.arc.command.CommandUtils
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand
+import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsPool
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHTag
@@ -61,6 +62,7 @@ import org.kohsuke.github.PagedSearchIterable
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class GitHubSearchCommand extends RepositoryCommand {
 
     private GitHub github
@@ -75,13 +77,13 @@ class GitHubSearchCommand extends RepositoryCommand {
     @Override
     void execute(ArcContext context) {
         this.context = context
-        context.logger().atInfo().log("Searching GitHub for projects")
+        log.info("Searching GitHub for projects")
 
         authenticate()
 
         findProjects()
 
-        context.logger().atInfo().log("GitHub Search Complete")
+        log.info("GitHub Search Complete")
     }
 
     @Override
@@ -90,18 +92,18 @@ class GitHubSearchCommand extends RepositoryCommand {
     }
 
     void authenticate() {
-        context.logger().atInfo().log("Authenticating with GitHub")
+        log.info("Authenticating with GitHub")
         try {
             github = GitHub.connect(context.getArcProperty(GitHubSearchProperties.GIT_HUB_USER),
                     context.getArcProperty(GitHubSearchProperties.GIT_HUB_TOKEN))
         } catch (IOException e) {
-            context.logger().atError().withThrowable(e).log(e.getMessage())
+            log.atError().withThrowable(e).log(e.getMessage())
         }
-        context.logger().atInfo().log("Authenticated to GitHub")
+        log.info("Authenticated to GitHub")
     }
 
     List<System> findProjects() {
-        context.logger().atInfo().log("Searching...")
+        log.info("Searching...")
         int maxSys = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_SYS))
         int maxProj = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MAX_PROJ))
         int minSize = Integer.parseInt(context.getArcProperty(GitHubSearchProperties.SEARCH_MIN_SIZE))
@@ -149,7 +151,7 @@ class GitHubSearchCommand extends RepositoryCommand {
                                     sys.addProject(p)
                                     numProj += 1
 
-                                    context.logger().atInfo().log("Found Project: " + p.getProjectKey())
+                                    log.info("Found Project: " + p.getProjectKey())
 
                                     SCM scm = SCM.builder()
                                             .name(repo.getName())
@@ -175,7 +177,7 @@ class GitHubSearchCommand extends RepositoryCommand {
             }
             context.close()
 
-            context.logger().atInfo().log(String.format("Repos Found: %d", numSys))
+            log.info(String.format("Repos Found: %d", numSys))
         }
 
         return systems

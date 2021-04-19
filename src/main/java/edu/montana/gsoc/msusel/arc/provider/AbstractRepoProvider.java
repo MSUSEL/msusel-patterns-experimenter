@@ -27,11 +27,13 @@
 package edu.montana.gsoc.msusel.arc.provider;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public abstract class AbstractRepoProvider implements RepoProvider {
 
     protected ArcContext context;
@@ -42,9 +44,9 @@ public abstract class AbstractRepoProvider implements RepoProvider {
 
     @Override
     public void load() {
-        context.logger().atInfo().log(String.format("%s: loading data", this.getClass().getSimpleName()));
+        log.info(String.format("%s: loading data", this.getClass().getSimpleName()));
         loadData();
-        context.logger().atInfo().log(String.format("%s: updating the database", this.getClass().getSimpleName()));
+        log.info(String.format("%s: updating the database", this.getClass().getSimpleName()));
         updateDatabase();
     }
 }

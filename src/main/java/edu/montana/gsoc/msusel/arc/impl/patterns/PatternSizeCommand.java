@@ -29,11 +29,13 @@ package edu.montana.gsoc.msusel.arc.impl.patterns;
 import edu.isu.isuese.datamodel.Project;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class PatternSizeCommand extends SecondaryAnalysisCommand {
 
     public PatternSizeCommand() {
@@ -42,13 +44,13 @@ public class PatternSizeCommand extends SecondaryAnalysisCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Started Pattern Size Analysis");
+        log.info("Started Pattern Size Analysis");
         Project project = context.getProject();
         PatternSizeEvaluator eval = new PatternSizeEvaluator();
 
         context.open();
         project.getPatternInstances().forEach(eval::measure);
         context.close();
-        context.logger().atInfo().log("Finished Pattern Size Analysis");
+        log.info("Finished Pattern Size Analysis");
     }
 }

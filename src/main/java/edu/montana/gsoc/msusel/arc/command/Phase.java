@@ -29,7 +29,7 @@ package edu.montana.gsoc.msusel.arc.command;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.Command;
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -42,6 +42,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"commands"})
 @ToString(exclude = {"commands"})
+@Log4j2
 public class Phase {
 
     @Singular
@@ -53,10 +54,10 @@ public class Phase {
     public void execute() {
 
         for (String cmdName : commands) {
-            context.logger().atInfo().log(String.format("Starting %s command:", cmdName));
+            log.info(String.format("Starting %s command:", cmdName));
             Command cmd = context.getRegisteredCommand(cmdName);
             cmd.execute(context);
-            context.logger().atInfo().log(String.format("Finished %s command.", cmdName));
+            log.info(String.format("Finished %s command.", cmdName));
         }
     }
 

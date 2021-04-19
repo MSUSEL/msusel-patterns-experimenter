@@ -42,15 +42,17 @@ import edu.montana.gsoc.msusel.arc.impl.pmd.PMDTool
 import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodTool
 import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoTool
 import edu.montana.gsoc.msusel.arc.impl.td.TechDebtTool
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class ToolsLoader {
 
     void loadTools(ArcContext context) {
-        context.logger().atInfo().log("Instantiating tools")
+        log.info("Instantiating tools")
 
         Tool[] tools = [
                 new FindBugsTool(context),
@@ -69,12 +71,12 @@ class ToolsLoader {
                 new PatternGeneratorTool(context)
         ]
 
-        context.logger().atInfo().log("Tools instantiated now loading repos and initializing commands")
+        log.info("Tools instantiated now loading repos and initializing commands")
         tools.each {
             it.getRepoProvider().load()
             it.getOtherProviders()*.load()
             it.init()
         }
-        context.logger().atInfo().log("Finished loading tools")
+        log.info("Finished loading tools")
     }
 }

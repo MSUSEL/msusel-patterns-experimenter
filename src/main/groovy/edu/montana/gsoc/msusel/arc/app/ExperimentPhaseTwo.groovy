@@ -51,6 +51,7 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
     Command techdebt
     Collector fbColl
     Collector pmdColl
+    int NUM
 
     ExperimentPhaseTwo(ArcContext context) {
         super("Experiment Phase Two", "A Test Empirical Study", context)

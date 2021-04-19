@@ -31,11 +31,13 @@ import edu.isu.isuese.datamodel.PatternInstance
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand
 import edu.montana.gsoc.msusel.rbml.coalese.Coalescence
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class PatternCoalescenceCommand extends PrimaryAnalysisCommand {
 
     PatternCoalescenceCommand() {
@@ -44,7 +46,7 @@ class PatternCoalescenceCommand extends PrimaryAnalysisCommand {
 
     @Override
     void execute(ArcContext context) {
-        context.logger().atInfo().log("Starting Pattern Coalescence")
+        log.info("Starting Pattern Coalescence")
         Coalescence coal = new Coalescence()
 
         context.open()
@@ -53,6 +55,6 @@ class PatternCoalescenceCommand extends PrimaryAnalysisCommand {
         coal.coalesce(insts)
         context.close()
 
-        context.logger().atInfo().log("Patterns Coalesced")
+        log.info("Patterns Coalesced")
     }
 }

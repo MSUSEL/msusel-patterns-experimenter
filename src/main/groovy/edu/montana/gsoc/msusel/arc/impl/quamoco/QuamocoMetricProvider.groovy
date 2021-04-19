@@ -63,22 +63,20 @@ class QuamocoMetricProvider extends AbstractMetricProvider {
         String root = config.metrics.root
         context.addArcProperty(QuamocoProperties.QUAMOCO_METRICS_ROOT, root)
 
-        GParsPool.withPool(8) {
-            config.metrics.eachParallel { Map<String, String> map ->
-                context.open()
-                Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${map.name}")
-                if (!metric) {
-                    metric = Metric.builder()
-                            .key("${repository.getRepoKey()}:$map.name")
-                            .handle(map.handle)
-                            .name(map.name)
-                            .description(map.description)
-                            .evaluator()
-                            .create()
-                    repository.addMetric(metric)
-                }
-                context.close()
+        config.metrics.each { Map<String, String> map ->
+            context.open()
+            Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${map.name}")
+            if (!metric) {
+                metric = Metric.builder()
+                        .key("${repository.getRepoKey()}:$map.name")
+                        .handle(map.handle)
+                        .name(map.name)
+                        .description(map.description)
+                        .evaluator()
+                        .create()
+                repository.addMetric(metric)
             }
+            context.close()
         }
     }
 }

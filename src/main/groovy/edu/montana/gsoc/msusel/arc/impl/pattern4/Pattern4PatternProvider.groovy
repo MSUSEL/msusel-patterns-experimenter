@@ -82,31 +82,27 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
     }
 
     void createPatterns(data) {
-        GParsPool.withPool {
-            data.pattern.eachParallel {
-                String name = it.@gofName
-                String pattern4Name = it.@pattern4Name
-                String family = it.@family
+        data.pattern.each {
+            String name = it.@gofName
+            String pattern4Name = it.@pattern4Name
+            String family = it.@family
 
-                println "Pattern Name: $name"
-
-                context.open()
-                Pattern pattern = Pattern.findFirst("patternKey = ?", repository.getRepoKey() + ":" + name)
-                if (!pattern) {
-                    pattern = Pattern.builder()
-                            .name(name)
-                            .key("${repository.getRepoKey()}:$name")
-                            .family(family)
-                            .create()
-                    repository.addPattern(pattern)
-                }
-                context.close()
-
-                if (name && pattern4Name)
-                    pattern4rbml[pattern4Name] = name
-
-                createRoles(pattern, it.role)
+            context.open()
+            Pattern pattern = Pattern.findFirst("patternKey = ?", repository.getRepoKey() + ":" + name)
+            if (!pattern) {
+                pattern = Pattern.builder()
+                        .name(name)
+                        .key("${repository.getRepoKey()}:$name")
+                        .family(family)
+                        .create()
+                repository.addPattern(pattern)
             }
+            context.close()
+
+            if (name && pattern4Name)
+                pattern4rbml[pattern4Name] = name
+
+            createRoles(pattern, it.role)
         }
     }
 
@@ -118,7 +114,7 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
             boolean mand = Boolean.parseBoolean((String) it.@mandatory)
 
             context.open()
-            Role role = pattern.getRoles().find { r -> r.getName() == rbmlName }
+            Role role = Role.findFirst("roleKey = ?", "${pattern.getPatternKey()}:$rbmlName")
             if (!role) {
                 role = Role.builder()
                         .name(rbmlName)

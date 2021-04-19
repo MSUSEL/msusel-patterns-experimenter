@@ -28,11 +28,13 @@ package edu.montana.gsoc.msusel.arc.impl.metrics;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class MetricsCommand extends PrimaryAnalysisCommand {
 
     public MetricsCommand() {
@@ -44,11 +46,11 @@ public class MetricsCommand extends PrimaryAnalysisCommand {
     public void execute(ArcContext context) {
         ArcMetricsTool tool = new ArcMetricsTool(context);
 
-        context.logger().atInfo().log(String.format("Initializing Tool: %s", getToolName()));
+        log.info(String.format("Initializing Tool: %s", getToolName()));
         tool.init();
 
-        context.logger().atInfo().log(String.format("Executing Tool: %s", getToolName()));
+        log.info(String.format("Executing Tool: %s", getToolName()));
         tool.exec();
-        context.logger().atInfo().log(String.format("Execution Complete: %s", getToolName()));
+        log.info(String.format("Execution Complete: %s", getToolName()));
     }
 }

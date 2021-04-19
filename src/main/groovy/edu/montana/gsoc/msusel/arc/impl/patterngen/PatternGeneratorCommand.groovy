@@ -34,11 +34,13 @@ import edu.montana.gsoc.msusel.pattern.gen.Director
 import edu.montana.gsoc.msusel.pattern.gen.GeneratorContext
 import edu.montana.gsoc.msusel.pattern.gen.PatternManager
 import edu.montana.gsoc.msusel.pattern.gen.PluginLoader
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class PatternGeneratorCommand extends PrimaryAnalysisCommand {
 
     PatternGeneratorCommand() {
@@ -49,25 +51,25 @@ class PatternGeneratorCommand extends PrimaryAnalysisCommand {
     void execute(ArcContext context) {
         PluginLoader plugins = PluginLoader.instance
 
-        context.logger().atInfo().log("PatternGenerator: Creating the base directory")
+        log.info("PatternGenerator: Creating the base directory")
         File fBase = new File(context.getArcProperty(GeneratorProperties.GEN_BASE_DIR))
         fBase.mkdirs()
 
-        context.logger().atInfo().log("PatternGenerator: Setting up the GeneratorContext and loading generator plugins")
+        log.info("PatternGenerator: Setting up the GeneratorContext and loading generator plugins")
         createGeneratorContext(context)
         plugins.loadBuiltInLanguageProviders()
         plugins.loadLanguage(context.getArcProperty(GeneratorProperties.GEN_LANG_PROP))
-        context.logger().atInfo().log("PatternGenerator: Completed GeneratorContext setups and loading generator plugins")
+        log.info("PatternGenerator: Completed GeneratorContext setups and loading generator plugins")
 
         // Run the program
-        context.logger().atInfo().log("PatternGenerator: Initializing the director")
+        log.info("PatternGenerator: Initializing the director")
         Director director = new Director()
         director.initialize()
-        context.logger().atInfo().log("PatternGenerator: Director initialized")
+        log.info("PatternGenerator: Director initialized")
 
-        context.logger().atInfo().log("PatternGenerator: Executing...")
+        log.info("PatternGenerator: Executing...")
         director.execute()
-        context.logger().atInfo().log("PatternGenerator: Execution complete")
+        log.info("PatternGenerator: Execution complete")
     }
 
     String createGeneratorContext(ArcContext context) {
@@ -86,14 +88,13 @@ class PatternGeneratorCommand extends PrimaryAnalysisCommand {
         generatorContext.arities      = createAritiesList(context)
         generatorContext.srcPath      = context.getArcProperty(GeneratorProperties.GEN_SOURCE_PATH)
         generatorContext.srcExt       = context.getArcProperty(GeneratorProperties.GEN_SOURCE_EXT)
-        generatorContext.logger       = context.logger()
         generatorContext.resetDb      = false
         generatorContext.resetOnly    = false
         generatorContext.generateOnly = false
         generatorContext.dataOnly     = false
 
-        context.logger().atInfo().log("PatternGenerator: GeneratorContext created with the following values:")
-        context.logger().atInfo().log(generatorContext.toString())
+        log.info("PatternGenerator: GeneratorContext created with the following values:")
+        log.info(generatorContext.toString())
     }
 
     private Map<String, String> createLicenseMap(ArcContext context) {

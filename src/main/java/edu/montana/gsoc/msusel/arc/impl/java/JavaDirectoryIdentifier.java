@@ -28,8 +28,9 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.ArtifactIdentifierCommand;
-import edu.montana.gsoc.msusel.datamodel.parsers.JavaArtifactIdentifier;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class JavaDirectoryIdentifier extends ArtifactIdentifierCommand {
 
     public JavaDirectoryIdentifier() {
@@ -38,7 +39,7 @@ public class JavaDirectoryIdentifier extends ArtifactIdentifierCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Setting project paths");
+        log.info("Setting project paths");
         JavaPathsDetector detector = new JavaPathsDetector(context);
         detector.detect();
     }

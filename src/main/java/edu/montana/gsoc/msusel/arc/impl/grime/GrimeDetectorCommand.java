@@ -34,6 +34,7 @@ import edu.isu.isuese.detstrat.impl.ModularGrimeDetector;
 import edu.isu.isuese.detstrat.impl.OrgGrimeDetector;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -41,6 +42,7 @@ import java.util.List;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
 
     public GrimeDetectorCommand() {
@@ -51,21 +53,21 @@ public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
     public void execute(ArcContext context) {
         Project project = context.getProject();
 
-        context.logger().atInfo().log("Initializing Grime Detectors");
+        log.info("Initializing Grime Detectors");
         List<GrimeDetector> detectors = Lists.newArrayList(
 //                new ClassGrimeDetector(),
 //                new ModularGrimeDetector(),
                 new OrgGrimeDetector()
         );
 
-        context.logger().atInfo().log("Starting Grime Detection");
+        log.info("Starting Grime Detection");
         context.open();
         for (GrimeDetector detector : detectors) {
-            context.logger().atInfo().log(String.format("Detecting %s Started", detector.getClass().getSimpleName()));
+            log.info(String.format("Detecting %s Started", detector.getClass().getSimpleName()));
             project.getPatternInstances().forEach(detector::detect);
-            context.logger().atInfo().log(String.format("Detecting %s Complete", detector.getClass().getSimpleName()));
+            log.info(String.format("Detecting %s Complete", detector.getClass().getSimpleName()));
         }
         context.close();
-        context.logger().atInfo().log("Grime Detection Complete");
+        log.info("Grime Detection Complete");
     }
 }

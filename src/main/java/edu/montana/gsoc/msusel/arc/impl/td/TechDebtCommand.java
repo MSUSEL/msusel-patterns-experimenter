@@ -35,6 +35,7 @@ import edu.montana.gsoc.msusel.arc.impl.td.strategies.CastTD;
 import edu.montana.gsoc.msusel.arc.impl.td.strategies.TechnicalDebtCalcStrategy;
 import edu.montana.gsoc.msusel.arc.impl.td.param.CastParams;
 import edu.montana.gsoc.msusel.arc.impl.td.param.TDParams;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.List;
 
@@ -42,6 +43,7 @@ import java.util.List;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class TechDebtCommand extends SecondaryAnalysisCommand {
 
     TechnicalDebtCalcStrategy strategy;
@@ -53,7 +55,7 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Executing TechDebt Analysis");
+        log.info("Executing TechDebt Analysis");
         context.open();
         List<Rule> rules = Rule.findAll();
 
@@ -87,7 +89,7 @@ public class TechDebtCommand extends SecondaryAnalysisCommand {
         Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.TD_MEASURE_NAME)
                 .on(context.getProject())
                 .withValue(value);
-        context.logger().atInfo().log("Finished TechDebt Analysis");
+        log.info("Finished TechDebt Analysis");
         context.close();
     }
 }

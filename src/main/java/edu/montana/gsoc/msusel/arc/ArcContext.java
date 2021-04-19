@@ -118,10 +118,6 @@ public class ArcContext {
         }
     }
 
-    public Logger logger() {
-        return logger;
-    }
-
     public void open() {
         DBManager.getInstance().open(getDBCreds());
     }

@@ -36,14 +36,14 @@ class ExperimentGenerator {
     void initialize() {
     }
 
-    Table<String, String, String> generate(List<String> patternTypes, List<String> grimeTypes) {
+    Table<String, String, String> generate(List<String> patternTypes, List<String> grimeTypes, int severityLevels) {
         Table<String, String, String> table = HashBasedTable.create()
 
         log.info("Generating an Experiment for ${patternTypes.size() * grimeTypes.size() * 7} experimental units")
         int id = 0
         patternTypes.each { patternType ->
             grimeTypes.each {grimeType ->
-                (0..6).each {severity ->
+                (0..(severityLevels - 1)).each {severity ->
                     table.put("$id", Constants.PatternType, patternType)
                     table.put("$id", Constants.GrimeType, grimeType)
                     table.put("$id", Constants.GrimeSeverity, "$severity")

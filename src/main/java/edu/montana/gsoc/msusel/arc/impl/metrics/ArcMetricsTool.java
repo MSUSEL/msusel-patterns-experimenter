@@ -32,6 +32,7 @@ import edu.isu.isuese.datamodel.Type;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator;
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
+import lombok.extern.log4j.Log4j2;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.List;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class ArcMetricsTool {
 
     MetricsRegistrar registrar;
@@ -60,10 +62,10 @@ public class ArcMetricsTool {
 
     public void exec() {
         Project proj = context.getProject();
-        context.logger().atInfo().log("Measuring Primary Metrics");
+        log.info("Measuring Primary Metrics");
         context.open();
         streamAndMeasureProject(proj, evaluatorList);
-        context.logger().atInfo().log("Measuring Secondary Metrics");
+        log.info("Measuring Secondary Metrics");
         streamAndMeasureProject(proj, secondaryList);
         context.close();
     }

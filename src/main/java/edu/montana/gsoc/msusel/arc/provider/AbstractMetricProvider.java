@@ -28,11 +28,13 @@ package edu.montana.gsoc.msusel.arc.provider;
 
 import edu.isu.isuese.datamodel.MetricRepository;
 import edu.montana.gsoc.msusel.arc.ArcContext;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public abstract class AbstractMetricProvider implements MetricProvider {
 
     protected MetricRepository repository;
@@ -44,11 +46,11 @@ public abstract class AbstractMetricProvider implements MetricProvider {
 
     @Override
     public void load() {
-        context.logger().atInfo().log(String.format("%s: initializing the repository", this.getClass().getSimpleName()));
+        log.info(String.format("%s: initializing the repository", this.getClass().getSimpleName()));
         initRepository();
-        context.logger().atInfo().log(String.format("%s: loading data", this.getClass().getSimpleName()));
+        log.info(String.format("%s: loading data", this.getClass().getSimpleName()));
         loadData();
-        context.logger().atInfo().log(String.format("%s: updating the database", this.getClass().getSimpleName()));
+        log.info(String.format("%s: updating the database", this.getClass().getSimpleName()));
         updateDatabase();
     }
 }

@@ -59,29 +59,27 @@ class PMDRuleProvider extends AbstractRuleProvider {
         RuleRepository repo = RuleRepository.findFirst("repoKey = ?", "pmd")
         context.close()
 
-        GParsPool.withPool {
-            config.rule.eachParallel { rule ->
-                String ruleKey = rule.@key
-                String ruleName = rule.@key
-                String priorityName = rule.priority
-                Priority priority = Priority.fromValue(priorityName)
-                String tag = rule.tag
+        config.rule.each { rule ->
+            String ruleKey = rule.@key
+            String ruleName = rule.@key
+            String priorityName = rule.priority
+            Priority priority = Priority.fromValue(priorityName)
+            String tag = rule.tag
 
-                context.open()
-                if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
-                    if (rule.status != "DEPRECATED" || ruleExists(repo, ruleKey)) {
-                        Rule r = Rule.builder()
-                                .name(ruleName)
-                                .key("${repo.repoKey}:${ruleKey}")
-                                .description()
-                                .priority(priority)
-                                .create()
-                        r.addTag(Tag.of(tag))
-                        repo.addRule(r)
-                    }
+            context.open()
+            if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
+                if (rule.status != "DEPRECATED" || ruleExists(repo, ruleKey)) {
+                    Rule r = Rule.builder()
+                            .name(ruleName)
+                            .key("${repo.repoKey}:${ruleKey}")
+                            .description()
+                            .priority(priority)
+                            .create()
+                    r.addTag(Tag.of(tag))
+                    repo.addRule(r)
                 }
-                context.close()
             }
+            context.close()
         }
     }
 

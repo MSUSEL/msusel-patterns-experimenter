@@ -29,7 +29,9 @@ package edu.montana.gsoc.msusel.arc.app
 import com.google.common.collect.Table
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ReportingLevel
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class Runner {
 
     ArcContext context
@@ -45,6 +47,8 @@ class Runner {
     int num
     ConfigObject runnerConfig
     SystemDropLoader sdl
+    long start
+    long end
 
     Runner(ArcContext context) {
         this.context = context
@@ -53,6 +57,8 @@ class Runner {
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
+        phaseOne = new ExperimentPhaseOne(context)
+        phaseTwo = new ExperimentPhaseTwo(context)
         sdl = new SystemDropLoader(context)
         status = 0
         num = 0
@@ -64,15 +70,16 @@ class Runner {
         if (status < 2) generateExperimentalConfig()
         if (status < 3) {
             generatePatternInstances()
-            prepareDatabaseForExperiment()
+            loadTools()
+//            prepareDatabaseForExperiment()
         }
         if (status < 4) executeArcExperimenterPhaseOne()
-        if (status < 5) executeSourceCodeInjector()
-        if (status < 6) executeArcExperimenterPhaseTwo()
-        if (status < 7) extractResults()
+//        if (status < 5) executeSourceCodeInjector()
+//        if (status < 6) executeArcExperimenterPhaseTwo()
+//        if (status < 7) extractResults()
         long end = System.currentTimeMillis()
 
-        println("Processing took a total of ${(double)(end - start) / 1000 / 60} minutes")
+        log.info(TimePrinter.print(end - start))
     }
 
     def initialize() {
@@ -83,64 +90,83 @@ class Runner {
     }
 
     void generateExperimentalConfig() {
-        context.logger().atInfo().log("Generating Experimental Config")
+        log.info("Generating Experimental Config")
+        start = System.currentTimeMillis()
         exGen.initialize()
-        results = exGen.generate(runnerConfig.pattern_types, runnerConfig.grime_types)
+        results = exGen.generate(runnerConfig.pattern_types, runnerConfig.grime_types, runnerConfig.grime_severity_levels)
         num = results.rowKeySet().size()
-        context.logger().atInfo().log("Finished Generating Experimental Config")
+        log.info("Finished Generating Experimental Config")
+        end = System.currentTimeMillis()
         updateStatus()
     }
 
     void generatePatternInstances() {
-        context.logger().atInfo().log("Generating Design Pattern Instances")
+        log.info("Generating Design Pattern Instances")
+        start = System.currentTimeMillis()
         patternGenerator.initialize(context, results, runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
         patternGenerator.execute()
-        context.logger().atInfo().log("Finished Generating Design Pattern Instances")
+        log.info("Finished Generating Design Pattern Instances")
+        end = System.currentTimeMillis()
         updateStatus()
     }
 
     void prepareDatabaseForExperiment() {
-        context.logger().atInfo().log("Preparing Database for Experiment")
+        log.info("Preparing Database for Experiment")
+        start = System.currentTimeMillis()
         sdl.dropOutSystemsAndProjects()
         resetDatabase()
         loadTools()
         sdl.loadSystemsAndProjects()
-        context.logger().atInfo().log("Database Prepared")
+        log.info("Database Prepared")
+        end = System.currentTimeMillis()
     }
 
     void executeArcExperimenterPhaseOne() {
-        context.logger().atInfo().log("Executing Experiment Phase One")
+        log.info("Executing Experiment Phase One")
+        start = System.currentTimeMillis()
+        phaseOne.setNUM(num)
+        phaseOne.setResults(results)
         phaseOne.execute()
-        context.logger().atInfo().log("Finished Executing Experiment Phase One")
+        log.info("Finished Executing Experiment Phase One")
+        end = System.currentTimeMillis()
         updateStatus()
     }
 
     void executeSourceCodeInjector() {
-        context.logger().atInfo().log("Executing Source Code Injector")
+        log.info("Executing Source Code Injector")
+        start = System.currentTimeMillis()
         injector.initialize(num, context)
-        injector.execute()
-        context.logger().atInfo().log("Finished Executing Source Code Injector")
+        injector.execute(results)
+        log.info("Finished Executing Source Code Injector")
+        end = System.currentTimeMillis()
 
         updateStatus()
     }
 
     void executeArcExperimenterPhaseTwo() {
-        context.logger().atInfo().log("Executing Experiment Phase Two")
+        log.info("Executing Experiment Phase Two")
+        start = System.currentTimeMillis()
+        phaseTwo.setNUM(num)
+        phaseTwo.setResults(results)
         phaseTwo.execute()
-        context.logger().atInfo().log("Executing Experiment Phase Two")
+        log.info("Executing Experiment Phase Two")
+        end = System.currentTimeMillis()
 
         updateStatus()
     }
 
     void extractResults() {
-        context.logger().atInfo().log("Collecting Experimental Results")
+        log.info("Collecting Experimental Results")
+        start = System.currentTimeMillis()
         resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures, num)
         resEx.extractResults(results)
-        context.logger().atInfo().log("Finished Collecting Experimental Results")
+        log.info("Finished Collecting Experimental Results")
+        end = System.currentTimeMillis()
         updateStatus()
     }
 
     void updateStatus() {
+        log.info(TimePrinter.print(end - start))
         resWrite.initialize(num, runnerConfig.measures, runnerConfig.results_file)
         resWrite.writeResults(results)
         writeStatus(status++)
@@ -169,11 +195,11 @@ class Runner {
     }
 
     private void loadTools() {
-        context.open()
-        context.logger().atInfo().log("Loading and registering tools")
+//        context.open()
+        log.info("Loading and registering tools")
         ToolsLoader toolLoader = new ToolsLoader()
         toolLoader.loadTools(context)
-        context.logger().atInfo().log("Tools loaded and registered")
-        context.close()
+        log.info("Tools loaded and registered")
+//        context.close()
     }
 }

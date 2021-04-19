@@ -32,6 +32,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -46,6 +47,7 @@ import java.nio.file.Paths;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class GitCommand extends RepositoryCommand {
 
     @Setter
@@ -70,7 +72,7 @@ public class GitCommand extends RepositoryCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Running Git to retrieve the project");
+        log.info("Running Git to retrieve the project");
         this.context = context;
         if (context != null) {
             this.project = context.getProject();
@@ -90,15 +92,15 @@ public class GitCommand extends RepositoryCommand {
             assert git != null;
 
             if (tag != null && !tag.isEmpty()) {
-                context.logger().atInfo().log("Checking out Tag");
+                log.info("Checking out Tag");
                 git.checkout().setName("refs/tags/" + tag).call();
             }
 
             closeRepository(git);
         } catch (GitAPIException | IOException e) {
-            context.logger().atError().withThrowable(e).log(e.getMessage());
+            log.atError().withThrowable(e).log(e.getMessage());
         }
-        context.logger().atInfo().log("Git execution complete");
+        log.info("Git execution complete");
     }
 
     @Override
@@ -107,10 +109,10 @@ public class GitCommand extends RepositoryCommand {
     }
 
     private Git cloneRepository() throws GitAPIException {
-        context.logger().atInfo().log("Cloning Repo");
-        context.logger().atInfo().log("Project: " + project.getProjectKey());
-        context.logger().atInfo().log("Git URL: " + project.getSCM(SCMType.GIT).getURL());
-        context.logger().atInfo().log("Project Path: " + project.getFullPath());
+        log.info("Cloning Repo");
+        log.info("Project: " + project.getProjectKey());
+        log.info("Git URL: " + project.getSCM(SCMType.GIT).getURL());
+        log.info("Project Path: " + project.getFullPath());
         File file = new File(project.getFullPath());
         if (!file.exists()) {
             file.mkdirs();
@@ -125,12 +127,12 @@ public class GitCommand extends RepositoryCommand {
     }
 
     private Git openRepository() throws IOException {
-        context.logger().atInfo().log("Opening Repo");
+        log.info("Opening Repo");
         return Git.open(new File(repoDir));
     }
 
     private void closeRepository(Git git) {
-        context.logger().atInfo().log("Closing Repo");
+        log.info("Closing Repo");
         git.close();
     }
 }

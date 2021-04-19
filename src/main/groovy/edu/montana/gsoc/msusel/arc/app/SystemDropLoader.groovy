@@ -57,13 +57,23 @@ class SystemDropLoader {
         context.open()
         sysProjMap.each { System sys, List<Project> projList ->
             sys.thaw()
+            sys.save()
             projList.each {
                 it.thaw()
+                it.save()
                 sys.addProject(it)
             }
         }
 
         sysProjMap.clear()
         context.close()
+    }
+
+    void collectPatternInstances() {
+
+    }
+
+    void loadPatternInstances() {
+
     }
 }

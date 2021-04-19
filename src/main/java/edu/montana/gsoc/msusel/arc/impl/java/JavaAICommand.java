@@ -29,11 +29,13 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.ArtifactIdentifierCommand;
 import edu.montana.gsoc.msusel.datamodel.parsers.JavaDirector;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class JavaAICommand extends ArtifactIdentifierCommand {
 
     public JavaAICommand() {
@@ -42,13 +44,18 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
 
     @Override
     public void execute(ArcContext context) {
-        context.logger().atInfo().log("Java Artifact Identification Started");
-        JavaDirector director = new JavaDirector(context.getProject(), context.logger(), context.getDBCreds(), true);
+        log.info("Java Artifact Identification Started");
+        JavaDirector director = new JavaDirector(context.getProject(), log, context.getDBCreds(), true);
         context.open();
         String path = context.getProject().getFullPath();
+
+        log.info("");
+        log.info("Path: " + path);
+        log.info("");
+
         context.close();
         director.build(path);
-        context.logger().atInfo().log("Java Artifact Identification Complete");
+        log.info("Java Artifact Identification Complete");
     }
 
     @Override

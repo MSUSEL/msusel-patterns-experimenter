@@ -45,6 +45,11 @@ public class CommandUtils {
         return path;
     }
 
+    public static String absolutePathString(String path) {
+        Path p = Paths.get(path);
+        return p.toAbsolutePath().toString();
+    }
+
     public static boolean verifyFileExists(String path, String file) {
         Path p = Paths.get(path, file);
         return Files.exists(p);

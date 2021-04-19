@@ -30,6 +30,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.Command;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
@@ -37,11 +38,13 @@ import org.apache.commons.exec.Executor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public abstract class ToolCommand implements Command {
 
     @Setter @Getter
@@ -68,7 +71,7 @@ public abstract class ToolCommand implements Command {
 
     public void execute(ArcContext context) {
         this.context = context;
-        context.logger().atInfo().log("Executing " + getToolName() + " Analysis");
+        log.info("Executing " + getToolName() + " Analysis");
 
         this.projectBaseDirectory = context.getProjectDirectory();
         this.sourceDirectory = CommandUtils.normalizePathString(projectBaseDirectory) + context.getProject().getSrcPath();
@@ -76,16 +79,18 @@ public abstract class ToolCommand implements Command {
         this.projectName = context.getProject().getName();
 
         if (isRequirementsMet()) {
-            context.logger().atInfo().log("Constructing command line");
+            log.info("Constructing command line");
             CommandLine cmdLine = buildCommandLine();
-            context.logger().atInfo().log("Executing command");
-            context.logger().atInfo().log("Command Line: " + cmdLine.toString());
+            log.info("Executing command");
+            log.info("Command Line: " + cmdLine.toString());
             executeCmdLine(cmdLine, getExpectedExitValue());
-            context.logger().atInfo().log("Updating collector");
+            log.info("Updating collector");
             updateCollector();
+        } else {
+            log.error(String.format("Requirements not met for %s", toolName));
         }
 
-        context.logger().atInfo().log("Finished Executing " + getToolName() + " Analysis");
+        log.info("Finished Executing " + getToolName() + " Analysis");
     }
 
     public abstract boolean isRequirementsMet();
@@ -97,9 +102,10 @@ public abstract class ToolCommand implements Command {
     public abstract int getExpectedExitValue();
 
     private void executeCmdLine(CommandLine cmdLine, int expectedExitValue) {
+        log.info("Executing Command");
         DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
         Executor executor = new DefaultExecutor();
-        executor.setWorkingDirectory(new File(projectBaseDirectory));
+        executor.setWorkingDirectory(new File(Paths.get(projectBaseDirectory).toAbsolutePath().toString()));
         executor.setExitValue(expectedExitValue);
         try {
             executor.execute(cmdLine, resultHandler);

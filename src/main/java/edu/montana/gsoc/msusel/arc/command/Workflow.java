@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.command;
 
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 @ToString(exclude = {"phases"})
 @AllArgsConstructor
 @NoArgsConstructor
+@Log4j2
 public class Workflow {
 
     @Singular
@@ -52,9 +54,9 @@ public class Workflow {
     public void execute() {
 
         for (Phase phase : phases) {
-            context.logger().atInfo().log(String.format("Starting phase: %s", phase.getName()));
+            log.info(String.format("Starting phase: %s", phase.getName()));
             phase.execute();
-            context.logger().atInfo().log(String.format("Finished phase: %s", phase.getName()));
+            log.info(String.format("Finished phase: %s", phase.getName()));
         }
     }
 }

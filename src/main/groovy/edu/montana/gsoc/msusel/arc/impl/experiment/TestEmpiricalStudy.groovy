@@ -46,7 +46,9 @@ import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants
 import edu.montana.gsoc.msusel.arc.impl.reporting.CSVReportWriter
 import edu.montana.gsoc.msusel.arc.impl.reporting.Report
 import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class TestEmpiricalStudy extends EmpiricalStudy {
 
     TestEmpiricalStudy(ArcContext context) {
@@ -103,20 +105,20 @@ class TestEmpiricalStudy extends EmpiricalStudy {
 
     @Override
     void execute() {
-        context.logger().atInfo().log("Running Empirical Study: $name")
-        context.logger().atInfo().log("Initializing study workflow")
+        log.info("Running Empirical Study: $name")
+        log.info("Initializing study workflow")
         initWorkflow()
 
-        context.logger().atInfo().log("Initializing study report")
+        log.info("Initializing study report")
         initReport()
 
-        context.logger().atInfo().log("Starting empirical study workflow")
+        log.info("Starting empirical study workflow")
         executeStudy()
-        context.logger().atInfo().log("Empirical study workflow complete")
+        log.info("Empirical study workflow complete")
 
-        context.logger().atInfo().log("Generating report for Empirical Study: $name")
+        log.info("Generating report for Empirical Study: $name")
         //report.generate()
-        context.logger().atInfo().log("Report generated in ${report.getReportFileName()}")
+        log.info("Report generated in ${report.getReportFileName()}")
     }
 
     void executeStudy() {

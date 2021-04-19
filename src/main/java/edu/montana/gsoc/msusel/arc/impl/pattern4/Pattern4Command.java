@@ -60,12 +60,12 @@ public class Pattern4Command extends ToolCommand {
             .addArgument("-target")
             .addArgument(binaryDirectory)
             .addArgument("-output")
-            .addArgument(reportFile);
+            .addArgument(CommandUtils.absolutePathString(reportFile));
     }
 
     @Override
     public void updateCollector() {
-        owner.collector.setResultsFile(reportFile);
+        owner.collector.setResultsFile(CommandUtils.absolutePathString(reportFile));
     }
 
     @Override

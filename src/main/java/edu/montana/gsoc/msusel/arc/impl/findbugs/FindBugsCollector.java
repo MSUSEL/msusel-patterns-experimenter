@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.arc.collector.FileCollector;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.resultsdm.BugCollection;
 import edu.montana.gsoc.msusel.arc.impl.findbugs.resultsdm.SourceLine;
 import lombok.Builder;
+import lombok.extern.log4j.Log4j2;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -45,6 +46,7 @@ import java.util.List;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class FindBugsCollector extends FileCollector {
 
     FindBugsTool owner;
@@ -57,7 +59,7 @@ public class FindBugsCollector extends FileCollector {
 
     @Override
     public void execute(ArcContext ctx) {
-        ctx.logger().atInfo().log("Started collecting FindBugs Results");
+        log.info("Started collecting FindBugs Results");
 
         this.project = ctx.getProject();
         try {
@@ -65,7 +67,7 @@ public class FindBugsCollector extends FileCollector {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             BugCollection bugColl = (BugCollection) unmarshaller.unmarshal(new File(resultsFile));
-            ctx.logger().atInfo().log("Instances Found: " + bugColl.getBugInstance().size());
+            log.info("Instances Found: " + bugColl.getBugInstance().size());
 
             List<Finding> findings = Lists.newArrayList();
             bugColl.getBugInstance().forEach(inst -> {
@@ -74,7 +76,7 @@ public class FindBugsCollector extends FileCollector {
                 ctx.close();
                 if (rule != null) {
                     ctx.open();
-                    ctx.logger().atInfo().log("Rule: " + rule.getKey());
+                    log.info("Rule: " + rule.getKey());
                                         ctx.close();
 
                     inst.getClazzOrTypeOrMethod().forEach(obj -> {
@@ -108,7 +110,7 @@ public class FindBugsCollector extends FileCollector {
                 }
             });
 
-            ctx.logger().atInfo().log("Findings Created: " + findings.size());
+            log.info("Findings Created: " + findings.size());
             ctx.open();
             for (Finding f : findings) {
                 System.out.println("\t" + f);
@@ -118,7 +120,7 @@ public class FindBugsCollector extends FileCollector {
             e.printStackTrace();
         }
 
-        ctx.logger().atInfo().log("Finished collecting FindBugs Results");
+        log.info("Finished collecting FindBugs Results");
     }
 
     public void setReferenceAndLineInfo(ArcContext ctx, Finding finding, Component comp, SourceLine line) {

@@ -38,7 +38,9 @@ import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
 import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants;
 import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants;
 import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class FindBugOnly extends EmpiricalStudy {
 
     public FindBugOnly(ArcContext context) {
@@ -119,7 +121,7 @@ public class FindBugOnly extends EmpiricalStudy {
 
         // Grime
         grime.execute(getContext());
-        getContext().logger().atInfo().log("metrics: " + metrics);
+        log.info("metrics: " + metrics);
 
         // Metrics
 //        metrics.execute(getContext());

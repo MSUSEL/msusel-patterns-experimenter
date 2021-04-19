@@ -30,11 +30,13 @@ import edu.isu.isuese.datamodel.System
 import edu.isu.isuese.datamodel.pattern.ChainIdentifier
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 class PatternChainingCommand extends PrimaryAnalysisCommand {
 
     PatternChainingCommand() {
@@ -43,11 +45,11 @@ class PatternChainingCommand extends PrimaryAnalysisCommand {
 
     @Override
     void execute(ArcContext context) {
-        context.logger().atInfo().log("Starting Pattern Chain Identification")
+        log.info("Starting Pattern Chain Identification")
         ChainIdentifier chainId = new ChainIdentifier()
 
         System sys = context.getProject().getParentSystem()
         chainId.findChains(sys)
-        context.logger().atInfo().log("Pattern Chain Identification Complete")
+        log.info("Pattern Chain Identification Complete")
     }
 }

@@ -28,7 +28,6 @@ package edu.montana.gsoc.msusel.arc.app
 
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.Project
-import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
@@ -47,6 +46,7 @@ class ExperimentPhaseOne extends EmpiricalStudy {
     Command coalesce
     Command pSize
     Collector p4Coll
+    int NUM
 
     ExperimentPhaseOne(ArcContext context) {
         super("Experiment Phase One", "A Test Empirical Study", context)
@@ -81,6 +81,7 @@ class ExperimentPhaseOne extends EmpiricalStudy {
             getContext().close()
 
             // Java
+            java.execute(getContext())
             build.execute(getContext())
             java.execute(getContext())
             jdi.execute(getContext())

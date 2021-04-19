@@ -81,6 +81,8 @@ class PatternGeneratorExecutor {
         version = "1.0.0"
         arities = [1, 3, 5]
         srcPath = "src/main/java"
+        testPath = "src/test/java"
+        binPath = "build/classes/java/main"
         srcExt = ".java"
         
         license {

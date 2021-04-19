@@ -26,12 +26,12 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pmd;
 
-import com.google.common.flogger.StackSize;
 import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.collector.FileCollector;
 import edu.montana.gsoc.msusel.arc.impl.pmd.resultsdm.Pmd;
 import lombok.Builder;
+import lombok.extern.log4j.Log4j2;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -42,6 +42,7 @@ import java.lang.System;
  * @author Isaac Griffith
  * @version 1.3.0
  */
+@Log4j2
 public class PMDCollector extends FileCollector {
 
     PMDTool owner;
@@ -54,7 +55,7 @@ public class PMDCollector extends FileCollector {
 
     @Override
     public void execute(ArcContext ctx) {
-        ctx.logger().atInfo().log("Starting Collecting PMD Results");
+        log.info("Starting Collecting PMD Results");
 
         this.project = ctx.getProject();
         try {
@@ -85,10 +86,10 @@ public class PMDCollector extends FileCollector {
                 })
             );
         } catch (JAXBException e) {
-            ctx.logger().atError().withThrowable(e).log(e.getMessage());
+            log.atError().withThrowable(e).log(e.getMessage());
         }
 
-        ctx.logger().atInfo().log("Finished Collecting PMD Results");
+        log.info("Finished Collecting PMD Results");
     }
 
     public static void main(String args[]) {
