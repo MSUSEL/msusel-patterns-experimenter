@@ -33,18 +33,16 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public abstract class UserState {
 
     /**
      * 
      */
-    public void exporter() {
-    }
+    public abstract void collection();
 
     /**
      * 
      */
-    public void clear() {
-    }
+    public abstract void state();
 }
 

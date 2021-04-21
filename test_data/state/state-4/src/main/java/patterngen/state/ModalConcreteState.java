@@ -33,18 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class ModalConcreteState extends FactoryAbstractState {
 
-    /**
-     * 
-     */
-    public void exporter() {
+    private static ModalConcreteState instance;
+    private SingletonContext context;
+
+
+    private ModalConcreteState(SingletonContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void clear() {
+    public static ModalConcreteState instance(SingletonContext ctx) {
+        if (instance == null) {
+            instance = new ModalConcreteState(ctx);
+        }
+        return instance;
     }
+
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void column() {
+	context.changeCurrentState(SerializableConcreteState.instance(context));
+    }
+
+
 }
 

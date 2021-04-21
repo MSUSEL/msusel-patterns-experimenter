@@ -33,18 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class ConfigurableConcreteState extends ResultAbstractState {
 
-    /**
-     * 
-     */
-    public void exporter() {
+    private static ConfigurableConcreteState instance;
+    private SingletonContext context;
+
+
+    private ConfigurableConcreteState(SingletonContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void clear() {
+    public static ConfigurableConcreteState instance(SingletonContext ctx) {
+        if (instance == null) {
+            instance = new ConfigurableConcreteState(ctx);
+        }
+        return instance;
     }
+
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void column() {
+	context.changeCurrentState(StringConcreteState.instance(context));
+    }
+
+
 }
 

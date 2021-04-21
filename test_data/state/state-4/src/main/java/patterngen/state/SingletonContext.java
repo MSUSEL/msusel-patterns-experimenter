@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.StringState;
 import java.util.*;
 
 /**
@@ -33,18 +35,29 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class SingletonContext {
 
-    /**
-     * 
-     */
-    public void exporter() {
+    private StringState currentState;
+
+
+
+
+    public SingletonContext() {
+    	currentState = SerializableConcreteState.instance(this);
     }
 
-    /**
-     * 
-     */
-    public void clear() {
+    public void changeCurrentState(StringState state) {
+        currentState = state;
+        // currentState.run();
     }
+
+    public void minus() {
+        currentState.column();
+    }
+
+    public void set() {
+        currentState.column();
+    }
+
 }
 

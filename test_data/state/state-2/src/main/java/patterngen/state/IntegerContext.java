@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ResultState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class IntegerContext {
+
+    private ResultState grid;
 
     /**
-     * 
+     * @return the value of grid
      */
-    public void exporter() {
+    public ResultState getGrid() {
+        return grid;
+    }
+
+    /**
+     * @param grid the new value for grid
+     */
+    public void setGrid(ResultState grid) {
+        this.grid = grid;
     }
 
     /**
      * 
      */
-    public void clear() {
+    public void minus() {
+    }
+
+    /**
+     * 
+     */
+    public void of() {
+    }
+
+    /**
+     * 
+     */
+    public void definition() {
     }
 }
 

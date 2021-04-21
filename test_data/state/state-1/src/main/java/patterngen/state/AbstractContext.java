@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.UserState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class AbstractContext {
+
+    private UserState pixel;
 
     /**
-     * 
+     * @return the value of pixel
      */
-    public void exporter() {
+    public UserState getPixel() {
+        return pixel;
+    }
+
+    /**
+     * @param pixel the new value for pixel
+     */
+    public void setPixel(UserState pixel) {
+        this.pixel = pixel;
     }
 
     /**
      * 
      */
-    public void clear() {
+    public void memory() {
+    }
+
+    /**
+     * 
+     */
+    public void set() {
+    }
+
+    /**
+     * 
+     */
+    public void transaction() {
     }
 }
 

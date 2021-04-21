@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.RecursiveState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class FactoryFactoryContext {
+
+    private RecursiveState operation;
 
     /**
-     * 
+     * @return the value of operation
      */
-    public void exporter() {
+    public RecursiveState getOperation() {
+        return operation;
+    }
+
+    /**
+     * @param operation the new value for operation
+     */
+    public void setOperation(RecursiveState operation) {
+        this.operation = operation;
     }
 
     /**
      * 
      */
-    public void clear() {
+    public void converter() {
+    }
+
+    /**
+     * 
+     */
+    public void context() {
+    }
+
+    /**
+     * 
+     */
+    public void action() {
     }
 }
 

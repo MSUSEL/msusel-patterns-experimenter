@@ -33,18 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RunnableConcreteState extends MemoryAbstractState {
+public class UtilConcreteState extends NonblockingAbstractState {
 
     /**
      * 
      */
-    public void exporter() {
-    }
-
-    /**
-     * 
-     */
-    public void clear() {
+    public void connection() {
     }
 }
 
