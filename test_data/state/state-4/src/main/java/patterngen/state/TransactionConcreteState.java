@@ -33,24 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public class TransactionConcreteState extends MessageAbstractState {
 
-    /**
-     * 
-     */
-    public void as() {
+    private static TransactionConcreteState instance;
+    private AccumulatorContext context;
+
+
+    private TransactionConcreteState(AccumulatorContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void get() {
+    public static TransactionConcreteState instance(AccumulatorContext ctx) {
+        if (instance == null) {
+            instance = new TransactionConcreteState(ctx);
+        }
+        return instance;
     }
 
+    public void run() {}
+
     /**
-     * 
+     *
      */
-    public void reset() {
+    @Override
+    public void build() {
+	context.changeCurrentState(SingletonConcreteState.instance(context));
     }
+
+
 }
 

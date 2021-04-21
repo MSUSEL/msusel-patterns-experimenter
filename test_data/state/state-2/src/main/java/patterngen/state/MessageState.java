@@ -33,24 +33,11 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public abstract class MessageState {
 
     /**
      * 
      */
-    public void as() {
-    }
-
-    /**
-     * 
-     */
-    public void get() {
-    }
-
-    /**
-     * 
-     */
-    public void reset() {
-    }
+    public abstract void query();
 }
 

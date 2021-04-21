@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.MultipleState;
 import java.util.*;
 
 /**
@@ -33,24 +35,37 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public class AccumulatorContext {
 
-    /**
-     * 
-     */
-    public void as() {
+    private MultipleState currentState;
+
+
+
+
+    public AccumulatorContext() {
+    	currentState = TransactionConcreteState.instance(this);
     }
 
-    /**
-     * 
-     */
-    public void get() {
+    public void changeCurrentState(MultipleState state) {
+        currentState = state;
+        // currentState.run();
     }
 
-    /**
-     * 
-     */
-    public void reset() {
+    public void result() {
+        currentState.build();
     }
+
+    public void controller() {
+        currentState.build();
+    }
+
+    public void plus() {
+        currentState.build();
+    }
+
+    public void remove() {
+        currentState.build();
+    }
+
 }
 

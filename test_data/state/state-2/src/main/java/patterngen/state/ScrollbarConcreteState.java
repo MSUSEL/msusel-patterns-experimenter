@@ -33,18 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScrollbarConcreteState extends RequestAbstractState {
+public class ScrollbarConcreteState extends DecoderAbstractState {
 
     /**
      * 
      */
-    public void with() {
-    }
-
-    /**
-     * 
-     */
-    public void mutex() {
+    public void query() {
     }
 }
 

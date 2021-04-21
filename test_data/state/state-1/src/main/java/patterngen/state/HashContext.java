@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ErrorCorrectingState;
 import java.util.*;
 
 /**
@@ -33,24 +35,46 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public class HashContext {
+
+    private ErrorCorrectingState abstract;
 
     /**
-     * 
+     * @return the value of abstract
      */
-    public void as() {
+    public ErrorCorrectingState getAbstract() {
+        return abstract;
+    }
+
+    /**
+     * @param abstract the new value for abstract
+     */
+    public void setAbstract(ErrorCorrectingState abstract) {
+        this.abstract = abstract;
     }
 
     /**
      * 
      */
-    public void get() {
+    public void resource() {
     }
 
     /**
      * 
      */
-    public void reset() {
+    public void servlet() {
+    }
+
+    /**
+     * 
+     */
+    public void is() {
+    }
+
+    /**
+     * 
+     */
+    public void plus() {
     }
 }
 

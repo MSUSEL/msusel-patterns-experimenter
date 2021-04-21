@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.DescriptorState;
 import java.util.*;
 
 /**
@@ -33,24 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public class ServletContext {
+
+    private DescriptorState mutex;
 
     /**
-     * 
+     * @return the value of mutex
      */
-    public void as() {
+    public DescriptorState getMutex() {
+        return mutex;
+    }
+
+    /**
+     * @param mutex the new value for mutex
+     */
+    public void setMutex(DescriptorState mutex) {
+        this.mutex = mutex;
     }
 
     /**
      * 
      */
-    public void get() {
+    public void add() {
     }
 
     /**
      * 
      */
-    public void reset() {
+    public void parse() {
     }
 }
 

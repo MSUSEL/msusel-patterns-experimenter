@@ -33,18 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CollectionConcreteState extends MonitorAbstractState {
+public class CollectionConcreteState extends VectorAbstractState {
 
     /**
      * 
      */
-    public void with() {
-    }
-
-    /**
-     * 
-     */
-    public void mutex() {
+    public void query() {
     }
 }
 

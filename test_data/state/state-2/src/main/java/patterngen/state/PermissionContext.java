@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.MessageState;
 import java.util.*;
 
 /**
@@ -33,24 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScriptableConcreteState extends StatefulAbstractState {
+public class PermissionContext {
+
+    private MessageState threadsafe;
 
     /**
-     * 
+     * @return the value of threadsafe
      */
-    public void as() {
+    public MessageState getThreadsafe() {
+        return threadsafe;
+    }
+
+    /**
+     * @param threadsafe the new value for threadsafe
+     */
+    public void setThreadsafe(MessageState threadsafe) {
+        this.threadsafe = threadsafe;
     }
 
     /**
      * 
      */
-    public void get() {
-    }
-
-    /**
-     * 
-     */
-    public void reset() {
+    public void iterator() {
     }
 }
 
