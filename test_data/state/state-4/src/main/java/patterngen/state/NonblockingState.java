@@ -38,6 +38,21 @@ public abstract class NonblockingState {
     /**
      * 
      */
-    public abstract void dispatcher();
+    public abstract void allocator();
+
+    /**
+     * 
+     */
+    public abstract void loader();
+
+    /**
+     * 
+     */
+    public abstract void scanner();
+
+    /**
+     * 
+     */
+    public abstract void connection();
 }
 

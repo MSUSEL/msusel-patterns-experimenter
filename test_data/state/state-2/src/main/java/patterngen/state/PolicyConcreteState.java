@@ -33,24 +33,18 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class PolicyConcreteState extends MetadataAbstractState {
+public class PolicyConcreteState extends RequestAbstractState {
 
     /**
      * 
      */
-    public void set() {
+    public void with() {
     }
 
     /**
      * 
      */
-    public void upload() {
-    }
-
-    /**
-     * 
-     */
-    public void get() {
+    public void mutex() {
     }
 }
 

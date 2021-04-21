@@ -33,12 +33,30 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DownloadConcreteState extends RecordAbstractState {
+public class DownloadConcreteState extends DownloadAbstractState {
 
     /**
      * 
      */
-    public void lexer() {
+    public void build() {
+    }
+
+    /**
+     * 
+     */
+    public void expander() {
+    }
+
+    /**
+     * 
+     */
+    public void plus() {
+    }
+
+    /**
+     * 
+     */
+    public void put() {
     }
 }
 

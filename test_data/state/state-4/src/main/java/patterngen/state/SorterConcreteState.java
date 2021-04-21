@@ -33,19 +33,19 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScrollbarConcreteState extends NodeAbstractState {
+public class SorterConcreteState extends NodeAbstractState {
 
-    private static ScrollbarConcreteState instance;
+    private static SorterConcreteState instance;
     private UserContext context;
 
 
-    private ScrollbarConcreteState(UserContext ctx) {
+    private SorterConcreteState(UserContext ctx) {
         this.context = ctx;
     }
 
-    public static ScrollbarConcreteState instance(UserContext ctx) {
+    public static SorterConcreteState instance(UserContext ctx) {
         if (instance == null) {
-            instance = new ScrollbarConcreteState(ctx);
+            instance = new SorterConcreteState(ctx);
         }
         return instance;
     }
@@ -65,7 +65,7 @@ public class ScrollbarConcreteState extends NodeAbstractState {
      */
     @Override
     public void loader() {
-	context.changeCurrentState(SorterConcreteState.instance(context));
+	context.changeCurrentState(SimpleConcreteState.instance(context));
     }
 
     /**
@@ -73,7 +73,7 @@ public class ScrollbarConcreteState extends NodeAbstractState {
      */
     @Override
     public void scanner() {
-	context.changeCurrentState(MetadataConcreteState.instance(context));
+	context.changeCurrentState(ConstraintConcreteState.instance(context));
     }
 
     /**
@@ -81,7 +81,7 @@ public class ScrollbarConcreteState extends NodeAbstractState {
      */
     @Override
     public void connection() {
-	context.changeCurrentState(ScrollbarConcreteState.instance(context));
+	context.changeCurrentState(SimpleConcreteState.instance(context));
     }
 
 

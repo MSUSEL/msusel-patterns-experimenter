@@ -33,57 +33,30 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScrollbarConcreteState extends NodeAbstractState {
-
-    private static ScrollbarConcreteState instance;
-    private UserContext context;
-
-
-    private ScrollbarConcreteState(UserContext ctx) {
-        this.context = ctx;
-    }
-
-    public static ScrollbarConcreteState instance(UserContext ctx) {
-        if (instance == null) {
-            instance = new ScrollbarConcreteState(ctx);
-        }
-        return instance;
-    }
-
-    public void run() {}
+public class ObjectConcreteState extends DownloadAbstractState {
 
     /**
-     *
+     * 
      */
-    @Override
-    public void allocator() {
-	context.changeCurrentState(NotificationConcreteState.instance(context));
+    public void build() {
     }
 
     /**
-     *
+     * 
      */
-    @Override
-    public void loader() {
-	context.changeCurrentState(SorterConcreteState.instance(context));
+    public void expander() {
     }
 
     /**
-     *
+     * 
      */
-    @Override
-    public void scanner() {
-	context.changeCurrentState(MetadataConcreteState.instance(context));
+    public void plus() {
     }
 
     /**
-     *
+     * 
      */
-    @Override
-    public void connection() {
-	context.changeCurrentState(ScrollbarConcreteState.instance(context));
+    public void put() {
     }
-
-
 }
 

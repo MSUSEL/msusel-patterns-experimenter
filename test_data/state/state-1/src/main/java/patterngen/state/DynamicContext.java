@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ViewState;
 import java.util.*;
 
 /**
@@ -33,57 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScrollbarConcreteState extends NodeAbstractState {
+public class DynamicContext {
 
-    private static ScrollbarConcreteState instance;
-    private UserContext context;
-
-
-    private ScrollbarConcreteState(UserContext ctx) {
-        this.context = ctx;
-    }
-
-    public static ScrollbarConcreteState instance(UserContext ctx) {
-        if (instance == null) {
-            instance = new ScrollbarConcreteState(ctx);
-        }
-        return instance;
-    }
-
-    public void run() {}
+    private ViewState flexible;
 
     /**
-     *
+     * @return the value of flexible
      */
-    @Override
-    public void allocator() {
-	context.changeCurrentState(NotificationConcreteState.instance(context));
+    public ViewState getFlexible() {
+        return flexible;
     }
 
     /**
-     *
+     * @param flexible the new value for flexible
      */
-    @Override
-    public void loader() {
-	context.changeCurrentState(SorterConcreteState.instance(context));
+    public void setFlexible(ViewState flexible) {
+        this.flexible = flexible;
     }
 
     /**
-     *
+     * 
      */
-    @Override
-    public void scanner() {
-	context.changeCurrentState(MetadataConcreteState.instance(context));
+    public void add() {
     }
-
-    /**
-     *
-     */
-    @Override
-    public void connection() {
-	context.changeCurrentState(ScrollbarConcreteState.instance(context));
-    }
-
-
 }
 

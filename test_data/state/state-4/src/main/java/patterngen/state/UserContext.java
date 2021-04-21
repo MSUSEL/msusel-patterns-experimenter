@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.NonblockingState;
 import java.util.*;
 
 /**
@@ -33,57 +35,25 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ScrollbarConcreteState extends NodeAbstractState {
+public class UserContext {
 
-    private static ScrollbarConcreteState instance;
-    private UserContext context;
+    private NonblockingState currentState;
 
 
-    private ScrollbarConcreteState(UserContext ctx) {
-        this.context = ctx;
+
+
+    public UserContext() {
+    	currentState = SimpleConcreteState.instance(this);
     }
 
-    public static ScrollbarConcreteState instance(UserContext ctx) {
-        if (instance == null) {
-            instance = new ScrollbarConcreteState(ctx);
-        }
-        return instance;
+    public void changeCurrentState(NonblockingState state) {
+        currentState = state;
+        // currentState.run();
     }
 
-    public void run() {}
-
-    /**
-     *
-     */
-    @Override
-    public void allocator() {
-	context.changeCurrentState(NotificationConcreteState.instance(context));
+    public void clear() {
+        currentState.scanner();
     }
-
-    /**
-     *
-     */
-    @Override
-    public void loader() {
-	context.changeCurrentState(SorterConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void scanner() {
-	context.changeCurrentState(MetadataConcreteState.instance(context));
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void connection() {
-	context.changeCurrentState(ScrollbarConcreteState.instance(context));
-    }
-
 
 }
 
