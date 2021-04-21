@@ -33,12 +33,24 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class PermissionConcreteState extends TransactionAbstractState {
 
     /**
      * 
      */
-    public void reset() {
+    public void dialog() {
+    }
+
+    /**
+     * 
+     */
+    public void subtract() {
+    }
+
+    /**
+     * 
+     */
+    public void statement() {
     }
 }
 

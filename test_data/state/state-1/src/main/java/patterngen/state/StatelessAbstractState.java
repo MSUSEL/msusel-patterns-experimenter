@@ -33,12 +33,6 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
-
-    /**
-     * 
-     */
-    public void reset() {
-    }
+public abstract class StatelessAbstractState extends OptimizedState {
 }
 

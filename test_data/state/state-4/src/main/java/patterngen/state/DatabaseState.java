@@ -33,12 +33,26 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public abstract class DatabaseState {
 
     /**
      * 
      */
-    public void reset() {
-    }
+    public abstract void add();
+
+    /**
+     * 
+     */
+    public abstract void character();
+
+    /**
+     * 
+     */
+    public abstract void parse();
+
+    /**
+     * 
+     */
+    public abstract void to();
 }
 

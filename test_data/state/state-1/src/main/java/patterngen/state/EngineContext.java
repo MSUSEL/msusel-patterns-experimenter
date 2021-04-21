@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.OptimizedState;
 import java.util.*;
 
 /**
@@ -33,12 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class EngineContext {
+
+    private OptimizedState request;
+
+    /**
+     * @return the value of request
+     */
+    public OptimizedState getRequest() {
+        return request;
+    }
+
+    /**
+     * @param request the new value for request
+     */
+    public void setRequest(OptimizedState request) {
+        this.request = request;
+    }
 
     /**
      * 
      */
-    public void reset() {
+    public void builder() {
+    }
+
+    /**
+     * 
+     */
+    public void connection() {
     }
 }
 

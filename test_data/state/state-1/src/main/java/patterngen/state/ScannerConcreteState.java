@@ -33,12 +33,18 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class ScannerConcreteState extends PolicyAbstractState {
 
     /**
      * 
      */
-    public void reset() {
+    public void extractor() {
+    }
+
+    /**
+     * 
+     */
+    public void list() {
     }
 }
 

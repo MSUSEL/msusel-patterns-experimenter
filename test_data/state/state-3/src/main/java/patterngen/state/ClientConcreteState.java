@@ -33,24 +33,24 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ClientConcreteState extends DefinitionAbstractState {
+public class ClientConcreteState extends ScrollbarAbstractState {
 
     /**
      * 
      */
-    public void add() {
+    public void dialog() {
+    }
+
+    /**
+     * 
+     */
+    public void subtract() {
     }
 
     /**
      * 
      */
     public void statement() {
-    }
-
-    /**
-     * 
-     */
-    public void scanner() {
     }
 }
 

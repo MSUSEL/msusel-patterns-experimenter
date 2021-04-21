@@ -33,12 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ParserConcreteState extends TimestampAbstractState {
+public class ParserConcreteState extends RecursiveAbstractState {
 
     /**
      * 
      */
-    public void build() {
+    public void reset() {
     }
 }
 

@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.MemoryState;
 import java.util.*;
 
 /**
@@ -33,12 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class ObjectContext {
+
+    private MemoryState monitor;
+
+    /**
+     * @return the value of monitor
+     */
+    public MemoryState getMonitor() {
+        return monitor;
+    }
+
+    /**
+     * @param monitor the new value for monitor
+     */
+    public void setMonitor(MemoryState monitor) {
+        this.monitor = monitor;
+    }
 
     /**
      * 
      */
-    public void reset() {
+    public void get() {
     }
 }
 

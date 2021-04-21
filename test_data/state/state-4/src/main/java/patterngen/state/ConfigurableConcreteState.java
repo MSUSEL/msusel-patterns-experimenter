@@ -33,12 +33,57 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class ConfigurableConcreteState extends CacheAbstractState {
+
+    private static ConfigurableConcreteState instance;
+    private KeystrokeContext context;
+
+
+    private ConfigurableConcreteState(KeystrokeContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ConfigurableConcreteState instance(KeystrokeContext ctx) {
+        if (instance == null) {
+            instance = new ConfigurableConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void reset() {
+    @Override
+    public void add() {
+	context.changeCurrentState(ConfigurableConcreteState.instance(context));
     }
+
+    /**
+     *
+     */
+    @Override
+    public void character() {
+	context.changeCurrentState(ConfigurableConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void parse() {
+	context.changeCurrentState(ConfigurableConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void to() {
+	context.changeCurrentState(ConfigurableConcreteState.instance(context));
+    }
+
+
 }
 

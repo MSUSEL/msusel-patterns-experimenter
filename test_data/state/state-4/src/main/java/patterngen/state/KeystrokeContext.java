@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.DatabaseState;
 import java.util.*;
 
 /**
@@ -33,12 +35,29 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public class KeystrokeContext {
 
-    /**
-     * 
-     */
-    public void reset() {
+    private DatabaseState currentState;
+
+
+
+
+    public KeystrokeContext() {
+    	currentState = ConfigurableConcreteState.instance(this);
     }
+
+    public void changeCurrentState(DatabaseState state) {
+        currentState = state;
+        // currentState.run();
+    }
+
+    public void set() {
+        currentState.character();
+    }
+
+    public void valueof() {
+        currentState.character();
+    }
+
 }
 

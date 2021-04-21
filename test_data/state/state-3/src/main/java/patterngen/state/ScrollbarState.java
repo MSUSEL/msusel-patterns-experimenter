@@ -33,12 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class EncoderConcreteState extends NonblockingAbstractState {
+public abstract class ScrollbarState {
 
     /**
      * 
      */
-    public void reset() {
-    }
+    public abstract void dialog();
+
+    /**
+     * 
+     */
+    public abstract void subtract();
+
+    /**
+     * 
+     */
+    public abstract void statement();
 }
 
