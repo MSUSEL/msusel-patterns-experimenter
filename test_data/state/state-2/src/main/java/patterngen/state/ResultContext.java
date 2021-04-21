@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ActionState;
 import java.util.*;
 
 /**
@@ -33,18 +35,22 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class ResultContext {
+
+    private ActionState list;
 
     /**
-     * 
+     * @return the value of list
      */
-    public void as() {
+    public ActionState getList() {
+        return list;
     }
 
     /**
-     * 
+     * @param list the new value for list
      */
-    public void response() {
+    public void setList(ActionState list) {
+        this.list = list;
     }
 
     /**
@@ -56,7 +62,13 @@ public class IntegerConcreteState extends MessageAbstractState {
     /**
      * 
      */
-    public void descriptor() {
+    public void clear() {
+    }
+
+    /**
+     * 
+     */
+    public void tester() {
     }
 }
 

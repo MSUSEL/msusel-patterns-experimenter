@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ModalState;
 import java.util.*;
 
 /**
@@ -33,30 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class DatabaseContext {
+
+    private ModalState socket;
 
     /**
-     * 
+     * @return the value of socket
      */
-    public void as() {
+    public ModalState getSocket() {
+        return socket;
+    }
+
+    /**
+     * @param socket the new value for socket
+     */
+    public void setSocket(ModalState socket) {
+        this.socket = socket;
     }
 
     /**
      * 
      */
-    public void response() {
+    public void operation() {
     }
 
     /**
      * 
      */
-    public void get() {
+    public void put() {
     }
 
     /**
      * 
      */
-    public void descriptor() {
+    public void remove() {
     }
 }
 

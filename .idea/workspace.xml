@@ -5,68 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/LegacyAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConnectionAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/GenericConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/GraphConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/MultipleConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SelectorConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SubscriberConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ListConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MigratorConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/VirtualContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsWriter.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsWriter.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/results.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/DatabaseAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/DownloadConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/FileAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/InternalConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/LexerConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ScannerAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ScrollbarConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/SharedContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/SimpleConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/SmartConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ThreadState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ThreadedConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/TimestampConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/TokenizerAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/TreeConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/BasicAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/BasicContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DownloadConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/LocalizedAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/MessageState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ProcessorConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ScannerConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ScriptableAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ServerConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/VirtualConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ByteAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConcatenatorConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConcatenatorConcreteState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConverterConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DispatcherContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ErrorCorrectingConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ExecutableAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ExpanderAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/GridConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/InternalConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/IteratorConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/IteratorConcreteState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/PixelConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/RecursiveConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/RequestConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ResourceConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StatementState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/UploadConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/WritableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/AbstractAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/CollectionContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ResultConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ResultConcreteState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/StackState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/TableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/WindowConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/AutomaticContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ComparatorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/HashAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/VisitorState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ButtonState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/CacheConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ComparatorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/FileContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/IntegerConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/IntegerConcreteState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/LegacyAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/CollectionConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/CommandConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConcatenatorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ConnectionAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DatabaseState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DefinitionConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/GenericConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/GraphConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/IteratorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/MultipleConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ScriptableAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SelectorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ServerAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SimpleContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StateConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StatelessAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StringConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SubscriberConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ThreadConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/WrapperAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DirectoryState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ImporterAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ListConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MigratorConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RasterConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RequestConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ResultConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/VirtualContext.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test_data/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/test.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test_data/tools/p4results.xml" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/tools/p4results.xml" afterDir="false" />
     </list>
@@ -295,7 +272,7 @@
       <workItem from="1618656291671" duration="28380000" />
       <workItem from="1618813217192" duration="19107000" />
       <workItem from="1618857040609" duration="19418000" />
-      <workItem from="1618990747493" duration="13566000" />
+      <workItem from="1618990747493" duration="14382000" />
     </task>
     <servers />
   </component>

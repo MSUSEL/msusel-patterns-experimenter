@@ -33,30 +33,57 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class NonblockingConcreteState extends ColumnState {
+
+    private static NonblockingConcreteState instance;
+    private CharacterContext context;
+
+
+    private NonblockingConcreteState(CharacterContext ctx) {
+        this.context = ctx;
+    }
+
+    public static NonblockingConcreteState instance(CharacterContext ctx) {
+        if (instance == null) {
+            instance = new NonblockingConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void as() {
+    @Override
+    public void dialog() {
+	context.changeCurrentState(NonblockingConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void response() {
+    @Override
+    public void from() {
+	context.changeCurrentState(NonblockingConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void get() {
+    @Override
+    public void integer() {
+	context.changeCurrentState(NonblockingConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void descriptor() {
+    @Override
+    public void put() {
+	context.changeCurrentState(NonblockingConcreteState.instance(context));
     }
+
+
 }
 

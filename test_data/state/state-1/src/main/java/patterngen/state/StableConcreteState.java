@@ -33,18 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class StableConcreteState extends ErrorCorrectingAbstractState {
 
     /**
      * 
      */
-    public void as() {
-    }
-
-    /**
-     * 
-     */
-    public void response() {
+    public void button() {
     }
 
     /**
@@ -56,7 +50,13 @@ public class IntegerConcreteState extends MessageAbstractState {
     /**
      * 
      */
-    public void descriptor() {
+    public void clear() {
+    }
+
+    /**
+     * 
+     */
+    public void put() {
     }
 }
 

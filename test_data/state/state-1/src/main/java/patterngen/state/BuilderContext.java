@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.SequenceState;
 import java.util.*;
 
 /**
@@ -33,30 +35,46 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class BuilderContext {
+
+    private SequenceState threaded;
 
     /**
-     * 
+     * @return the value of threaded
      */
-    public void as() {
+    public SequenceState getThreaded() {
+        return threaded;
+    }
+
+    /**
+     * @param threaded the new value for threaded
+     */
+    public void setThreaded(SequenceState threaded) {
+        this.threaded = threaded;
     }
 
     /**
      * 
      */
-    public void response() {
+    public void formatter() {
     }
 
     /**
      * 
      */
-    public void get() {
+    public void util() {
     }
 
     /**
      * 
      */
-    public void descriptor() {
+    public void publisher() {
+    }
+
+    /**
+     * 
+     */
+    public void check() {
     }
 }
 

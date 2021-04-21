@@ -33,7 +33,13 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class LegacyConcreteState extends StableAbstractState {
+
+    /**
+     * 
+     */
+    public void search() {
+    }
 
     /**
      * 
@@ -44,19 +50,13 @@ public class IntegerConcreteState extends MessageAbstractState {
     /**
      * 
      */
-    public void response() {
+    public void loader() {
     }
 
     /**
      * 
      */
-    public void get() {
-    }
-
-    /**
-     * 
-     */
-    public void descriptor() {
+    public void compressor() {
     }
 }
 

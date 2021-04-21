@@ -33,30 +33,26 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public abstract class ActionState {
 
     /**
      * 
      */
-    public void as() {
-    }
+    public abstract void as();
 
     /**
      * 
      */
-    public void response() {
-    }
+    public abstract void response();
 
     /**
      * 
      */
-    public void get() {
-    }
+    public abstract void get();
 
     /**
      * 
      */
-    public void descriptor() {
-    }
+    public abstract void descriptor();
 }
 

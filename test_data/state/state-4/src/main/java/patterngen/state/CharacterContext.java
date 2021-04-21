@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ColumnState;
 import java.util.*;
 
 /**
@@ -33,30 +35,25 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IntegerConcreteState extends MessageAbstractState {
+public class CharacterContext {
 
-    /**
-     * 
-     */
-    public void as() {
+    private ColumnState currentState;
+
+
+
+
+    public CharacterContext() {
+    	currentState = NonblockingConcreteState.instance(this);
     }
 
-    /**
-     * 
-     */
-    public void response() {
+    public void changeCurrentState(ColumnState state) {
+        currentState = state;
+        // currentState.run();
     }
 
-    /**
-     * 
-     */
-    public void get() {
+    public void encoder() {
+        currentState.put();
     }
 
-    /**
-     * 
-     */
-    public void descriptor() {
-    }
 }
 
