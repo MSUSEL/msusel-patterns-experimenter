@@ -33,6 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class ThreadConcreteState extends FlexibleAbstractState {
+
+    private static ThreadConcreteState instance;
+    private RequestContext context;
+
+
+    private ThreadConcreteState(RequestContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ThreadConcreteState instance(RequestContext ctx) {
+        if (instance == null) {
+            instance = new ThreadConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void get() {
+	context.changeCurrentState(ThreadConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void from() {
+	context.changeCurrentState(SingletonConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void encoder() {
+	context.changeCurrentState(CloneableConcreteState.instance(context));
+    }
+
+
 }
 

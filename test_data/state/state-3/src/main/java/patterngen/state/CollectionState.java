@@ -33,6 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public abstract class CollectionState {
+
+    /**
+     * 
+     */
+    public abstract void with();
+
+    /**
+     * 
+     */
+    public abstract void listener();
+
+    /**
+     * 
+     */
+    public abstract void encoder();
 }
 

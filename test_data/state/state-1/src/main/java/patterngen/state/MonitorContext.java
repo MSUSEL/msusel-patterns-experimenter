@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.WritableState;
 import java.util.*;
 
 /**
@@ -33,6 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class MonitorContext {
+
+    private WritableState server;
+
+    /**
+     * @return the value of server
+     */
+    public WritableState getServer() {
+        return server;
+    }
+
+    /**
+     * @param server the new value for server
+     */
+    public void setServer(WritableState server) {
+        this.server = server;
+    }
+
+    /**
+     * 
+     */
+    public void jar() {
+    }
+
+    /**
+     * 
+     */
+    public void counter() {
+    }
 }
 

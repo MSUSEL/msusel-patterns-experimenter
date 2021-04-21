@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.CollectionState;
 import java.util.*;
 
 /**
@@ -33,6 +35,46 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class RandomizerContext {
+
+    private CollectionState transaction;
+
+    /**
+     * @return the value of transaction
+     */
+    public CollectionState getTransaction() {
+        return transaction;
+    }
+
+    /**
+     * @param transaction the new value for transaction
+     */
+    public void setTransaction(CollectionState transaction) {
+        this.transaction = transaction;
+    }
+
+    /**
+     * 
+     */
+    public void with() {
+    }
+
+    /**
+     * 
+     */
+    public void of() {
+    }
+
+    /**
+     * 
+     */
+    public void logger() {
+    }
+
+    /**
+     * 
+     */
+    public void parse() {
+    }
 }
 

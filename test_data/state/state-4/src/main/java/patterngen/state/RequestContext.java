@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.MutexState;
 import java.util.*;
 
 /**
@@ -33,6 +35,25 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class RequestContext {
+
+    private MutexState currentState;
+
+
+
+
+    public RequestContext() {
+    	currentState = GraphConcreteState.instance(this);
+    }
+
+    public void changeCurrentState(MutexState state) {
+        currentState = state;
+        // currentState.run();
+    }
+
+    public void remove() {
+        currentState.from();
+    }
+
 }
 

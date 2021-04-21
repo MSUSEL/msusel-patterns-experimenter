@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.NonblockingState;
 import java.util.*;
 
 /**
@@ -33,6 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class LoaderContext {
+
+    private NonblockingState reader;
+
+    /**
+     * @return the value of reader
+     */
+    public NonblockingState getReader() {
+        return reader;
+    }
+
+    /**
+     * @param reader the new value for reader
+     */
+    public void setReader(NonblockingState reader) {
+        this.reader = reader;
+    }
+
+    /**
+     * 
+     */
+    public void task() {
+    }
+
+    /**
+     * 
+     */
+    public void parse() {
+    }
 }
 

@@ -33,6 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class NonblockingConcreteState extends WrapperAbstractState {
+
+    private static NonblockingConcreteState instance;
+    private RequestContext context;
+
+
+    private NonblockingConcreteState(RequestContext ctx) {
+        this.context = ctx;
+    }
+
+    public static NonblockingConcreteState instance(RequestContext ctx) {
+        if (instance == null) {
+            instance = new NonblockingConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
+
+    /**
+     *
+     */
+    @Override
+    public void get() {
+	context.changeCurrentState(NonblockingConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void from() {
+	context.changeCurrentState(DialogConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void encoder() {
+	context.changeCurrentState(SequenceConcreteState.instance(context));
+    }
+
+
 }
 

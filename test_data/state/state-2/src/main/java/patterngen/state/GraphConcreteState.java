@@ -33,6 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class NonblockingAbstractState extends CollectionState {
+public class GraphConcreteState extends FlexibleAbstractState {
+
+    /**
+     * 
+     */
+    public void valueof() {
+    }
 }
 
