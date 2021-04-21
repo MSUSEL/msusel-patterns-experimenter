@@ -33,7 +33,9 @@ import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.inject.Director
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class SourceInjectorExecutor {
 
     int NUM
@@ -69,6 +71,7 @@ class SourceInjectorExecutor {
 
     private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
         context.open()
+        log.info("Looking up project with key: ${map[Constants.Key1]}")
         Project proj = Project.findFirst("projKey = ?", map[Constants.Key1])
         PatternInstance inst
         String pattern = map.get(Constants.PatternType)

@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.VisitorState;
 import java.util.*;
 
 /**
@@ -33,12 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class AutomaticContext {
+
+    private VisitorState connection;
+
+    /**
+     * @return the value of connection
+     */
+    public VisitorState getConnection() {
+        return connection;
+    }
+
+    /**
+     * @param connection the new value for connection
+     */
+    public void setConnection(VisitorState connection) {
+        this.connection = connection;
+    }
+
+    /**
+     * 
+     */
+    public void reader() {
+    }
 
     /**
      * 
      */
     public void is() {
+    }
+
+    /**
+     * 
+     */
+    public void table() {
     }
 }
 

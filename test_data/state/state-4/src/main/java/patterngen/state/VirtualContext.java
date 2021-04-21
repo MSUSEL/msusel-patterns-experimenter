@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.DirectoryState;
 import java.util.*;
 
 /**
@@ -33,12 +35,29 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class VirtualContext {
 
-    /**
-     * 
-     */
-    public void is() {
+    private DirectoryState currentState;
+
+
+
+
+    public VirtualContext() {
+    	currentState = ListConcreteState.instance(this);
     }
+
+    public void changeCurrentState(DirectoryState state) {
+        currentState = state;
+        // currentState.run();
+    }
+
+    public void importer() {
+        currentState.mediator();
+    }
+
+    public void graph() {
+        currentState.plus();
+    }
+
 }
 

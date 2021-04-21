@@ -33,18 +33,12 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ConcatenatorConcreteState extends StatementState {
+public class ConcatenatorConcreteState extends ConnectionAbstractState {
 
     /**
      * 
      */
-    public void factoryfactory() {
-    }
-
-    /**
-     * 
-     */
-    public void valueof() {
+    public void is() {
     }
 }
 

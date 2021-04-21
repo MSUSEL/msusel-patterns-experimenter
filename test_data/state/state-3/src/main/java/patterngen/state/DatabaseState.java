@@ -33,12 +33,11 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public abstract class DatabaseState {
 
     /**
      * 
      */
-    public void is() {
-    }
+    public abstract void is();
 }
 

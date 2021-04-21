@@ -33,12 +33,57 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class ListConcreteState extends ImporterAbstractState {
+
+    private static ListConcreteState instance;
+    private VirtualContext context;
+
+
+    private ListConcreteState(VirtualContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ListConcreteState instance(VirtualContext ctx) {
+        if (instance == null) {
+            instance = new ListConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void is() {
+    @Override
+    public void set() {
+	context.changeCurrentState(RequestConcreteState.instance(context));
     }
+
+    /**
+     *
+     */
+    @Override
+    public void mediator() {
+	context.changeCurrentState(RequestConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void plus() {
+	context.changeCurrentState(MigratorConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void tokenizer() {
+	context.changeCurrentState(MigratorConcreteState.instance(context));
+    }
+
+
 }
 

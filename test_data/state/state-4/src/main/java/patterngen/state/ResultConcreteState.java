@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ResultConcreteState extends StackState {
+public class ResultConcreteState extends ImporterAbstractState {
 
     private static ResultConcreteState instance;
-    private CollectionContext context;
+    private VirtualContext context;
 
 
-    private ResultConcreteState(CollectionContext ctx) {
+    private ResultConcreteState(VirtualContext ctx) {
         this.context = ctx;
     }
 
-    public static ResultConcreteState instance(CollectionContext ctx) {
+    public static ResultConcreteState instance(VirtualContext ctx) {
         if (instance == null) {
             instance = new ResultConcreteState(ctx);
         }
@@ -56,24 +56,32 @@ public class ResultConcreteState extends StackState {
      *
      */
     @Override
-    public void add() {
-	context.changeCurrentState(TableConcreteState.instance(context));
+    public void set() {
+	context.changeCurrentState(ListConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void converter() {
-	context.changeCurrentState(ResultConcreteState.instance(context));
+    public void mediator() {
+	context.changeCurrentState(RequestConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void put() {
-	context.changeCurrentState(TableConcreteState.instance(context));
+    public void plus() {
+	context.changeCurrentState(MigratorConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void tokenizer() {
+	context.changeCurrentState(ListConcreteState.instance(context));
     }
 
 

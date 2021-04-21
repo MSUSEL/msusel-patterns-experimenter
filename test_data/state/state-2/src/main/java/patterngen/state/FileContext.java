@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ButtonState;
 import java.util.*;
 
 /**
@@ -33,12 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class FileContext {
+
+    private ButtonState stateless;
+
+    /**
+     * @return the value of stateless
+     */
+    public ButtonState getStateless() {
+        return stateless;
+    }
+
+    /**
+     * @param stateless the new value for stateless
+     */
+    public void setStateless(ButtonState stateless) {
+        this.stateless = stateless;
+    }
 
     /**
      * 
      */
-    public void is() {
+    public void add() {
+    }
+
+    /**
+     * 
+     */
+    public void thread() {
     }
 }
 

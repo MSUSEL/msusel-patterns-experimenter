@@ -33,12 +33,26 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public abstract class VisitorState {
 
     /**
      * 
      */
-    public void is() {
-    }
+    public abstract void clear();
+
+    /**
+     * 
+     */
+    public abstract void reset();
+
+    /**
+     * 
+     */
+    public abstract void remove();
+
+    /**
+     * 
+     */
+    public abstract void tokenizer();
 }
 

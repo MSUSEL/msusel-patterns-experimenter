@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.DatabaseState;
 import java.util.*;
 
 /**
@@ -33,12 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class SimpleContext {
+
+    private DatabaseState collector;
+
+    /**
+     * @return the value of collector
+     */
+    public DatabaseState getCollector() {
+        return collector;
+    }
+
+    /**
+     * @param collector the new value for collector
+     */
+    public void setCollector(DatabaseState collector) {
+        this.collector = collector;
+    }
 
     /**
      * 
      */
-    public void is() {
+    public void subtract() {
+    }
+
+    /**
+     * 
+     */
+    public void tree() {
     }
 }
 

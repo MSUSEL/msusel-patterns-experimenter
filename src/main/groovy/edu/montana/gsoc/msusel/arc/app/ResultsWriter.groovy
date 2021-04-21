@@ -52,18 +52,14 @@ class ResultsWriter {
             for (int id = 0; id < NUM; id++) {
                 Map<String, String> row = table.row("$id")
                 List<String> rowValues = []
-                Constants.HEADERS.each {
+                headers.each {
                     if (row.containsKey(it))
                         rowValues << row.get(it)
                     else
                         rowValues << ""
                 }
-                MEASURES.each {
-                    if (row.containsKey(it))
-                        rowValues << row.get(it)
-                    else
-                        rowValues << ""
-                }
+                rowValues.remove(0)
+                rowValues.add(0, id.toString())
                 printer.printRecord(rowValues)
             }
         }

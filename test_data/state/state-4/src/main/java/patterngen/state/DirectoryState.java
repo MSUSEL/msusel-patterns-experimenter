@@ -33,12 +33,26 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public abstract class DirectoryState {
 
     /**
      * 
      */
-    public void is() {
-    }
+    public abstract void set();
+
+    /**
+     * 
+     */
+    public abstract void mediator();
+
+    /**
+     * 
+     */
+    public abstract void plus();
+
+    /**
+     * 
+     */
+    public abstract void tokenizer();
 }
 

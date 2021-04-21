@@ -33,12 +33,30 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class IteratorConcreteState extends ScriptableAbstractState {
+public class ComparatorConcreteState extends HashAbstractState {
 
     /**
      * 
      */
-    public void is() {
+    public void clear() {
+    }
+
+    /**
+     * 
+     */
+    public void reset() {
+    }
+
+    /**
+     * 
+     */
+    public void remove() {
+    }
+
+    /**
+     * 
+     */
+    public void tokenizer() {
     }
 }
 
