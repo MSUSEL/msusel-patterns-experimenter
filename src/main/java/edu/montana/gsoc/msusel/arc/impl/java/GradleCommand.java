@@ -29,7 +29,11 @@ package edu.montana.gsoc.msusel.arc.impl.java;
 import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.Executor;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,11 +59,9 @@ public class GradleCommand extends ToolCommand {
 
     @Override
     public CommandLine buildCommandLine() {
-        CommandLine cmdLine = new CommandLine("gradle")
+        return new CommandLine(toolHome)
                 .addArgument("clean")
                 .addArgument("compileJava");
-
-        return cmdLine;
     }
 
     @Override

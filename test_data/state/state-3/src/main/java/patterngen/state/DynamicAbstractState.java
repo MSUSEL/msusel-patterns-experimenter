@@ -33,6 +33,6 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public abstract class DynamicAbstractState extends ModalState {
+public abstract class DynamicAbstractState extends LocalizedState {
 }
 

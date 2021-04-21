@@ -105,14 +105,15 @@ public abstract class ToolCommand implements Command {
         log.info("Executing Command");
         DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
         Executor executor = new DefaultExecutor();
-        executor.setWorkingDirectory(new File(Paths.get(projectBaseDirectory).toAbsolutePath().toString()));
+        executor.setWorkingDirectory(Paths.get(projectBaseDirectory).toFile());
         executor.setExitValue(expectedExitValue);
         try {
             executor.execute(cmdLine, resultHandler);
             resultHandler.waitFor();
             int exitval = resultHandler.getExitValue();
+            log.info("Exit Value: " + exitval);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            log.atError().withThrowable(e).log(e.getMessage());
         }
     }
 }

@@ -5,50 +5,93 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/AllocatorAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/CloneableConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/DirectoryState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/StringContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DatabaseState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DemarshallerAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DownloadConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/NodeAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/SecureContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/StatementConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ThreadsafeConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/BasicConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DynamicAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/FilterConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/FrameConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ModalState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ReadableAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ScriptableConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SerializableContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ServletConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SharedConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StateConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ThreadsafeAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/AbstractConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ActionAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ActionConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ButtonConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ByteConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DelegatorAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DispatcherConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DownloadContext.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ErrorCorrectingAbstractState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/GenericConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/LexerConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ListenerConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MessageConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MigratorState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/NonblockingConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RequestConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/TaskConcreteState.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ThreadConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/fileChanges/last-build.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/6.8.1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/checksums/checksums.lock" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/configuration-cache/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/.gradle/vcs-1/gc.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/config/gradle/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/RasterConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/ScannerConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/CryptographicConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/LoaderAbstractState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/SingletonConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/TesterConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ThreadConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ContainerConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/LegacyConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/RowConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StatefulConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StatelessConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/FactoryFactoryConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/FormatterAbstractState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/GridAbstractState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/NodeConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ObjectConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RowConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/SecureConcreteState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/TimerConcreteState.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_data/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/results.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/arc.properties" beforeDir="false" afterPath="$PROJECT_DIR$/config/arc.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/command/ToolCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/command/ToolCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/GradleCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/GradleCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/GradleConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/GradleConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaBuildCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaBuildCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/AllocatorAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/CloneableConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/DirectoryState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-1/src/main/java/patterngen/state/StringContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DatabaseState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DemarshallerAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/DownloadConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/NodeAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/SecureContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/StatementConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-2/src/main/java/patterngen/state/ThreadsafeConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/BasicConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DynamicAbstractState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/DynamicAbstractState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/FilterConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/FrameConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ModalState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ReadableAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ScriptableConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SerializableContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ServletConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/SharedConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/StateConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-3/src/main/java/patterngen/state/ThreadsafeAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/AbstractConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ActionAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ActionConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ButtonConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ByteConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DelegatorAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DispatcherConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/DownloadContext.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ErrorCorrectingAbstractState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/GenericConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/GenericConcreteState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/LexerConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ListenerConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MessageConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/MigratorState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/NonblockingConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RequestConcreteState.java" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/RequestConcreteState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/TaskConcreteState.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/state/state-4/src/main/java/patterngen/state/ThreadConcreteState.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/test_data/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/test.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_data/tools/p4results.xml" beforeDir="false" afterPath="$PROJECT_DIR$/test_data/tools/p4results.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,13 +162,28 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration name="GradleCommand" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="edu.montana.gsoc.msusel.arc.impl.java.GradleCommand" />
+      <module name="msusel-arc-framework" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.impl.java.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -212,6 +270,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.CLI" />
+        <item itemvalue="Application.GradleCommand" />
         <item itemvalue="JUnit.ExperimentalTest.test" />
         <item itemvalue="JUnit.ExperimentalTest.testFindBugs" />
       </list>
@@ -258,7 +317,8 @@
       <workItem from="1618575326563" duration="2125000" />
       <workItem from="1618656291671" duration="28380000" />
       <workItem from="1618813217192" duration="19107000" />
-      <workItem from="1618857040609" duration="10093000" />
+      <workItem from="1618857040609" duration="19418000" />
+      <workItem from="1618990747493" duration="1815000" />
     </task>
     <servers />
   </component>

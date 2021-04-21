@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class GenericConcreteState extends DelegatorAbstractState {
+public class GenericConcreteState extends ViewAbstractState {
 
     private static GenericConcreteState instance;
-    private DownloadContext context;
+    private ExtractorContext context;
 
 
-    private GenericConcreteState(DownloadContext ctx) {
+    private GenericConcreteState(ExtractorContext ctx) {
         this.context = ctx;
     }
 
-    public static GenericConcreteState instance(DownloadContext ctx) {
+    public static GenericConcreteState instance(ExtractorContext ctx) {
         if (instance == null) {
             instance = new GenericConcreteState(ctx);
         }
@@ -56,16 +56,32 @@ public class GenericConcreteState extends DelegatorAbstractState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(ListenerConcreteState.instance(context));
+    public void minus() {
+	context.changeCurrentState(GenericConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void module() {
-	context.changeCurrentState(TaskConcreteState.instance(context));
+    public void contains() {
+	context.changeCurrentState(ObjectConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void parse() {
+	context.changeCurrentState(GenericConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void remove() {
+	context.changeCurrentState(NodeConcreteState.instance(context));
     }
 
 

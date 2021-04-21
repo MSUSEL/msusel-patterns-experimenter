@@ -33,17 +33,17 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class RequestConcreteState extends MigratorState {
+public class RequestConcreteState extends FormatterAbstractState {
 
     private static RequestConcreteState instance;
-    private DownloadContext context;
+    private ExtractorContext context;
 
 
-    private RequestConcreteState(DownloadContext ctx) {
+    private RequestConcreteState(ExtractorContext ctx) {
         this.context = ctx;
     }
 
-    public static RequestConcreteState instance(DownloadContext ctx) {
+    public static RequestConcreteState instance(ExtractorContext ctx) {
         if (instance == null) {
             instance = new RequestConcreteState(ctx);
         }
@@ -56,16 +56,32 @@ public class RequestConcreteState extends MigratorState {
      *
      */
     @Override
-    public void with() {
-	context.changeCurrentState(ThreadConcreteState.instance(context));
+    public void minus() {
+	context.changeCurrentState(StringConcreteState.instance(context));
     }
 
     /**
      *
      */
     @Override
-    public void module() {
-	context.changeCurrentState(GenericConcreteState.instance(context));
+    public void contains() {
+	context.changeCurrentState(SecureConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void parse() {
+	context.changeCurrentState(SecureConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void remove() {
+	context.changeCurrentState(StringConcreteState.instance(context));
     }
 
 

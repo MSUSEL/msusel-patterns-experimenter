@@ -74,7 +74,7 @@ class Runner {
 //            prepareDatabaseForExperiment()
         }
         if (status < 4) executeArcExperimenterPhaseOne()
-//        if (status < 5) executeSourceCodeInjector()
+        if (status < 5) executeSourceCodeInjector()
 //        if (status < 6) executeArcExperimenterPhaseTwo()
 //        if (status < 7) extractResults()
         long end = System.currentTimeMillis()

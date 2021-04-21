@@ -68,17 +68,14 @@ class SourceInjectorExecutor {
     }
 
     private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
-        String sys = map[Constants.Key1]
         context.open()
-        System s = System.findFirst("sysKey = ?", sys)
-        Project proj
+        Project proj = Project.findFirst("projKey = ?", map[Constants.Key1])
         PatternInstance inst
         String pattern = map.get(Constants.PatternType)
         String grimeType = map.get(Constants.GrimeType)
         int min = 0, max = 0
 
-        if (s) {
-            proj = s.getProjects().first()
+        if (proj) {
             inst = proj.getPatternInstances().first()
             (min, max) = calculateGrimeSeverity(inst, Integer.parseInt(map.get(Constants.GrimeSeverity)))
         }
@@ -86,7 +83,7 @@ class SourceInjectorExecutor {
         if (proj && inst) {
             String confText = """
             where {
-                systemKey = '$sys'
+                systemKey = '${proj.getParentSystem().getKey()}'
                 projectKey = '${proj.getProjectKey()}'
                 patternKey = 'gof:$pattern'
                 patternInst = '${inst.getInstKey()}'

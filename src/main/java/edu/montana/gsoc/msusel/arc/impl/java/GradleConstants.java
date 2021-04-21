@@ -34,4 +34,5 @@ public interface GradleConstants {
 
     String GRADLE_CMD_NAME = "Gradle";
     int GRADLE_CMD_EXIT_VALUE = 0;
+    String GRADLE_CMD_PROPERTY = "arc.tool.gradle.binary";
 }

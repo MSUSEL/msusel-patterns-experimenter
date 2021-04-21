@@ -42,11 +42,11 @@ public class JavaBuildCommand extends ToolCommand {
     ToolCommand basicJavaCmd;
 
     @Builder(buildMethodName = "create")
-    public JavaBuildCommand() {
+    public JavaBuildCommand(String gradleHome, String mavenHome) {
         super(JavaConstants.JAVA_BUILD_CMD_NAME, null, null);
 
-        gradleCmd = GradleCommand.builder().create();
-        mavenCmd = MavenCommand.builder().create();
+        gradleCmd = GradleCommand.builder().toolHome(gradleHome).create();
+        mavenCmd = MavenCommand.builder().toolHome(mavenHome).create();
         basicJavaCmd = BasicJavaCommand.builder().create();
     }
 
