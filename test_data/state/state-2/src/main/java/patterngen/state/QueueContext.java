@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.FormatterState;
 import java.util.*;
 
 /**
@@ -33,30 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class QueueContext {
+
+    private FormatterState configurable;
 
     /**
-     * 
+     * @return the value of configurable
      */
-    public void build() {
+    public FormatterState getConfigurable() {
+        return configurable;
+    }
+
+    /**
+     * @param configurable the new value for configurable
+     */
+    public void setConfigurable(FormatterState configurable) {
+        this.configurable = configurable;
     }
 
     /**
      * 
      */
-    public void parse() {
-    }
-
-    /**
-     * 
-     */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
+    public void of() {
     }
 }
 

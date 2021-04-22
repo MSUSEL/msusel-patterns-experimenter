@@ -33,30 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class ControllerConcreteState extends StreamAbstractState {
 
-    /**
-     * 
-     */
-    public void build() {
+    private static ControllerConcreteState instance;
+    private DelegatorContext context;
+
+
+    private ControllerConcreteState(DelegatorContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void parse() {
+    public static ControllerConcreteState instance(DelegatorContext ctx) {
+        if (instance == null) {
+            instance = new ControllerConcreteState(ctx);
+        }
+        return instance;
     }
 
-    /**
-     * 
-     */
-    public void collector() {
-    }
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void compressor() {
+    @Override
+    public void logger() {
+	context.changeCurrentState(BufferConcreteState.instance(context));
     }
+
+
 }
 

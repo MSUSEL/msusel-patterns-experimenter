@@ -33,30 +33,24 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class RecordConcreteState extends NonblockingAbstractState {
 
     /**
      * 
      */
-    public void build() {
+    public void column() {
     }
 
     /**
      * 
      */
-    public void parse() {
+    public void to() {
     }
 
     /**
      * 
      */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
+    public void marshaller() {
     }
 }
 

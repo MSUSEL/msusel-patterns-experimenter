@@ -33,30 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class UploadConcreteState extends StreamAbstractState {
 
-    /**
-     * 
-     */
-    public void build() {
+    private static UploadConcreteState instance;
+    private DelegatorContext context;
+
+
+    private UploadConcreteState(DelegatorContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void parse() {
+    public static UploadConcreteState instance(DelegatorContext ctx) {
+        if (instance == null) {
+            instance = new UploadConcreteState(ctx);
+        }
+        return instance;
     }
 
-    /**
-     * 
-     */
-    public void collector() {
-    }
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void compressor() {
+    @Override
+    public void logger() {
+	context.changeCurrentState(LockConcreteState.instance(context));
     }
+
+
 }
 

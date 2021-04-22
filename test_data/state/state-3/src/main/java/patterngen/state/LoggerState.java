@@ -33,30 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public abstract class LoggerState {
 
     /**
      * 
      */
-    public void build() {
-    }
+    public abstract void column();
 
     /**
      * 
      */
-    public void parse() {
-    }
+    public abstract void to();
 
     /**
      * 
      */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
-    }
+    public abstract void marshaller();
 }
 

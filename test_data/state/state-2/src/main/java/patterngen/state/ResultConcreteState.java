@@ -33,30 +33,18 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class ResultConcreteState extends PublisherAbstractState {
 
     /**
      * 
      */
-    public void build() {
+    public void contains() {
     }
 
     /**
      * 
      */
-    public void parse() {
-    }
-
-    /**
-     * 
-     */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
+    public void servlet() {
     }
 }
 

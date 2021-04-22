@@ -33,18 +33,30 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ConfigurableConcreteState extends EngineAbstractState {
+public class ConfigurableConcreteState extends ButtonAbstractState {
 
     /**
      * 
      */
-    public void mediator() {
+    public void build() {
     }
 
     /**
      * 
      */
-    public void dispatcher() {
+    public void parse() {
+    }
+
+    /**
+     * 
+     */
+    public void collector() {
+    }
+
+    /**
+     * 
+     */
+    public void compressor() {
     }
 }
 

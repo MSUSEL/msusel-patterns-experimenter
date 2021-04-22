@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.RecursiveState;
 import java.util.*;
 
 /**
@@ -33,30 +35,25 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class DelegatorContext {
 
-    /**
-     * 
-     */
+    private RecursiveState currentState;
+
+
+
+
+    public DelegatorContext() {
+    	currentState = BufferConcreteState.instance(this);
+    }
+
+    public void changeCurrentState(RecursiveState state) {
+        currentState = state;
+        // currentState.run();
+    }
+
     public void build() {
+        currentState.logger();
     }
 
-    /**
-     * 
-     */
-    public void parse() {
-    }
-
-    /**
-     * 
-     */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
-    }
 }
 

@@ -33,30 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class BufferConcreteState extends SimpleAbstractState {
 
-    /**
-     * 
-     */
-    public void build() {
+    private static BufferConcreteState instance;
+    private DelegatorContext context;
+
+
+    private BufferConcreteState(DelegatorContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void parse() {
+    public static BufferConcreteState instance(DelegatorContext ctx) {
+        if (instance == null) {
+            instance = new BufferConcreteState(ctx);
+        }
+        return instance;
     }
 
-    /**
-     * 
-     */
-    public void collector() {
-    }
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void compressor() {
+    @Override
+    public void logger() {
+	context.changeCurrentState(ActionConcreteState.instance(context));
     }
+
+
 }
 

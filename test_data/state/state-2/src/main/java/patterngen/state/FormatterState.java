@@ -33,30 +33,16 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public abstract class FormatterState {
 
     /**
      * 
      */
-    public void build() {
-    }
+    public abstract void contains();
 
     /**
      * 
      */
-    public void parse() {
-    }
-
-    /**
-     * 
-     */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
-    }
+    public abstract void servlet();
 }
 

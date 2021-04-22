@@ -33,30 +33,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class AccumulatorConcreteState extends RecursiveState {
 
-    /**
-     * 
-     */
-    public void build() {
+    private static AccumulatorConcreteState instance;
+    private DelegatorContext context;
+
+
+    private AccumulatorConcreteState(DelegatorContext ctx) {
+        this.context = ctx;
     }
 
-    /**
-     * 
-     */
-    public void parse() {
+    public static AccumulatorConcreteState instance(DelegatorContext ctx) {
+        if (instance == null) {
+            instance = new AccumulatorConcreteState(ctx);
+        }
+        return instance;
     }
 
-    /**
-     * 
-     */
-    public void collector() {
-    }
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void compressor() {
+    @Override
+    public void logger() {
+	context.changeCurrentState(UploadConcreteState.instance(context));
     }
+
+
 }
 

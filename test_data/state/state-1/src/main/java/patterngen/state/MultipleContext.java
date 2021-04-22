@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.FlexibleState;
 import java.util.*;
 
 /**
@@ -33,30 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class MultipleContext {
+
+    private FlexibleState channel;
 
     /**
-     * 
+     * @return the value of channel
      */
-    public void build() {
+    public FlexibleState getChannel() {
+        return channel;
+    }
+
+    /**
+     * @param channel the new value for channel
+     */
+    public void setChannel(FlexibleState channel) {
+        this.channel = channel;
     }
 
     /**
      * 
      */
-    public void parse() {
-    }
-
-    /**
-     * 
-     */
-    public void collector() {
-    }
-
-    /**
-     * 
-     */
-    public void compressor() {
+    public void add() {
     }
 }
 

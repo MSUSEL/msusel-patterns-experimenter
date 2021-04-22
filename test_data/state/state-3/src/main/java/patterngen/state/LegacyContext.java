@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.LoggerState;
 import java.util.*;
 
 /**
@@ -33,30 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class OptimizedConcreteState extends FlexibleState {
+public class LegacyContext {
+
+    private LoggerState metadata;
 
     /**
-     * 
+     * @return the value of metadata
      */
-    public void build() {
+    public LoggerState getMetadata() {
+        return metadata;
+    }
+
+    /**
+     * @param metadata the new value for metadata
+     */
+    public void setMetadata(LoggerState metadata) {
+        this.metadata = metadata;
     }
 
     /**
      * 
      */
-    public void parse() {
+    public void adapter() {
     }
 
     /**
      * 
      */
-    public void collector() {
+    public void subtract() {
     }
 
     /**
      * 
      */
-    public void compressor() {
+    public void command() {
     }
 }
 

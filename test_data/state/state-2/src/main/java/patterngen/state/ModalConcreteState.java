@@ -33,18 +33,18 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class ModalConcreteState extends StackAbstractState {
+public class ModalConcreteState extends PublisherAbstractState {
 
     /**
      * 
      */
-    public void column() {
+    public void contains() {
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void servlet() {
     }
 }
 
