@@ -71,6 +71,9 @@ class SourceInjectorExecutor {
 
     private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
         context.open()
+        Project.findAll().each {
+            println(it.get("projKey"))
+        }
         log.info("Looking up project with key: ${map[Constants.Key1]}")
         Project proj = Project.findFirst("projKey = ?", map[Constants.Key1])
         PatternInstance inst
@@ -83,6 +86,8 @@ class SourceInjectorExecutor {
             (min, max) = calculateGrimeSeverity(inst, Integer.parseInt(map.get(Constants.GrimeSeverity)))
         }
 
+        println("Project: $proj")
+        println("Instance: $inst")
         if (proj && inst) {
             String confText = """
             where {
