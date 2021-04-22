@@ -33,18 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class CharacterConcreteState extends MutexAbstractState {
+
+    private static CharacterConcreteState instance;
+    private BundleContext context;
+
+
+    private CharacterConcreteState(BundleContext ctx) {
+        this.context = ctx;
+    }
+
+    public static CharacterConcreteState instance(BundleContext ctx) {
+        if (instance == null) {
+            instance = new CharacterConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void as() {
+    @Override
+    public void contains() {
+	context.changeCurrentState(ModalConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
+    @Override
+    public void get() {
+	context.changeCurrentState(CharacterConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
     public void remove() {
+	context.changeCurrentState(CacheConcreteState.instance(context));
     }
+
+
 }
 

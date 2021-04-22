@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ByteState;
 import java.util.*;
 
 /**
@@ -33,18 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class SingletonContext extends SingletonContext {
+
+    private ByteState writable;
 
     /**
-     * 
+     * @return the value of writable
      */
-    public void as() {
+    public ByteState getWritable() {
+        return writable;
+    }
+
+    /**
+     * @param writable the new value for writable
+     */
+    public void setWritable(ByteState writable) {
+        this.writable = writable;
     }
 
     /**
      * 
      */
-    public void remove() {
+    public void formatter() {
     }
 }
 

@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.CloneableState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class NotificationContext {
+
+    private CloneableState string;
 
     /**
-     * 
+     * @return the value of string
      */
-    public void as() {
+    public CloneableState getString() {
+        return string;
+    }
+
+    /**
+     * @param string the new value for string
+     */
+    public void setString(CloneableState string) {
+        this.string = string;
     }
 
     /**
      * 
      */
-    public void remove() {
+    public void exception() {
+    }
+
+    /**
+     * 
+     */
+    public void cache() {
+    }
+
+    /**
+     * 
+     */
+    public void set() {
     }
 }
 

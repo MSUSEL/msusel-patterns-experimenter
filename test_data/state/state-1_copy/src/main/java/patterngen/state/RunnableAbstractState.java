@@ -33,18 +33,6 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
-
-    /**
-     * 
-     */
-    public void as() {
-    }
-
-    /**
-     * 
-     */
-    public void remove() {
-    }
+public abstract class RunnableAbstractState extends CloneableState {
 }
 

@@ -33,18 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class ModalConcreteState extends MutexAbstractState {
+
+    private static ModalConcreteState instance;
+    private BundleContext context;
+
+
+    private ModalConcreteState(BundleContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ModalConcreteState instance(BundleContext ctx) {
+        if (instance == null) {
+            instance = new ModalConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void as() {
+    @Override
+    public void contains() {
+	context.changeCurrentState(ModalConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
+    @Override
+    public void get() {
+	context.changeCurrentState(ControllerConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
     public void remove() {
+	context.changeCurrentState(DynamicConcreteState.instance(context));
     }
+
+
 }
 

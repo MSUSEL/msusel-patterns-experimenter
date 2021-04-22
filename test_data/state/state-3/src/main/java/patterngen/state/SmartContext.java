@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.RowState;
 import java.util.*;
 
 /**
@@ -33,18 +35,34 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class SmartContext {
+
+    private RowState servlet;
 
     /**
-     * 
+     * @return the value of servlet
      */
-    public void as() {
+    public RowState getServlet() {
+        return servlet;
+    }
+
+    /**
+     * @param servlet the new value for servlet
+     */
+    public void setServlet(RowState servlet) {
+        this.servlet = servlet;
     }
 
     /**
      * 
      */
-    public void remove() {
+    public void factory() {
+    }
+
+    /**
+     * 
+     */
+    public void analyzer() {
     }
 }
 

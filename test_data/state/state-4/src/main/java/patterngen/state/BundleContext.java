@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.FactoryState;
 import java.util.*;
 
 /**
@@ -33,18 +35,37 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class BundleContext {
 
-    /**
-     * 
-     */
+    private FactoryState currentState;
+
+
+
+
+    public BundleContext() {
+    	currentState = DirectoryConcreteState.instance(this);
+    }
+
+    public void changeCurrentState(FactoryState state) {
+        currentState = state;
+        // currentState.run();
+    }
+
     public void as() {
+        currentState.remove();
     }
 
-    /**
-     * 
-     */
-    public void remove() {
+    public void subtract() {
+        currentState.remove();
     }
+
+    public void from() {
+        currentState.get();
+    }
+
+    public void connection() {
+        currentState.get();
+    }
+
 }
 

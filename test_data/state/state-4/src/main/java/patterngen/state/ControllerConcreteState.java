@@ -33,18 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class ControllerConcreteState extends PermissionAbstractState {
+
+    private static ControllerConcreteState instance;
+    private BundleContext context;
+
+
+    private ControllerConcreteState(BundleContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ControllerConcreteState instance(BundleContext ctx) {
+        if (instance == null) {
+            instance = new ControllerConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void as() {
+    @Override
+    public void contains() {
+	context.changeCurrentState(ModalConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
+    @Override
+    public void get() {
+	context.changeCurrentState(StringConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
     public void remove() {
+	context.changeCurrentState(BuilderConcreteState.instance(context));
     }
+
+
 }
 

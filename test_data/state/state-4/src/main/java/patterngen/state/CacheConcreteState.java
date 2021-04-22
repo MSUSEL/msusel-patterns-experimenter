@@ -33,18 +33,49 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public class CacheConcreteState extends MultipleAbstractState {
+
+    private static CacheConcreteState instance;
+    private BundleContext context;
+
+
+    private CacheConcreteState(BundleContext ctx) {
+        this.context = ctx;
+    }
+
+    public static CacheConcreteState instance(BundleContext ctx) {
+        if (instance == null) {
+            instance = new CacheConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void as() {
+    @Override
+    public void contains() {
+	context.changeCurrentState(KeystrokeConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
+    @Override
+    public void get() {
+	context.changeCurrentState(KeystrokeConcreteState.instance(context));
+    }
+
+    /**
+     *
+     */
+    @Override
     public void remove() {
+	context.changeCurrentState(DynamicConcreteState.instance(context));
     }
+
+
 }
 

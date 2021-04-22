@@ -33,18 +33,11 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public abstract class RowState {
 
     /**
      * 
      */
-    public void as() {
-    }
-
-    /**
-     * 
-     */
-    public void remove() {
-    }
+    public abstract void minus();
 }
 

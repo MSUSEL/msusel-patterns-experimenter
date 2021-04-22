@@ -33,18 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public abstract class FactoryState {
 
     /**
      * 
      */
-    public void as() {
-    }
+    public abstract void contains();
 
     /**
      * 
      */
-    public void remove() {
-    }
+    public abstract void get();
+
+    /**
+     * 
+     */
+    public abstract void remove();
 }
 

@@ -33,18 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class DeviceConcreteState extends ModuleAbstractState {
+public abstract class ByteState {
 
     /**
      * 
      */
-    public void as() {
-    }
+    public abstract void channel();
 
     /**
      * 
      */
-    public void remove() {
-    }
+    public abstract void check();
+
+    /**
+     * 
+     */
+    public abstract void user();
 }
 
