@@ -33,18 +33,18 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class ConfigurableConcreteState extends EngineAbstractState {
 
     /**
      * 
      */
-    public void column() {
+    public void mediator() {
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void dispatcher() {
     }
 }
 

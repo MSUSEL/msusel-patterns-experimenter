@@ -33,18 +33,26 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public abstract class ModalState {
 
     /**
      * 
      */
-    public void column() {
-    }
+    public abstract void minus();
 
     /**
      * 
      */
-    public void visitor() {
-    }
+    public abstract void as();
+
+    /**
+     * 
+     */
+    public abstract void contains();
+
+    /**
+     * 
+     */
+    public abstract void remove();
 }
 

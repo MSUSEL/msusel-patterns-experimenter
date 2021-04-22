@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.TesterState;
 import java.util.*;
 
 /**
@@ -33,18 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class IntegerContext {
+
+    private TesterState wrapper;
 
     /**
-     * 
+     * @return the value of wrapper
      */
-    public void column() {
+    public TesterState getWrapper() {
+        return wrapper;
+    }
+
+    /**
+     * @param wrapper the new value for wrapper
+     */
+    public void setWrapper(TesterState wrapper) {
+        this.wrapper = wrapper;
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void exception() {
     }
 }
 

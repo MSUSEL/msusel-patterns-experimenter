@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ClientState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class NotificationContext {
+
+    private ClientState comparator;
 
     /**
-     * 
+     * @return the value of comparator
      */
-    public void column() {
+    public ClientState getComparator() {
+        return comparator;
+    }
+
+    /**
+     * @param comparator the new value for comparator
+     */
+    public void setComparator(ClientState comparator) {
+        this.comparator = comparator;
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void remove() {
+    }
+
+    /**
+     * 
+     */
+    public void plus() {
+    }
+
+    /**
+     * 
+     */
+    public void put() {
     }
 }
 

@@ -33,18 +33,30 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class RasterConcreteState extends GraphAbstractState {
 
     /**
      * 
      */
-    public void column() {
+    public void minus() {
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void as() {
+    }
+
+    /**
+     * 
+     */
+    public void contains() {
+    }
+
+    /**
+     * 
+     */
+    public void remove() {
     }
 }
 

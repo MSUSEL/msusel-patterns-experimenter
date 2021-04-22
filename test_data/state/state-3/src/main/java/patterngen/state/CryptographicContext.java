@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ModalState;
 import java.util.*;
 
 /**
@@ -33,18 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class CryptographicContext {
+
+    private ModalState migrator;
 
     /**
-     * 
+     * @return the value of migrator
      */
-    public void column() {
+    public ModalState getMigrator() {
+        return migrator;
+    }
+
+    /**
+     * @param migrator the new value for migrator
+     */
+    public void setMigrator(ModalState migrator) {
+        this.migrator = migrator;
     }
 
     /**
      * 
      */
-    public void visitor() {
+    public void reset() {
     }
 }
 

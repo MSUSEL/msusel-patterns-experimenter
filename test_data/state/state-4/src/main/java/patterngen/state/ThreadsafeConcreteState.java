@@ -33,18 +33,41 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class ThreadsafeConcreteState extends ClientState {
+
+    private static ThreadsafeConcreteState instance;
+    private RasterContext context;
+
+
+    private ThreadsafeConcreteState(RasterContext ctx) {
+        this.context = ctx;
+    }
+
+    public static ThreadsafeConcreteState instance(RasterContext ctx) {
+        if (instance == null) {
+            instance = new ThreadsafeConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void column() {
+    @Override
+    public void reader() {
+	context.changeCurrentState(ScriptableConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void visitor() {
+    @Override
+    public void extractor() {
+	context.changeCurrentState(ThreadsafeConcreteState.instance(context));
     }
+
+
 }
 

@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.ClientState;
 import java.util.*;
 
 /**
@@ -33,18 +35,33 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public class RasterContext {
 
-    /**
-     * 
-     */
-    public void column() {
+    private ClientState currentState;
+
+
+
+
+    public RasterContext() {
+    	currentState = StableConcreteState.instance(this);
     }
 
-    /**
-     * 
-     */
-    public void visitor() {
+    public void changeCurrentState(ClientState state) {
+        currentState = state;
+        // currentState.run();
     }
+
+    public void with() {
+        currentState.extractor();
+    }
+
+    public void stack() {
+        currentState.extractor();
+    }
+
+    public void task() {
+        currentState.extractor();
+    }
+
 }
 

@@ -33,18 +33,16 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class TimestampConcreteState extends TesterState {
+public abstract class ClientState {
 
     /**
      * 
      */
-    public void column() {
-    }
+    public abstract void mediator();
 
     /**
      * 
      */
-    public void visitor() {
-    }
+    public abstract void dispatcher();
 }
 
