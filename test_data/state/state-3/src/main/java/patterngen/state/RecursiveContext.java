@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.OptimizedState;
 import java.util.*;
 
 /**
@@ -33,24 +35,46 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class RecursiveContext {
+
+    private OptimizedState memory;
 
     /**
-     * 
+     * @return the value of memory
      */
-    public void add() {
+    public OptimizedState getMemory() {
+        return memory;
+    }
+
+    /**
+     * @param memory the new value for memory
+     */
+    public void setMemory(OptimizedState memory) {
+        this.memory = memory;
     }
 
     /**
      * 
      */
-    public void minus() {
+    public void subtract() {
     }
 
     /**
      * 
      */
-    public void put() {
+    public void interpreter() {
+    }
+
+    /**
+     * 
+     */
+    public void demarshaller() {
+    }
+
+    /**
+     * 
+     */
+    public void tokenizer() {
     }
 }
 

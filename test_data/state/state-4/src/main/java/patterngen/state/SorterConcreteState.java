@@ -33,24 +33,57 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class SorterConcreteState extends NonblockingAbstractState {
+
+    private static SorterConcreteState instance;
+    private ManagerContext context;
+
+
+    private SorterConcreteState(ManagerContext ctx) {
+        this.context = ctx;
+    }
+
+    public static SorterConcreteState instance(ManagerContext ctx) {
+        if (instance == null) {
+            instance = new SorterConcreteState(ctx);
+        }
+        return instance;
+    }
+
+    public void run() {}
 
     /**
-     * 
+     *
      */
-    public void add() {
+    @Override
+    public void with() {
+	context.changeCurrentState(SorterConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void minus() {
+    @Override
+    public void build() {
+	context.changeCurrentState(SorterConcreteState.instance(context));
     }
 
     /**
-     * 
+     *
      */
-    public void put() {
+    @Override
+    public void get() {
+	context.changeCurrentState(SorterConcreteState.instance(context));
     }
+
+    /**
+     *
+     */
+    @Override
+    public void object() {
+	context.changeCurrentState(SorterConcreteState.instance(context));
+    }
+
+
 }
 

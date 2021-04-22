@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.OptimizedState;
 import java.util.*;
 
 /**
@@ -33,24 +35,37 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class ManagerContext {
 
-    /**
-     * 
-     */
-    public void add() {
+    private OptimizedState currentState;
+
+
+
+
+    public ManagerContext() {
+    	currentState = SorterConcreteState.instance(this);
     }
 
-    /**
-     * 
-     */
-    public void minus() {
+    public void changeCurrentState(OptimizedState state) {
+        currentState = state;
+        // currentState.run();
     }
 
-    /**
-     * 
-     */
-    public void put() {
+    public void set() {
+        currentState.with();
     }
+
+    public void manager() {
+        currentState.get();
+    }
+
+    public void parse() {
+        currentState.with();
+    }
+
+    public void remove() {
+        currentState.object();
+    }
+
 }
 

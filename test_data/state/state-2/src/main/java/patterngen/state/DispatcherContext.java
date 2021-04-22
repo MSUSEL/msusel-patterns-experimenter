@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.QueryState;
 import java.util.*;
 
 /**
@@ -33,24 +35,28 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class DispatcherContext {
+
+    private QueryState transaction;
 
     /**
-     * 
+     * @return the value of transaction
      */
-    public void add() {
+    public QueryState getTransaction() {
+        return transaction;
+    }
+
+    /**
+     * @param transaction the new value for transaction
+     */
+    public void setTransaction(QueryState transaction) {
+        this.transaction = transaction;
     }
 
     /**
      * 
      */
-    public void minus() {
-    }
-
-    /**
-     * 
-     */
-    public void put() {
+    public void build() {
     }
 }
 

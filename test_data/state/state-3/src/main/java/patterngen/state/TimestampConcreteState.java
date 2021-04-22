@@ -33,7 +33,7 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class TimestampConcreteState extends ProcessorAbstractState {
 
     /**
      * 

@@ -25,6 +25,8 @@
  * SOFTWARE.
  */
 package patterngen.state;
+
+import patterngen.state.InternalState;
 import java.util.*;
 
 /**
@@ -33,18 +35,40 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class FormatterContext {
+
+    private InternalState queue;
 
     /**
-     * 
+     * @return the value of queue
      */
-    public void add() {
+    public InternalState getQueue() {
+        return queue;
+    }
+
+    /**
+     * @param queue the new value for queue
+     */
+    public void setQueue(InternalState queue) {
+        this.queue = queue;
     }
 
     /**
      * 
      */
-    public void minus() {
+    public void as() {
+    }
+
+    /**
+     * 
+     */
+    public void set() {
+    }
+
+    /**
+     * 
+     */
+    public void is() {
     }
 
     /**

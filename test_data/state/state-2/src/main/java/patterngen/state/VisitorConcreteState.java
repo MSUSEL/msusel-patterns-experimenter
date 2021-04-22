@@ -33,7 +33,7 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public class VisitorConcreteState extends QueryState {
 
     /**
      * 
@@ -44,13 +44,13 @@ public class CheckedConcreteState extends SubscriberAbstractState {
     /**
      * 
      */
-    public void minus() {
+    public void with() {
     }
 
     /**
      * 
      */
-    public void put() {
+    public void set() {
     }
 }
 

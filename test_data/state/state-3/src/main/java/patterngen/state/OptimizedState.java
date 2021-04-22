@@ -33,24 +33,21 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
+public abstract class OptimizedState {
 
     /**
      * 
      */
-    public void add() {
-    }
+    public abstract void add();
 
     /**
      * 
      */
-    public void minus() {
-    }
+    public abstract void minus();
 
     /**
      * 
      */
-    public void put() {
-    }
+    public abstract void put();
 }
 

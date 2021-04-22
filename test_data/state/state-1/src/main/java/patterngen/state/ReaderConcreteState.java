@@ -33,13 +33,7 @@ import java.util.*;
  * @author Isaac Griffith
  * @version 1.0
  */
-public class CheckedConcreteState extends SubscriberAbstractState {
-
-    /**
-     * 
-     */
-    public void add() {
-    }
+public class ReaderConcreteState extends TaskAbstractState {
 
     /**
      * 
@@ -50,7 +44,13 @@ public class CheckedConcreteState extends SubscriberAbstractState {
     /**
      * 
      */
-    public void put() {
+    public void subtract() {
+    }
+
+    /**
+     * 
+     */
+    public void tester() {
     }
 }
 
