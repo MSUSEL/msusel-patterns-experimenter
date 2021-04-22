@@ -118,8 +118,8 @@ class SourceInjectorExecutor {
 
         int size = inst.getRoleBindings().size()
 
-        int min = (int) Math.ceil((double) (severityMap[severity].v1 * size) / 100)
-        int max = (int) Math.ceil((double) (severityMap[severity].v2 * size) / 100)
+        int min = (int) Math.floor((double) (severityMap[severity].v1 / 100) * size) + 1
+        int max = (int) Math.ceil((double) (severityMap[severity].v2 / 100) * size) + 1
 
         return [min, max]
     }
