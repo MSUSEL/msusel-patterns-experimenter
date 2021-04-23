@@ -152,19 +152,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ExperimentalTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="msusel-arc-framework (1)" />
       <extension name="coverage">
@@ -298,7 +285,7 @@
       <workItem from="1618857040609" duration="19418000" />
       <workItem from="1618990747493" duration="18643000" />
       <workItem from="1619038313165" duration="3037000" />
-      <workItem from="1619071494282" duration="11834000" />
+      <workItem from="1619071494282" duration="12294000" />
     </task>
     <servers />
   </component>
