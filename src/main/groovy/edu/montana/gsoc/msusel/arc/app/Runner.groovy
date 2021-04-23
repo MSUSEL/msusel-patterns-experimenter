@@ -71,11 +71,10 @@ class Runner {
         if (status < 3) {
             generatePatternInstances()
             loadTools()
-//            prepareDatabaseForExperiment()
         }
         if (status < 4) executeArcExperimenterPhaseOne()
         if (status < 5) executeSourceCodeInjector()
-//        if (status < 6) executeArcExperimenterPhaseTwo()
+        if (status < 6) executeArcExperimenterPhaseTwo()
 //        if (status < 7) extractResults()
         long end = System.currentTimeMillis()
 
@@ -108,17 +107,6 @@ class Runner {
         log.info("Finished Generating Design Pattern Instances")
         end = System.currentTimeMillis()
         updateStatus()
-    }
-
-    void prepareDatabaseForExperiment() {
-        log.info("Preparing Database for Experiment")
-        start = System.currentTimeMillis()
-        sdl.dropOutSystemsAndProjects()
-        resetDatabase()
-        loadTools()
-        sdl.loadSystemsAndProjects()
-        log.info("Database Prepared")
-        end = System.currentTimeMillis()
     }
 
     void executeArcExperimenterPhaseOne() {

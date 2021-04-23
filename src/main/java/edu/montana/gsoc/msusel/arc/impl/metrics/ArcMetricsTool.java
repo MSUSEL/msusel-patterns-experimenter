@@ -73,7 +73,6 @@ public class ArcMetricsTool {
     private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
         type.getMethods().forEach(method -> {
             evaluatorList.forEach(metricEvaluator -> {
-                System.out.println(metricEvaluator.getClass().getSimpleName());
                 metricEvaluator.measure(method);
             });
         });
@@ -83,7 +82,6 @@ public class ArcMetricsTool {
         ns.getAllTypes().forEach(type -> {
             streamAndMeasureMethods(type, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
-                System.out.println(metricEvaluator.getClass().getSimpleName());
                 metricEvaluator.measure(type);
             });
         });
@@ -92,7 +90,6 @@ public class ArcMetricsTool {
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
         proj.getFiles().forEach(file -> {
             evaluatorList.forEach(metricEvaluator -> {
-                System.out.println(metricEvaluator.getClass().getSimpleName());
                 metricEvaluator.measure(file);
             });
         });
@@ -102,7 +99,6 @@ public class ArcMetricsTool {
         proj.getNamespaces().forEach(ns -> {
             streamAndMeasureTypes(ns, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
-                System.out.println(metricEvaluator.getClass().getSimpleName());
                 metricEvaluator.measure(ns);
             });
         });
@@ -111,7 +107,6 @@ public class ArcMetricsTool {
     private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
         project.getModules().forEach(mod -> {
             evaluatorList.forEach(metricEvaluator -> {
-                System.out.println(metricEvaluator.getClass().getSimpleName());
                 metricEvaluator.measure(mod);
             });
         });
@@ -122,7 +117,6 @@ public class ArcMetricsTool {
         streamAndMeasureNamespaces(proj, evaluatorList);
         streamAndMeasureFiles(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
-            System.out.println(metricEvaluator.getClass().getSimpleName());
             metricEvaluator.measure(proj);
         });
     }

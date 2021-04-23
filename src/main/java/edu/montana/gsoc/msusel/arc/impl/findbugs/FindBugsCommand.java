@@ -31,6 +31,8 @@ import edu.montana.gsoc.msusel.arc.command.CommandUtils;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
+import java.nio.file.Paths;
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -52,7 +54,7 @@ public class FindBugsCommand extends ToolCommand {
 
     @Override
     public CommandLine buildCommandLine() {
-        return new CommandLine("java")
+        return new CommandLine("/usr/bin/java")
             .addArgument("-jar")
             .addArgument(CommandUtils.normalizePathString(toolHome) + "lib/spotbugs.jar")
             .addArgument("-projectName")
@@ -60,8 +62,8 @@ public class FindBugsCommand extends ToolCommand {
             .addArgument("-effort:default")
             .addArgument("-xml")
             .addArgument("-output")
-            .addArgument(reportFile)
-            .addArgument(binaryDirectory);
+            .addArgument(Paths.get(reportFile).toAbsolutePath().toString())
+            .addArgument(Paths.get(binaryDirectory).toAbsolutePath().toString());
     }
 
     @Override

@@ -26,11 +26,12 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pmd;
 
-import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import edu.montana.gsoc.msusel.arc.command.CommandUtils;
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsTool;
+import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
+
+import java.nio.file.Paths;
 
 /**
  * @author Isaac Griffith
@@ -56,11 +57,11 @@ public class PMDCommand extends ToolCommand {
         return new CommandLine(CommandUtils.normalizePathString(toolHome) + "bin/run.sh")
             .addArgument("pmd")
             .addArgument("-d")
-            .addArgument(sourceDirectory)
+            .addArgument(Paths.get(sourceDirectory).toAbsolutePath().toString())
             .addArgument("-f")
             .addArgument("xml")
             .addArgument("-r")
-            .addArgument(reportFile)
+            .addArgument(Paths.get(reportFile).toAbsolutePath().toString())
             .addArgument("-R")
             .addArgument("category/java/bestpractices.xml,category/java/codestyle.xml,category/java/design.xml,category/java/documentation.xml,category/java/errorprone.xml,category/java/multithreading.xml,category/java/performance.xml")
             .addArgument("-version")

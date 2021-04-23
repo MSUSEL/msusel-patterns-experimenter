@@ -139,9 +139,6 @@ class Searcher implements CLIProcessor {
             String db = p("db.file")
             String user = p("db.user")
             String pass = p("db.pass")
-            java.lang.System.out.println("Db: " + db)
-            java.lang.System.out.println("User: " + user)
-            java.lang.System.out.println("Pass: " + pass)
             Base.open("org.sqlite.JDBC", "jdbc:sqlite:" + db, user, pass)
 
             findProjects(minSize, maxSize, minStars, minTags, maxProj, file)

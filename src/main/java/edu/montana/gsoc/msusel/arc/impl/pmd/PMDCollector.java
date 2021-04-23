@@ -63,8 +63,6 @@ public class PMDCollector extends FileCollector {
             Unmarshaller unmarshaller = context.createUnmarshaller();
 
             Pmd pmd = (Pmd) unmarshaller.unmarshal(new java.io.File(resultsFile));
-            pmd.getFile().forEach(f -> System.out.println("File: " + f.getName() + " has " + f.getViolation().size() + " findings"));
-
             pmd.getFile().forEach(file ->
                 file.getViolation().forEach(v -> {
                     ctx.open();

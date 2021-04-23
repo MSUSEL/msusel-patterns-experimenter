@@ -111,11 +111,6 @@ public class FindBugsCollector extends FileCollector {
             });
 
             log.info("Findings Created: " + findings.size());
-            ctx.open();
-            for (Finding f : findings) {
-                System.out.println("\t" + f);
-            }
-            ctx.close();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
