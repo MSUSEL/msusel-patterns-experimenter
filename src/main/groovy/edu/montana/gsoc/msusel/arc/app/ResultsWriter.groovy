@@ -33,11 +33,9 @@ import org.apache.commons.csv.CSVPrinter
 class ResultsWriter {
 
     String[] MEASURES = []
-    int NUM = 0
     String file
 
-    void initialize(int num, List<String> measures, String file) {
-        this.NUM = num
+    void initialize(List<String> measures, String file) {
         this.MEASURES = measures
         this.file = file
     }
@@ -49,7 +47,7 @@ class ResultsWriter {
             headers += it.split(":")[1]
         }
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(headers))) {
-            for (int id = 0; id < NUM; id++) {
+            table.rowKeySet().each {id ->
                 Map<String, String> row = table.row("$id")
                 List<String> rowValues = []
                 headers.each {

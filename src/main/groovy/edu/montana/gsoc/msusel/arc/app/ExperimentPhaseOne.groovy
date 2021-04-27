@@ -46,7 +46,6 @@ class ExperimentPhaseOne extends EmpiricalStudy {
     Command coalesce
     Command pSize
     Collector p4Coll
-    int NUM
 
     ExperimentPhaseOne(ArcContext context) {
         super("Experiment Phase One", "A Test Empirical Study", context)
@@ -74,7 +73,7 @@ class ExperimentPhaseOne extends EmpiricalStudy {
     void initReport() {}
 
     void executeStudy() {
-        for (int id = 0; id < NUM; id++) {
+        results.rowKeySet().each {id ->
             String projKey = results.get("$id", Constants.Key1)
             getContext().open()
             getContext().setProject(Project.findFirst("projKey = ?", projKey))

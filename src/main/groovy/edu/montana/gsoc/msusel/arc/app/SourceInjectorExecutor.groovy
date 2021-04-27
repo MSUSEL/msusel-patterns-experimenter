@@ -49,14 +49,13 @@ class SourceInjectorExecutor {
             6 : new Tuple2(26, 35)
     ]
 
-    void initialize(int num, ArcContext context) {
-        this.NUM = num
+    void initialize(ArcContext context) {
         this.context = context
     }
 
     void execute(Table<String, String, String> results) {
         ConfigSlurper slurper = new ConfigSlurper()
-        for (int id = 0; id < NUM; id++) {
+        results.rowKeySet().each {id ->
             ConfigObject config = createConfig(slurper, results.row("$id"))
 
             context.open()

@@ -35,12 +35,10 @@ class ResultsExtractor {
 
     List<String> measures = []
     ReportingLevel level
-    int NUM
 
-    void initialize(ReportingLevel level, List<String> measures, int num) {
+    void initialize(ReportingLevel level, List<String> measures) {
         this.level = level
         this.measures = measures
-        this.NUM = num
     }
 
     void extractResults(Table<String, String, String> table) {
@@ -55,7 +53,7 @@ class ResultsExtractor {
     }
 
     void extractSystemResults(Table<String, String, String> values) {
-        for (int id = 0; id < NUM; id++) {
+        values.rowKeySet().each {id ->
             String key1 = values.get("$id", Constants.Key1)
             String key2 = values.get("$id", Constants.Key2)
             System sys1 = System.findFirst("key = ?", key1)
@@ -70,7 +68,7 @@ class ResultsExtractor {
     }
 
     void extractProjectResults(Table<String, String, String> values) {
-        for (int id = 0; id < NUM; id++) {
+        values.rowKeySet().each {id ->
             String key1 = values.get("$id", Constants.Key1)
             String key2 = values.get("$id", Constants.Key2)
             Project sys1 = Project.findFirst("projKey = ?", key1)

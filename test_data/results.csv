@@ -1,0 +1,5 @@
+ID,PatternType,GrimeType,GrimeSeverity,Key1,Key2,Path1,Path2,QMEFFECT,QMEXTEND,QMFLEX,QMFUNC,QMREUSE,QMUNDER,cast_td
+0,state,pig,0,state:state-1:1.0.0,state:state-1_copy:1.0.0,test_data/state/state-1/,test_data/state/state-1_copy/,,,,,,,
+1,state,pig,1,state:state-2:1.0.0,state:state-2_copy:1.0.0,test_data/state/state-2/,test_data/state/state-2_copy/,,,,,,,
+2,state,tig,0,state:state-3:1.0.0,state:state-3_copy:1.0.0,test_data/state/state-3/,test_data/state/state-3_copy/,,,,,,,
+3,state,tig,1,state:state-4:1.0.0,state:state-4_copy:1.0.0,test_data/state/state-4/,test_data/state/state-4_copy/,,,,,,,

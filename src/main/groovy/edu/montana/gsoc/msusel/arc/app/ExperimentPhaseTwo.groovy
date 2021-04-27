@@ -51,7 +51,6 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
     Command techdebt
     Collector fbColl
     Collector pmdColl
-    int NUM
 
     ExperimentPhaseTwo(ArcContext context) {
         super("Experiment Phase Two", "A Test Empirical Study", context)
@@ -82,7 +81,7 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
     void initReport() { }
 
     void executeStudy() {
-        for (int id = 0; id < NUM; id++) {
+        results.rowKeySet().each { id ->
             runTools(results.get("$id", Constants.Key1))
             runTools(results.get("$id", Constants.Key2))
         }

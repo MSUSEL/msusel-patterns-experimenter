@@ -36,6 +36,7 @@ class Runner {
 
     ArcContext context
     Table<String, String, String> results
+    ExperimentConfigReader exConfReader
     ExperimentGenerator exGen
     ResultsExtractor resEx
     ResultsWriter resWrite
@@ -53,6 +54,7 @@ class Runner {
     Runner(ArcContext context) {
         this.context = context
         patternGenerator = new PatternGeneratorExecutor()
+        exConfReader = new ExperimentConfigReader()
         exGen = new ExperimentGenerator()
         resEx = new ResultsExtractor()
         resWrite = new ResultsWriter()
@@ -67,7 +69,8 @@ class Runner {
     void run() {
         long start = System.currentTimeMillis()
         if (status < 1) initialize()
-        if (status < 2) generateExperimentalConfig()
+//        if (status < 2) generateExperimentalConfig()
+        if (status < 2) loadExperimentalConfig()
         if (status < 3) {
             generatePatternInstances()
             loadTools()
@@ -75,7 +78,7 @@ class Runner {
         if (status < 4) executeArcExperimenterPhaseOne()
         if (status < 5) executeSourceCodeInjector()
         if (status < 6) executeArcExperimenterPhaseTwo()
-//        if (status < 7) extractResults()
+        if (status < 7) extractResults()
         long end = System.currentTimeMillis()
 
         log.info(TimePrinter.print(end - start))
@@ -83,9 +86,21 @@ class Runner {
 
     def initialize() {
         this.runnerConfig = loadConfiguration()
+        context.setLanguage("java")
         readStatus()
         if (status <= 0)
             resetDatabase()
+    }
+
+    void loadExperimentalConfig() {
+        log.info("Loading Experimental Config")
+        start = System.currentTimeMillis()
+        exConfReader.initialize()
+        results = exConfReader.loadNext()
+        num = results.rowKeySet().size()
+        log.info("Finished Loading Experimental Config")
+        end = System.currentTimeMillis()
+        updateStatus()
     }
 
     void generateExperimentalConfig() {
@@ -112,7 +127,6 @@ class Runner {
     void executeArcExperimenterPhaseOne() {
         log.info("Executing Experiment Phase One")
         start = System.currentTimeMillis()
-        phaseOne.setNUM(num)
         phaseOne.setResults(results)
         phaseOne.execute()
         log.info("Finished Executing Experiment Phase One")
@@ -123,7 +137,7 @@ class Runner {
     void executeSourceCodeInjector() {
         log.info("Executing Source Code Injector")
         start = System.currentTimeMillis()
-        injector.initialize(num, context)
+        injector.initialize(context)
         injector.execute(results)
         log.info("Finished Executing Source Code Injector")
         end = System.currentTimeMillis()
@@ -134,7 +148,6 @@ class Runner {
     void executeArcExperimenterPhaseTwo() {
         log.info("Executing Experiment Phase Two")
         start = System.currentTimeMillis()
-        phaseTwo.setNUM(num)
         phaseTwo.setResults(results)
         phaseTwo.execute()
         log.info("Executing Experiment Phase Two")
@@ -146,7 +159,7 @@ class Runner {
     void extractResults() {
         log.info("Collecting Experimental Results")
         start = System.currentTimeMillis()
-        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures, num)
+        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures)
         resEx.extractResults(results)
         log.info("Finished Collecting Experimental Results")
         end = System.currentTimeMillis()
@@ -155,7 +168,7 @@ class Runner {
 
     void updateStatus() {
         log.info(TimePrinter.print(end - start))
-        resWrite.initialize(num, runnerConfig.measures, runnerConfig.results_file)
+        resWrite.initialize(runnerConfig.measures, runnerConfig.results_file)
         resWrite.writeResults(results)
         writeStatus(status++)
     }

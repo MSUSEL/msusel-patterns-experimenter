@@ -30,8 +30,8 @@ interface Constants {
 
     String ID = "ID"
     String PatternType = "PatternType"
-    String GrimeType = "GrimeType"
-    String GrimeSeverity = "GrimeSeverity"
+    String GrimeType = "InjectionType"
+    String GrimeSeverity = "InjectionSeverity"
     String Key1 = "Key1"
     String Key2 = "Key2"
     String Path1 = "Path1"

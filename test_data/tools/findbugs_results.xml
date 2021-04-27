@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+
+<BugCollection version="4.0.3" sequence="0" timestamp="1619169921295" analysisTimestamp="1619171302992" release="">
+  <Project projectName="state-4_copy">
+    <Jar>/home/git/msusel/msusel-patterns-experimenter/test_data/state/state-4_copy/build/classes/java/main</Jar>
+  </Project>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.LoaderConcreteState">
+      <SourceLine classname="patterngen.state.LoaderConcreteState" start="43" end="86" sourcefile="LoaderConcreteState.java" sourcepath="patterngen/state/LoaderConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.BufferConcreteState">
+      <SourceLine classname="patterngen.state.BufferConcreteState" start="43" end="86" sourcefile="BufferConcreteState.java" sourcepath="patterngen/state/BufferConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.LoaderConcreteState">
+      <SourceLine classname="patterngen.state.LoaderConcreteState" start="43" end="86" sourcefile="LoaderConcreteState.java" sourcepath="patterngen/state/LoaderConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.CheckedConcreteState">
+      <SourceLine classname="patterngen.state.CheckedConcreteState" start="43" end="86" sourcefile="CheckedConcreteState.java" sourcepath="patterngen/state/CheckedConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.LexerConcreteState">
+      <SourceLine classname="patterngen.state.LexerConcreteState" start="43" end="86" sourcefile="LexerConcreteState.java" sourcepath="patterngen/state/LexerConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.LoaderConcreteState">
+      <SourceLine classname="patterngen.state.LoaderConcreteState" start="43" end="86" sourcefile="LoaderConcreteState.java" sourcepath="patterngen/state/LoaderConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ImporterConcreteState">
+      <SourceLine classname="patterngen.state.ImporterConcreteState" start="43" end="86" sourcefile="ImporterConcreteState.java" sourcepath="patterngen/state/ImporterConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.SecureConcreteState">
+      <SourceLine classname="patterngen.state.SecureConcreteState" start="43" end="86" sourcefile="SecureConcreteState.java" sourcepath="patterngen/state/SecureConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.LoaderConcreteState">
+      <SourceLine classname="patterngen.state.LoaderConcreteState" start="43" end="86" sourcefile="LoaderConcreteState.java" sourcepath="patterngen/state/LoaderConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ListContext">
+      <SourceLine classname="patterngen.state.ListContext" start="46" end="65" sourcefile="ListContext.java" sourcepath="patterngen/state/ListContext.java"/>
+    </Class>
+    <Class classname="patterngen.state.NodeConcreteState">
+      <SourceLine classname="patterngen.state.NodeConcreteState" start="43" end="86" sourcefile="NodeConcreteState.java" sourcepath="patterngen/state/NodeConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.MonitorConcreteState">
+      <SourceLine classname="patterngen.state.MonitorConcreteState" start="43" end="86" sourcefile="MonitorConcreteState.java" sourcepath="patterngen/state/MonitorConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.DynamicConcreteState">
+      <SourceLine classname="patterngen.state.DynamicConcreteState" start="43" end="86" sourcefile="DynamicConcreteState.java" sourcepath="patterngen/state/DynamicConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.LoaderConcreteState">
+      <SourceLine classname="patterngen.state.LoaderConcreteState" start="43" end="86" sourcefile="LoaderConcreteState.java" sourcepath="patterngen/state/LoaderConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.SecureConcreteState">
+      <SourceLine classname="patterngen.state.SecureConcreteState" start="43" end="86" sourcefile="SecureConcreteState.java" sourcepath="patterngen/state/SecureConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.MonitorConcreteState">
+      <SourceLine classname="patterngen.state.MonitorConcreteState" start="43" end="86" sourcefile="MonitorConcreteState.java" sourcepath="patterngen/state/MonitorConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ReadableConcreteState">
+      <SourceLine classname="patterngen.state.ReadableConcreteState" start="43" end="86" sourcefile="ReadableConcreteState.java" sourcepath="patterngen/state/ReadableConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.MonitorConcreteState">
+      <SourceLine classname="patterngen.state.MonitorConcreteState" start="43" end="86" sourcefile="MonitorConcreteState.java" sourcepath="patterngen/state/MonitorConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.WritableConcreteState">
+      <SourceLine classname="patterngen.state.WritableConcreteState" start="43" end="86" sourcefile="WritableConcreteState.java" sourcepath="patterngen/state/WritableConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.SecureConcreteState">
+      <SourceLine classname="patterngen.state.SecureConcreteState" start="43" end="86" sourcefile="SecureConcreteState.java" sourcepath="patterngen/state/SecureConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.NodeConcreteState">
+      <SourceLine classname="patterngen.state.NodeConcreteState" start="43" end="86" sourcefile="NodeConcreteState.java" sourcepath="patterngen/state/NodeConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.BufferConcreteState">
+      <SourceLine classname="patterngen.state.BufferConcreteState" start="43" end="86" sourcefile="BufferConcreteState.java" sourcepath="patterngen/state/BufferConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.WritableConcreteState">
+      <SourceLine classname="patterngen.state.WritableConcreteState" start="43" end="86" sourcefile="WritableConcreteState.java" sourcepath="patterngen/state/WritableConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ImporterConcreteState">
+      <SourceLine classname="patterngen.state.ImporterConcreteState" start="43" end="86" sourcefile="ImporterConcreteState.java" sourcepath="patterngen/state/ImporterConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ReadableConcreteState">
+      <SourceLine classname="patterngen.state.ReadableConcreteState" start="43" end="86" sourcefile="ReadableConcreteState.java" sourcepath="patterngen/state/ReadableConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.MonitorConcreteState">
+      <SourceLine classname="patterngen.state.MonitorConcreteState" start="43" end="86" sourcefile="MonitorConcreteState.java" sourcepath="patterngen/state/MonitorConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.CheckedConcreteState">
+      <SourceLine classname="patterngen.state.CheckedConcreteState" start="43" end="86" sourcefile="CheckedConcreteState.java" sourcepath="patterngen/state/CheckedConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <BugInstance type="FCCD_FIND_CLASS_CIRCULAR_DEPENDENCY" priority="2" rank="9" abbrev="FCCD" category="CORRECTNESS">
+    <Class classname="patterngen.state.WritableConcreteState">
+      <SourceLine classname="patterngen.state.WritableConcreteState" start="43" end="86" sourcefile="WritableConcreteState.java" sourcepath="patterngen/state/WritableConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.DynamicConcreteState">
+      <SourceLine classname="patterngen.state.DynamicConcreteState" start="43" end="86" sourcefile="DynamicConcreteState.java" sourcepath="patterngen/state/DynamicConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.ReadableConcreteState">
+      <SourceLine classname="patterngen.state.ReadableConcreteState" start="43" end="86" sourcefile="ReadableConcreteState.java" sourcepath="patterngen/state/ReadableConcreteState.java"/>
+    </Class>
+    <Class classname="patterngen.state.NodeConcreteState">
+      <SourceLine classname="patterngen.state.NodeConcreteState" start="43" end="86" sourcefile="NodeConcreteState.java" sourcepath="patterngen/state/NodeConcreteState.java"/>
+    </Class>
+  </BugInstance>
+  <Errors errors="0" missingClasses="0"></Errors>
+  <FindBugsSummary timestamp="Fri, 23 Apr 2021 03:25:21 -0600" total_classes="16" referenced_classes="27" total_bugs="8" total_size="309" num_packages="1" java_version="15" vm_version="15+36-Ubuntu-1" cpu_seconds="4.05" clock_seconds="1.50" peak_mbytes="223.64" alloc_mbytes="3972.00" gc_seconds="0.03" priority_2="8">
+    <PackageStats package="patterngen.state" total_bugs="8" total_types="16" total_size="309" priority_2="8">
+      <ClassStats class="patterngen.state.BufferConcreteState" sourceFile="BufferConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.CheckedConcreteState" sourceFile="CheckedConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.DynamicConcreteState" sourceFile="DynamicConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.ImporterConcreteState" sourceFile="ImporterConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.InitializerState" sourceFile="InitializerState.java" interface="false" size="7" bugs="0"/>
+      <ClassStats class="patterngen.state.LexerAbstractState" sourceFile="LexerAbstractState.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="patterngen.state.LexerConcreteState" sourceFile="LexerConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.ListContext" sourceFile="ListContext.java" interface="false" size="18" bugs="0"/>
+      <ClassStats class="patterngen.state.LoaderConcreteState" sourceFile="LoaderConcreteState.java" interface="false" size="25" bugs="5" priority_2="5"/>
+      <ClassStats class="patterngen.state.MonitorConcreteState" sourceFile="MonitorConcreteState.java" interface="false" size="25" bugs="1" priority_2="1"/>
+      <ClassStats class="patterngen.state.NodeConcreteState" sourceFile="NodeConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.ReadableConcreteState" sourceFile="ReadableConcreteState.java" interface="false" size="25" bugs="0"/>
+      <ClassStats class="patterngen.state.ResourceAbstractState" sourceFile="ResourceAbstractState.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="patterngen.state.SecureConcreteState" sourceFile="SecureConcreteState.java" interface="false" size="25" bugs="1" priority_2="1"/>
+      <ClassStats class="patterngen.state.ThreadAbstractState" sourceFile="ThreadAbstractState.java" interface="false" size="3" bugs="0"/>
+      <ClassStats class="patterngen.state.WritableConcreteState" sourceFile="WritableConcreteState.java" interface="false" size="25" bugs="1" priority_2="1"/>
+    </PackageStats>
+    <FindBugsProfile>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine" totalMilliseconds="215" invocations="333" avgMicrosecondsPerInvocation="648" maxMicrosecondsPerInvocation="10683" standardDeviationMicrosecondsPerInvocation="1323"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine" totalMilliseconds="36" invocations="113" avgMicrosecondsPerInvocation="318" maxMicrosecondsPerInvocation="8318" standardDeviationMicrosecondsPerInvocation="874"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine" totalMilliseconds="32" invocations="353" avgMicrosecondsPerInvocation="92" maxMicrosecondsPerInvocation="3254" standardDeviationMicrosecondsPerInvocation="189"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FieldItemSummary" totalMilliseconds="28" invocations="27" avgMicrosecondsPerInvocation="1048" maxMicrosecondsPerInvocation="11851" standardDeviationMicrosecondsPerInvocation="2510"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.IsNullValueDataflowFactory" totalMilliseconds="25" invocations="86" avgMicrosecondsPerInvocation="298" maxMicrosecondsPerInvocation="3753" standardDeviationMicrosecondsPerInvocation="413"/>
+      <ClassProfile name="com.mebigfatguy.fbcontrib.collect.CollectStatistics" totalMilliseconds="25" invocations="27" avgMicrosecondsPerInvocation="949" maxMicrosecondsPerInvocation="9980" standardDeviationMicrosecondsPerInvocation="2121"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory" totalMilliseconds="25" invocations="90" avgMicrosecondsPerInvocation="282" maxMicrosecondsPerInvocation="18685" standardDeviationMicrosecondsPerInvocation="1952"/>
+      <ClassProfile name="com.h3xstream.findsecbugs.taintanalysis.TaintDataflowEngine" totalMilliseconds="25" invocations="86" avgMicrosecondsPerInvocation="292" maxMicrosecondsPerInvocation="5590" standardDeviationMicrosecondsPerInvocation="594"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.ValueNumberDataflowFactory" totalMilliseconds="22" invocations="86" avgMicrosecondsPerInvocation="266" maxMicrosecondsPerInvocation="6722" standardDeviationMicrosecondsPerInvocation="706"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.CFGFactory" totalMilliseconds="22" invocations="90" avgMicrosecondsPerInvocation="250" maxMicrosecondsPerInvocation="6720" standardDeviationMicrosecondsPerInvocation="689"/>
+      <ClassProfile name="edu.umd.cs.findbugs.ba.npe.NullDerefAndRedundantComparisonFinder" totalMilliseconds="22" invocations="86" avgMicrosecondsPerInvocation="261" maxMicrosecondsPerInvocation="1119" standardDeviationMicrosecondsPerInvocation="174"/>
+      <ClassProfile name="edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory" totalMilliseconds="22" invocations="129" avgMicrosecondsPerInvocation="171" maxMicrosecondsPerInvocation="2785" standardDeviationMicrosecondsPerInvocation="363"/>
+      <ClassProfile name="edu.umd.cs.findbugs.util.TopologicalSort" totalMilliseconds="22" invocations="300" avgMicrosecondsPerInvocation="73" maxMicrosecondsPerInvocation="1045" standardDeviationMicrosecondsPerInvocation="133"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.FindNoSideEffectMethods" totalMilliseconds="21" invocations="27" avgMicrosecondsPerInvocation="807" maxMicrosecondsPerInvocation="7298" standardDeviationMicrosecondsPerInvocation="1549"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.UnconditionalValueDerefDataflowFactory" totalMilliseconds="21" invocations="86" avgMicrosecondsPerInvocation="248" maxMicrosecondsPerInvocation="1807" standardDeviationMicrosecondsPerInvocation="217"/>
+      <ClassProfile name="edu.umd.cs.findbugs.classfile.engine.bcel.TypeDataflowFactory" totalMilliseconds="19" invocations="86" avgMicrosecondsPerInvocation="228" maxMicrosecondsPerInvocation="5584" standardDeviationMicrosecondsPerInvocation="587"/>
+      <ClassProfile name="com.mebigfatguy.fbcontrib.collect.CollectNullableMethodStatus" totalMilliseconds="16" invocations="27" avgMicrosecondsPerInvocation="606" maxMicrosecondsPerInvocation="5148" standardDeviationMicrosecondsPerInvocation="1378"/>
+      <ClassProfile name="com.h3xstream.findsecbugs.jsp.JspSpringEvalDetector" totalMilliseconds="12" invocations="16" avgMicrosecondsPerInvocation="808" maxMicrosecondsPerInvocation="12013" standardDeviationMicrosecondsPerInvocation="2893"/>
+      <ClassProfile name="edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers" totalMilliseconds="12" invocations="27" avgMicrosecondsPerInvocation="478" maxMicrosecondsPerInvocation="4491" standardDeviationMicrosecondsPerInvocation="955"/>
+    </FindBugsProfile>
+  </FindBugsSummary>
+  <ClassFeatures></ClassFeatures>
+  <History></History>
+</BugCollection>
