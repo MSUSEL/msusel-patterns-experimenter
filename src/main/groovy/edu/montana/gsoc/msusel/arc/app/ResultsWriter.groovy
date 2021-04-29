@@ -27,6 +27,7 @@
 package edu.montana.gsoc.msusel.arc.app
 
 import com.google.common.collect.Table
+import edu.montana.gsoc.msusel.arc.ArcContext
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
 
@@ -34,10 +35,12 @@ class ResultsWriter {
 
     String[] MEASURES = []
     String file
+    ArcContext context
 
-    void initialize(List<String> measures, String file) {
+    void initialize(List<String> measures, String file, ArcContext context) {
         this.MEASURES = measures
         this.file = file
+        this.context = context
     }
 
     void writeResults(Table<String, String, String> table) {
@@ -48,7 +51,7 @@ class ResultsWriter {
         }
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(headers))) {
             table.rowKeySet().each {id ->
-                Map<String, String> row = table.row("$id")
+                Map<String, String> row = table.row(id)
                 List<String> rowValues = []
                 headers.each {
                     if (row.containsKey(it))

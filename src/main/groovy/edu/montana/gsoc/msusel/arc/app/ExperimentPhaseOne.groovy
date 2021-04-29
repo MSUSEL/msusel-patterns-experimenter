@@ -74,7 +74,7 @@ class ExperimentPhaseOne extends EmpiricalStudy {
 
     void executeStudy() {
         results.rowKeySet().each {id ->
-            String projKey = results.get("$id", Constants.Key1)
+            String projKey = results.get(id, Constants.Key1)
             getContext().open()
             getContext().setProject(Project.findFirst("projKey = ?", projKey))
             getContext().close()

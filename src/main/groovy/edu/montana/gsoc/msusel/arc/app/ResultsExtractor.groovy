@@ -29,19 +29,23 @@ package edu.montana.gsoc.msusel.arc.app
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ReportingLevel
 
 class ResultsExtractor {
 
     List<String> measures = []
     ReportingLevel level
+    ArcContext context
 
-    void initialize(ReportingLevel level, List<String> measures) {
+    void initialize(ReportingLevel level, List<String> measures, ArcContext context) {
         this.level = level
         this.measures = measures
+        this.context = context
     }
 
     void extractResults(Table<String, String, String> table) {
+        context.open()
         switch(level) {
             case ReportingLevel.SYSTEM:
                 extractSystemResults(table)
@@ -50,34 +54,37 @@ class ResultsExtractor {
                 extractProjectResults(table)
                 break
         }
+        context.close()
     }
 
     void extractSystemResults(Table<String, String, String> values) {
         values.rowKeySet().each {id ->
-            String key1 = values.get("$id", Constants.Key1)
-            String key2 = values.get("$id", Constants.Key2)
+            String key1 = values.get(id, Constants.Key1)
+            String key2 = values.get(id, Constants.Key2)
             System sys1 = System.findFirst("key = ?", key1)
             System sys2 = System.findFirst("key = ?", key2)
             measures.each {
                 double val1 = sys1.getMeasureValueByName(it)
                 double val2 = sys2.getMeasureValueByName(it)
                 double diff = val2 - val1
-                values.put("$id", it, "$diff")
+                String name = it.split(/:/)[1]
+                values.put(id, name, "$diff")
             }
         }
     }
 
     void extractProjectResults(Table<String, String, String> values) {
         values.rowKeySet().each {id ->
-            String key1 = values.get("$id", Constants.Key1)
-            String key2 = values.get("$id", Constants.Key2)
+            String key1 = values.get(id, Constants.Key1)
+            String key2 = values.get(id, Constants.Key2)
             Project sys1 = Project.findFirst("projKey = ?", key1)
             Project sys2 = Project.findFirst("projKey = ?", key2)
             measures.each {
                 double val1 = sys1.getMeasureValueByName(it)
                 double val2 = sys2.getMeasureValueByName(it)
                 double diff = val2 - val1
-                values.put("$id", it, "$diff")
+                String name = it.split(/:/)[1]
+                values.put(id, name, "$diff")
             }
         }
     }

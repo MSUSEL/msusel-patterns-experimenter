@@ -44,6 +44,7 @@ class Runner {
     PatternGeneratorExecutor patternGenerator
     ExperimentPhaseOne phaseOne
     ExperimentPhaseTwo phaseTwo
+    ResultsReader resReader
     int status
     int num
     ConfigObject runnerConfig
@@ -61,6 +62,7 @@ class Runner {
         injector = new SourceInjectorExecutor()
         phaseOne = new ExperimentPhaseOne(context)
         phaseTwo = new ExperimentPhaseTwo(context)
+        resReader = new ResultsReader()
         sdl = new SystemDropLoader(context)
         status = 0
         num = 0
@@ -68,7 +70,7 @@ class Runner {
 
     void run() {
         long start = System.currentTimeMillis()
-        if (status < 1) initialize()
+        initialize()
 //        if (status < 2) generateExperimentalConfig()
         if (status < 2) loadExperimentalConfig()
         if (status < 3) {
@@ -77,8 +79,8 @@ class Runner {
         }
         if (status < 4) executeArcExperimenterPhaseOne()
         if (status < 5) executeSourceCodeInjector()
-        if (status < 6) executeArcExperimenterPhaseTwo()
-        if (status < 7) extractResults()
+//        if (status < 6) executeArcExperimenterPhaseTwo()
+//        if (status < 7) extractResults()
         long end = System.currentTimeMillis()
 
         log.info(TimePrinter.print(end - start))
@@ -88,6 +90,8 @@ class Runner {
         this.runnerConfig = loadConfiguration()
         context.setLanguage("java")
         readStatus()
+        if (status > 0)
+            readResults()
         if (status <= 0)
             resetDatabase()
     }
@@ -159,7 +163,7 @@ class Runner {
     void extractResults() {
         log.info("Collecting Experimental Results")
         start = System.currentTimeMillis()
-        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures)
+        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures, context)
         resEx.extractResults(results)
         log.info("Finished Collecting Experimental Results")
         end = System.currentTimeMillis()
@@ -168,7 +172,7 @@ class Runner {
 
     void updateStatus() {
         log.info(TimePrinter.print(end - start))
-        resWrite.initialize(runnerConfig.measures, runnerConfig.results_file)
+        resWrite.initialize(runnerConfig.measures, runnerConfig.results_file, context)
         resWrite.writeResults(results)
         writeStatus(status++)
     }
@@ -202,5 +206,10 @@ class Runner {
         toolLoader.loadTools(context)
         log.info("Tools loaded and registered")
 //        context.close()
+    }
+
+    private void readResults() {
+        resReader.initialize(runnerConfig.measures, runnerConfig.results_file)
+        results = resReader.readResults()
     }
 }

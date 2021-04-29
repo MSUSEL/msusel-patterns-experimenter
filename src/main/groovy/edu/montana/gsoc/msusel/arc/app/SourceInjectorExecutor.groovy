@@ -41,12 +41,11 @@ class SourceInjectorExecutor {
     int NUM
     ArcContext context
     Map<Integer, Tuple2<Integer, Integer>> severityMap = [
-            1 : new Tuple2(1, 5),
-            2 : new Tuple2(6, 10),
-            3 : new Tuple2(11, 15),
-            4 : new Tuple2(16, 20),
-            5 : new Tuple2(21, 25),
-            6 : new Tuple2(26, 35)
+            1 : new Tuple2(1, 15),
+            2 : new Tuple2(16, 30),
+            3 : new Tuple2(31, 45),
+            4 : new Tuple2(46, 60),
+            5 : new Tuple2(61, 75)
     ]
 
     void initialize(ArcContext context) {
@@ -56,14 +55,14 @@ class SourceInjectorExecutor {
     void execute(Table<String, String, String> results) {
         ConfigSlurper slurper = new ConfigSlurper()
         results.rowKeySet().each {id ->
-            ConfigObject config = createConfig(slurper, results.row("$id"))
+            ConfigObject config = createConfig(slurper, results.row(id))
 
             context.open()
             def vals = Director.instance.inject(config)
             context.close()
 
             vals.each { col, value ->
-                results.put("$id", col, value)
+                results.put(id, col, value)
             }
         }
     }

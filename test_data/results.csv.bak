@@ -1,0 +1,2 @@
+ID,PatternType,InjectionType,InjectionSeverity,Key1,Key2,Path1,Path2,QMEFFECT,QMEXTEND,QMFLEX,QMFUNC,QMREUSE,QMUNDER,Functional Correctness,Performance Efficiency,Compatibility,Usability,Reliability,Security,Maintainability,Portability,cast_td
+0,state,pig,0,state:state-0:1.0.0,state:state-0_copy:1.0.0,test_data/state/state-0/,test_data/state/state-0_copy/,,,,,,,,,,,,,,,
