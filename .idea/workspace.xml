@@ -6,85 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiment.conf" beforeDir="false" afterPath="$PROJECT_DIR$/experiment.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/results.csv" beforeDir="false" afterPath="$PROJECT_DIR$/grime_data/results.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/CheckedConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/CloneableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ConnectionConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ExecutableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/IntegerAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/InterpreterConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/LoaderContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/LoggerConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/MediatorAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/MemoryAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/NotificationConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/PreferenceConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ReadableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ScriptableAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ScrollbarState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/SearchConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/StackAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/StackConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/TaskConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ThreadConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/ThreadsafeConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6/src/main/java/patterngen/state/WritableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/CheckedConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/CloneableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ConnectionConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ExecutableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/IntegerAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/InterpreterConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/LoaderContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/LoggerConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/MediatorAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/MemoryAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/NotificationConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/PreferenceConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ReadableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ScriptableAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ScrollbarState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/SearchConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/StackAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/StackConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/TaskConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ThreadConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/ThreadsafeConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-6_copy/src/main/java/patterngen/state/WritableConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/src/main/java/patterngen/state/BasicContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/src/main/java/patterngen/state/SimpleState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/src/main/java/patterngen/state/StatefulConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8/src/main/java/patterngen/state/StatelessAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/settings.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/src/main/java/genexternns1/GenExternalType1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/src/main/java/patterngen/state/BasicContext.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/src/main/java/patterngen/state/SimpleState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/src/main/java/patterngen/state/StatefulConcreteState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/state/state-8_copy/src/main/java/patterngen/state/StatelessAbstractState.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/grime_data/test.db" beforeDir="false" afterPath="$PROJECT_DIR$/grime_data/test.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/PatternGeneratorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/PatternGeneratorExecutor.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -336,6 +258,7 @@
       <workItem from="1619529853504" duration="11186000" />
       <workItem from="1619546320248" duration="24454000" />
       <workItem from="1619744855535" duration="2441000" />
+      <workItem from="1619747955805" duration="1339000" />
     </task>
     <servers />
   </component>
