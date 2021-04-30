@@ -86,8 +86,8 @@ class ExperimentPhaseOne extends EmpiricalStudy {
             jdi.execute(getContext())
 
             // Pattern 4
-            pattern4.execute(getContext())
-            p4Coll.execute(getContext())
+//            pattern4.execute(getContext())
+//            p4Coll.execute(getContext())
 
             // Patterns
             coalesce.execute(getContext())
