@@ -75,7 +75,7 @@ class PatternGeneratorExecutor {
         output = '$base'
         language = 'java'
         patterns = ['${patterns.join("','")}']
-        numInstances = ${NUM / patterns.size()}
+        numInstances = $NUM
         maxBreadth = 5
         maxDepth = 2
         version = "1.0.0"

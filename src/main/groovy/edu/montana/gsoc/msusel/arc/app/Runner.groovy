@@ -107,21 +107,21 @@ class Runner {
         updateStatus()
     }
 
-    void generateExperimentalConfig() {
-        log.info("Generating Experimental Config")
-        start = System.currentTimeMillis()
-        exGen.initialize()
-        results = exGen.generate(runnerConfig.pattern_types, runnerConfig.grime_types, runnerConfig.grime_severity_levels)
-        num = results.rowKeySet().size()
-        log.info("Finished Generating Experimental Config")
-        end = System.currentTimeMillis()
-        updateStatus()
-    }
+//    void generateExperimentalConfig() {
+//        log.info("Generating Experimental Config")
+//        start = System.currentTimeMillis()
+//        exGen.initialize()
+//        results = exGen.generate(runnerConfig.pattern_types, runnerConfig.grime_types, runnerConfig.base, runnerConfig.lang)
+//        num = results.rowKeySet().size()
+//        log.info("Finished Generating Experimental Config")
+//        end = System.currentTimeMillis()
+//        updateStatus()
+//    }
 
     void generatePatternInstances() {
         log.info("Generating Design Pattern Instances")
         start = System.currentTimeMillis()
-        patternGenerator.initialize(context, results, runnerConfig.pattern_types, runnerConfig.base, runnerConfig.lang, num)
+        patternGenerator.initialize((ArcContext) context, (Table<String, String, String>) results, (List<String>) runnerConfig.pattern_types, (String) runnerConfig.base, (String) runnerConfig.lang, (int) num)
         patternGenerator.execute()
         log.info("Finished Generating Design Pattern Instances")
         end = System.currentTimeMillis()

@@ -138,43 +138,66 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
                         <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                         <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>
+                                        edu.montana.gsoc.msusel.arc.app.CLI
+                                    </mainClass>
+                                </manifest>
+                            </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                            <archive>
-                                <manifest>
-                                    <mainClass>edu.montana.gsoc.msusel.arc.app.CLI</mainClass>
-                                </manifest>
-                            </archive>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.3</version>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
+                        <id>copy</id>
+                        <phase>prepare-package</phase>
                         <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>edu.montana.gsoc.msusel.arc.app.CLI</mainClass>
-                                </transformer>
-                            </transformers>
+                            <target>
+                                <echo message="Deleting file" level="info" />
+                                <delete file="${project.basedir}/target/classes/activejdbc_models.properties" />
+                                <copy file="${project.basedir}/src/main/resources/activejdbc_models.properties" tofile="${project.basedir}/target/classes/activejdbc_models.properties" overwrite="true"/>
+                            </target>
                         </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-shade-plugin</artifactId>-->
+<!--                <version>3.2.3</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <transformers>-->
+<!--                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--                                    <mainClass>edu.montana.gsoc.msusel.arc.app.CLI</mainClass>-->
+<!--                                </transformer>-->
+<!--                            </transformers>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
