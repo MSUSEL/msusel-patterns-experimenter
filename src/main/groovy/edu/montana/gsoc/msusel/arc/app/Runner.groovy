@@ -72,15 +72,15 @@ class Runner {
         long start = System.currentTimeMillis()
         initialize()
 //        if (status < 2) generateExperimentalConfig()
-        if (status < 2) loadExperimentalConfig()
-        if (status < 3) {
+        if (status < 1) loadExperimentalConfig()
+        if (status < 2) {
             generatePatternInstances()
-            loadTools()
         }
-        if (status < 4) executeArcExperimenterPhaseOne()
-        if (status < 5) executeSourceCodeInjector()
-//        if (status < 6) executeArcExperimenterPhaseTwo()
-//        if (status < 7) extractResults()
+        loadTools()
+        if (status < 3) executeArcExperimenterPhaseOne()
+        if (status < 4) executeSourceCodeInjector()
+//        if (status < 5) executeArcExperimenterPhaseTwo()
+//        if (status < 6) extractResults()
         long end = System.currentTimeMillis()
 
         log.info(TimePrinter.print(end - start))
