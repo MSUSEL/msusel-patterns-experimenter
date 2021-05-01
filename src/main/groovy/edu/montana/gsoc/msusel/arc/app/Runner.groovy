@@ -27,6 +27,8 @@
 package edu.montana.gsoc.msusel.arc.app
 
 import com.google.common.collect.Table
+import edu.isu.isuese.datamodel.Field
+import edu.isu.isuese.datamodel.RoleBinding
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ReportingLevel
 import groovy.util.logging.Log4j2
@@ -76,9 +78,20 @@ class Runner {
         if (status < 2) {
             generatePatternInstances()
         }
+
         loadTools()
         if (status < 3) executeArcExperimenterPhaseOne()
-        if (status < 4) executeSourceCodeInjector()
+
+        context.open()
+        RoleBinding.findAll().each {
+            RoleBinding binding = (RoleBinding) it
+            log.info "RoleBinding: $binding"
+            log.info "RoleBinding: Ref: ${binding.getReference()}"
+            log.info "RoleBinding: Role: ${binding.getRole()}"
+        }
+        context.close()
+
+//        if (status < 4) executeSourceCodeInjector()
 //        if (status < 5) executeArcExperimenterPhaseTwo()
 //        if (status < 6) extractResults()
         long end = System.currentTimeMillis()
