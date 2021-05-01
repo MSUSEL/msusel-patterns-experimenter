@@ -26,22 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4
 
-import edu.isu.isuese.datamodel.Component
-import edu.isu.isuese.datamodel.Field
-import edu.isu.isuese.datamodel.Method
-import edu.isu.isuese.datamodel.Pattern
-import edu.isu.isuese.datamodel.PatternInstance
-import edu.isu.isuese.datamodel.Reference
-import edu.isu.isuese.datamodel.Role
-import edu.isu.isuese.datamodel.RoleBinding
-import edu.isu.isuese.datamodel.Type
+import edu.isu.isuese.datamodel.*
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.collector.FileCollector
 import groovy.util.logging.Log4j2
 import groovy.xml.XmlSlurper
-import groovyx.gpars.GParsExecutorsPool
 import lombok.Builder
 
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.concurrent.atomic.AtomicInteger
 
