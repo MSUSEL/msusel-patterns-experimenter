@@ -105,7 +105,7 @@ class Pattern4Collector extends FileCollector {
                             log.atInfo().log("r = $r")
                             log.atInfo().log("comp = $comp")
                         } else {
-                            inst.addRoleBinding(RoleBinding.of(r, Reference.to(comp))) // figure out why comp is null
+                            inst.addRoleBinding(RoleBinding.of(r, comp.createReference())) // figure out why comp is null
                         }
                         context.close()
                     }
