@@ -178,14 +178,18 @@ class Runner {
     }
 
     private void writeStatus(int phase) {
-        File f = new File("config/status")
-        if (f.exists() && f.isFile() && f.canRead())
+        File f = new File(this.runnerConfig.status_file)
+        if (f.exists() && f.isFile() && f.canWrite())
             f.text = phase
+        else {
+            f.createNewFile()
+            f.text = phase
+        }
     }
 
     private void readStatus() {
-        File f = new File("config/status")
-        if (f.exists() && f.isFile() && f.canWrite())
+        File f = new File(this.runnerConfig.status_file)
+        if (f.exists() && f.isFile() && f.canRead())
             status = Integer.parseInt(f.text)
     }
 

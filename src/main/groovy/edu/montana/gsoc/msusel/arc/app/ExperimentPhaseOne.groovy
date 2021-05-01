@@ -90,8 +90,8 @@ class ExperimentPhaseOne extends EmpiricalStudy {
 //            p4Coll.execute(getContext())
 
             // Patterns
-            coalesce.execute(getContext())
-            pSize.execute(getContext())
+//            coalesce.execute(getContext())
+//            pSize.execute(getContext())
         }
     }
 }
