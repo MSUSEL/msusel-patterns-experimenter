@@ -45,6 +45,7 @@ class Runner {
     SourceInjectorExecutor injector
     PatternGeneratorExecutor patternGenerator
     ExperimentPhaseOne phaseOne
+    ExperimentPhaseOneInjected phaseOneInjected
     ExperimentPhaseTwo phaseTwo
     ResultsReader resReader
     int status
@@ -63,6 +64,7 @@ class Runner {
         resWrite = new ResultsWriter()
         injector = new SourceInjectorExecutor()
         phaseOne = new ExperimentPhaseOne(context)
+        phaseOneInjected = new ExperimentPhaseOneInjected(context)
         phaseTwo = new ExperimentPhaseTwo(context)
         resReader = new ResultsReader()
         sdl = new SystemDropLoader(context)
@@ -81,6 +83,7 @@ class Runner {
         loadTools()
         if (status < 3) executeArcExperimenterPhaseOne()
         if (status < 4) executeSourceCodeInjector()
+//        if (status < 5) executeArcExperimenterPhaseOneInjected()
 //        if (status < 5) executeArcExperimenterPhaseTwo()
 //        if (status < 6) extractResults()
         long end = System.currentTimeMillis()
@@ -148,6 +151,16 @@ class Runner {
         log.info("Finished Executing Source Code Injector")
         end = System.currentTimeMillis()
 
+        updateStatus()
+    }
+
+    void executeArcExperimenterPhaseOneInjected() {
+        log.info("Executing Experiment Phase One - Injected")
+        start = System.currentTimeMillis()
+        phaseOneInjected.setResults(results)
+        phaseOneInjected.execute()
+        log.info("Finished Executing Experiment Phase One - Injected")
+        end = System.currentTimeMillis()
         updateStatus()
     }
 

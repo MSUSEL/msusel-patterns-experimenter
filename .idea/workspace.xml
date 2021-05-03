@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseOneInjected.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +69,9 @@
       <recent name="$PROJECT_DIR$/config" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="edu.montana.gsoc.msusel.arc.app" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="edu.montana.gsoc.msusel.arc.app" />
     </key>
   </component>
@@ -260,7 +265,8 @@
       <workItem from="1619747955805" duration="1942000" />
       <workItem from="1619777493753" duration="4816000" />
       <workItem from="1619822612575" duration="8278000" />
-      <workItem from="1619885396899" duration="602000" />
+      <workItem from="1619885396899" duration="2070000" />
+      <workItem from="1620002610826" duration="1332000" />
     </task>
     <servers />
   </component>
