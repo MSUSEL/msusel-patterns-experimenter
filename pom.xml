@@ -207,6 +207,8 @@
             <name>msusel-maven-repo</name>
             <releases>
                 <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
             </releases>
             <snapshots>
                 <enabled>false</enabled>
