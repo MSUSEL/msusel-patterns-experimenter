@@ -83,7 +83,7 @@ class Runner {
         loadTools()
         if (status < 3) executeArcExperimenterPhaseOne()
         if (status < 4) executeSourceCodeInjector()
-//        if (status < 5) executeArcExperimenterPhaseOneInjected()
+        if (status < 5) executeArcExperimenterPhaseOneInjected()
 //        if (status < 6) executeArcExperimenterPhaseTwo()
 //        if (status < 7) extractResults()
         long end = System.currentTimeMillis()
