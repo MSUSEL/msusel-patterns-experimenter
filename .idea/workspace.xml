@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +267,9 @@
       <workItem from="1619885396899" duration="2070000" />
       <workItem from="1620002610826" duration="2873000" />
       <workItem from="1620194237270" duration="667000" />
-      <workItem from="1620256610990" duration="4074000" />
+      <workItem from="1620256610990" duration="5147000" />
+      <workItem from="1620348528728" duration="3125000" />
+      <workItem from="1620762776362" duration="2410000" />
     </task>
     <servers />
   </component>
