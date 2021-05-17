@@ -113,9 +113,9 @@ public class ArcMetricsTool {
     }
 
     private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList) {
-        streamAndMeasureModules(proj, evaluatorList);
         streamAndMeasureNamespaces(proj, evaluatorList);
         streamAndMeasureFiles(proj, evaluatorList);
+        streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
             metricEvaluator.measure(proj);
         });
