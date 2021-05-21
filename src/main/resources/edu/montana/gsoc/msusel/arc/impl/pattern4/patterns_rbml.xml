@@ -209,7 +209,7 @@
     <pattern gofName="State" pattern4Name="State" family="Behavioral">
         <role rbmlName="Context" pattern4Name="Context" elementType="CLASS" mandatory="true"/>
         <role rbmlName="ConcreteState" pattern4Name="State" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="st" pattern4Name="state" elementType="FIELD" mandatory="true"/>
+        <role rbmlName="currentState" pattern4Name="state" elementType="FIELD" mandatory="true"/>
         <role rbmlName="Request()" pattern4Name="Request()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractState" elementType="CLASS" mandatory="false"/>
         <role rbmlName="Handle()" elementType="METHOD" mandatory="false"/>
