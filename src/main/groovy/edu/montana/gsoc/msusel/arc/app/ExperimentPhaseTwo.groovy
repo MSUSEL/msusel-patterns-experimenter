@@ -29,6 +29,7 @@ package edu.montana.gsoc.msusel.arc.app
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
+import edu.isu.isuese.datamodel.util.MeasureTable
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
@@ -88,6 +89,7 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
     }
 
     void runTools(String projKey) {
+        MeasureTable.getInstance().reset()
         getContext().open()
         getContext().setProject(Project.findFirst("projKey = ?", projKey))
         getContext().close()
