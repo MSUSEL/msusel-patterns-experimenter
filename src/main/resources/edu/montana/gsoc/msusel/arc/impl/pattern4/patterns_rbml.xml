@@ -217,7 +217,7 @@
     <pattern gofName="Strategy" pattern4Name="Strategy" family="Behavioral">
         <role rbmlName="ConcreteStrategy" pattern4Name="Strategy" elementType="CLASS" mandatory="true"/>
         <role rbmlName="Context" pattern4Name="Context" elementType="CLASS" mandatory="true"/>
-        <role rbmlName="strat" pattern4Name="strategy" elementType="FIELD" mandatory="true"/>
+        <role rbmlName="currentStrategy" pattern4Name="strategy" elementType="FIELD" mandatory="true"/>
         <role rbmlName="ContextOperation()" pattern4Name="ContextInterface()" elementType="METHOD" mandatory="true"/>
         <role rbmlName="AbstractStrategy" elementType="CLASS" mandatory="false"/>
         <role rbmlName="GetState()" elementType="METHOD" mandatory="false"/>
