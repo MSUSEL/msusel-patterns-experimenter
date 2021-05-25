@@ -31,7 +31,9 @@ import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ReportingLevel
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class ResultsExtractor {
 
     List<String> measures = []
@@ -63,10 +65,17 @@ class ResultsExtractor {
             String key2 = values.get(id, Constants.Key2)
             System sys1 = System.findFirst("key = ?", key1)
             System sys2 = System.findFirst("key = ?", key2)
+            log.info "Severity: ${values.get(id, Constants.GrimeSeverity)}"
+            log.info "Key1: $key1"
+            log.info "Key2: $key2"
             measures.each {
+                log.info "Measure: $it"
                 double val1 = sys1.getMeasureValueByName(it)
                 double val2 = sys2.getMeasureValueByName(it)
+                log.info "Value1: $val1"
+                log.info "Value2: $val2"
                 double diff = val2 - val1
+                log.info "Diff: $diff"
                 String name = it.split(/:/)[1]
                 values.put(id, name, "$diff")
             }
@@ -79,10 +88,17 @@ class ResultsExtractor {
             String key2 = values.get(id, Constants.Key2)
             Project sys1 = Project.findFirst("projKey = ?", key1)
             Project sys2 = Project.findFirst("projKey = ?", key2)
+            log.info "Severity: ${values.get(id, Constants.GrimeSeverity)}"
+            log.info "Key1: $key1"
+            log.info "Key2: $key2"
             measures.each {
+                log.info "Measure: $it"
                 double val1 = sys1.getMeasureValueByName(it)
                 double val2 = sys2.getMeasureValueByName(it)
+                log.info "Value1: $val1"
+                log.info "Value2: $val2"
                 double diff = val2 - val1
+                log.info "Diff: $diff"
                 String name = it.split(/:/)[1]
                 values.put(id, name, "$diff")
             }

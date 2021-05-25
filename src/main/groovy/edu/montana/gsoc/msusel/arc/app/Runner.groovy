@@ -205,7 +205,7 @@ class Runner {
     private void readStatus() {
         File f = new File(this.runnerConfig.status_file)
         if (f.exists() && f.isFile() && f.canRead())
-            status = Integer.parseInt(f.text)
+            status = Integer.parseInt(f.text.trim())
     }
 
     private void resetDatabase() {

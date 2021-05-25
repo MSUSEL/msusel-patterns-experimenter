@@ -83,8 +83,8 @@ class ExperimentPhaseTwo extends EmpiricalStudy {
 
     void executeStudy() {
         results.rowKeySet().each { id ->
-            runTools(results.get(id, Constants.Key1))
-//            runTools(results.get(id, Constants.Key2))
+//            runTools(results.get(id, Constants.Key1))
+            runTools(results.get(id, Constants.Key2))
         }
     }
 
