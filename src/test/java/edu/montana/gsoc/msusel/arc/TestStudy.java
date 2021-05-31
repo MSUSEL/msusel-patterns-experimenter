@@ -27,40 +27,24 @@
 package edu.montana.gsoc.msusel.arc;
 
 import edu.isu.isuese.datamodel.System;
-import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
-import edu.montana.gsoc.msusel.arc.impl.grime.GrimeConstants;
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow;
+import edu.montana.gsoc.msusel.arc.impl.issues.findbugs.FindBugsConstants;
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants;
-import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants;
-import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
-import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants;
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants;
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants;
-import org.javalite.activejdbc.Model;
+import edu.montana.gsoc.msusel.arc.impl.issues.pmd.PMDConstants;
+import edu.montana.gsoc.msusel.arc.impl.quality.qmood.QMoodConstants;
+import edu.montana.gsoc.msusel.arc.impl.quality.quamoco.QuamocoConstants;
+import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtConstants;
+import groovy.util.ConfigObject;
 
-class TestStudy extends EmpiricalStudy {
+class TestStudy extends WorkFlow {
 
     public TestStudy(ArcContext context) {
         super("Test", "A Test Empirical Study", context);
     }
 
     @Override
-    public void execute() {
-        initWorkflow();
-        initReport();
-        executeStudy();
-        //report.generate();
-    }
-
-    @Override
-    public void initWorkflow() {
-
-    }
-
-    @Override
-    public void initReport() {
+    public void initWorkflow(ConfigObject runnerConfig, int num) {
 
     }
 
@@ -76,7 +60,7 @@ class TestStudy extends EmpiricalStudy {
 //        Command pSize = getContext().getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME);
 //        Command grime = getContext().getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME);
         Command metrics = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME);
-        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.TD_CMD_NAME);
+        Command techdebt = getContext().getRegisteredCommand(TechDebtConstants.CAST_CMD_NAME);
         Command qmood = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME);
         Command quamoco = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME);
 

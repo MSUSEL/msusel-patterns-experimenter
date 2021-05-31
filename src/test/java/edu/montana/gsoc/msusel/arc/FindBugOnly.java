@@ -27,41 +27,27 @@
 package edu.montana.gsoc.msusel.arc;
 
 import edu.isu.isuese.datamodel.System;
-import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants;
-import edu.montana.gsoc.msusel.arc.impl.grime.GrimeConstants;
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow;
+import edu.montana.gsoc.msusel.arc.impl.issues.findbugs.FindBugsConstants;
+import edu.montana.gsoc.msusel.arc.impl.issues.grime.GrimeConstants;
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants;
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants;
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants;
-import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants;
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants;
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants;
+import edu.montana.gsoc.msusel.arc.impl.issues.pmd.PMDConstants;
+import edu.montana.gsoc.msusel.arc.impl.quality.quamoco.QuamocoConstants;
+import groovy.util.ConfigObject;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class FindBugOnly extends EmpiricalStudy {
+public class FindBugOnly extends WorkFlow {
 
     public FindBugOnly(ArcContext context) {
         super("FBOnly", "A Test Empirical Study", context);
     }
 
     @Override
-    public void execute() {
-        initWorkflow();
-        initReport();
-        executeStudy();
-        //report.generate();
-    }
-
-    @Override
-    public void initWorkflow() {
-
-    }
-
-    @Override
-    public void initReport() {
+    public void initWorkflow(ConfigObject runnerConfig, int num) {
 
     }
 

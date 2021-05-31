@@ -30,33 +30,32 @@ import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsConstants
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.ghsearch.GitHubSearchConstants
 import edu.montana.gsoc.msusel.arc.impl.git.GitConstants
-import edu.montana.gsoc.msusel.arc.impl.java.GradleConstants
-import edu.montana.gsoc.msusel.arc.impl.grime.GrimeConstants
+import edu.montana.gsoc.msusel.arc.impl.issues.findbugs.FindBugsConstants
+import edu.montana.gsoc.msusel.arc.impl.issues.grime.GrimeConstants
+import edu.montana.gsoc.msusel.arc.impl.issues.pmd.PMDConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
-import edu.montana.gsoc.msusel.arc.impl.java.MavenConstants
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDConstants
-import edu.montana.gsoc.msusel.arc.impl.qmood.QMoodConstants
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants
+import edu.montana.gsoc.msusel.arc.impl.quality.qmood.QMoodConstants
+import edu.montana.gsoc.msusel.arc.impl.quality.quamoco.QuamocoConstants
+import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtConstants
 import edu.montana.gsoc.msusel.arc.impl.reporting.CSVReportWriter
 import edu.montana.gsoc.msusel.arc.impl.reporting.Report
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants
 import groovy.util.logging.Log4j2
 
 @Log4j2
-class TestEmpiricalStudy extends EmpiricalStudy {
+class TestEmpiricalStudy extends WorkFlow {
 
     TestEmpiricalStudy(ArcContext context) {
         super("Test", "A Test Empirical Study", context)
     }
 
     @Override
-    void initWorkflow() {
+    void initWorkflow(ConfigObject runnerConfig, int num) {
 //        workflow = Workflow.builder()
 //                .context(context)
 //                .name("Test Workflow")
@@ -89,38 +88,6 @@ class TestEmpiricalStudy extends EmpiricalStudy {
 //                .create()
     }
 
-
-    @Override
-    void initReport() {
-        report = new Report().writeWith(new CSVReportWriter())
-//        report = Report.on()
-//                .column()
-//                .column()
-//                .column()
-//                .measures()
-//                .where()
-//                .where()
-//                .writeWith(new CSVReportWriter())
-    }
-
-    @Override
-    void execute() {
-        log.info("Running Empirical Study: $name")
-        log.info("Initializing study workflow")
-        initWorkflow()
-
-        log.info("Initializing study report")
-        initReport()
-
-        log.info("Starting empirical study workflow")
-        executeStudy()
-        log.info("Empirical study workflow complete")
-
-        log.info("Generating report for Empirical Study: $name")
-        //report.generate()
-        log.info("Report generated in ${report.getReportFileName()}")
-    }
-
     void executeStudy() {
         Command ghSearch  = context.getRegisteredCommand(GitHubSearchConstants.GHSEARCH_CMD_NAME)
         Command git       = context.getRegisteredCommand(GitConstants.GIT_CMD_NAME)
@@ -134,7 +101,7 @@ class TestEmpiricalStudy extends EmpiricalStudy {
         Command pSize     = context.getRegisteredCommand(ArcPatternConstants.PATTERN_SIZE_CMD_NAME)
         Command grime     = context.getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME)
         Command metrics   = context.getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
-        Command techdebt  = context.getRegisteredCommand(TechDebtConstants.TD_CMD_NAME)
+        Command techdebt  = context.getRegisteredCommand(TechDebtConstants.CAST_CMD_NAME)
         Command qmood     = context.getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME)
         Command quamoco   = context.getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME)
 

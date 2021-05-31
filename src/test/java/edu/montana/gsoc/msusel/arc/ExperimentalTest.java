@@ -28,11 +28,11 @@ package edu.montana.gsoc.msusel.arc;
 
 import edu.isu.isuese.datamodel.Project;
 import edu.isu.isuese.datamodel.System;
-import edu.montana.gsoc.msusel.arc.app.ToolsLoader;
-import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy;
-import edu.montana.gsoc.msusel.arc.impl.findbugs.FindBugsProperties;
+import edu.montana.gsoc.msusel.arc.app.runner.ToolsLoader;
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow;
+import edu.montana.gsoc.msusel.arc.impl.issues.findbugs.FindBugsProperties;
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Properties;
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDProperties;
+import edu.montana.gsoc.msusel.arc.impl.issues.pmd.PMDProperties;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -92,7 +92,7 @@ public class ExperimentalTest {
         context.getProject().setBinPath(new String[]{"bin/"});
         context.close();
 
-        EmpiricalStudy empiricalStudy = new TestStudy(context);
+        WorkFlow empiricalStudy = new TestStudy(context);
         empiricalStudy.execute();
     }
 
@@ -103,7 +103,7 @@ public class ExperimentalTest {
         context.getProject().setBinPath(new String[]{"bin/"});
         context.close();
 
-        EmpiricalStudy empiricalStudy = new FindBugOnly(context);
+        WorkFlow empiricalStudy = new FindBugOnly(context);
         empiricalStudy.execute();
     }
 }

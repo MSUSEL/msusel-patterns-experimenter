@@ -5,8 +5,179 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/StudyConfigReader.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyConfigReader.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyPhaseFour.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyPhaseOne.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyPhaseThree.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyPhaseTwo.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyPhaseZero.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyRunner.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentRunner.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrateConstants.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseOne.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseThree.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseTwo.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationRunner.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/AbstractMetricRater.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/AnalyzabilityEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Calibrator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentEntanglement.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentIndependence.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Duplication.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/MetricRater.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModifiabilityEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModularityEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModuleCoupling.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/MultiValueRater.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Rateable.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ReusabilityEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/RiskCategory.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/RiskProfileCalibrator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationMetricProvider.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationRepoProvider.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainComponentMetricEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricProvider.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainRepoProvider.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SingleValueCalibrator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SingleValueRater.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/TestabilityEvaluator.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitComplexity.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitInterfacing.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitSize.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Volume.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationTool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainConstants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainTool.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/CastTDCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/NugrohoTDCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/TechDebtCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/NugrohoTD.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseTwo.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Constants.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentConstants.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentConfigReader.groovy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentGenerator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentGenerator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentPhaseOne.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseOneInjected.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentPhaseOneInjected.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ExperimentPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentPhaseTwo.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/PatternGeneratorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/PatternGeneratorExecutor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsExtractor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ResultsExtractor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsReader.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ResultsReader.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ResultsWriter.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ResultsWriter.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/Runner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/EmpiricalStudy.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/SourceInjectorExecutor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/SourceInjectorExecutor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/TimePrinter.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/TimePrinter.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/ToolsLoader.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ToolsLoader.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/EmpiricalStudy.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/WorkFlow.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/StudyManager.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/StudyManager.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/TestEmpiricalStudy.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/TestEmpiricalStudy.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsRuleProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsRuleProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/grime/GrimeRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/grime/GrimeRuleProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeRuleProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/metrics/MetricsToolMetricsProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/metrics/MetricsToolMetricsProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pmd/PMDRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pmd/PMDRuleProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDRuleProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/EffectivenessEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/EffectivenessEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/ExtendibilityEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/ExtendibilityEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/FlexibilityEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/FlexibilityEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/FunctionalityEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/FunctionalityEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodMetricProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodMetricProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/ReusabilityEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/ReusabilityEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/qmood/UnderstandabilityEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/qmood/UnderstandabilityEvaluator.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoMetricProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoMetricProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/td/TechDebtMetricProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/td/TechDebtMetricProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/td/TechDebtRepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/td/TechDebtRepoProvider.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsCollector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/FindBugsTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/AndMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/AndMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/BugCodeMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/BugCodeMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/BugCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/BugCollection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/BugMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/BugMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/BugPatternMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/BugPatternMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/ClassMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/ClassMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/DesignationMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/DesignationMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/DesignationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/DesignationType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/FieldMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/FieldMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/FindBugsFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/FindBugsFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/FirstVersionMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/FirstVersionMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/LastVersionMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/LastVersionMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/LocalMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/LocalMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/MatchMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/MatchMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/MatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/MatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/MethodMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/MethodMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/NotMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/NotMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/ObjectFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/OrMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/OrMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/PackageMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/PackageMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/PriorityMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/PriorityMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/RankMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/RankMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/SourceLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/SourceLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/findbugs/resultsdm/TypeMatcherType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/resultsdm/TypeMatcherType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeDetectorCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeDetectorCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/grime/GrimeTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/grime/GrimeTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/PMDCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDCollector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/PMDCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/PMDConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/PMDProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/PMDTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/Configerror.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/Configerror.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/Error.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/Error.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/File.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/File.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/ObjectFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/ObjectFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/Pmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/Pmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/Suppressedviolation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/Suppressedviolation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/Violation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/Violation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pmd/resultsdm/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/resultsdm/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/qmood/QMoodTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/qmood/QMoodTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quamoco/QuamocoTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/quamoco/QuamocoTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/TechDebtCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/TechDebtConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/TechDebtConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/TechDebtTool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/TechDebtTool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/CastParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/CastParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/ChinParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/ChinParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/ILanguageConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/ILanguageConstants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/NugrohoParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/NugrohoParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/SonarParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/SonarParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/TDParams.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/TDParams.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/param/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/param/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/CastTD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/CastTD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/ChinTD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/ChinTD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/MarinescuTD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/MarinescuTD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/NugrohoTD.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/SonarTD.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/SonarTD.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/TechnicalDebtCalcStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/TechnicalDebtCalcStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/td/strategies/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/findbugs/rules-fbcontrib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/rules-fbcontrib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/findbugs/rules-findbugs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/rules-findbugs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/findbugs/rules-findsecbugs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/rules-findsecbugs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/pmd/pmd_rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/issues/pmd/pmd_rules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/pmd/rules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/issues/pmd/rules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/td/strategies/cast.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/cast.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/td/strategies/sonar.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/sonar.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/td/strategies/tf-data.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/montana/gsoc/msusel/arc/impl/quality/td/strategies/tf-data.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/ExperimentalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/ExperimentalTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/FindBugOnly.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/FindBugOnly.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/TestStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/TestStudy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/impl/java/JavaPathsDetectorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/edu/montana/gsoc/msusel/arc/impl/java/JavaPathsDetectorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +189,15 @@
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -43,7 +223,6 @@
   <component name="ProjectId" id="1mQUhdsEEa5VnUby4PIrP6G5t4D" />
   <component name="ProjectViewState">
     <option name="flattenPackages" value="true" />
-    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
@@ -64,10 +243,19 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="edu.montana.gsoc.msusel.arc.impl.quality.sigmain" />
+      <recent name="edu.montana.gsoc.msusel.arc.app.runner.casestudy" />
+      <recent name="edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate" />
+      <recent name="edu.montana.gsoc.msusel.arc.impl.sigmain" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/config" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="edu.montana.gsoc.msusel.arc.impl.quality.sigmain" />
+      <recent name="edu.montana.gsoc.msusel.arc.impl.quality" />
+      <recent name="edu.montana.gsoc.msusel.arc.impl.sigmain" />
       <recent name="edu.montana.gsoc.msusel.arc.app" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -80,7 +268,7 @@
       <module name="msusel-arc-framework" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.app.*" />
+          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.app.runner.experiment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -102,14 +290,25 @@
       </method>
     </configuration>
     <configuration name="SourceInjectorExecutor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="edu.montana.gsoc.msusel.arc.app.SourceInjectorExecutor" />
+      <option name="MAIN_CLASS_NAME" value="edu.montana.gsoc.msusel.arc.app.runner.experiment.SourceInjectorExecutor" />
       <module name="msusel-arc-framework" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.app.*" />
+          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.app.runner.experiment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -285,7 +484,12 @@
       <workItem from="1621733050406" duration="598000" />
       <workItem from="1621737097265" duration="395000" />
       <workItem from="1621906688033" duration="20000" />
-      <workItem from="1621910625518" duration="3606000" />
+      <workItem from="1621910625518" duration="4074000" />
+      <workItem from="1621979320049" duration="7696000" />
+      <workItem from="1622043644390" duration="10546000" />
+      <workItem from="1622063150062" duration="5691000" />
+      <workItem from="1622075631159" duration="8578000" />
+      <workItem from="1622277035571" duration="36335000" />
     </task>
     <servers />
   </component>

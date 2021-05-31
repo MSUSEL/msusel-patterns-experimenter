@@ -29,8 +29,9 @@ package edu.montana.gsoc.msusel.arc.app
 import edu.isu.isuese.datamodel.util.DBManager
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ArcProperties
+import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.db.ConfigLoader
-import edu.montana.gsoc.msusel.arc.impl.experiment.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.experiment.StudyManager
 import groovy.cli.picocli.CliBuilder
 import groovy.cli.picocli.OptionAccessor
@@ -48,7 +49,7 @@ class CLI {
     static void main(String[] args) {
         ArcContext context = new ArcContext(log)
         StudyManager studyManager = new StudyManager(context)
-        Runner runner = new Runner(context)
+        EmpiricalStudy empiricalStudy = null
 
         // Setup CLI
         CommandLineInterface cli = CommandLineInterface.instance
@@ -56,7 +57,6 @@ class CLI {
         cli.manager = studyManager
 
         String base = ""
-        EmpiricalStudy empiricalStudy
         cli.initialize()
         ConfigLoader loader = ConfigLoader.instance
 
@@ -78,14 +78,14 @@ class CLI {
 
         // Process Command Line Args
         log.info("Processing Command Line Arguments")
-//        (base, empiricalStudy) = cli.parse(args)
-//        context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
+        (base, empiricalStudy) = cli.parse(args)
+        context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
         log.info("Command Line Arguments Processed")
 
         log.info("Verifying Database and Creating if missing")
         DBManager.instance.checkDatabaseAndCreateIfMissing(context.getDBCreds())
 
-        runner.run()
+        empiricalStudy?.run()
 
         // Select experiment
 //        log.info(String.format("Selecting experiment: %s", empiricalStudy.getName()))
@@ -182,7 +182,7 @@ class CommandLineInterface {
 //            logger.addAppender(file)
 //        }
 
-        EmpiricalStudy empiricalStudy
+        EmpiricalStudy empiricalStudy = null
         if (options.e) {
             String studyName = options.e
             if (manager.studies.keySet().contains(studyName))

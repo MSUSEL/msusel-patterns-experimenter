@@ -27,6 +27,11 @@
 package edu.montana.gsoc.msusel.arc.impl.experiment
 
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.app.runner.casestudy.CaseStudyRunner
+import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentRunner
+import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationRunner
 
 class StudyManager {
 
@@ -34,7 +39,10 @@ class StudyManager {
 
     StudyManager(ArcContext context) {
         studies = [
-                "test" : new TestEmpiricalStudy(context)
+                "test" : new TestEmpiricalStudy(context),
+                "experiment" : new ExperimentRunner(context),
+                "case-study" : new CaseStudyRunner(context),
+                "calibration" : new SigCalibrationRunner(context)
         ]
     }
 }

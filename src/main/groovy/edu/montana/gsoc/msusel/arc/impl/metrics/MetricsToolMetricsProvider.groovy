@@ -73,27 +73,30 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
     }
 
     void registerMetrics() {
-        registrar.registerPrimary(new NumberOfFields())
-        registrar.registerPrimary(new NumberOfMethods())
-        registrar.registerPrimary(new NumberOfStatements())
-        registrar.registerPrimary(new NumberOfTypes())
+        registrar.registerPrimary(new NumberOfFields()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfMethods()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfStatements()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfTypes()) // Needed for Quamoco
         registrar.registerPrimary(new LinesOfCode())
         registrar.registerPrimary(new LogicalLinesOfCode())
-        registrar.registerPrimary(new SourceLinesOfCode())
-        registrar.registerPrimary(new NumberOfPrivateAttributes())
-        registrar.registerPrimary(new NumberOfProtectedAttributes())
-        registrar.registerPrimary(new NumberOfPublicMethods())
-        registrar.registerPrimary(new NumberOfAncestorClasses())
-        registrar.registerPrimary(new NumberOfClasses())
-        registrar.registerPrimary(new NumberOfInstanceVariables())
-        registrar.registerPrimary(new NumberOfClassVariables())
-        registrar.registerPrimary(new NumberOfLocalVariables())
+        registrar.registerPrimary(new SourceLinesOfCode()) // Needed for Quamoco and Sig Maintainability
+        registrar.registerPrimary(new NumberOfPrivateAttributes()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfProtectedAttributes()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfPublicMethods()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfAncestorClasses()) // Needed for QMOOD
+        registrar.registerPrimary(new NumberOfClasses()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfInstanceVariables()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfClassVariables()) // Needed for Quamoco
+        registrar.registerPrimary(new NumberOfLocalVariables()) // Needed for Quamoco
+        registrar.registerPrimary(new CyclomaticComplexity()) // Needed for Sig Maintainability
+        registrar.registerPrimary(new AfferentCoupling()) // Needed for Sig Maintainability
+        registrar.registerPrimary(new NumberOfMethodParameters()) // Needed for Sig Maintainability
 
-        registrar.registerSecondary(new LinesOfCodePerClass()) // depends on LOC
-        registrar.registerSecondary(new TotalNumberOfAttributes()) // depends on NOA
-        registrar.registerSecondary(new TotalNumberOfClasses()) // depends on NC
-        registrar.registerSecondary(new TotalNumberOfMethods()) // depends on NOM
-        registrar.registerSecondary(new PolymorphicMethods()) // depends on NOC
+        registrar.registerSecondary(new LinesOfCodePerClass()) // depends on LOC -> Needed for QMOOD
+        registrar.registerSecondary(new TotalNumberOfAttributes()) // depends on NOA -> Needed for QMOOD
+        registrar.registerSecondary(new TotalNumberOfClasses()) // depends on NC -> Needed for QMOOD
+        registrar.registerSecondary(new TotalNumberOfMethods()) // depends on NOM -> Needed for QMOOD
+        registrar.registerSecondary(new PolymorphicMethods()) // depends on NOC -> Needed for QMOOD
     }
 
     MetricEvaluator getMetricEvaluator(String handle) {
