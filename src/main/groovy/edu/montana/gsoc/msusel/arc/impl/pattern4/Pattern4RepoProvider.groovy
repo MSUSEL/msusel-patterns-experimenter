@@ -26,11 +26,9 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.pattern4
 
-
 import edu.isu.isuese.datamodel.PatternRepository
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
-import edu.montana.gsoc.msusel.arc.impl.pmd.PMDRepoProvider
 import groovy.xml.XmlSlurper
 
 /**
@@ -48,7 +46,7 @@ class Pattern4RepoProvider extends AbstractRepoProvider {
     @Override
     void loadData() {
         config = new XmlSlurper()
-                .parseText(PMDRepoProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).getText('UTF-8'))
+                .parseText(Pattern4RepoProvider.class.getResourceAsStream(Pattern4Constants.PATTERN4_CONFIG_PATH).getText('UTF-8'))
     }
 
     @Override

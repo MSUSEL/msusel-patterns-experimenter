@@ -31,10 +31,10 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ArcProperties
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.db.ConfigLoader
-import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.experiment.StudyManager
+import groovy.cli.Option
+import groovy.cli.Unparsed
 import groovy.cli.picocli.CliBuilder
-import groovy.cli.picocli.OptionAccessor
 import groovy.util.logging.Log4j2
 
 /**
@@ -57,11 +57,12 @@ class CLI {
         cli.manager = studyManager
 
         String base = ""
-        cli.initialize()
         ConfigLoader loader = ConfigLoader.instance
 
         // Load Configuration
         log.info("Loading Configuration")
+
+        (base, empiricalStudy) = cli.initializeAndParse(args)
 
         File fBase
         if (System.getenv("ARC_HOME") == null)
@@ -78,7 +79,6 @@ class CLI {
 
         // Process Command Line Args
         log.info("Processing Command Line Arguments")
-        (base, empiricalStudy) = cli.parse(args)
         context.addArcProperty(ArcProperties.BASE_DIRECTORY, base)
         log.info("Command Line Arguments Processed")
 
@@ -109,7 +109,7 @@ class CommandLineInterface {
     ArcContext context
     StudyManager manager
 
-    void initialize() {
+    def initializeAndParse(String[] args) {
         log.info("Initializing CLI")
 
         cli = new CliBuilder(
@@ -121,50 +121,35 @@ class CommandLineInterface {
         // set the amount of columns the usage message will be in width
         cli.width = 80 // default is 74
 
-        // add options
-        cli.h(longOpt: 'help', 'Print this help text and exit')
-        cli.v(longOpt: 'version', 'Print the version information')
-        cli.D(args: 2, valueSeparator: '=', argName: 'property=value', 'use value for given property')
-//        cli.l(longOpt: 'log', args: 1, argName: 'file', 'Name of the log file to log to')
-        cli.e(longOpt: 'empirical-study', "Name of the study to execute, available studies: ${manager.studies.keySet().join(', ')}")
-
         log.info("Completed CLI Initialization")
-    }
 
-    def parse(args) {
         log.info("started parsing command line arguments")
 
-        OptionAccessor options = cli.parse(args)
+        ArcCli arc = cli.parseFromInstance(new ArcCli(), args)
 
-        if (!options) {
-            System.err << 'Error while parsing command-line options.\n\n'
-            cli.usage()
-            System.exit 1
-        }
-
-        if (options.v) {
+        if (arc.version) {
             println "arc experimenter version ${CLI.VERSION}"
             System.exit 0
         }
 
-        if (options.h) {
+        if (arc.help) {
             System.out.println()
             cli.usage()
             System.exit 0
         }
 
         String base
-        if (options.arguments()) {
-            base = options.arguments()[0]
+        if (arc.base) {
+            base = arc.base.first()
         } else {
             base = "."
         }
 
-        if (options.Ds) {
-            List<String> values = options.Ds
-            for (int i = 0; i < values.size(); i+=2)
-                context.updateProperty(values[i], values[i + 1])
-        }
+//        if (arc.properties) {
+//            List<String> values = arc.properties
+//            for (int i = 0; i < values.size(); i+=2)
+//                context.updateProperty(values[i], values[i + 1])
+//        }
 
 //        if (options.l) {
 //            String logfile = options.l
@@ -183,8 +168,10 @@ class CommandLineInterface {
 //        }
 
         EmpiricalStudy empiricalStudy = null
-        if (options.e) {
-            String studyName = options.e
+        if (arc.study) {
+            String studyName = arc.study
+            println "StudyName: $studyName"
+            println "KeySet: ${manager.studies.keySet()}"
             if (manager.studies.keySet().contains(studyName))
                 empiricalStudy = manager.studies[studyName]
             else
@@ -202,6 +189,27 @@ class CommandLineInterface {
 
         return [base, empiricalStudy]
     }
+}
+
+class ArcCli {
+    @Option(shortName = 'h', description = 'Print this help text and exit', longName = 'help')
+    Boolean help
+
+    @Option(shortName = 'v', longName = 'version', description = 'Print the version information')
+    Boolean version
+
+//    @Option(shortName = 'D', numberOfArguments = 2, valueSeparator = '=', numberOfArgumentsString = 'property=value', description = 'use value for given property')
+//    List<String> properties
+
+    private String study
+    @Option(shortName = 'e', longName = 'empirical-study', description = 'Name of the study to execute')
+    void setStudy(String study) {
+        this.study = study
+    }
+    String getStudy() { study }
+
+    @Unparsed(description = 'base directory')
+    List base
 }
 
 

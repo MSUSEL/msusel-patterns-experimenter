@@ -54,23 +54,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 )
 class UnitComplexity extends SigMainMetricEvaluator {
 
-    UnitSize() {
-        ratingTable.put(5, RiskCategory.MODERATE, (0d..30d))
-        ratingTable.put(5, RiskCategory.HIGH, (0d..5d))
-        ratingTable.put(5, RiskCategory.VERY_HIGH, (0..0))
-
-        ratingTable.put(4, RiskCategory.MODERATE, (30..41))
-        ratingTable.put(4, RiskCategory.HIGH, (5..18))
-        ratingTable.put(4, RiskCategory.VERY_HIGH, (0..5))
-
-        ratingTable.put(3, RiskCategory.MODERATE, (41..50))
-        ratingTable.put(3, RiskCategory.HIGH, (18..25))
-        ratingTable.put(3, RiskCategory.VERY_HIGH, (5..7))
-
-        ratingTable.put(2, RiskCategory.MODERATE, (50..60))
-        ratingTable.put(2, RiskCategory.HIGH, (25..30))
-        ratingTable.put(2, RiskCategory.VERY_HIGH, (7..10))
-
+    UnitComplexity() {
         riskMap[RiskCategory.LOW] = (1..10)
         riskMap[RiskCategory.MODERATE] = (11..20)
         riskMap[RiskCategory.HIGH] = (21..50)

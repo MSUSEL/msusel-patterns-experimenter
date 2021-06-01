@@ -41,31 +41,33 @@ import groovy.util.logging.Log4j2
 @Log4j2
 class SigCalibrationPhaseTwo  extends WorkFlow {
 
-    Command git
+//    Command git
     Command java
     Command jdi
 
     SigCalibrationPhaseTwo(ArcContext context) {
-        super("Experiment Phase Two", "A Test Empirical Study", context)
+        super("Sig Calibration Phase Two", "Sig Maintainability Model Calibration - Phase Two", context)
     }
 
     void initWorkflow(ConfigObject runnerConfig, int num) {
-        git = context.getRegisteredCommand(GitConstants.GIT_CMD_NAME)
+//        git = context.getRegisteredCommand(GitConstants.GIT_CMD_NAME)
         java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
         jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
     }
 
     void executeStudy() {
+        context.open()
         System.findAll().each { sys ->
             (sys as System).getProjects().each {
                 context.project = it
                 runTools()
             }
         }
+        context.close()
     }
 
     void runTools() {
-        git.execute(context)
+//        git.execute(context)
         java.execute(context)
         jdi.execute(context)
     }

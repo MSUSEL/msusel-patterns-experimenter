@@ -41,6 +41,7 @@ import edu.montana.gsoc.msusel.arc.impl.patterngen.PatternGeneratorTool
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternTool
 import edu.montana.gsoc.msusel.arc.impl.quality.qmood.QMoodTool
 import edu.montana.gsoc.msusel.arc.impl.quality.quamoco.QuamocoTool
+import edu.montana.gsoc.msusel.arc.impl.quality.sigmain.SigCalibrationTool
 import edu.montana.gsoc.msusel.arc.impl.quality.sigmain.SigMainTool
 import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtTool
 import groovy.util.logging.Log4j2
@@ -70,7 +71,8 @@ class ToolsLoader {
                 new QMoodTool(context),
                 new ArcPatternTool(context),
                 new PatternGeneratorTool(context),
-                new SigMainTool(context)
+                new SigMainTool(context),
+                new SigCalibrationTool(context)
         ]
 
         log.info("Tools instantiated now loading repos and initializing commands")

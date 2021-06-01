@@ -29,6 +29,8 @@ package edu.montana.gsoc.msusel.arc.app.runner.casestudy
 
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import groovy.util.logging.Log4j2
 
 /**
@@ -38,8 +40,11 @@ import groovy.util.logging.Log4j2
 @Log4j2
 class CaseStudyRunner extends EmpiricalStudy {
 
+    private static final String STUDY_NAME = "Grime Case Studies"
+    private static final String STUDY_DESC = ""
+
     CaseStudyRunner(ArcContext context) {
-        super("Case Study", "", context, new CaseStudyConfigReader())
+        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
         this.phases = [
                 new CaseStudyPhaseZero(context),
                 new CaseStudyPhaseOne(context),
@@ -47,5 +52,17 @@ class CaseStudyRunner extends EmpiricalStudy {
                 new CaseStudyPhaseThree(context),
                 new CaseStudyPhaseFour(context)
         ]
+    }
+
+    def static getConfigHeaders() {
+        return [
+                ExperimentConstants.PatternType,
+                ExperimentConstants.GrimeType,
+                ExperimentConstants.GrimeSeverity
+        ]
+    }
+
+    def static getConfigFileName() {
+        "case_study.conf"
     }
 }

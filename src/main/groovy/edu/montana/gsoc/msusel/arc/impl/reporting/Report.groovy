@@ -26,30 +26,13 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.reporting
 
-import com.google.common.collect.BiMap
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.HashBiMap
-import com.google.common.collect.Queues
-import com.google.common.collect.Table
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Pattern
-import edu.isu.isuese.datamodel.PatternChain
-import edu.isu.isuese.datamodel.PatternInstance
-import edu.montana.gsoc.msusel.arc.impl.quamoco.QuamocoConstants
-import edu.montana.gsoc.msusel.arc.impl.td.TechDebtConstants
+import com.google.common.collect.*
 import groovy.sql.GroovyResultSet
 import groovy.sql.Sql
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVPrinter
 import org.apache.commons.lang3.tuple.Pair
 import org.javalite.activejdbc.Model
-import org.mariadb.jdbc.internal.ColumnType
 
 import java.lang.reflect.Method
-import java.sql.Connection
-import java.sql.ResultSet
-import java.sql.SQLException
-import java.sql.Statement
 
 /**
  * @author Isaac Griffith

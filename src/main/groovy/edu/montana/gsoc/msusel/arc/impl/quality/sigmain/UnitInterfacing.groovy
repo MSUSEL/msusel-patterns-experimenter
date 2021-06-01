@@ -54,7 +54,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 )
 class UnitInterfacing extends SigMainMetricEvaluator {
 
-    UnitSize() {
+    UnitInterfacing() {
         riskMap[RiskCategory.LOW] = (0..3)
         riskMap[RiskCategory.MODERATE] = (3..5)
         riskMap[RiskCategory.HIGH] = (5..7)

@@ -42,7 +42,7 @@ abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateabl
 
     protected Map<RiskCategory, Double> profile
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
-    protected Map<RiskCategory, Range<Double>> riskMap
+    protected Map<RiskCategory, Range<Double>> riskMap = [:]
 
     def measure(Measurable node) {
         if (node instanceof Project) {

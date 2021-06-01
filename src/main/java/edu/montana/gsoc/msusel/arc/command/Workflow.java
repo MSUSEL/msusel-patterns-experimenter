@@ -29,7 +29,6 @@ package edu.montana.gsoc.msusel.arc.command;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 

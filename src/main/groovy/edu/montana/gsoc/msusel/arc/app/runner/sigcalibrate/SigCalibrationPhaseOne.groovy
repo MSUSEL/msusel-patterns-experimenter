@@ -41,19 +41,20 @@ import groovy.util.logging.Log4j2
 @Log4j2
 class SigCalibrationPhaseOne extends WorkFlow {
 
-    Command ghSearch
+//    Command ghSearch
 
     SigCalibrationPhaseOne(ArcContext context) {
-        super("Experiment Phase Two", "A Test Empirical Study", context)
+        super("Sig Calibration Phase One", "Sig Maintainability Model Calibration - Phase One", context)
     }
 
     void initWorkflow(ConfigObject runnerConfig, int num) {
-        ghSearch  = context.getRegisteredCommand(GitHubSearchConstants.GHSEARCH_CMD_NAME)
+//        ghSearch  = context.getRegisteredCommand(GitHubSearchConstants.GHSEARCH_CMD_NAME)
     }
 
     void executeStudy() {
         context.open()
         results.rowKeySet().each {id ->
+            println("ID: $id")
             def map = results.row(id)
             System sys = System.builder()
                     .name(map[SigCalibrateConstants.Project])
@@ -66,6 +67,8 @@ class SigCalibrationPhaseOne extends WorkFlow {
                     .relPath(map[SigCalibrateConstants.Version])
                     .version(map[SigCalibrateConstants.Version])
                     .create()
+            sys.addProject(proj)
+            println "Sys: $sys"
         }
         context.close()
     }

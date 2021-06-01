@@ -45,7 +45,7 @@ class SigCalibrationPhaseThree extends WorkFlow {
     Command sigmain
 
     SigCalibrationPhaseThree(ArcContext context) {
-        super("Experiment Phase Two", "A Test Empirical Study", context)
+        super("Sig Calibration Phase Three", "Sig Maintainability Model Calibration - Phase Three", context)
     }
 
     @Override
@@ -56,12 +56,14 @@ class SigCalibrationPhaseThree extends WorkFlow {
 
     @Override
     void executeStudy() {
+        context.open()
         System.findAll().each { sys ->
             (sys as System).getProjects().each {
                 context.project = it
                 runTools()
             }
         }
+        context.close()
     }
 
     void runTools() {

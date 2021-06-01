@@ -38,8 +38,8 @@ import groovy.util.logging.Log4j2
 @Log4j2
 class ExperimentRunner extends EmpiricalStudy {
 
-    private final String STUDY_NAME = "Grime Experiments"
-    private final String STUDY_DESC = ""
+    private static final String STUDY_NAME = "Grime Experiments"
+    private static final String STUDY_DESC = ""
 
     ExperimentRunner(ArcContext context) {
         super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
@@ -53,7 +53,7 @@ class ExperimentRunner extends EmpiricalStudy {
         ]
     }
 
-    def getConfigHeaders() {
+    def static getConfigHeaders() {
         return [
                 ExperimentConstants.PatternType,
                 ExperimentConstants.GrimeType,
@@ -61,7 +61,7 @@ class ExperimentRunner extends EmpiricalStudy {
         ]
     }
 
-    def getConfigFileName() {
+    def static getConfigFileName() {
         "calibration.conf"
     }
 }

@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.app.runner
 
 import com.google.common.collect.Table
 import edu.montana.gsoc.msusel.arc.ArcContext
+import groovy.transform.ToString
 import groovy.util.logging.Log4j2
 
 /**
@@ -35,6 +36,7 @@ import groovy.util.logging.Log4j2
  * @version 1.3.0
  */
 @Log4j2
+@ToString(includes = ["name"])
 abstract class WorkFlow {
 
     String name

@@ -88,7 +88,7 @@ abstract class EmpiricalStudy {
 
     def executeProcess() {
         if (status < 1) loadStudyConfig()
-        for (int i = status; i < phases.size(); i++) {
+        for (int i = status - 1; i < phases.size(); i++) {
             executePhase(phases[i])
         }
     }

@@ -39,8 +39,8 @@ import groovy.util.logging.Log4j2
 @Log4j2
 class SigCalibrationRunner extends EmpiricalStudy {
 
-    private final String STUDY_NAME = "Sig Maintainability Calibration"
-    private final String STUDY_DESC = ""
+    private static final String STUDY_NAME = "Sig Maintainability Calibration"
+    private static final String STUDY_DESC = ""
 
     SigCalibrationRunner(ArcContext context) {
         super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
@@ -52,7 +52,7 @@ class SigCalibrationRunner extends EmpiricalStudy {
         ]
     }
 
-    def getConfigHeaders() {
+    def static getConfigHeaders() {
         return [
                 SigCalibrateConstants.Project,
                 SigCalibrateConstants.Version,
@@ -60,7 +60,7 @@ class SigCalibrationRunner extends EmpiricalStudy {
         ]
     }
 
-    def getConfigFileName() {
+    def static getConfigFileName() {
         "calibration.conf"
     }
 }
