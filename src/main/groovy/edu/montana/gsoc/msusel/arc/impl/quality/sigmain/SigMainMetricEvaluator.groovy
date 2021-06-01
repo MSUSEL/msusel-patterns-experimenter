@@ -46,12 +46,10 @@ abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateabl
 
     def measure(Measurable node) {
         if (node instanceof Project) {
-            profile = [
-                    RiskCategory.LOW       : 0.0d,
-                    RiskCategory.MODERATE  : 0.0d,
-                    RiskCategory.HIGH      : 0.0d,
-                    RiskCategory.VERY_HIGH : 0.0d
-            ]
+            profile[RiskCategory.LOW] = 0.0d
+            profile[RiskCategory.MODERATE] = 0.0d
+            profile[RiskCategory.HIGH] = 0.0d
+            profile[RiskCategory.VERY_HIGH] = 0.0d
             Project proj = node as Project
 
             evaluate(proj)
