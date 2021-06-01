@@ -6,25 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/EmpiricalStudy.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/EmpiricalStudy.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ToolsLoader.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/ToolsLoader.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/WorkFlow.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/WorkFlow.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyConfigReader.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyRunner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/casestudy/CaseStudyRunner.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentRunner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/experiment/ExperimentRunner.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseOne.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseThree.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseThree.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationPhaseTwo.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationRunner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/sigcalibrate/SigCalibrationRunner.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4RepoProvider.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4RepoProvider.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitComplexity.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitComplexity.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitInterfacing.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitInterfacing.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/reporting/Report.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/reporting/Report.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/command/Workflow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/command/Workflow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/findbugs/FindBugsConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/issues/pmd/PMDConstants.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -337,7 +318,7 @@
       <workItem from="1622043644390" duration="10546000" />
       <workItem from="1622063150062" duration="5691000" />
       <workItem from="1622075631159" duration="8578000" />
-      <workItem from="1622277035571" duration="48156000" />
+      <workItem from="1622277035571" duration="48448000" />
     </task>
     <servers />
   </component>
