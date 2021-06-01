@@ -54,7 +54,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 )
 class ModuleCoupling extends SigMainMetricEvaluator {
 
-    UnitSize() {
+    ModuleCoupling() {
         riskMap[RiskCategory.LOW] = (0..10)
         riskMap[RiskCategory.MODERATE] = (10..20)
         riskMap[RiskCategory.HIGH] = (20..50)
