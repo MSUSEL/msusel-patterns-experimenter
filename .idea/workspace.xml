@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaAICommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/java/JavaAICommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -309,7 +310,7 @@
       <workItem from="1622075631159" duration="8578000" />
       <workItem from="1622277035571" duration="49663000" />
       <workItem from="1622609409036" duration="630000" />
-      <workItem from="1623103379648" duration="67000" />
+      <workItem from="1623103379648" duration="1997000" />
     </task>
     <servers />
   </component>
