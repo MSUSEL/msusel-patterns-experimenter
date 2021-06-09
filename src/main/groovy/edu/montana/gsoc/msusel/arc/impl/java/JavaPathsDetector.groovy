@@ -78,8 +78,10 @@ class JavaPathsDetector {
         List<String> rootNS = proj.getRootNamespaces()*.getName()
         Set<String> paths = Sets.newHashSet()
         rootNS.each { ns ->
+            println "NS: $ns"
             names.each { name ->
-                if (name.contains(ns)) {
+                if (!ns.isBlank() && name.contains(ns)) {
+                    println "Name: $name"
                     paths << name.substring(0, name.indexOf(ns) - 1)
                 }
             }
