@@ -49,6 +49,8 @@ abstract class EmpiricalStudy {
     int num
     long start
     long end
+    long studyStart
+    long studyEnd
     String name
     String description
     List<WorkFlow> phases
@@ -66,13 +68,13 @@ abstract class EmpiricalStudy {
     }
 
     void run() {
-        long start = System.currentTimeMillis()
+        studyStart = System.currentTimeMillis()
         initialize()
         executeProcess()
         if (status < 7) extractResults()
-        long end = System.currentTimeMillis()
+        studyEnd = System.currentTimeMillis()
 
-        log.info(TimePrinter.print(end - start))
+        log.info(TimePrinter.print(studyEnd - studyStart, "Study"))
     }
 
     def initialize() {
@@ -155,22 +157,22 @@ abstract class EmpiricalStudy {
             return
 
         log.info("$name - Executing Phase ${phase.name}")
-        start = System.currentTimeMillis()
+        this.start = System.currentTimeMillis()
         phase.setResults(results)
         phase.execute(runnerConfig, num)
-        end = System.currentTimeMillis()
+        this.end = System.currentTimeMillis()
         log.info("$name - Finished Executing Phase ${phase.name}")
         updateStatus()
     }
 
     def loadStudyConfig() {
         log.info("Loading Study Config")
-        start = System.currentTimeMillis()
+        this.start = System.currentTimeMillis()
         configReader.initialize()
         results = configReader.loadNext() as Table<String, String, String>
         num = results.rowKeySet().size()
         log.info("Finished Loading Study Config")
-        end = System.currentTimeMillis()
+        this.end = System.currentTimeMillis()
         updateStatus()
     }
 }

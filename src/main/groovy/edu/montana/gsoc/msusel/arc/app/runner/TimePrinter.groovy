@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit
 @Log4j2
 class TimePrinter {
 
-    static String print(long duration) {
+    static String print(long duration, String heading = "Process") {
         long days = TimeUnit.MILLISECONDS.toDays(duration)
         duration -= TimeUnit.DAYS.toMillis(days)
         long hours = TimeUnit.MILLISECONDS.toHours(duration)
@@ -46,6 +46,6 @@ class TimePrinter {
         duration -= TimeUnit.MINUTES.toMillis(minutes)
         long seconds = TimeUnit.MILLISECONDS.toSeconds(duration)
 
-        return "Process took: $days days, $hours hours, $minutes minutes, $seconds seconds"
+        return "$heading took: $days days, $hours hours, $minutes minutes, $seconds seconds"
     }
 }

@@ -61,7 +61,7 @@ class SigCalibrationPhaseTwo  extends WorkFlow {
         List<System> systems = System.findAll()
         context.close()
 
-        System.findAll().each { sys ->
+        systems.each { sys ->
             context.open()
             List<Project> projects = (sys as System).getProjects()
             context.close()
