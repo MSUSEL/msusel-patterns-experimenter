@@ -68,7 +68,6 @@ class SigCalibrationPhaseOne extends WorkFlow {
                     .version(map[SigCalibrateConstants.Version])
                     .create()
             sys.addProject(proj)
-            println "Sys: $sys"
         }
         context.close()
     }

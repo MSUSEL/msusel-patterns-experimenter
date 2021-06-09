@@ -31,10 +31,12 @@ import edu.isu.isuese.datamodel.File
 import edu.isu.isuese.datamodel.FileType
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
+import groovy.util.logging.Log4j2
 import org.apache.commons.lang3.tuple.Pair
 
 import java.nio.file.Paths
 
+@Log4j2
 class JavaPathsDetector {
 
     ArcContext context
@@ -44,6 +46,7 @@ class JavaPathsDetector {
     }
 
     void detect() {
+        log.info "Detecting Project Paths"
         context.open()
         Pair<List<String>, List<String>> pairs = buildGraph(FileType.SOURCE)
         String[] src = pairs.getLeft()
@@ -57,9 +60,11 @@ class JavaPathsDetector {
 
         context.getProject().setBinPath(bin)
         context.close()
+        log.info "Finished Detecting Project Paths"
     }
 
     Pair<List<String>, List<String>> buildGraph(FileType type) {
+        log.info "Building Graph"
         // setup
         Project proj = context.getProject()
         String dir = Paths.get(context.getProjectDirectory()).toAbsolutePath().toString()
@@ -95,6 +100,7 @@ class JavaPathsDetector {
             }
         }
 
+        log.info "Finished Building Graph"
         return Pair.of(paths.asList(), testPaths.asList())
     }
 }

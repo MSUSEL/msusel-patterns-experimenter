@@ -26,6 +26,7 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate
 
+import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
@@ -57,13 +58,19 @@ class SigCalibrationPhaseTwo  extends WorkFlow {
 
     void executeStudy() {
         context.open()
+        List<System> systems = System.findAll()
+        context.close()
+
         System.findAll().each { sys ->
-            (sys as System).getProjects().each {
+            context.open()
+            List<Project> projects = (sys as System).getProjects()
+            context.close()
+
+            projects.each {
                 context.project = it
                 runTools()
             }
         }
-        context.close()
     }
 
     void runTools() {

@@ -79,11 +79,11 @@ abstract class EmpiricalStudy {
         this.runnerConfig = loadConfiguration()
         context.setLanguage("java")
         readStatus()
-        loadTools()
         if (status > 0)
             readResults()
         if (status <= 0)
             resetDatabase()
+        loadTools()
     }
 
     def executeProcess() {
