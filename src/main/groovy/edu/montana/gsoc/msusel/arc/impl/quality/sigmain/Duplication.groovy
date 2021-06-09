@@ -101,18 +101,23 @@ class Duplication extends MetricEvaluator {
 
         List<String> lines = base.split("\n")
         int before = lines.size()
-        processText(lines, mod)
-        mod = sanitize(mod)
+        mod = processText(lines, mod)
         int after = mod.split("\n").size()
 
         return before - after
     }
 
-    private void processText(List<String> lines, String mod) {
-        for (int i = 0; lines.size() >= 6 && i < lines.size() - 6; i++) {
+    String processText(List<String> lines, String mod) {
+        int i = 0
+        for (; lines.size() >= 6 && i < lines.size() - 5; i++) {
             String subText = lines.subList(i, i + 6).join("\n")
-            mod.replaceAll(subText, "")
+            mod = mod.replace(subText, "")
         }
+        if (i < lines.size()) {
+            String subText = lines.subList(i, lines.size()).join("\n")
+            mod = mod.replace(subText, "")
+        }
+        sanitize(mod)
     }
 
     double scanOther(File file1, File file2) {
@@ -132,8 +137,8 @@ class Duplication extends MetricEvaluator {
     }
 
     String sanitize(String text) {
-        text.replaceAll(/(?ms)\/\*.*\*\//, "")
-        text.replaceAll(/\/\/.*/,"")
+        text = text.replaceAll(/(?ms)\/\*.*?\*\\//, "")
+        text = text.replaceAll(/\/\/.*/,"")
         List<String> lines = text.split("\n")
         for (int i = 0; i < lines.size(); i++)
             lines[i] = lines[i].trim()

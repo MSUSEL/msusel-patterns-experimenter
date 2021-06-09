@@ -93,7 +93,7 @@ public class ExperimentalTest {
         context.close();
 
         WorkFlow empiricalStudy = new TestStudy(context);
-        empiricalStudy.execute();
+//        empiricalStudy.execute();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ExperimentalTest {
         context.close();
 
         WorkFlow empiricalStudy = new FindBugOnly(context);
-        empiricalStudy.execute();
+//        empiricalStudy.execute();
     }
 }
 
