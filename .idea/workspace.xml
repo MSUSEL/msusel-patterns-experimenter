@@ -5,40 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/AbstractMetricRater.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/AnalyzabilityEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Calibrator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentEntanglement.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentIndependence.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Duplication.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/MetricRater.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModifiabilityEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModularityEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ModuleCoupling.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/MultiValueRater.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Rateable.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ReusabilityEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/RiskCategory.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/RiskProfileCalibrator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationMetricProvider.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationRepoProvider.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainComponentMetricEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricProvider.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainRepoProvider.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SingleValueCalibrator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SingleValueRater.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/TestabilityEvaluator.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitComplexity.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitInterfacing.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/UnitSize.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Volume.groovy" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigCalibrationTool.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainCommand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainConstants.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainTool.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/SigMainMetricEvaluator.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -366,7 +335,7 @@
       <workItem from="1622609409036" duration="630000" />
       <workItem from="1623103379648" duration="2838000" />
       <workItem from="1623147436857" duration="1197000" />
-      <workItem from="1623180820024" duration="11996000" />
+      <workItem from="1623180820024" duration="16360000" />
     </task>
     <servers />
   </component>

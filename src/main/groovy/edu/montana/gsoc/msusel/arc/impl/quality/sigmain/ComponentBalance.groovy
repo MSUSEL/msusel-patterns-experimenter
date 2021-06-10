@@ -56,8 +56,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
 
     @Override
     protected double evaluate(Project proj) {
-        List<Double> sizes = []
-        createSizesList(proj, sizes)
+        List<Double> sizes = createSizesList(proj)
         Collections.sort(sizes)
 
         double giniCoefficient
@@ -75,7 +74,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         "sigComponentBalance"
     }
 
-    private double detemineGiniCoefficient(ArrayList<Double> sizes) {
+    private double detemineGiniCoefficient(List<Double> sizes) {
         int numPartitions
         int partitionSize
         (numPartitions, partitionSize) = createPartitions(sizes)
@@ -89,11 +88,13 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         calculateGiniCoef(cummulative, frequencies)
     }
 
-    private void createSizesList(Project proj, List<Double> sizes) {
+    private void createSizesList(Project proj) {
+        List<Double> sizes = []
         proj.getNamespaces().each {
             sizes << Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", it)
         }
-        sizes.removeIf { it == 0.0d }
+//        sizes.removeIf { it == null }
+        sizes
     }
 
     private List createPartitions(List<Double> sizes) {

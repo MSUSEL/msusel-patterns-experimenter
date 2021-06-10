@@ -40,7 +40,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 
 abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateable {
 
-    protected Map<RiskCategory, Double> profile
+    protected Map<RiskCategory, Double> profile = [:]
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
     protected Map<RiskCategory, Range<Double>> riskMap = [:]
 
@@ -120,6 +120,8 @@ abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateabl
         if (!metricRating) {
             createMetric(repository, primaryHandle, metricName, metricDescription, "RATING")
         }
+
+        null
     }
 
     private Metric createMetric(MetricRepository repository, String primaryHandle, String metricName, String metricDescription, String postName) {
@@ -131,5 +133,7 @@ abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateabl
                 .evaluator(this.class.getCanonicalName())
                 .create()
         repository.addMetric(metric)
+
+        metric
     }
 }
