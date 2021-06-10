@@ -26,12 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics;
 
+import edu.isu.isuese.datamodel.Measure;
 import edu.isu.isuese.datamodel.Namespace;
 import edu.isu.isuese.datamodel.Project;
 import edu.isu.isuese.datamodel.Type;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator;
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
+import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Collections;
@@ -73,6 +75,8 @@ public class ArcMetricsTool {
     private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
         type.getMethods().forEach(method -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring Method using " + mdef.primaryHandle());
                 metricEvaluator.measure(method);
             });
         });
@@ -82,6 +86,8 @@ public class ArcMetricsTool {
         ns.getAllTypes().forEach(type -> {
             streamAndMeasureMethods(type, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring Types using " + mdef.primaryHandle());
                 metricEvaluator.measure(type);
             });
         });
@@ -90,6 +96,8 @@ public class ArcMetricsTool {
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
         proj.getFiles().forEach(file -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring Files using " + mdef.primaryHandle());
                 metricEvaluator.measure(file);
             });
         });
@@ -99,6 +107,8 @@ public class ArcMetricsTool {
         proj.getNamespaces().forEach(ns -> {
             streamAndMeasureTypes(ns, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring Projects using " + mdef.primaryHandle());
                 metricEvaluator.measure(ns);
             });
         });
@@ -107,6 +117,8 @@ public class ArcMetricsTool {
     private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
         project.getModules().forEach(mod -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring " + mdef.primaryHandle());
                 metricEvaluator.measure(mod);
             });
         });
@@ -117,6 +129,8 @@ public class ArcMetricsTool {
         streamAndMeasureFiles(proj, evaluatorList);
         streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
+            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+            log.info("Measuring " + mdef.primaryHandle());
             metricEvaluator.measure(proj);
         });
     }
