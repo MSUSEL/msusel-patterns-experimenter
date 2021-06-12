@@ -88,7 +88,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         calculateGiniCoef(cummulative, frequencies)
     }
 
-    private void createSizesList(Project proj) {
+    private List<Double> createSizesList(Project proj) {
         List<Double> sizes = []
         proj.getNamespaces().each {
             sizes << Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", it)

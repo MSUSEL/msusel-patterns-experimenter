@@ -28,6 +28,8 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import edu.isu.isuese.datamodel.Measurable
 import edu.isu.isuese.datamodel.Measure
+import edu.isu.isuese.datamodel.Metric
+import edu.isu.isuese.datamodel.MetricRepository
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
@@ -56,7 +58,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
         ),
         references = []
 )
-class Volume extends MetricEvaluator implements Rateable {
+class Volume extends SigAbstractMetricEvaluator implements Rateable {
 
     @Override
     def measure(Measurable node) {
@@ -72,5 +74,11 @@ class Volume extends MetricEvaluator implements Rateable {
 
     MetricRater getMetricRater() {
         return new SingleValueRater("sigVolume")
+    }
+
+    Metric toMetric(MetricRepository repository) {
+        this.toMetric(repository, ["RAW", "RATING"])
+
+        null
     }
 }

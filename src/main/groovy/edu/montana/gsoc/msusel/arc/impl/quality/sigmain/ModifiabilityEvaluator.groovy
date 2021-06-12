@@ -60,9 +60,9 @@ class ModifiabilityEvaluator extends MetricEvaluator {
     @Override
     def measure(Measurable node) {
         if (node instanceof Project) {
-            double duplication    = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication", node)
-            double unitComplexity = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitComplexity", node)
-            double moduleCoupling = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModuleCoupling", node)
+            double duplication    = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication.RATING", node)
+            double unitComplexity = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitComplexity.RATING", node)
+            double moduleCoupling = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModuleCoupling.RATING", node)
 
             def factors = [
                     [0.33, duplication],

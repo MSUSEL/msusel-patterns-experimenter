@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.app.runner
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import groovy.util.logging.Log4j2
 import org.apache.commons.csv.CSVFormat
@@ -42,30 +43,43 @@ class ResultsReader {
 
     String file
     List<String> measures
+    String[] headers
+    ArcContext context
+    String identifier
 
-    void initialize(List<String> measures, String file) {
+    void initialize(String identifier, List<String> headers, List<String> measures, String file, ArcContext context) {
+        this.identifier = identifier
+        this.headers = headers
         this.measures = measures
         this.file = file
+        this.context = context
     }
 
     Table<String,String,String> readResults() {
+        combineHeadersAndMeasures()
         Table<String, String, String> table = HashBasedTable.create()
-        String[] headers = ExperimentConstants.HEADERS
-        measures.each {
-            headers += it.split(":")[1]
-        }
+        processResults(table)
 
+        return table
+    }
+
+    void processResults(Table<String, String, String> table) {
         Reader reader = new FileReader(file)
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)
         records.each { record ->
             headers.each {
-                if (it != ExperimentConstants.ID) {
-                    table.put(record.get(ExperimentConstants.ID), it, record.get(it))
+                if (it != identifier) {
+                    table.put(record.get(identifier), it, record.get(it))
                 }
             }
         }
         reader.close()
+    }
 
-        return table
+    void combineHeadersAndMeasures() {
+//        headers = ExperimentConstants.HEADERS
+        measures.each {
+            headers += it.split(":")[1]
+        }
     }
 }

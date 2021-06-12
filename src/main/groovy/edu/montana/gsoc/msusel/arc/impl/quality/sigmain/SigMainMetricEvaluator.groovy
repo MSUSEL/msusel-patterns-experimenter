@@ -38,7 +38,7 @@ import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 
-abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateable {
+abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator implements Rateable {
 
     protected Map<RiskCategory, Double> profile = [:]
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
@@ -94,46 +94,8 @@ abstract class SigMainMetricEvaluator extends MetricEvaluator implements Rateabl
     protected abstract String getMetricName()
 
     Metric toMetric(MetricRepository repository) {
-        repo = repository
-        MetricDefinition mdef = this.getClass().getAnnotation(MetricDefinition.class)
-        String primaryHandle = mdef.primaryHandle()
-        String metricName = mdef.name()
-        String metricDescription = mdef.description()
-
-        Metric metricLow = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.LOW")
-        Metric metricMod = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.MOD")
-        Metric metricHigh = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.HIGH")
-        Metric metricVHigh = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.VHIGH")
-        Metric metricRating = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.RATING")
-        if (!metricLow) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "LOW")
-        }
-        if (!metricMod) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "MOD")
-        }
-        if (!metricHigh) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "HIGH")
-        }
-        if (!metricVHigh) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "VHIGH")
-        }
-        if (!metricRating) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "RATING")
-        }
+        this.toMetric(repository, ["LOW", "MOD", "HIGH", "VHIGH", "RATING"])
 
         null
-    }
-
-    private Metric createMetric(MetricRepository repository, String primaryHandle, String metricName, String metricDescription, String postName) {
-        Metric metric = Metric.builder()
-                .key("${repository.getRepoKey()}:${primaryHandle}.${postName}")
-                .handle("${primaryHandle}.${postName}")
-                .name("${metricName}.${postName}")
-                .description(metricDescription)
-                .evaluator(this.class.getCanonicalName())
-                .create()
-        repository.addMetric(metric)
-
-        metric
     }
 }

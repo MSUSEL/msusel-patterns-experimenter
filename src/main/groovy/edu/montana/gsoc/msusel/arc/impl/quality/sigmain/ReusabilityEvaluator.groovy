@@ -60,8 +60,8 @@ class ReusabilityEvaluator extends MetricEvaluator {
     @Override
     def measure(Measurable node) {
         if (node instanceof Project) {
-            double unitSize        = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitSize", node)
-            double unitInterfacing = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitInterfacing", node)
+            double unitSize        = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitSize.RATING", node)
+            double unitInterfacing = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitInterfacing.RATING", node)
 
             def factors = [
                     [0.5, unitSize],

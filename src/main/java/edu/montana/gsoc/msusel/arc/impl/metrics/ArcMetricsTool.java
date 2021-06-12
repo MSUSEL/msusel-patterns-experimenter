@@ -108,7 +108,7 @@ public class ArcMetricsTool {
             streamAndMeasureTypes(ns, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Projects using " + mdef.primaryHandle());
+                log.info("Measuring Namespaces using " + mdef.primaryHandle());
                 metricEvaluator.measure(ns);
             });
         });
@@ -118,7 +118,7 @@ public class ArcMetricsTool {
         project.getModules().forEach(mod -> {
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring " + mdef.primaryHandle());
+                log.info("Measuring Modules using " + mdef.primaryHandle());
                 metricEvaluator.measure(mod);
             });
         });
@@ -130,7 +130,7 @@ public class ArcMetricsTool {
         streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-            log.info("Measuring " + mdef.primaryHandle());
+            log.info("Measuring Projects using " + mdef.primaryHandle());
             metricEvaluator.measure(proj);
         });
     }

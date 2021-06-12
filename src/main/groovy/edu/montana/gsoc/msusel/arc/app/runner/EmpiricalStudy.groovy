@@ -55,6 +55,10 @@ abstract class EmpiricalStudy {
     String description
     List<WorkFlow> phases
 
+    List<String> keyHeaders
+    List<String> headers
+    String identifier
+
     EmpiricalStudy(String name, String description, ArcContext context, StudyConfigReader configReader) {
         this.name = name
         this.description = description
@@ -98,7 +102,7 @@ abstract class EmpiricalStudy {
     void extractResults() {
         log.info("Collecting Experimental Results")
         start = System.currentTimeMillis()
-        resEx.initialize(ReportingLevel.PROJECT, runnerConfig.measures, context)
+        resEx.initialize(ReportingLevel.PROJECT, keyHeaders, runnerConfig.measures, context)
         resEx.extractResults(results)
         log.info("Finished Collecting Experimental Results")
         end = System.currentTimeMillis()
@@ -107,8 +111,7 @@ abstract class EmpiricalStudy {
 
     void updateStatus() {
         log.info(TimePrinter.print(end - start))
-        resWrite.initialize(runnerConfig.measures, runnerConfig.results_file, context)
-        resWrite.writeResults(results)
+        writeResults()
         writeStatus(status++)
     }
 
@@ -148,8 +151,13 @@ abstract class EmpiricalStudy {
     }
 
     private void readResults() {
-        resReader.initialize(runnerConfig.measures, runnerConfig.results_file)
+        resReader.initialize(identifier, headers, runnerConfig.measures, runnerConfig.results_file, context)
         results = resReader.readResults()
+    }
+
+    private void writeResults() {
+        resWrite.initialize(headers, runnerConfig.measures, runnerConfig.results_file, context)
+        resWrite.writeResults(results)
     }
 
     def executePhase(WorkFlow phase) {

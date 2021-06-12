@@ -56,9 +56,9 @@ class AnalyzabilityEvaluator extends MetricEvaluator {
     def measure(Measurable node) {
         if (node instanceof Project) {
             double volume      = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigVolume", node)
-            double duplication = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication", node)
-            double unitSize    = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitSize", node)
-            double compBalance = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentBalance", node)
+            double duplication = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication.RATING", node)
+            double unitSize    = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitSize.RATING", node)
+            double compBalance = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentBalance.RATING", node)
 
             def factors = [
                     [0.25, volume],

@@ -51,6 +51,10 @@ class ExperimentRunner extends EmpiricalStudy {
                 new ExperimentPhaseOneInjected(context),
                 new ExperimentPhaseTwo(context)
         ]
+
+        this.headers = ExperimentConstants.HEADERS
+        this.keyHeaders = [ExperimentConstants.Key1, ExperimentConstants.Key2]
+        this.identifier = ExperimentConstants.ID
     }
 
     def static getConfigHeaders() {

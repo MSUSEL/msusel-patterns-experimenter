@@ -30,6 +30,7 @@ package edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import groovy.util.logging.Log4j2
 
 /**
@@ -50,13 +51,16 @@ class SigCalibrationRunner extends EmpiricalStudy {
                 new SigCalibrationPhaseTwo(context),
                 new SigCalibrationPhaseThree(context),
         ]
+
+        this.headers = SigCalibrateConstants.HEADERS
+        this.keyHeaders = [SigCalibrateConstants.KEY]
+        this.identifier = SigCalibrateConstants.ID
     }
 
     def static getConfigHeaders() {
         return [
-                SigCalibrateConstants.Project,
-                SigCalibrateConstants.Version,
-                SigCalibrateConstants.Location
+                SigCalibrateConstants.KEY,
+                SigCalibrateConstants.LOCATION
         ]
     }
 

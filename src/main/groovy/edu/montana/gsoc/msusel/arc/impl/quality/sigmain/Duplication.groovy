@@ -60,7 +60,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
         ),
         references = []
 )
-class Duplication extends MetricEvaluator {
+class Duplication extends SigAbstractMetricEvaluator {
 
     @Override
     def measure(Measurable node) {
@@ -148,33 +148,9 @@ class Duplication extends MetricEvaluator {
         return lines.join("\n")
     }
 
-    @Override
     Metric toMetric(MetricRepository repository) {
-        repo = repository
-        MetricDefinition mdef = this.getClass().getAnnotation(MetricDefinition.class)
-        String primaryHandle = mdef.primaryHandle()
-        String metricName = mdef.name()
-        String metricDescription = mdef.description()
+        this.toMetric(repository, ["RAW", "RATING"])
 
-        Metric metricRaw = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.RAW")
-        Metric metricRating = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.RATING")
-        if (!metricRaw) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "RAW")
-        }
-        if (!metricRating) {
-            createMetric(repository, primaryHandle, metricName, metricDescription, "RATING")
-        }
         null
-    }
-
-    private Metric createMetric(MetricRepository repository, String primaryHandle, String metricName, String metricDescription, String postName) {
-        Metric metric = Metric.builder()
-                .key("${repository.getRepoKey()}:${primaryHandle}.${postName}")
-                .handle("${primaryHandle}.${postName}")
-                .name("${metricName}.${postName}")
-                .description(metricDescription)
-                .evaluator(this.class.getCanonicalName())
-                .create()
-        repository.addMetric(metric)
     }
 }

@@ -56,7 +56,7 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
 
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-            log.info("Metric: " + mdef.name());
+            log.info("Measuring project with: " + mdef.primaryHandle());
             metricEvaluator.measure(context.getProject());
         });
         context.close();
@@ -67,6 +67,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
         type.getMethods().forEach(method -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring method with: " + mdef.primaryHandle());
                 metricEvaluator.measure(method);
             });
         });
@@ -76,6 +78,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
         ns.getAllTypes().forEach(type -> {
             streamAndMeasureMethods(type, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring type with: " + mdef.primaryHandle());
                 metricEvaluator.measure(type);
             });
         });
@@ -84,6 +88,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
         proj.getFiles().forEach(file -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring file with: " + mdef.primaryHandle());
                 metricEvaluator.measure(file);
             });
         });
@@ -93,6 +99,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
         proj.getNamespaces().forEach(ns -> {
             streamAndMeasureTypes(ns, evaluatorList);
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring namespace with: " + mdef.primaryHandle());
                 metricEvaluator.measure(ns);
             });
         });
@@ -101,6 +109,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
         project.getModules().forEach(mod -> {
             evaluatorList.forEach(metricEvaluator -> {
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+                log.info("Measuring module with: " + mdef.primaryHandle());
                 metricEvaluator.measure(mod);
             });
         });
@@ -111,6 +121,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
         streamAndMeasureFiles(proj, evaluatorList);
         streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
+            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
+            log.info("Measuring project with: " + mdef.primaryHandle());
             metricEvaluator.measure(proj);
         });
     }

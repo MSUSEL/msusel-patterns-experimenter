@@ -29,7 +29,7 @@ package edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate
 interface SigCalibrateConstants {
 
     String ID = "Identifier"
-    String Project = "Project"
-    String Version = "Version"
-    String Location = "Location"
+    String KEY = "Key"
+    String LOCATION = "Location"
+    String[] HEADERS = [ID, KEY, LOCATION]
 }

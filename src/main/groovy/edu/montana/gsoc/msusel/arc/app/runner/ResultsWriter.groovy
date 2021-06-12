@@ -28,7 +28,6 @@ package edu.montana.gsoc.msusel.arc.app.runner
 
 import com.google.common.collect.Table
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import groovy.util.logging.Log4j2
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVPrinter
@@ -40,22 +39,25 @@ import org.apache.commons.csv.CSVPrinter
 @Log4j2
 class ResultsWriter {
 
-    String[] MEASURES = []
+    String[] headers = []
+    String[] measures = []
     String file
     ArcContext context
 
-    void initialize(List<String> measures, String file, ArcContext context) {
-        this.MEASURES = measures
+    void initialize(List<String> headers, List<String> measures, String file, ArcContext context) {
+        this.headers = headers
+        this.measures = measures
         this.file = file
         this.context = context
     }
 
     void writeResults(Table<String, String, String> table) {
+        combineHeadersAndMeasures()
+        produceResults(table)
+    }
+
+    void produceResults(Table<String, String, String> table) {
         FileWriter out = new FileWriter(file)
-        String[] headers = ExperimentConstants.HEADERS
-        MEASURES.each {
-            headers += it.split(":")[1]
-        }
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(headers))) {
             table.rowKeySet().each {id ->
                 Map<String, String> row = table.row(id)
@@ -70,6 +72,13 @@ class ResultsWriter {
                 rowValues.add(0, id.toString())
                 printer.printRecord(rowValues)
             }
+        }
+    }
+
+    void combineHeadersAndMeasures() {
+//        headers = ExperimentConstants.HEADERS
+        measures.each {
+            headers += it.split(":")[1]
         }
     }
 }

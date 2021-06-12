@@ -60,10 +60,10 @@ class ModularityEvaluator extends MetricEvaluator {
     @Override
     def measure(Measurable node) {
         if (node instanceof Project) {
-            double moduleCoupling   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModuleCoupling", node)
-            double compBalance      = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentBalance", node)
-            double compIndependence = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentIndependence", node)
-            double compEntanglement = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentEntanglement", node)
+            double moduleCoupling   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModuleCoupling.RATING", node)
+            double compBalance      = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentBalance.RATING", node)
+            double compIndependence = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentIndependence.RATING", node)
+            double compEntanglement = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentEntanglement.RATING", node)
 
             def factors = [
                     [0.25, moduleCoupling],

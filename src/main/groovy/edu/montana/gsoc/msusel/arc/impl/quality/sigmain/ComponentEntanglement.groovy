@@ -93,47 +93,52 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                 .allowsSelfLoops(false)
                 .build()
         proj.getNamespaces().each { ns ->
-            Node node = GraphElementFactory.getInstance().createNode(ns)
-            nsMap.put(ns, node)
-            graph.addNode(node)
+            if (!ns.getName().isEmpty()) {
+                Node node = GraphElementFactory.getInstance().createNode(ns)
+                nsMap.put(ns, node)
+                graph.addNode(node)
+            }
         }
 
         proj.getNamespaces().each { ns ->
             Node nsNode = nsMap.get(ns)
             Set<Type> incoming = Sets.newHashSet()
             Set<Type> outgoing = Sets.newHashSet()
-            ns.getAllTypes().each { type ->
-                // incoming
-                Set<Type> set = Sets.newHashSet()
 
-                set += type.getRealizedBy()
-                set += type.getGeneralizes()
-                set += type.getUseFrom()
-                set += type.getAssociatedFrom()
-                set += type.getAggregatedFrom()
-                set += type.getComposedFrom()
+            if (!ns.getName().isEmpty()) {
+                ns.getAllTypes().each { type ->
+                    // incoming
+                    Set<Type> set = Sets.newHashSet()
 
-                set.removeIf { Type t ->
-                    t.getParentNamespace() == ns
+                    set += type.getRealizedBy()
+                    set += type.getGeneralizes()
+                    set += type.getUseFrom()
+                    set += type.getAssociatedFrom()
+                    set += type.getAggregatedFrom()
+                    set += type.getComposedFrom()
+
+                    set.removeIf { Type t ->
+                        t.getParentNamespace() == ns
+                    }
+
+                    incoming += set
+
+                    // outgoing
+                    set.clear()
+
+                    set += type.getRealizes()
+                    set += type.getGeneralizedBy()
+                    set += type.getUseTo()
+                    set += type.getAssociatedTo()
+                    set += type.getAggregatedTo()
+                    set += type.getComposedTo()
+
+                    set.removeIf { Type t ->
+                        t.getParentNamespace() == ns
+                    }
+
+                    outgoing += set
                 }
-
-                incoming += set
-
-                // outgoing
-                set.clear()
-
-                set += type.getRealizes()
-                set += type.getGeneralizedBy()
-                set += type.getUseTo()
-                set += type.getAssociatedTo()
-                set += type.getAggregatedTo()
-                set += type.getComposedTo()
-
-                set.removeIf { Type t ->
-                    t.getParentNamespace() == ns
-                }
-
-                outgoing += set
             }
 
             Set<Namespace> inNs = Sets.newHashSet()
@@ -148,12 +153,12 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
             inNs.each {
                 Node other = nsMap.get(it)
-                if (!graph.hasEdgeConnecting(nsNode, other))
+                if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
                     graph.addEdge(nsNode, other, new NamespaceRelation())
             }
             outNs.each {
                 Node other = nsMap.get(it)
-                if (!graph.hasEdgeConnecting(other, nsNode))
+                if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
                     graph.addEdge(other, nsNode, new NamespaceRelation())
             }
         }

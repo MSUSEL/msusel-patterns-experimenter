@@ -44,9 +44,11 @@ class ResultsExtractor {
     List<String> measures = []
     ReportingLevel level
     ArcContext context
+    List<String> keyHeaders = []
 
-    void initialize(ReportingLevel level, List<String> measures, ArcContext context) {
+    void initialize(ReportingLevel level, List<String> keyHeaders, List<String> measures, ArcContext context) {
         this.level = level
+        this.keyHeaders = keyHeaders
         this.measures = measures
         this.context = context
     }
@@ -66,22 +68,30 @@ class ResultsExtractor {
 
     void extractSystemResults(Table<String, String, String> values) {
         values.rowKeySet().each {id ->
-            String key1 = values.get(id, ExperimentConstants.Key1)
-            String key2 = values.get(id, ExperimentConstants.Key2)
-            System sys1 = System.findFirst("key = ?", key1)
-            System sys2 = System.findFirst("key = ?", key2)
-            log.info "Severity: ${values.get(id, ExperimentConstants.GrimeSeverity)}"
-            log.info "Key1: $key1"
-            log.info "Key2: $key2"
-            measures.each {
-                log.info "Measure: $it"
-                double val1 = sys1.getMeasureValueByName(it)
-                double val2 = sys2.getMeasureValueByName(it)
-                log.info "Value1: $val1"
-                log.info "Value2: $val2"
-                double diff = val2 - val1
-                log.info "Diff: $diff"
-                String name = it.split(/:/)[1]
+            List<String> keys = []
+            keyHeaders.each {
+                keys << values.get(id, it)
+            }
+
+            List<System> systems = []
+            keys.each {
+                systems << (System) System.findFirst("key = ?", it)
+            }
+
+            measures.each {measure ->
+                log.info "Measure: $measure"
+                List<Double> vals = []
+                systems.each { sys ->
+                    vals << (sys as System).getMeasureValueByName(measure)
+                }
+
+                double diff = vals[-1]
+                if (vals.size() > 1) {
+                    for (int i = vals.size() - 2; i >= 0; i--)
+                        diff -= vals[i]
+                }
+
+                String name = measure.split(/:/)[1]
                 values.put(id, name, "$diff")
             }
         }
@@ -89,22 +99,30 @@ class ResultsExtractor {
 
     void extractProjectResults(Table<String, String, String> values) {
         values.rowKeySet().each {id ->
-            String key1 = values.get(id, ExperimentConstants.Key1)
-            String key2 = values.get(id, ExperimentConstants.Key2)
-            Project sys1 = Project.findFirst("projKey = ?", key1)
-            Project sys2 = Project.findFirst("projKey = ?", key2)
-            log.info "Severity: ${values.get(id, ExperimentConstants.GrimeSeverity)}"
-            log.info "Key1: $key1"
-            log.info "Key2: $key2"
-            measures.each {
-                log.info "Measure: $it"
-                double val1 = sys1.getMeasureValueByName(it)
-                double val2 = sys2.getMeasureValueByName(it)
-                log.info "Value1: $val1"
-                log.info "Value2: $val2"
-                double diff = val2 - val1
-                log.info "Diff: $diff"
-                String name = it.split(/:/)[1]
+            List<String> keys = []
+            keyHeaders.each {
+                keys << values.get(id, it)
+            }
+
+            List<Project> projects = []
+            keys.each {
+                projects << (Project) Project.findFirst("projKey = ?", it)
+            }
+
+            measures.each {measure ->
+                log.info "Measure: $measure"
+                List<Double> vals = []
+                projects.each { proj ->
+                    vals << (proj as Project).getMeasureValueByName(measure)
+                }
+
+                double diff = vals[-1]
+                if (vals.size() > 1) {
+                    for (int i = vals.size() - 2; i >= 0; i--)
+                        diff -= vals[i]
+                }
+
+                String name = measure.split(/:/)[1]
                 values.put(id, name, "$diff")
             }
         }

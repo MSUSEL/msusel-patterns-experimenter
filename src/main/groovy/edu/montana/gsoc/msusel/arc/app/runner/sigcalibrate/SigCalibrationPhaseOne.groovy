@@ -56,16 +56,20 @@ class SigCalibrationPhaseOne extends WorkFlow {
         results.rowKeySet().each {id ->
             println("ID: $id")
             def map = results.row(id)
+            String key = map[SigCalibrateConstants.KEY]
+            String sysName = key.split(/:/)[0]
+            String projName = key.split(/:/)[1]
+            String projVersion = projName.split(/-/)[1]
             System sys = System.builder()
-                    .name(map[SigCalibrateConstants.Project])
-                    .key(map[SigCalibrateConstants.Project])
-                    .basePath(map[SigCalibrateConstants.Location])
+                    .name(sysName)
+                    .key(sysName)
+                    .basePath(map[SigCalibrateConstants.LOCATION])
                     .create()
             Project proj = Project.builder()
-                    .name("${map[SigCalibrateConstants.Project]}-${map[SigCalibrateConstants.Version]}")
-                    .projKey("${map[SigCalibrateConstants.Project]}:${map[SigCalibrateConstants.Project]}-${map[SigCalibrateConstants.Version]}")
-                    .relPath(map[SigCalibrateConstants.Version])
-                    .version(map[SigCalibrateConstants.Version])
+                    .name(projName)
+                    .projKey(key)
+                    .relPath(projVersion)
+                    .version(projVersion)
                     .create()
             sys.addProject(proj)
         }

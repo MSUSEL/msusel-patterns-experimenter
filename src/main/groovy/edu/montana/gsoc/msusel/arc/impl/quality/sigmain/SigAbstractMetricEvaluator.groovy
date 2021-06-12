@@ -26,23 +26,38 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
+import edu.isu.isuese.datamodel.Metric
 import edu.isu.isuese.datamodel.MetricRepository
-import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.provider.AbstractRepoProvider
+import edu.montana.gsoc.msusel.metrics.MetricEvaluator
+import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 
-class SigCalibrationRepoProvider extends AbstractRepoProvider {
+abstract class SigAbstractMetricEvaluator extends MetricEvaluator {
 
-    SigCalibrationRepoProvider(ArcContext context) {
-        super(context)
+    void toMetric(MetricRepository repository, List<String> levels) {
+        repo = repository
+        MetricDefinition mdef = this.getClass().getAnnotation(MetricDefinition.class)
+        String primaryHandle = mdef.primaryHandle()
+        String metricName = mdef.name()
+        String metricDescription = mdef.description()
+
+        levels.each {
+            Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.${it}")
+            if (!metric) {
+                createMetric(repository, primaryHandle, metricName, metricDescription, it)
+            }
+        }
     }
 
-    @Override
-    void loadData() {}
+    Metric createMetric(MetricRepository repository, String primaryHandle, String metricName, String metricDescription, String postName) {
+        Metric metric = Metric.builder()
+                .key("${repository.getRepoKey()}:${primaryHandle}.${postName}")
+                .handle("${primaryHandle}.${postName}")
+                .name("${metricName}.${postName}")
+                .description(metricDescription)
+                .evaluator(this.class.getCanonicalName())
+                .create()
+        repository.addMetric(metric)
 
-    @Override
-    void updateDatabase() {
-        context.open()
-        MetricRepository.findOrCreateIt("repoKey", SigMainConstants.SIGCAL_REPO_KEY, "name", SigMainConstants.SIGCAL_REPO_NAME, "toolName", SigMainConstants.SIGCAL_TOOL_NAME);
-        context.close()
+        metric
     }
 }
