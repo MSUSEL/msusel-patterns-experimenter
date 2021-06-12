@@ -26,10 +26,7 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics;
 
-import edu.isu.isuese.datamodel.Measure;
-import edu.isu.isuese.datamodel.Namespace;
-import edu.isu.isuese.datamodel.Project;
-import edu.isu.isuese.datamodel.Type;
+import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator;
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar;
@@ -94,7 +91,7 @@ public class ArcMetricsTool {
     }
 
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
-        proj.getFiles().forEach(file -> {
+        proj.getFilesByType(FileType.SOURCE).forEach(file -> {
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
                 log.info("Measuring Files using " + mdef.primaryHandle());
