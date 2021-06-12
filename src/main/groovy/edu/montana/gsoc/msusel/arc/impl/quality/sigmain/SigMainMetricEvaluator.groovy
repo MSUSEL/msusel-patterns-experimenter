@@ -28,21 +28,14 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
-import edu.isu.isuese.datamodel.Component
-import edu.isu.isuese.datamodel.Measurable
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Metric
-import edu.isu.isuese.datamodel.MetricRepository
-import edu.isu.isuese.datamodel.Project
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
-import edu.montana.gsoc.msusel.metrics.MetricEvaluator
-import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
+import edu.isu.isuese.datamodel.*
+import org.apache.commons.lang3.tuple.Pair
 
 abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator implements Rateable {
 
     protected Map<RiskCategory, Double> profile = [:]
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
-    protected Map<RiskCategory, Range<Double>> riskMap = [:]
+    protected Map<RiskCategory, Pair<Double, Double>> riskMap = [:]
 
     def measure(Measurable node) {
         if (node instanceof Project) {
@@ -54,13 +47,16 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
 
             evaluate(proj)
 
-            double sysSize = Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", node)
+            println "Profiles"
+            println profile
+
+            double sysSize = profile.values().sum()
             normalize(sysSize)
 
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.LOW").on(node).withValue(profile[RiskCategory.LOW])
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.MOD").on(node).withValue(profile[RiskCategory.MODERATE])
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.HIGH").on(node).withValue(profile[RiskCategory.HIGH])
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.VHIGH").on(node).withValue(profile[RiskCategory.VERY_HIGH])
+            Measure.of("${repo.getRepoKey()}:${getMetricName()}.LOW").on(node).withValue(profile[RiskCategory.LOW])
+            Measure.of("${repo.getRepoKey()}:${getMetricName()}.MOD").on(node).withValue(profile[RiskCategory.MODERATE])
+            Measure.of("${repo.getRepoKey()}:${getMetricName()}.HIGH").on(node).withValue(profile[RiskCategory.HIGH])
+            Measure.of("${repo.getRepoKey()}:${getMetricName()}.VHIGH").on(node).withValue(profile[RiskCategory.VERY_HIGH])
         }
     }
 
@@ -74,17 +70,23 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     }
 
     void categorize(Component comp, String handle) {
-        double size = Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", comp)
-        double value = Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, handle, comp)
+        double size = comp.getValueFor("${repo.getRepoKey()}:SLOC")
+        double value = comp.getValueFor("${repo.getRepoKey()}:${handle}")
+
+        boolean found = false
+
+        println "Value: $value"
 
         riskMap.each {cat, range ->
-            if (range.containsWithinBounds(value)) {
+            if (value >= range.left && value <= range.right && !found) {
+                println "Range found: $cat"
                 profile[cat] += size
-                return
+                found = true
             }
         }
 
-        profile[RiskCategory.VERY_HIGH] += size
+        if (!found)
+            profile[RiskCategory.VERY_HIGH] += size
     }
 
     MetricRater getMetricRater() {

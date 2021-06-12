@@ -85,9 +85,9 @@ class Duplication extends SigAbstractMetricEvaluator {
                 }
             }
 
-            double sysSize = Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", node)
+            double sysSize = node.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
 
-            double dupPercent = dupLines / sysSize * 100
+            double dupPercent = (1 - (dupLines / sysSize)) * 100
 
             Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:sigDuplication.RAW").on(node).withValue(dupPercent)
         }

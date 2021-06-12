@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
 import edu.montana.gsoc.msusel.metrics.annotations.MetricType
+import org.apache.commons.lang3.tuple.Pair
 
 /**
  * @author Isaac Griffith
@@ -55,9 +56,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class UnitInterfacing extends SigMainMetricEvaluator {
 
     UnitInterfacing() {
-        riskMap[RiskCategory.LOW] = (0..3)
-        riskMap[RiskCategory.MODERATE] = (3..5)
-        riskMap[RiskCategory.HIGH] = (5..7)
+        riskMap[RiskCategory.LOW] = Pair.of(0.0, 3.0)
+        riskMap[RiskCategory.MODERATE] = Pair.of(3.0, 5.0)
+        riskMap[RiskCategory.HIGH] = Pair.of(5.0, 7.0)
     }
 
     def evaluate(Project proj) {

@@ -63,7 +63,7 @@ class Volume extends SigAbstractMetricEvaluator implements Rateable {
     @Override
     def measure(Measurable node) {
         if (node instanceof Project) {
-            double systemSize = Measure.valueFor(MetricsConstants.METRICS_REPO_NAME, "SLOC", node)
+            double systemSize = node.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
             double technologyFactor = 0.00136d
 
             double rebuildValue = systemSize * technologyFactor * 12

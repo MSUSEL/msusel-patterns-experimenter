@@ -27,12 +27,8 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import edu.isu.isuese.datamodel.Project
-import edu.montana.gsoc.msusel.metrics.annotations.MetricCategory
-import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
-import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
-import edu.montana.gsoc.msusel.metrics.annotations.MetricType
+import edu.montana.gsoc.msusel.metrics.annotations.*
+import org.apache.commons.lang3.tuple.Pair
 
 /**
  * @author Isaac Griffith
@@ -55,9 +51,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class ModuleCoupling extends SigMainMetricEvaluator {
 
     ModuleCoupling() {
-        riskMap[RiskCategory.LOW] = (0..10)
-        riskMap[RiskCategory.MODERATE] = (10..20)
-        riskMap[RiskCategory.HIGH] = (20..50)
+        riskMap[RiskCategory.LOW] = Pair.of(0.0, 10.0)
+        riskMap[RiskCategory.MODERATE] = Pair.of(10.0, 20.0)
+        riskMap[RiskCategory.HIGH] = Pair.of(20.0, 50.0)
     }
 
     def evaluate(Project proj) {

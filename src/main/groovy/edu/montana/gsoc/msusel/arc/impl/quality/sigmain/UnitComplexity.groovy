@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
 import edu.montana.gsoc.msusel.metrics.annotations.MetricType
+import org.apache.commons.lang3.tuple.Pair
 
 /**
  * @author Isaac Griffith
@@ -55,9 +56,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class UnitComplexity extends SigMainMetricEvaluator {
 
     UnitComplexity() {
-        riskMap[RiskCategory.LOW] = (1..10)
-        riskMap[RiskCategory.MODERATE] = (11..20)
-        riskMap[RiskCategory.HIGH] = (21..50)
+        riskMap[RiskCategory.LOW] = Pair.of(1.0, 10.0)
+        riskMap[RiskCategory.MODERATE] = Pair.of(11.0, 20.0)
+        riskMap[RiskCategory.HIGH] = Pair.of(21.0, 50.0)
     }
 
     def evaluate(Project proj) {
