@@ -117,8 +117,8 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     }
 
     private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList) {
-        streamAndMeasureNamespaces(proj, evaluatorList);
         streamAndMeasureFiles(proj, evaluatorList);
+        streamAndMeasureNamespaces(proj, evaluatorList);
         streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
