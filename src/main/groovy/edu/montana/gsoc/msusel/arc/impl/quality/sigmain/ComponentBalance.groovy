@@ -91,7 +91,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
     List<Double> createSizesList(Project proj) {
         List<Double> sizes = []
         proj.getNamespaces().each {
-            sizes << it.getValueFor("${repo.getRepoKey()}:SLOC")
+            sizes << it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
         }
 //        sizes.removeIf { it == null }
         sizes

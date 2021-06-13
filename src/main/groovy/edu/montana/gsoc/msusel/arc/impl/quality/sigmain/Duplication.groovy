@@ -27,6 +27,7 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
 /**
@@ -77,7 +78,7 @@ class Duplication extends SigAbstractMetricEvaluator {
 
             double dupPercent = dupLines / totalLines * 100
 
-            Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
+            Measure.of("${MetricsConstants.METRICS_REPO_NAME}:sigDuplication.RAW").on(node).withValue(dupPercent)
         }
     }
 

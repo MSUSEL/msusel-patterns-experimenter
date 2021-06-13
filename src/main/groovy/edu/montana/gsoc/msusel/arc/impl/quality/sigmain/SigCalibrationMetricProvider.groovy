@@ -74,10 +74,10 @@ class SigCalibrationMetricProvider extends AbstractMetricProvider {
 
     void registerMetrics() {
         // Base Metrics
-        registrar.registerPrimary(new SourceLinesOfCode())
-        registrar.registerPrimary(new CyclomaticComplexity())
-        registrar.registerPrimary(new AfferentCoupling())
-        registrar.registerPrimary(new NumberOfMethodParameters())
+//        registrar.registerPrimary(new SourceLinesOfCode())
+//        registrar.registerPrimary(new CyclomaticComplexity())
+//        registrar.registerPrimary(new AfferentCoupling())
+//        registrar.registerPrimary(new NumberOfMethodParameters())
 
         // Calibration metrics
         registrar.registerSecondary(new Volume())

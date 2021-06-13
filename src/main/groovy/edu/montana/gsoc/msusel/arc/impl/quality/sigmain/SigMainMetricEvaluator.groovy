@@ -29,6 +29,7 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import org.apache.commons.lang3.tuple.Pair
 
 abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator implements Rateable {
@@ -70,8 +71,8 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     }
 
     void categorize(Component comp, String handle) {
-        double size = comp.getValueFor("${repo.getRepoKey()}:SLOC")
-        double value = comp.getValueFor("${repo.getRepoKey()}:${handle}")
+        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+        double value = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:${handle}")
 
         boolean found = false
 

@@ -53,7 +53,7 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
         log.info("Starting Sig Maintainability Calibration Analysis");
 
         context.open();
-        streamAndMeasureProject(context.getProject(), provider.getRegistrar().getPrimaryEvaluators());
+//        streamAndMeasureProject(context.getProject(), provider.getRegistrar().getPrimaryEvaluators());
 
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
