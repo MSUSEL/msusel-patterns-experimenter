@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalanceTest.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentBalance.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentEntanglement.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentEntanglement.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentIndependence.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/ComponentIndependence.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Duplication.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/Duplication.groovy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/DuplicationTest.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain/DuplicationTest.groovy" afterDir="false" />
-    </list>
+    <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -349,7 +341,7 @@
       <workItem from="1623103379648" duration="2838000" />
       <workItem from="1623147436857" duration="1197000" />
       <workItem from="1623180820024" duration="19468000" />
-      <workItem from="1623357056664" duration="37842000" />
+      <workItem from="1623357056664" duration="38079000" />
     </task>
     <servers />
   </component>
