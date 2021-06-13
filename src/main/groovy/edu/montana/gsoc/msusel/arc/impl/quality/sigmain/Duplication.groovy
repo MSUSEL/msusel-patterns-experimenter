@@ -26,21 +26,8 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
-import edu.isu.isuese.datamodel.File
-import edu.isu.isuese.datamodel.FileType
-import edu.isu.isuese.datamodel.Measurable
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Metric
-import edu.isu.isuese.datamodel.MetricRepository
-import edu.isu.isuese.datamodel.Project
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
-import edu.montana.gsoc.msusel.metrics.MetricEvaluator
-import edu.montana.gsoc.msusel.metrics.annotations.MetricCategory
-import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
-import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
-import edu.montana.gsoc.msusel.metrics.annotations.MetricType
+import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.metrics.annotations.*
 
 /**
  * @author Isaac Griffith
@@ -62,9 +49,12 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 )
 class Duplication extends SigAbstractMetricEvaluator {
 
+    int totalLines
+
     @Override
     def measure(Measurable node) {
         if (node instanceof Project) {
+            totalLines = 0
             Project proj = node as Project
 
             List<File> srcFiles = proj.getFilesByType(FileType.SOURCE)
@@ -85,9 +75,7 @@ class Duplication extends SigAbstractMetricEvaluator {
                 }
             }
 
-            double sysSize = node.getValueFor("${repo.getRepoKey()}:SLOC")
-
-            double dupPercent = dupLines / sysSize * 100
+            double dupPercent = dupLines / totalLines * 100
 
             Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
         }
@@ -96,15 +84,35 @@ class Duplication extends SigAbstractMetricEvaluator {
     double scanSelf(File file) {
         java.io.File f1 = new java.io.File(file.getFullPath())
 
-        String base = sanitize(f1.text)
-        String mod = new String(base)
+        int dup = 0
 
-        List<String> lines = base.split("\n")
-        int before = lines.size()
-        mod = processText(lines, mod)
-        int after = mod.split("\n").size()
+        List<Method> methods = file.getAllMethods()
+        for (int i = 0; i < methods.size(); i++) {
+            String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
+            totalLines += m1Text.split("\n").size()
 
-        return before - after
+            int before = m1Text.split("\n").size()
+            String mod = new String(m1Text)
+            mod = processText(m1Text.split("\n").toList(), mod)
+            int after = mod.split("\n").size()
+
+            dup += before - after
+
+            for (int j = 0; j < methods.size(); j++) {
+                if (i == j)
+                    continue
+
+                String m2Text = f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n")
+                before = m2Text.split("\n").size()
+                mod = new String(m2Text)
+                mod = processText(m2Text.split("\n").toList(), mod)
+                after = mod.split("\n").size()
+
+                dup += before - after
+            }
+        }
+
+        return dup
     }
 
     String processText(List<String> lines, String mod) {
@@ -113,10 +121,10 @@ class Duplication extends SigAbstractMetricEvaluator {
             String subText = lines.subList(i, i + 6).join("\n")
             mod = mod.replace(subText, "")
         }
-        if (i < lines.size()) {
-            String subText = lines.subList(i, lines.size()).join("\n")
-            mod = mod.replace(subText, "")
-        }
+//        if (i < lines.size()) {
+//            String subText = lines.subList(i, lines.size()).join("\n")
+//            mod = mod.replace(subText, "")
+//        }
         sanitize(mod)
     }
 
@@ -124,21 +132,30 @@ class Duplication extends SigAbstractMetricEvaluator {
         java.io.File f1 = new java.io.File(file1.getFullPath())
         java.io.File f2 = new java.io.File(file2.getFullPath())
 
-        String f1Text = sanitize(f1.text)
-        String f2Text = sanitize(f2.text)
+        int dup = 0
 
-        List<String> lines = f1Text.split("\n")
-        int before = f2Text.split("\n").size()
-        f2Text = processText(lines, f2Text)
-        f2Text = sanitize(f2Text)
-        int after = f2Text.split("\n").size()
+        List<Method> methods = file1.getAllMethods()
+        List<Method> other = file2.getAllMethods()
+        methods.each {m1 ->
+            String m1Text = sanitize(f1.text.split("\n").toList().subList(m1.getStart(), m1.getEnd()).join("\n"))
 
-        return before - after
+            other.each { m2 ->
+                String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
+                int before = m2Text.split("\n").size()
+                String mod = processText(m1Text.split("\n").toList(), m2Text)
+                int after = mod.split("\n").size()
+
+                dup += before - after
+            }
+        }
+
+        return dup
     }
 
     String sanitize(String text) {
         text = text.replaceAll(/(?ms)\/\*.*?\*\\//, "")
         text = text.replaceAll(/\/\/.*/,"")
+        text = text.replaceAll(/(?ms)^.*?\{/, "")
         List<String> lines = text.split("\n")
         for (int i = 0; i < lines.size(); i++)
             lines[i] = lines[i].trim()

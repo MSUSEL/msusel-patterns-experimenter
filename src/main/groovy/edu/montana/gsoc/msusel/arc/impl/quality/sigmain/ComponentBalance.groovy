@@ -60,7 +60,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         Collections.sort(sizes)
 
         double giniCoefficient
-        if (sizes.size() == 1) {
+        if (sizes.size() - 1 == 1) {
             giniCoefficient = 0.0
         } else {
             giniCoefficient = detemineGiniCoefficient(sizes)
@@ -74,7 +74,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         "sigComponentBalance"
     }
 
-    private double detemineGiniCoefficient(List<Double> sizes) {
+    double detemineGiniCoefficient(List<Double> sizes) {
         int numPartitions
         int partitionSize
         (numPartitions, partitionSize) = createPartitions(sizes)
@@ -88,7 +88,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         calculateGiniCoef(cummulative, frequencies)
     }
 
-    private List<Double> createSizesList(Project proj) {
+    List<Double> createSizesList(Project proj) {
         List<Double> sizes = []
         proj.getNamespaces().each {
             sizes << it.getValueFor("${repo.getRepoKey()}:SLOC")
@@ -97,7 +97,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         sizes
     }
 
-    private List createPartitions(List<Double> sizes) {
+    List createPartitions(List<Double> sizes) {
         int partitionSize, numPartitions
         if (sizes.size() <= 5) {
             numPartitions = sizes.size()
@@ -109,10 +109,15 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         [numPartitions, partitionSize]
     }
 
-    private List<Double> calculatePartitionTotals(int numPartitions, List<Double> sizes, int partitionSize) {
+    List<Double> calculatePartitionTotals(int numPartitions, List<Double> sizes, int partitionSize) {
         int currentPartition = 0
         int subIndex = 0
         List<Double> totals = []
+
+        int fullSize = numPartitions * partitionSize
+        int oneLess = fullSize - (sizes.size() % fullSize)
+        int fullPartitions = numPartitions - oneLess
+
         numPartitions.times {
             totals << 0.0
         }
@@ -123,30 +128,41 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
                 currentPartition++
                 subIndex = 0
             }
+            if (currentPartition == fullPartitions) {
+                partitionSize -= 1
+            }
         }
         totals
     }
 
-    private void buildFrequencyLists(List<Double> totals, List<Double> frequencies, double total, List<Double> cummulative) {
+    void buildFrequencyLists(List<Double> totals, List<Double> frequencies, double total, List<Double> cummulative) {
         double runningTotal = 0
+
+        totals.sort()
+
         totals.each {
             frequencies << it / total
             runningTotal += it
-            cummulative << runningTotal
+            cummulative << runningTotal / total
         }
     }
 
-    private double calculateGiniCoef(List<Double> cummulative, List<Double> frequencies) {
+    double calculateGiniCoef(List<Double> cummulative, List<Double> frequencies) {
         double rects = 0
         double tris = 0
-        for (int i = 0; i < cummulative.size() - 1; i++)
+
+        for (int i = 0; i < cummulative.size() - 1; i++) {
             rects += (1.0 / cummulative.size()) * cummulative[i]
-        for (int i = 0; i < frequencies.size(); i++)
+        }
+
+        for (int i = 0; i < frequencies.size(); i++) {
             tris += (1.0 / frequencies.size()) * frequencies[i] * 0.5
+        }
 
         double areaB = rects + tris
+
         double areaA = 0.5 - areaB
 
-        return areaA / 0.5
+        return areaA / (areaA + areaB)
     }
 }

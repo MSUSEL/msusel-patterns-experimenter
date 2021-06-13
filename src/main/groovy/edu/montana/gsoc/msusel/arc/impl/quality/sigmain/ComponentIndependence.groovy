@@ -81,7 +81,7 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         }
 
         double projSize = proj.getValueFor("${repo.getRepoKey()}:SLOC")
-        (hiddenSize / projSize) * 100
+        (hiddenSize / projSize)
     }
 
     @Override

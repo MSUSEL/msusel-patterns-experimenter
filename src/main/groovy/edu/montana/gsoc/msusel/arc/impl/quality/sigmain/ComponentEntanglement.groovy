@@ -72,12 +72,16 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         double commDensity = ((double) graph.nodes().size()) / graph.edges().size()
 
         // 3. calc communication violation ratio
-        GraphUtils.getInstance().markCycles(graph)
-        double numCyclic = graph.edges().findAll { it.cyclic }.size()
-        double commViolationRatio = numCyclic / graph.edges().size()
+        if (graph.edges().size() == 0) {
+            return 1.0
+        } else {
+            GraphUtils.getInstance().markCycles(graph)
+            double numCyclic = graph.edges().findAll { it.cyclic }.size()
+            double commViolationRatio = numCyclic / graph.edges().size()
 
-        // 4. calculate component entanglement
-        return commDensity * commViolationRatio
+            // 4. calculate component entanglement
+            return commDensity * commViolationRatio
+        }
     }
 
     @Override
