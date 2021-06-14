@@ -54,7 +54,6 @@ class SigCalibrationPhaseOne extends WorkFlow {
     void executeStudy() {
         context.open()
         results.rowKeySet().each {id ->
-            println("ID: $id")
             def map = results.row(id)
             String key = map[SigCalibrateConstants.KEY]
             String sysName = key.split(/:/)[0]

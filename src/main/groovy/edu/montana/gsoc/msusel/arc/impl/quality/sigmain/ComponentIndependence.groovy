@@ -73,14 +73,14 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
                     t.getParentNamespace() == ns
                 }
 
-                double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+                double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
                 if (set.isEmpty()) {
                     hiddenSize += size
                 }
             }
         }
 
-        double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+        double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
         (hiddenSize / projSize)
     }
 

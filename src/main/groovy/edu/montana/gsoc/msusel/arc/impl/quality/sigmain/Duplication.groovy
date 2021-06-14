@@ -30,6 +30,8 @@ import edu.isu.isuese.datamodel.*
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
+import java.nio.charset.MalformedInputException
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -78,7 +80,7 @@ class Duplication extends SigAbstractMetricEvaluator {
 
             double dupPercent = dupLines / totalLines * 100
 
-            Measure.of("${MetricsConstants.METRICS_REPO_NAME}:sigDuplication.RAW").on(node).withValue(dupPercent)
+            Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
         }
     }
 
@@ -92,27 +94,39 @@ class Duplication extends SigAbstractMetricEvaluator {
 
         List<Method> methods = file.getAllMethods()
         for (int i = 0; i < methods.size(); i++) {
-            String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
-            totalLines += m1Text.split("\n").size()
+            int before
+            int after
+            String mod
+            try {
+                String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
 
-            int before = m1Text.split("\n").size()
-            String mod = new String(m1Text)
-            mod = processText(m1Text.split("\n").toList(), mod)
-            int after = mod.split("\n").size()
+                totalLines += m1Text.split("\n").size()
 
-            dup += before - after
+                before = m1Text.split("\n").size()
+                mod = new String(m1Text)
+                mod = processText(m1Text.split("\n").toList(), mod)
+                after = mod.split("\n").size()
+
+                dup += before - after
+            } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
+                dup += 0
+            }
 
             for (int j = 0; j < methods.size(); j++) {
                 if (i == j)
                     continue
 
-                String m2Text = f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n")
-                before = m2Text.split("\n").size()
-                mod = new String(m2Text)
-                mod = processText(m2Text.split("\n").toList(), mod)
-                after = mod.split("\n").size()
+                try {
+                    String m2Text = f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n")
+                    before = m2Text.split("\n").size()
+                    mod = new String(m2Text)
+                    mod = processText(m2Text.split("\n").toList(), mod)
+                    after = mod.split("\n").size()
 
-                dup += before - after
+                    dup += before - after
+                } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
+                    dup += 0
+                }
             }
         }
 
@@ -143,16 +157,25 @@ class Duplication extends SigAbstractMetricEvaluator {
 
         List<Method> methods = file1.getAllMethods()
         List<Method> other = file2.getAllMethods()
-        methods.each {m1 ->
-            String m1Text = sanitize(f1.text.split("\n").toList().subList(m1.getStart(), m1.getEnd()).join("\n"))
 
-            other.each { m2 ->
-                String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
-                int before = m2Text.split("\n").size()
-                String mod = processText(m1Text.split("\n").toList(), m2Text)
-                int after = mod.split("\n").size()
+        methods.each { m1 ->
+            try {
+                String m1Text = sanitize(f1.text.split("\n").toList().subList(m1.getStart(), m1.getEnd()).join("\n"))
 
-                dup += before - after
+                other.each { m2 ->
+                    try {
+                        String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
+                        int before = m2Text.split("\n").size()
+                        String mod = processText(m1Text.split("\n").toList(), m2Text)
+                        int after = mod.split("\n").size()
+
+                        dup += before - after
+                    } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
+                        dup += 0
+                    }
+                }
+            } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
+                dup += 0
             }
         }
 
@@ -161,7 +184,7 @@ class Duplication extends SigAbstractMetricEvaluator {
 
     String sanitize(String text) {
         text = text.replaceAll(/(?ms)\/\*.*?\*\\//, "")
-        text = text.replaceAll(/\/\/.*/,"")
+        text = text.replaceAll(/\/\/.*/, "")
         text = text.replaceAll(/(?ms)^.*?\{/, "")
         List<String> lines = text.split("\n")
         for (int i = 0; i < lines.size(); i++)

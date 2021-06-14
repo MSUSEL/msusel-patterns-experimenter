@@ -63,7 +63,7 @@ class UnitSize extends SigMainMetricEvaluator {
 
     def evaluate(Project proj) {
         proj.getAllMethods().each {
-            categorize(it, "SLOC")
+            categorize(it, "LOC")
         }
     }
 

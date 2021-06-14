@@ -48,9 +48,6 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
 
             evaluate(proj)
 
-            println "Profiles"
-            println profile
-
             double sysSize = profile.values().sum()
             normalize(sysSize)
 
@@ -71,16 +68,13 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     }
 
     void categorize(Component comp, String handle) {
-        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
         double value = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:${handle}")
 
         boolean found = false
 
-        println "Value: $value"
-
         riskMap.each {cat, range ->
             if (value >= range.left && value <= range.right && !found) {
-                println "Range found: $cat"
                 profile[cat] += size
                 found = true
             }
