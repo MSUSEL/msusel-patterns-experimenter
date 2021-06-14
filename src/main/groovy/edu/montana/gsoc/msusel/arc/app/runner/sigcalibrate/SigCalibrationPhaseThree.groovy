@@ -75,7 +75,7 @@ class SigCalibrationPhaseThree extends WorkFlow {
     }
 
     void runTools() {
-        metrics.execute(context)
+//        metrics.execute(context)
         sigmain.execute(context)
     }
 }

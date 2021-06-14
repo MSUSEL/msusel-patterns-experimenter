@@ -85,6 +85,9 @@ class Duplication extends SigAbstractMetricEvaluator {
     double scanSelf(File file) {
         java.io.File f1 = new java.io.File(file.getFullPath())
 
+        if (!f1.exists())
+            return 0.0
+
         int dup = 0
 
         List<Method> methods = file.getAllMethods()
@@ -132,6 +135,9 @@ class Duplication extends SigAbstractMetricEvaluator {
     double scanOther(File file1, File file2) {
         java.io.File f1 = new java.io.File(file1.getFullPath())
         java.io.File f2 = new java.io.File(file2.getFullPath())
+
+        if (!f1.exists() || !f2.exists())
+            return 0.0
 
         int dup = 0
 
