@@ -1,0 +1,14 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+////File: ${paths.JspOutput}/upload/uploadFile.jsp
+<%@ include file="../inc/header.jsp" %>
+<%@ page import="com.finalist.entity.trips.Trips"%>
+<div class="exportlinks">&nbsp;<a href="index.jsp"><strong><bean:message key="entity.index"/></strong></a>
+</div>
+<form name="uploadFileForm" method="post" action="UploadFile.do" enctype="multipart/form-data">
+     Select File: <input type="file" name="myFile"><br>
+     <input type="submit" value="Upload">
+</form>
+<%@ include file="../inc/footer.jsp" %>
+#end
+#end

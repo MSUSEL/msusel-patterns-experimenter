@@ -1,0 +1,228 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+
+////File: ${paths.WebOutput}/${app.RootPath}/forms/${entityBean.Name}Form.java
+package ${app.RootPackage}.forms;
+
+import java.util.Collection;
+import java.util.ArrayList;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import ${sessionBean.RootPackage}.${sessionBean.Name}Service;
+import com.finalist.Constants;
+import ${sessionBean.RootPackage}.*;
+
+/**
+ * Form bean for the ${entityBean.Name.Lower} form page.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.11 $, $Date: 2005/07/20 18:20:32 $
+ * @struts.form name="${entityBean.Name.Desentensized}Form"
+#if (${config.templateSettings.serviceTier} == "Spring")
+ *
+ * @spring.bean name="/${entityBean.Name.Desentensized}Form"
+#end
+ */
+public final class ${entityBean.Name}Form extends ServiceBaseForm {
+   private String mode;
+#foreach($field in $entityBean.Fields)
+   private String ${field.Name.CrazyStruts};
+#end
+#foreach($relation in $entityBean.Relations)
+   private ${relation.RelatedEntity.Name}Form ${relation.FieldName}${relation.RelatedEntity.Name.Sentensized};
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+   private int listSize;
+   private Collection list;
+#end
+
+   /**
+    * Returns the value of the <code>mode</code> property.
+    *
+    * @return the value of the <code>mode</code> property.
+    */
+   public String getMode() {
+      return mode;
+   }
+
+   /**
+    * Sets the value of the <code>mode</code> property.
+    *
+    * @param mode the mode
+    */
+   public void setMode(String mode) {
+      this.mode = mode;
+   }
+
+#foreach($field in $entityBean.Fields)
+   /**
+    * Returns the value of the <code>${field.Name.CrazyStruts}</code> property.
+    *
+    * @return the value of the <code>${field.Name.CrazyStruts}</code> property.
+    */
+   public String get${field.Name.Sentensized}() {
+      return ${field.Name.CrazyStruts};
+   }
+
+   /**
+    * Sets the value of the <code>${field.Name.CrazyStruts}</code> property.
+    *
+    * @param ${field.Name.CrazyStruts} a value for <code>${field.Name.CrazyStruts}</code>.
+    */
+   public void set${field.Name.Sentensized}(String ${field.Name.CrazyStruts}) {
+      this.${field.Name.CrazyStruts} = ${field.Name.CrazyStruts};
+   }
+
+#end
+#foreach($relation in $entityBean.Relations)
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    */
+   public ${relation.RelatedEntity.Name}Form get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}() {
+      if (${relation.FieldName}${relation.RelatedEntity.Name.Sentensized} == null) {
+         ${relation.FieldName}${relation.RelatedEntity.Name.Sentensized} = new ${relation.RelatedEntity.Name}Form();
+      }
+      return ${relation.FieldName}${relation.RelatedEntity.Name.Sentensized};
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}Form ${relation.RelatedEntity.Name.Desentensized}) {
+      this.${relation.FieldName}${relation.RelatedEntity.Name.Sentensized} = ${relation.RelatedEntity.Name.Desentensized};
+   }
+
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+   /**
+    * Obtains the total number of ${entityBean.Name.Desentensized} objects.
+    *
+    * @throws Exception exception
+    * @return an integer value.
+    */
+   public int getListSize() throws Exception {
+      return listSize;
+   }
+   
+    /**
+    * Obtains the total number of ${entityBean.Name.Desentensized} objects.
+    *
+    * @throws Exception exception
+    * 
+    */
+   public void setListSize(int size) throws Exception {
+      this.listSize = size;
+   }
+
+   /**
+    * Obtains a collection of all ${entityBean.Name.Desentensized} objects.
+    *
+    * @throws Exception exception
+    * @return a collection of ${entityBean.Name}Data objects.
+    */
+   public Collection getList() throws Exception {
+      if (list.size() > 0) {
+        return list;
+      } else {
+        return new ArrayList();
+      }
+
+   }
+
+   public void setList(Collection list) throws Exception {
+      this.list = list;
+   }
+#end
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+   /**
+    * Obtains the total number of ${entityBean.Name.Desentensized} objects.
+    *
+    * @throws Exception exception
+    * @return an integer value.
+    */
+   public int getListSize() throws Exception {
+      return get${sessionBean.Name}Service().get${entityBean.Name}ListSize();
+   }
+
+   /**
+    * Obtains a collection of all ${entityBean.Name.Desentensized} objects.
+    *
+    * @throws Exception exception
+    * @return a collection of ${entityBean.Name}Data objects.
+    */
+   public Collection getList() throws Exception {
+      Collection result = get${sessionBean.Name}Service().get${entityBean.Name}List();
+      if (result.size() > 0) {
+        return result;
+      } else {
+        return new ArrayList();
+      }
+
+   }
+#end
+   /**
+    * Performs server-side validation on the properties that have been set from this HTTP request,
+    * and returns an <code>ActionErrors</code> object that encapsulates any
+    * validation errors that have been found.  If no errors are found, returns
+    * <code>null</code> or an <code>ActionErrors</code> object with no
+    * recorded error messages.
+    * <p>
+    * <b>NOTE:</b> Please override this method and not the ValidatorForm 'validate'
+    * method - any errors thrown in an overwritten 'validate' method will not be handled
+    * by the GenericExceptionHandling framework.
+    *
+    * @param mapping The mapping used to select this instance
+    * @param request The servlet request we are processing
+    * @return a list with errors or <code>null</code> iIf no errors are found
+    * @throws Exception - all exceptions are handled by the GenericExceptions framework
+    * (no stack trace dumps shown to the user!)
+    */
+   public ActionErrors doValidate(ActionMapping mapping, HttpServletRequest request) throws Exception {
+      boolean noValidate = (request.getParameter(Constants.SUBMIT_NO_VALIDATION) != null);
+      return noValidate ? null : super.doValidate(mapping, request);
+   }
+
+   /**
+    * Returns the string representation of the form.
+    *
+    * @return the string representation of the form
+    */
+   public String toString() {
+      StringBuffer sb = new StringBuffer();
+#foreach($field in $entityBean.NonRelationFields)
+      sb.append("\n${field.Name} : ").append(${field.Name.CrazyStruts});
+#end
+#foreach($relation in $entityBean.Relations)
+      sb.append("\n${relation.FieldName}${relation.RelatedEntity.Name.Sentensized} : ").append(${relation.FieldName}${relation.RelatedEntity.Name.Sentensized});
+#end
+      return sb.toString();
+   }
+}
+
+#end
+#end
+#end

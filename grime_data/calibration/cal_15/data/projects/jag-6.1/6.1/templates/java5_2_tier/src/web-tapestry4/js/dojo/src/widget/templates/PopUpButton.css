@@ -1,0 +1,61 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+.PopUpButton {
+	padding : 2px 6px 2px 9px;
+	border : 1px outset #ccc;
+	background : #f4f4f4;
+	color : #333;
+	text-decoration : none;
+}
+
+.PopUpButton .downArrow {
+	margin-left: 0.5em;
+	margin-bottom: 2px;
+}
+
+.downArrow.disabled {
+	background-image : url(images/dropdownButtonsArrow-disabled.gif);
+	cursor : default;
+}
+
+ul.dropdownButtons li a:hover,
+ul.dropdownButtons li span.downArrow:hover {
+	color : black;
+	background-color : #ddd;
+}
+
+ul.dropdownButtons li .downArrow.pressed, ul.dropdownButtons li .downArrow:focus {
+	border-style : inset;
+	background-position : 5px 10px;
+	padding : 2px 4px;
+}
+
+ul.dropdownButtons li a.disabled:hover,
+ul.dropdownButtons li span.downArrow.disabled:hover {
+	color : #999;
+	background-color : #f4f4f4;
+}

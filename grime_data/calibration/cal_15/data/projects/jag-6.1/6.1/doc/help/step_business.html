@@ -1,0 +1,61 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+   <link rel="stylesheet" href="help.css">
+</head>
+
+<h3>Creating business methods</h3>
+JAG can be used to model business methods as well. They can be added to Services. In the business methods you
+can model the business interfaces for which JAG will generate stub implementations.
+The Business methods can be exposed as WebServices as well.
+<p>
+Modeling business methods is actually quite simple:
+<p>
+To add a business method to a Service, first select Edit > Add > business method from the menu or click the
+<img align="middle" src="../../images/businessMethod.gif">&nbsp;business method button on the toolbar.
+
+<h4>Configuring a business method</h4>
+<img border="1" src="images/business-method-configuration.png"><br>
+The business method you initially create is blank - it has no method name, and contains no parameters.
+The business method can be configured through the configuration screen, shown above.
+Here is a description of the various input fields:
+<ul>
+<li><b>Return type:</b> the fully qualified name of the return type of the method.</li>
+<li><b>Method name:</b> the name of the business method.</li>
+<li><b>Description:</b> an optional natural-language description for this business method.</li>
+<li><b>Parameters:</b> the input parameters for the business method.</li>
+</ul>
+<img border="1" src="images/business-method.png"><br>
+The resulting business method is shown above. In this case a simple echo method has been created,
+with one input parameter and a java.lang.String return type.
+<p>
+<table width="100%"><tr><td align="center">Previous step: <a href="step_session.html">Creating services</a></td></tr></table>
+<table width="100%"><tr><td align="center">Next step: <a href="step_generate.html">Generating the application</a></td></tr></table>
+<a href="help.html">&lt;&lt;Start page</a>

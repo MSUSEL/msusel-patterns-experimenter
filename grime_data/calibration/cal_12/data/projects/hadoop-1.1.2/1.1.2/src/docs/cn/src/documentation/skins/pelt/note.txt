@@ -1,0 +1,77 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
+Notes for developer:
+
+--Legend-------------------
+TODO -> blocker
+DONE -> blocker
+ToDo -> enhancement bug
+done -> enhancement bug
+
+--Issues-------------------
+- the corner images should be rendered through svg with the header color.
+-> DONE 
+-> ToDo: get rid of the images and use only divs!
+
+- the menu points should be displayed "better". 
+-> DONE
+-- Use the krysalis-site menu approach for the overall menu display.
+-> DONE
+-- Use the old lenya innermenu approch to further enhance the menu .
+-> DONE
+
+- the content area needs some attention.
+-> DONE
+-- introduce the heading scheme from krysalis (<headings type="clean|box|underlined"/>)
+-> DONE 
+-> ToDo: make box with round corners
+-> done: make underlined with variable border height
+-> ToDo: make underline with bottom round corner
+-- introduce the toc for each html-page
+-> DONE
+-- introduce the external-link-images.
+-> DONE
+
+- the publish note should be where now only a border is. 
+Like <div id="published"/>
+-> DONE
+, but make it configurable.
+-> DONE
+- footer needs some attention
+-> DONE
+-- the footer do not have the color profile! Enable it!
+-> DONE
+-- the footer should as well contain a feedback link. 
+See http://issues.apache.org/eyebrowse/ReadMsg?listName=forrest-user@xml.apache.org&msgNo=71
+-> DONE
+
+- introduce credits alternativ location
+-> DONE
+
+- border for published / breadtrail / menu /tab divs 
+-> ToDo

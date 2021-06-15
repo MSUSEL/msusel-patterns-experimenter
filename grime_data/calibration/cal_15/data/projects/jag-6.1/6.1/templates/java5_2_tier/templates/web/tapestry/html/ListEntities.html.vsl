@@ -1,0 +1,125 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ${paths.JspOutput}/List${entityBean.Name}.html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+   <head>
+      <title>The JAG Test Console</title>
+
+      <meta http-equiv="Expires" content="-1"/>
+      <meta http-equiv="Pragma" content="no-cache"/>
+      <meta http-equiv="Cache-Control" content="no-cache"/>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, print"/>
+      <script type="text/javascript" src="js/dojo/dojo.js"></script>
+      <script type="text/javascript">
+         function selectAll(checkbox) {
+             // skip the first (allesMarkeren) checkbox
+             for (i=0; i<document.forms[0].length; i++) {
+                var element = document.forms[0].elements[i];
+                if (element.type == "checkbox" && element.name != "select_all") {
+                    element.checked = checkbox.checked;
+                }
+             }
+          }
+      </script>
+   </head>
+
+   <body jwcid="@Body">
+      <div jwcid="List${entityBean.Name}@Form">
+      <div jwcid="@Header"/>
+      <input type="hidden" jwcid="selectedDirection" />
+      <div id="body">
+         <div class="exportlinks">&nbsp;<a href="Home.html" jwcid="@PageLink" page="Home"><strong>Index</strong></a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="List${entityBean.Name}.html" jwcid="@PageLink" page="List${entityBean.Name}"><strong>${entityBean.Name} List</strong></a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a href="Edit${entityBean.Name}.html" jwcid="@ExternalLink" page="ognl:editPage" parameters="ognl:getEditPageParams(null)"><strong>New ${entityBean.Name}</strong></a>
+#if ($config.check("useJasper"))
+            &nbsp;&nbsp;|&nbsp;&nbsp;<a jwcid="@ContextLink" href="/pdf?reportName=${entityBean.Name}Report"><strong>pdf</strong></a>
+#end
+
+         </div>
+         <span title="Use a % for wildcard queries" jwcid="queryLabel">Query</span>: <input jwcid="queryField" type="text" name="query" value="" class="input"
+#if ($config.check("useAjax"))
+               onkeyup="sendValue(this.value + ',' + document.List${entityBean.Name}.queryFieldField.value)"
+#end
+         />
+         <span title="Select a field to search" jwcid="queryFieldLabel">Field</span>: <input jwcid="queryFieldField" type="text" name="queryField" value="" class="input" />
+         <span title="Select a page size to display" jwcid="pageSizeLabel">Size</span>: <input jwcid="pageSizeField" type="text" name="pageSize" value="" class="input" />         
+         <input type="submit" name="query" value="Search" jwcid="queryButton"/>
+         <span>
+            <a title="Previous page" href="#" jwcid="previous">&#8249;&#8249;</a>
+            <div jwcid="selectLoop">
+               <a href="#" jwcid="select">
+                  <span jwcid="@If"  condition="ognl:pageRange.selected">
+                     <strong title="Current page">
+                        <span jwcid="@Insert" value="ognl:pageRange.pageNumber">1</span>
+                     </strong>
+                  </span>
+                  <span jwcid="@If"  condition="ognl:!pageRange.selected">
+                        <span jwcid="@Insert" value="ognl:pageRange.pageNumber">1</span>
+                  </span>
+               </a>
+            </div>
+            <a title="Next pagina" href="#" jwcid="next">&#8250;&#8250;</a>
+         </span>
+
+         <table id="parent">
+            <thead>
+               <tr>
+                    <th>&nbsp;&nbsp;X</th>               
+#foreach ($field in $entityBean.Fields)
+                    <th#if ($field.isRelation()) ><a #else class="sortable"><a jwcid="sort${field.Name.Sentensized}" #end href="#">${field.Name}</a></th>
+#end
+               </tr>
+            </thead>
+            <tbody jwcid="itemIterator">
+               <tr class="odd" jwcid="tableRow">
+                  <td><input jwcid="deleteCheckbox@Checkbox" selected="ognl:item.selected"  type="checkbox" name="" /></td>
+#foreach ($field in $entityBean.Fields)
+                  <td><a href="Edit${entityBean.Name}.html" jwcid="@ExternalLink" page="ognl:editPage" parameters="ognl:editPageParams"><span jwcid="@Insert" value="ognl:item.${field.Name}">${field.Name} value</span></a></td>
+#end
+               </tr>
+            </tbody>
+         </table>
+         <input onclick="javascript:selectAll(this)" type="checkbox" id="select_all" name="select_all" value="" />
+         <input onclick="return confirm('Are you sure?');" type="submit" name="delete" value="Delete" jwcid="deleteSelectionButton"/>
+#if ($config.check("useAjax"))
+## The ajax callback will fill the query field in case the one unique result can be found.
+         <span jwcid="@contrib:XTile" listener="ognl:listeners.handleCallback"
+               sendName="sendValue" receiveName="recvCompletions"/>
+         <script>
+            function recvCompletions(arr) {
+               document.List${entityBean.Name}.queryField.value = arr;
+            }
+         </script>
+         <span jwcid="@contrib:Timeout"/>
+#end
+      </div>
+      <div jwcid="@Footer"/>
+      </div>
+   </body>
+</html>
+#end
+#end
+#end
+#end

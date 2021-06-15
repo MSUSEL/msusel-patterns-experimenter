@@ -1,0 +1,62 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.hibernate.test.annotations.cascade.multicircle.jpa.identity;
+
+import java.util.Set;
+
+/**
+ * No Documentation
+ */
+@javax.persistence.Entity
+public class C extends AbstractEntity {
+    private static final long serialVersionUID = 1226955752L;
+
+	@javax.persistence.OneToMany(mappedBy = "c")
+	private Set<B> bCollection = new java.util.HashSet<org.hibernate.test.annotations.cascade.multicircle.jpa.identity.B>();
+
+	@javax.persistence.OneToMany(cascade =  {
+		javax.persistence.CascadeType.MERGE, javax.persistence.CascadeType.PERSIST, javax.persistence.CascadeType.REFRESH}
+	, mappedBy = "c")
+	private Set<D> dCollection = new java.util.HashSet<D>();
+
+	public Set<B> getBCollection() {
+		return bCollection;
+	}
+
+	public void setBCollection(Set<B> bCollection) {
+		this.bCollection = bCollection;
+	}
+
+	public Set<D> getDCollection() {
+		return dCollection;
+	}
+
+	public void setDCollection(Set<D> dCollection) {
+		this.dCollection = dCollection;
+	}
+
+}

@@ -1,0 +1,69 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Graphique des ressources</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Graphique des ressources</h3>
+Un graphique sp�cifique est disponible pour toutes les ressources utilis�es.
+Il affiche le temps d'utilisation des ressources&nbsp;:
+<br \><center><img src="../images/resourceChart.png"></center><br \>
+<ul>
+	<li><img src="../images/rectGreen.png">&nbsp; les rectangles verts (par d�faut) indiquent des sous-charges (pourcentage d'activit�
+	de la ressource inf�rieur � 100 %&nbsp;;</li>
+	<li><img src="../images/rectBlue.png">&nbsp; les rectangles bleus (par d�faut) indiquent une
+	charge normale (pourcentage d'activit� de la ressource �gal � 100 %&nbsp;;</li>
+	<li><img src="../images/rectRed.png">&nbsp; les rectangles rouges (par d�faut) indiquent des surcharges (pourcentage d'activit�
+	de la ressource sup�rieur � 100 %.</li>
+</ul>
+<p>
+Dans le cas des sous-charges et des surcharges, il est indiqu� le pourcentage d'activit� de la ressource dans
+le rectangle. Si le rectangle est trop petit pour affich� correctement ce pourcentage, ce dernier ne sera
+pas affich�.
+</p>
+
+<p>
+<img src="../images/light_16.gif">&nbsp; Vous pouvez modifier les couleurs des rectangles de charges&nbsp;:
+<ul>
+	<li>menu <b>Edition</b>, <b>Pr�f�rences</b>&nbsp;;</li>
+	<li>option <b>G�n�ral</b>, <b>Couleurs</b>&nbsp;;</li>	
+	<li>cliquez sur le bouton <b>Couleur</b> en face de <b>Ressources</b>, <b>Ressources (surcharg�es)</b> ou
+	<b>Ressources (sous-charg�es)</b> &nbsp;;</li>
+	<li>choisissez la couleur par d�faut d�sir�e.</li>
+</ul>
+</p>
+<h4>D�tail des affectations</h4>
+Il est possible de voir le d�tail des affectations et ainsi la charge de travail par ressource et par t�che.
+<br \><center><img src="../images/assignDetail.png"></center><br \>
+</body>
+</html>

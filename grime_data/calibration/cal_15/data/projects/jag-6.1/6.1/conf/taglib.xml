@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+
+<taglib>
+
+   <!-- ============== Tag Library Description Elements ============= -->
+
+   <tlibversion>1.0</tlibversion>
+   <jagversion>1.0</jagversion>
+   <shortname>jag</shortname>
+
+   <info></info>
+
+   <!-- ===================== Control Flow Tags ====================== -->
+   <tag>
+      <name>write</name>
+      <tagclass>com.finalist.jag.taglib.WriteTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>display</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>pathenable</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>iterator</name>
+      <tagclass>com.finalist.jag.taglib.IteratorTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>id</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>seperator</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>max</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>counter</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+
+   <tag>
+      <name>file</name>
+      <tagclass>com.finalist.jag.taglib.FileTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>path</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>title</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>ext</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>name</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+
+   <tag>
+      <name>equal</name>
+      <tagclass>com.finalist.jag.taglib.EqualTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>sensitive</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>parameter</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>variable</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>notEqual</name>
+      <tagclass>com.finalist.jag.taglib.NotEqualTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>sensitive</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>parameter</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>variable</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>exception</name>
+      <tagclass>com.finalist.jag.taglib.ExceptionTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>message</name>
+         <required>true</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>clearVariable</name>
+      <tagclass>com.finalist.jag.taglib.ClearVariableTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>exist</name>
+      <tagclass>com.finalist.jag.taglib.ExistTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>notExist</name>
+      <tagclass>com.finalist.jag.taglib.NotExistTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>counter</name>
+      <tagclass>com.finalist.jag.taglib.CounterTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>odd</name>
+         <required>true</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>empty</name>
+      <tagclass>com.finalist.jag.taglib.EmptyTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>notEmpty</name>
+      <tagclass>com.finalist.jag.taglib.NotEmptyTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+
+   <tag>
+      <name>variable</name>
+      <tagclass>com.finalist.jag.taglib.VariableTag</tagclass>
+      <bodycontent>java</bodycontent>
+      <attribute>
+         <name>name</name>
+         <required>true</required>
+      </attribute>
+      <attribute>
+         <name>list</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+</taglib>

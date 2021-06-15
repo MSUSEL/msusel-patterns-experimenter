@@ -1,0 +1,456 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2"  || ${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/web/WEB-INF/web.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+   <filter>
+      <filter-name>Set Character Encoding</filter-name>
+      <filter-class>filters.SetCharacterEncodingFilter</filter-class>
+      <init-param>
+         <param-name>encoding</param-name>
+         <param-value>UTF-8</param-value>
+       </init-param>
+   </filter>
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+    <!-- Filters for the display tag functionality -->
+    <filter>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <filter-class>org.displaytag.filter.ResponseOverrideFilter</filter-class>
+    </filter>
+#end
+#if ($config.matchBusinessTier("Hibernate"))
+   <filter>
+      <filter-name>databaseSession</filter-name>
+      <filter-class>
+#if (${config.templateSettings.serviceTier} == "Spring")
+#if ($config.matchBusinessTier("Hibernate 3"))
+      org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+#end
+#else
+      ${app.RootPackage}.SessionFilter
+#end
+      </filter-class>
+   </filter>
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+   <filter-mapping>
+      <filter-name>Set Character Encoding</filter-name>
+      <servlet-name>action</servlet-name>
+   </filter-mapping>
+    <filter-mapping>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+#end    
+#if ($config.matchBusinessTier("Hibernate"))
+   <filter-mapping>
+     <filter-name>databaseSession</filter-name>
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+     <url-pattern>/*</url-pattern>
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+     <url-pattern>/*</url-pattern>
+#end
+   </filter-mapping>
+#end
+#if ($config.check("useRss"))
+   <!--
+   The FeedServlet serves an RSS feed.
+   For example: the feed can be accessed using the url:
+   /feed/?id=LIST_ENTITIES&type=atom_0.3
+   -->
+   <servlet>
+      <servlet-name>FeedServlet</servlet-name>
+      <servlet-class>${app.RootPackage}.rss.RssFeedServlet</servlet-class>
+      <!-- Specify the feed type to return or pass it as a parameter.
+           Possible types are:
+             rss_0.9, rss_0.91, rss_0.92, rss_0.93, rss_0.94,
+             rss_1.0, rss_2.0 & atom_0.3
+      -->
+      <init-param>
+         <param-name>default.feed.type</param-name>
+         <param-value>rss_2.0</param-value>
+      </init-param>
+      <!-- Specify the number of items that should be shown in the list -->
+      <init-param>
+         <param-name>feed.list.size</param-name>
+         <param-value>10</param-value>
+      </init-param>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>FeedServlet</servlet-name>
+      <url-pattern>/feed/*</url-pattern>
+   </servlet-mapping>
+#end
+
+#if ($config.check("useJasper"))
+   <servlet>
+      <servlet-name>pdf</servlet-name>
+      <servlet-class>${app.RootPackage}.reports.PdfServlet</servlet-class>
+      <load-on-startup>2</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+      <servlet-name>pdf</servlet-name>
+      <url-pattern>/pdf</url-pattern>
+   </servlet-mapping>
+
+#end
+#if ($config.useWebService())
+<!-- Axis servlets -->
+  <servlet>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-name>AxisServlet</servlet-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AxisServlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-name>AdminServlet</servlet-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <!--
+    By default, Axis runs in production mode.
+    For testing it can be convenient to put it in development mode:
+    -->
+    <!--
+    <init-param>
+      <param-name>axis.development.system</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    -->
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <display-name>SOAPMonitorService</display-name>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <servlet-class>
+        org.apache.axis.monitor.SOAPMonitorService
+    </servlet-class>
+    <init-param>
+      <param-name>SOAPMonitorPort</param-name>
+      <param-value>5001</param-value>
+    </init-param>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+#end
+
+#if ($app.LogFramework.equals("log4j"))
+  <!-- Initialize the log4j logger by calling a init servlet -->
+  <servlet>
+     <servlet-name>log4j-init</servlet-name>
+     <servlet-class>${app.RootPackage}.${app.Name}.util.log.InitLoggerServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
+  </servlet>
+#end
+
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+   <!-- Tapestry Front-controller. -->
+   <servlet>
+      <servlet-name>${app.Name}</servlet-name>
+      <servlet-class>org.apache.tapestry.ApplicationServlet</servlet-class>
+      <load-on-startup>0</load-on-startup>
+   </servlet>
+
+   <!-- Action Servlet Mapping -->
+   <servlet-mapping>
+      <servlet-name>${app.Name}</servlet-name>
+      <url-pattern>/app</url-pattern>
+   </servlet-mapping>
+
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+  <!-- Action Servlet Configuration -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>ApplicationResources</param-value>
+    </init-param>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>validate</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <!-- Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+#end
+#if ($config.useSecurity())
+    <!-- Acegi configuration -->
+
+	<!-- Obtains Authentication from HttpSession attribute, puts it into
+		 ContextHolder for request duration, proceeds with request, then
+		 copies Authentication from ContextHolder back into HttpSession -->
+    <filter>
+        <filter-name>Acegi Security System for Spring HttpSession Integration Filter</filter-name>
+        <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+        <init-param>
+            <param-name>targetClass</param-name>
+            <param-value>org.acegisecurity.context.HttpSessionContextIntegrationFilter</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+	    <filter-name>Acegi Authentication Processing Filter</filter-name>
+	    <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+	    <init-param>
+	        <param-name>targetClass</param-name>
+	        <param-value>org.acegisecurity.ui.webapp.AuthenticationProcessingFilter</param-value>
+	    </init-param>
+	</filter>
+
+	<filter>
+	    <filter-name>Acegi HTTP Request Security Filter</filter-name>
+	    <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+	    <init-param>
+	        <param-name>targetClass</param-name>
+	        <param-value>org.acegisecurity.ui.ExceptionTranslationFilter</param-value>
+	    </init-param>
+	</filter>
+
+	<filter>
+	    <filter-name>Acegi HTTP Request Security Interceptor Filter</filter-name>
+	    <filter-class>org.acegisecurity.util.FilterToBeanProxy</filter-class>
+	    <init-param>
+	        <param-name>targetClass</param-name>
+	        <param-value>org.acegisecurity.intercept.web.FilterSecurityInterceptor</param-value>
+	    </init-param>
+	</filter>
+
+
+    <filter-mapping>
+      <filter-name>Acegi Security System for Spring HttpSession Integration Filter</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<filter-mapping>
+	    <filter-name>Acegi Authentication Processing Filter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+	    <filter-name>Acegi HTTP Request Security Filter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+	    <filter-name>Acegi HTTP Request Security Interceptor Filter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<session-config>
+	   <!-- 60 minutes -->
+  		<session-timeout>60</session-timeout>
+	</session-config>
+
+#end
+
+   <context-param>
+     <param-name>contextConfigLocation</param-name>
+     <param-value>/WEB-INF/applicationContext.xml
+#if ($config.useWebService())
+#if (${config.templateSettings.serviceTier} == "Spring")
+                  classpath:org/codehaus/xfire/spring/xfire.xml
+#end
+#end
+     </param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+#if ($config.useWebService())
+#if (${config.templateSettings.serviceTier} == "Spring")
+   <servlet>
+       <servlet-name>xfire</servlet-name>
+       <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+       <servlet-name>xfire</servlet-name>
+       <url-pattern>/xservices/*</url-pattern>
+   </servlet-mapping>
+#else
+<!-- XFire mappings -->
+   <servlet>
+     <display-name>XFire Servlet</display-name>
+     <servlet-name>XFireServlet</servlet-name>
+     <servlet-class>
+         org.codehaus.xfire.transport.http.XFireConfigurableServlet
+     </servlet-class>
+   </servlet>
+
+   <servlet-mapping>
+     <servlet-name>XFireServlet</servlet-name>
+     <url-pattern>/servlet/XFireServlet/*</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+     <servlet-name>XFireServlet</servlet-name>
+     <url-pattern>/xservices/*</url-pattern>
+   </servlet-mapping>
+#end
+
+<!-- Axis servlet mappings -->
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/servlet/AxisServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>*.jws</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <url-pattern>/SOAPMonitor</url-pattern>
+  </servlet-mapping>
+
+ <!-- uncomment the servlet mapping if you want the admin servlet,
+      an set the AdminServlet in development mode
+      by specifying an init-param (see the servlet definition).
+      The following commands will be available:
+            /servlet/AdminServlet?cmd=start
+            /servlet/AdminServlet?cmd=stop
+            /servlet/AdminServlet?cmd=list
+ -->
+ <!--
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/servlet/AdminServlet</url-pattern>
+  </servlet-mapping>
+ -->
+#end
+
+#if ($config.useWebService())
+
+    <!-- Axis specific mime mappings -->
+
+    <!-- currently the W3C havent settled on a media type for WSDL;
+    http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+    for now we go with the basic 'it's XML' response -->
+  <mime-mapping>
+    <extension>wsdl</extension>
+     <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+#end
+   
+   <mime-mapping>
+      <extension>.css</extension>
+      <mime-type>text/css</mime-type>
+   </mime-mapping>
+   <mime-mapping>
+      <extension>.js</extension>
+      <mime-type>application/x-javascript</mime-type>
+   </mime-mapping>
+   <mime-mapping>
+      <extension>.ico</extension>
+      <mime-type>image/x-icon</mime-type>
+   </mime-mapping>
+
+    
+  <!-- The Welcome File List -->
+  <welcome-file-list>
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+    <welcome-file>app</welcome-file>
+#end
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>main.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>main.html</welcome-file>
+  </welcome-file-list>
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+
+  <jsp-config>
+
+  <!-- Finalist Tag Library Descriptor -->
+  <taglib>
+    <taglib-uri>/WEB-INF/finalist.tld</taglib-uri>
+    <taglib-location>/WEB-INF/finalist.tld</taglib-location>
+  </taglib>
+    
+  <!-- Application Tag Library Descriptor -->
+
+  
+  <!-- Struts Tag Library Descriptors -->
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-ext.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-ext.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+  </taglib>
+  </jsp-config>
+#end
+</web-app>
+#end

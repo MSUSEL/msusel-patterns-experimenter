@@ -1,0 +1,113 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.hibernate.envers.test.entities.onetomany.detached.ids;
+import java.util.Set;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.test.entities.ids.EmbId;
+import org.hibernate.envers.test.entities.ids.EmbIdTestEntity;
+
+/**
+ * Set collection of references entity
+ * @author Adam Warski (adam at warski dot org)
+ */
+@Entity
+@Table(name = "SetRefCollEmbId")
+public class SetRefCollEntityEmbId {
+    @EmbeddedId
+    private EmbId id;
+
+    @Audited
+    private String data;
+
+    @Audited
+    @OneToMany
+    private Set<EmbIdTestEntity> collection;
+
+    public SetRefCollEntityEmbId() {
+    }
+
+    public SetRefCollEntityEmbId(EmbId id, String data) {
+        this.id = id;
+        this.data = data;
+    }
+
+    public SetRefCollEntityEmbId(String data) {
+        this.data = data;
+    }
+
+    public EmbId getId() {
+        return id;
+    }
+
+    public void setId(EmbId id) {
+        this.id = id;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public Set<EmbIdTestEntity> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(Set<EmbIdTestEntity> collection) {
+        this.collection = collection;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SetRefCollEntityEmbId)) return false;
+
+        SetRefCollEntityEmbId that = (SetRefCollEntityEmbId) o;
+
+        if (data != null ? !data.equals(that.data) : that.data != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (id != null ? id.hashCode() : 0);
+        result = 31 * result + (data != null ? data.hashCode() : 0);
+        return result;
+    }
+
+    public String toString() {
+        return "SetRefCollEntityEmbId(id = " + id + ", data = " + data + ")";
+    }
+}

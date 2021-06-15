@@ -1,0 +1,22 @@
+## Not used anymore, serlvet is used now.
+#if ($config.check("useJasperOld"))
+////File: ${paths.JspOutput}/reports/pdf.jsp
+<%@ page import="net.sf.jasperreports.engine.JasperCompileManager" %><%@ page import="net.sf.jasperreports.engine.JasperReport" %><%@ page import="net.sf.jasperreports.engine.JasperRunManager" %><%@ page import="net.sf.jasperreports.engine.data.JRTableModelDataSource" %><%@ page import="javax.servlet.ServletOutputStream" %><%@ page import="javax.swing.table.AbstractTableModel" %><%@ page import="java.io.File"%><%@ page import="java.io.InputStream"%><%@ page import="java.util.HashMap"%><%@ page import="java.util.Map"%><%
+    String reportName = request.getParameter("reportName");
+    JasperReport report = null;
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("reports/" + reportName + ".jrxml");
+    report = JasperCompileManager.compileReport(is);
+    Map parameters = new HashMap();
+    parameters.put("ReportTitle", "" + reportName + " Report");
+    byte[] bytes =
+            JasperRunManager.runReportToPdf(
+                    report,
+                    parameters,
+                    new JRTableModelDataSource((AbstractTableModel) Class.forName("${app.RootPackage}.reports." + reportName + "TableModel").newInstance())
+            );
+    response.setContentType("application/pdf");
+    response.setContentLength(bytes.length);
+    ServletOutputStream ouputStream = response.getOutputStream();
+    ouputStream.write(bytes, 0, bytes.length);
+    ouputStream.flush();
+    ouputStream.close();%>#end

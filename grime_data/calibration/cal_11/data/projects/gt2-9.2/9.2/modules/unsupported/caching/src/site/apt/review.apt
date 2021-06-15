@@ -1,0 +1,105 @@
+~~
+~~ The MIT License (MIT)
+~~
+~~ MSUSEL Arc Framework
+~~ Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+~~ Software Engineering Laboratory and Idaho State University, Informatics and
+~~ Computer Science, Empirical Software Engineering Laboratory
+~~
+~~ Permission is hereby granted, free of charge, to any person obtaining a copy
+~~ of this software and associated documentation files (the "Software"), to deal
+~~ in the Software without restriction, including without limitation the rights
+~~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+~~ copies of the Software, and to permit persons to whom the Software is
+~~ furnished to do so, subject to the following conditions:
+~~
+~~ The above copyright notice and this permission notice shall be included in all
+~~ copies or substantial portions of the Software.
+~~
+~~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+~~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+~~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+~~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+~~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+~~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+~~ SOFTWARE.
+~~
+
+Unsupported CACHING
+~~~~~~~~~~~~~~~~~~~
+
+  IP Review:
+ 
+    * Adrian Custer, June 2008
+
+  STATUS: DIRTY
+      Code NEEDS REVIEW
+        License is okay but we may need to give copyright to Marios 
+        Hadjieleftheriou on most of these files. Certainly, the files which are 
+        fully under his copyright can only be licensed under the LGPL.
+        http://jira.codehaus.org/browse/GEOT-1901
+    
+    Email sent for clarification.
+
+    ==> Response was
+------------------------------------------------------------------------
+Hi,
+
+Part of the code in org/geotools/caching/spatialindex was indeed
+derived from Mario's work.
+I reused the design he proposed ; however, I finally ended keeping
+mostly the interfaces, as I had to reimplement most of the code to fit
+my purpose.
+Files that used Mario's original code mention the original copyright
+notice in the header, as you stated.
+
+Files under org/geotools/caching/firstdraft were kept for history and
+can be discarded, as code is certainly not functional any more.
+
+Hope this is useful.
+
+Cheers,
+
+Christophe
+------------------------------------------------------------------------
+
+  This appears to be a Summer of code project to implement some feature caching 
+  system. See the README file for details.
+
+
+
+
+* org/geotools/caching/spatialindex/
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  All files are LGPL, some with the following header:
+  
+------------------------------------------------------------------------
+// Spatial Index Library
+//
+// Copyright (C) 2002  Navel Ltd.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation;
+// version 2.1 of the License.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+//
+// Contact information:
+//  Mailing address:
+//    Marios Hadjieleftheriou
+//    University of California, Riverside
+//    Department of Computer Science
+//    Surge Building, Room 310
+//    Riverside, CA 92521
+//
+//  Email:
+//    marioh@cs.ucr.edu
+------------------------------------------------------------------------

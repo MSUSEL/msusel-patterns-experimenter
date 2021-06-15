@@ -1,0 +1,67 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://www.example.org/myfeed</id>
+  <title>My Podcast Feed</title>
+  <updated>2005-07-15T12:00:00Z</updated>
+  <author>
+    <name>James M Snell</name>
+  </author>
+  <link href="http://example.org" />
+  <link rel="self" href="http://example.org/myfeed" />
+  <entry>
+    <id>http://www.example.org/entries/1</id>
+    <title>Atom 1.0</title>
+    <updated>2005-07-15T12:00:00Z</updated>
+    <link href="http://www.example.org/entries/1" />
+    <summary>An overview of Atom 1.0</summary>
+    <link rel="enclosure" 
+          type="audio/mpeg"
+          title="MP3"
+          href="http://www.example.org/myaudiofile.mp3"
+          length="1234" />
+    <link rel="enclosure"
+          type="application/x-bittorrent"
+          title="BitTorrent"
+          href="http://www.example.org/myaudiofile.torrent"
+          length="1234" />
+    <content type="xhtml">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <h1>Show Notes</h1>
+        <ul>
+          <li>00:01:00 -- Introduction</li>
+          <li>00:15:00 -- Talking about Atom 1.0</li>
+          <li>00:30:00 -- Wrapping up</li>
+        </ul>
+      </div>
+    </content>
+  </entry>
+</feed>
+  
+  

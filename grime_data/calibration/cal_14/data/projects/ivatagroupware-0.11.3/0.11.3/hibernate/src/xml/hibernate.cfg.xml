@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 2.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-2.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <!--
+    ////////////////////////////////////////////////////////////////////////////
+    CACHE
+    -->
+    <property name="hibernate.cache.provider_class">net.sf.hibernate.cache.EhCacheProvider</property>
+
+    <!--
+    ////////////////////////////////////////////////////////////////////////////
+    DB STUFF
+    -->
+    <property name="hibernate.connection.driver_class">org.hsqldb.jdbcDriver</property>
+    <property name="hibernate.connection.url">jdbc:hsqldb:res:/db/igwstart</property>
+    <property name="dialect">net.sf.hibernate.dialect.HSQLDialect</property>
+    <property name="show_sql">false</property>
+    <property name="hibernate.connection.username">sa</property>
+    <property name="hibernate.connection.password"></property>
+
+    <!--
+    you could use this with jboss!
+    <property name="connection.datasource">java:/ivatagroupwareDS</property>
+    -->
+
+    <!--
+    ////////////////////////////////////////////////////////////////////////////
+    CLASS DEFINITIONS
+    -->
+    <mapping resource="com/ivata/groupware/admin/setting/SettingDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/admin/security/user/UserDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/address/AddressDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/address/country/CountryDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/person/PersonDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/person/group/right/RightDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/person/group/right/detail/RightDetailDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/person/group/GroupDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/person/employee/EmployeeDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/addressbook/telecomaddress/TelecomAddressDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/calendar/event/EventDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/calendar/event/meeting/agendapoint/AgendaPointDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/calendar/event/meeting/attendee/AttendeeDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/calendar/event/meeting/category/MeetingCategoryDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/comment/CommentDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/faq/category/FAQCategoryDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/faq/FAQDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/item/LibraryItemDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/page/PageDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/library/topic/TopicDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/search/index/SearchIndexDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/search/item/SearchItemDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/business/search/item/content/SearchItemContentDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/navigation/menu/MenuDO.hbm.xml"/>
+    <mapping resource="com/ivata/groupware/navigation/menu/item/MenuItemDO.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>
+

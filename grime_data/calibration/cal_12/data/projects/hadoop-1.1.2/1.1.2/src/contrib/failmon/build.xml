@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project name="failmon" default="compile">
+
+  <import file="../build-contrib.xml"/>
+
+  <property name="jarfile" value="${build.dir}/hadoop-${name}-${version}.jar"/>
+
+  <target name="jar" depends="compile" unless="skip.contrib">
+    <!-- Make sure that the hadoop jar has been created -->
+<!-- This works, but causes findbugs to fail
+    <subant antfile="build.xml" target="jar">
+      <fileset dir="../../.." includes="build.xml"/>
+    </subant>
+-->
+    <!-- Copy the required files so that the jar can run independently
+	 of Hadoop source code -->
+    
+  <!-- create the list of files to add to the classpath -->
+  <fileset dir="${hadoop.root}/lib" id="class.path">
+    <include name="**/*.jar" />
+    <exclude name="**/excluded/" />
+  </fileset>
+  
+  <pathconvert pathsep=" " property="failmon-class-path" refid="class.path">
+    <map from="${basedir}/" to=""/>
+  </pathconvert>
+
+    <echo message="contrib: ${name}"/>
+    <jar jarfile="${jarfile}" basedir="${build.classes}">
+      <manifest>
+        <attribute name="Main-Class" value="org.apache.hadoop.contrib.failmon.RunOnce"/>
+	<attribute name="Class-Path" value="${failmon-class-path}"/> 
+      </manifest>
+    </jar>
+
+  </target>
+
+  
+  <!-- Override test target to copy sample data -->
+  <target name="test" depends="compile-test, compile, compile-examples" if="test.available">
+    <echo message="contrib: ${name}"/>
+    <delete dir="${hadoop.log.dir}"/>
+    <mkdir dir="${hadoop.log.dir}"/>
+    <delete dir="${build.test}/sample"/>
+    <mkdir dir="${build.test}/sample"/>
+    <copy todir="${build.test}/sample">
+      <fileset dir="${root}/sample"/>
+    </copy>
+    <junit
+      printsummary="yes" showoutput="${test.output}" 
+      haltonfailure="no" fork="yes" maxmemory="256m"
+      errorProperty="tests.failed" failureProperty="tests.failed"
+      timeout="${test.timeout}">
+      
+      <sysproperty key="test.build.data" value="${build.test}/data"/>
+      <sysproperty key="build.test" value="${build.test}"/>
+      <sysproperty key="contrib.name" value="${name}"/>
+      
+      <!-- requires fork=yes for: 
+        relative File paths to use the specified user.dir 
+        classpath to use build/contrib/*.jar
+      -->
+      <sysproperty key="user.dir" value="${build.test}/data"/>
+      
+      <sysproperty key="fs.default.name" value="${fs.default.name}"/>
+      <sysproperty key="hadoop.test.localoutputfile" value="${hadoop.test.localoutputfile}"/>
+      <sysproperty key="hadoop.log.dir" value="${hadoop.log.dir}"/>
+      <classpath refid="test.classpath"/>
+      <formatter type="${test.junit.output.format}" />
+      <batchtest todir="${build.test}" unless="testcase">
+        <fileset dir="${src.test}"
+                 includes="**/Test*.java" excludes="**/${test.exclude}.java" />
+      </batchtest>
+      <batchtest todir="${build.test}" if="testcase">
+        <fileset dir="${src.test}" includes="**/${testcase}.java"/>
+      </batchtest>
+    </junit>
+    <fail if="tests.failed">Tests failed!</fail>
+
+  </target>
+  
+  <target name="tar" depends="jar">
+
+    <copy todir=".">
+      <fileset dir="${hadoop.root}/build/contrib/failmon/"
+	       includes="failmon.jar"/>
+    </copy>
+    
+    <tar tarfile="${name}.tar" 
+	 basedir=".." 
+	 includes="${name}/**"
+	 excludes="${name}/${name}.tar.gz, ${name}/src/**, ${name}/logs/**, ${name}/build.xml*"/>
+    <gzip zipfile="${name}.tar.gz" src="${name}.tar"/>
+    <delete file="${name}.tar"/>
+    <delete file="${name}.jar"/>
+
+    <move file="${name}.tar.gz" todir="${build.dir}"/>
+    <echo message= "${hadoop.root}/build/contrib/failmon/hadoop-${name}-${version}.jar"/>
+    
+  </target>
+  
+</project>

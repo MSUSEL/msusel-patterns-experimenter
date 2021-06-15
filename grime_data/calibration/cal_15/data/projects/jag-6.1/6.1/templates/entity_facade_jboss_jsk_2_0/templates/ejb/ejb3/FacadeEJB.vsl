@@ -1,0 +1,463 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+#foreach ($session in $sessions)
+////File: ${paths.EjbOutput}/${session.RootPath}/${session.Name}EJB.java
+package ${session.RootPackage};
+
+import java.util.*;
+import javax.ejb.*;
+import javax.persistence.*;
+import com.finalist.util.log.*;
+import com.finalist.util.ejb.UniqueIdGenerator;
+import org.apache.commons.beanutils.BeanUtils;
+
+import com.finalist.util.log.*;
+#foreach ($entity in $session.EntitiesAndReferences)
+import ${entity.RootPackage}.*;
+#end
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+#end
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.25 $, $Date: 2005/08/27 13:40:15 $
+ *
+ */
+@Stateless
+public class ${session.Name}EJB implements ${session.Name}Remote  {
+
+   @Inject
+   private EntityManager manager;
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${session.Name}EJB.class);
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#set ($count = 0)
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) {
+#if ( ($businessMethod.returnType == "char") || ($businessMethod.returnType == "byte") || ($businessMethod.returnType == "short") || ($businessMethod.returnType == "int") || ($businessMethod.returnType == "long") || ($businessMethod.returnType == "float") || ($businessMethod.returnType == "double") )
+        return 0;
+#elseif ($businessMethod.returnType == "boolean")
+        return false;
+#elseif ($businessMethod.returnType != "void")
+        return null;
+#end
+   }
+#end
+
+   /*******************************************************************************************************************
+    *                                  P E R S I S T E N C E    M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $session.Entities)
+
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the database.
+    *
+    * @param model a data object
+    * @return ${entity.Name}If a data object with the primary key
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public ${entity.RootPackage}.${entity.Name}If add${entity.Name}(${entity.RootPackage}.${entity.Name}If model) {
+      ${entity.Name}EJB value = new ${entity.Name}EJB();
+      try {
+#foreach ($field in $entity.Fields)
+      value.set${field.Name.Sentensized}(model.get${field.Name.Sentensized}());
+#end
+#foreach ($pkField in $entity.PkFields)
+#if ($pkField.HasAutoGenPrimaryKey)
+#if ($pkField.Type.equals("java.lang.Integer"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getIntegerId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#if ($pkField.Type.equals("java.lang.Long"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getLongId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#if ($pkField.Type.equals("java.lang.String"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getStringId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#if ($pkField.Type.equals("java.lang.Short"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getShortId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#if ($pkField.Type.equals("java.lang.Byte"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getByteId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#if ($pkField.Type.equals("java.lang.Double"))
+         if (value.get${pkField.Name.Sentensized}() == null) {
+            value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getDoubleId("${entity.LocalTableName.ClassNameFormat}"));
+         }
+#end
+#end
+#end
+      } catch (Exception e) {
+         log.error("Error while copying properties for creating ${entity.Name}EJB data.", e);
+      }
+      manager.persist(value);
+      return get${entity.Name}(value.getPrimaryKey());
+   }
+
+   /**
+    * Stores the <code>${entity.Name}If</code> in the database.
+    *
+    * @param model the data model to store
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public void save${entity.Name}(${entity.RootPackage}.${entity.Name}If model) {
+      // We have to create an ejb object:
+      ${entity.Name}EJB data = new ${entity.Name}EJB();
+#foreach ($field in $entity.Fields)
+      data.set${field.Name.Sentensized}(model.get${field.Name.Sentensized}());
+#end
+#foreach($relation in $entity.Relations)
+## Make sure that the related objects are set.
+      if (model.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}() == null) {
+         data.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(get${relation.RelatedEntity.Name}(model.get${relation.FieldName.Sentensized}()));
+      }
+#end
+      manager.merge(data);
+   }
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public void delete${entity.Name}(${entity.PrimaryKeyType} id) {
+      ${entity.Name}EJB data = manager.find(${entity.Name}EJB.class, id);
+      manager.remove(data);
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * Retrieves a data object from the database by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name}If the data object
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public ${entity.RootPackage}.${entity.Name}If get${entity.Name}(${entity.PrimaryKeyType} id) {
+      return manager.find(${entity.Name}EJB.class, id);
+   }
+
+   /**
+    * Returns a collection of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a collection of ${entity.Name}If objects.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public Collection get${entity.Name}List() {
+      String queryString = "from ${entity.Name}EJB e";
+#if ($entity.isCompositeKey())
+## Do not create the order by clause in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+      // Add a an order by on all primary keys to assure reproducable results.
+      String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+      orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+      queryString += orderByPart;
+#end
+      Query query = manager.createQuery(queryString);
+      return query.getResultList();
+   }
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * any zero/negative values are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a collection of ${entity.Name}If objects, of size <code>(endIndex - startIndex)</code>.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public Collection get${entity.Name}List(int startIndex, int endIndex) {
+      if (startIndex < 1) {
+         startIndex = 1;
+      }
+      if ( (endIndex - startIndex) < 0) {
+         // Just return an empty list.
+         return new ArrayList();
+      }
+      String queryString = "from ${entity.Name}EJB e";
+#if ($entity.isCompositeKey())
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+      // Add a an order by on all primary keys to assure reproducable results.
+      String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+      orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+      queryString += orderByPart;
+#end      
+      Query query = manager.createQuery(queryString);
+      query.setFirstResult(startIndex - 1);
+      query.setMaxResults(endIndex - startIndex + 1);
+      return query.getResultList();
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the database.
+    *
+    * @return an integer value.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public int get${entity.Name}ListSize() {
+      Query countQuery = manager.createQuery("select count(*) from ${entity.Name}EJB");
+      List countQueryResult = countQuery.getResultList();
+      Integer countResult = (Integer) countQueryResult.get(0);
+      log.debug("The list size is: " + countResult.intValue());
+      return countResult.intValue();
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary key fields. They should be looked up with there get method.
+#else
+
+    /**
+     *
+     * Retrieves a list of data object for the specified $field.Name field.
+     *
+     * @param $field.Name the field
+     * @return Collection of ${entity.Name}If data objects, empty list in case no results were found.
+     */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public java.util.Collection find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name) {
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do a query on a field of a composite primary key.
+      log.fatal("Not implemented yet for EJB3.");
+      return new java.util.ArrayList();
+      }
+#else
+
+      String queryString = "from ${entity.Name}EJB e where e.$field.Name = :$field.Name ";
+#if ($entity.isCompositeKey())
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+      // Add a an order by on all primary keys to assure reproducable results.
+      String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+      orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+      queryString += orderByPart;
+#end
+      Query query = manager.createQuery(queryString);
+      query.setParameter("$field.Name", $field.Name);
+      return query.getResultList();
+    }
+#end
+#end
+#end
+#foreach ($relation in $entity.Relations)
+
+    /**
+     * Retrieves#if (${relation.TargetMultiple}) a list of ${entity.Name}If data objects#else the single corresponding ${entity.Name}If data object#end for the specified subject field.
+     *
+     * @param ${relation.ForeignPkFieldName} the field
+     * @return#if (${relation.TargetMultiple}) Collection of ${entity.Name}If data objects, empty list#else the single corresponding ${entity.Name}If data object, or <code>null</code>#end if no results were found.
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public #if (${relation.TargetMultiple})java.util.Collection#else${entity.Name}If#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName}) {
+      log.fatal("Not implemented yet for EJB3.");
+      return null;
+    }
+#end
+#end
+##
+##
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+
+   /**
+    * Get a list of related ${relation.localEntity.Name}If objects of the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return Collection of ${relation.localEntity.Name}If objects.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public java.util.Collection<${relation.localEntity.Name}If> get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized})
+   {
+      ${entity.Name}EJB data;
+      if (${entity.Name.Desentensized} instanceof ${entity.Name}EJB) {
+         data = (${entity.Name}EJB) ${entity.Name.Desentensized};
+      } else {
+         data = manager.find(${entity.Name}EJB.class, ${entity.Name.Desentensized}.getPrimaryKey());
+      }
+      java.util.ArrayList<${relation.localEntity.Name}If> result = new java.util.ArrayList<${relation.localEntity.Name}If>();
+      java.util.Collection<${relation.localEntity.Name}EJB> list;
+      list = data.get${relation.FieldName.Sentensized}${relation.localEntity.Name}List();
+      if (list == null) {
+         return new java.util.ArrayList();
+      }
+      for (${relation.localEntity.Name}EJB o: list) {
+         result.add(o);
+      }
+      return result;
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, java.util.Collection ${relation.localEntity.Name.Desentensized}List)
+   {
+      log.warn("Implementation has not been tested succesfully with ejb3 preview release 2");
+      java.util.Collection<${relation.localEntity.Name}If> the${relation.localEntity.Name}List = (java.util.Collection<${relation.localEntity.Name}If>) ${relation.localEntity.Name.Desentensized}List;
+
+      ${entity.Name}EJB data;
+      if (${entity.Name.Desentensized} instanceof ${entity.Name}EJB) {
+         data = (${entity.Name}EJB) ${entity.Name.Desentensized};
+      } else {
+         data = manager.find(${entity.Name}EJB.class, ${entity.Name.Desentensized}.getPrimaryKey());
+      }
+      java.util.ArrayList<${relation.localEntity.Name}EJB> result = new java.util.ArrayList<${relation.localEntity.Name}EJB>();
+      if (${relation.localEntity.Name.Desentensized}List == null) {
+         return;
+      }
+      for (${relation.localEntity.Name}If o: the${relation.localEntity.Name}List) {
+         ${relation.localEntity.Name}EJB rel;
+         if (o instanceof ${relation.localEntity.Name}EJB) {
+            rel = (${relation.localEntity.Name}EJB) o;
+         } else {
+            rel = new ${relation.localEntity.Name}EJB(o);
+         }
+         result.add(rel);
+      }
+      data.set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(result);
+      manager.merge(data);
+   }
+
+   /**
+    * Add ${relation.localEntity.Name}If to ${entity.Name}If .
+    *
+    * @param ${entity.Name.Desentensized} the object
+    * @param ${relation.localEntity.Name.Desentensized} the object to be added.
+    */
+   @TransactionAttribute(TransactionAttributeType.REQUIRED)
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) {
+      log.warn("Implementation has not been tested succesfully with ejb3 preview release 2");
+      ${entity.Name}EJB data;
+      if (${entity.Name.Desentensized} instanceof ${entity.Name}EJB) {
+         data = (${entity.Name}EJB) ${entity.Name.Desentensized};
+      } else {
+         data = manager.find(${entity.Name}EJB.class, ${entity.Name.Desentensized}.getPrimaryKey());
+      }
+      ${relation.localEntity.Name}EJB relation;
+      if (${relation.localEntity.Name.Desentensized} instanceof ${relation.localEntity.Name}EJB) {
+         relation = (${relation.localEntity.Name}EJB) ${relation.localEntity.Name.Desentensized};
+      } else {
+         relation = new ${relation.localEntity.Name}EJB(${relation.localEntity.Name.Desentensized});
+      }
+      manager.persist(relation);
+      data.add${relation.FieldName.Sentensized}${relation.localEntity.Name}(relation);
+      manager.merge(data);
+   }
+#else
+## This is a bidirectional one-to-one relation
+
+   /**
+    * Get a ${relation.localEntity.Name}If object of the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name}If object.
+    */
+    public ${relation.localEntity.Name}If get${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+         log.fatal("Not implemented for EJB 3");
+         return null;
+    }
+
+   /**
+    * Set a ${relation.localEntity.Name}If object to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized} the related object.
+    */
+    public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+      log.fatal("Not implemented yet for EJB3.");
+   }
+#end
+#end
+#end
+#end
+}
+#end
+#end

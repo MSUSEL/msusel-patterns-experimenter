@@ -1,0 +1,665 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.matchBusinessTier("Hibernate"))
+#foreach ($session in $sessions)
+////File: ./src/java-web/${session.RootPath}/${session.Name}.java
+package ${session.RootPackage};
+
+import java.util.*;
+import ${app.RootPackage}.*;
+#if (${config.templateSettings.serviceTier} == "Spring")
+import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.support.*;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.HibernateTransactionManager;
+import org.springframework.orm.hibernate3.HibernateCallback;
+#else
+import ${app.RootPackage}.servicelocator.LocatableService;
+#end
+import com.finalist.util.log.*;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import org.apache.commons.beanutils.BeanUtils;
+#if ($config.matchBusinessTier("Hibernate 3"))
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+#end
+import com.finalist.util.log.*;
+#foreach ($entity in $session.EntitiesAndReferences)
+#if ("false" == $entity.getIsAssociationEntity())
+import ${entity.RootPackage}.*;
+#end
+#end
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+#end
+#end
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.19 $, $Date: 2006/04/29 12:39:09 $
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="${session.Name}"
+ *
+#end
+ */
+#if (${config.templateSettings.serviceTier} == "Spring")
+@Transactional(rollbackFor= GenericBusinessException.class)
+#if ($config.useWebService())
+@javax.jws.WebService
+#end
+#end
+public class ${session.Name} implements I${session.Name} #if (${config.templateSettings.serviceTier} != "Spring"), LocatableService#end {
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${session.Name}.class);
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+   /**
+    * hibernate template that will be injected by spring.
+    */
+   private HibernateTemplate hibernateTemplate;
+
+#end
+
+#if (${config.templateSettings.serviceTier} != "Spring")
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void init() {
+    }
+
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void destroy() {
+    }
+#end
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#if (${config.templateSettings.serviceTier} == "Spring")
+#if ($config.useWebService())
+   @javax.jws.WebMethod
+#end
+#end
+#set ($count = 0)
+   public $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) {
+#if ( ($businessMethod.returnType == "char") || ($businessMethod.returnType == "byte") || ($businessMethod.returnType == "short") || ($businessMethod.returnType == "int") || ($businessMethod.returnType == "long") || ($businessMethod.returnType == "float") || ($businessMethod.returnType == "double") )
+        return 0;
+#elseif ($businessMethod.returnType == "boolean")
+        return false;
+#elseif ($businessMethod.returnType != "void")
+        return null;
+#end
+   }
+#end
+
+   /*******************************************************************************************************************
+    *                                  P E R S I S T E N C E    M E T H O D S
+    *******************************************************************************************************************/
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+   /**
+    * set the hibernate template.
+    * @param hibernateTemplate the hibernate spring template.
+    * @spring.property ref="hibernateTemplate"
+    *
+    */
+   public void setHibernateTemplate(HibernateTemplate hibernateTemplate){
+        this.hibernateTemplate = hibernateTemplate;
+   }
+
+   /**
+    * get the hibernate template.
+    * @return the hibernate spring template.
+    */
+   public HibernateTemplate getHibernateTemplate(){
+        return this.hibernateTemplate;
+   }
+#end
+
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the database.
+    *
+    * @param model a data object
+    * @return ${entity.Name} a data object with the primary key
+    */
+   public ${entity.RootPackage}.${entity.Name} add${entity.Name}(${entity.RootPackage}.${entity.Name} model) throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         hibernateTemplate.save(model);
+         return get${entity.Name}(model.getPrimaryKey());
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished add${entity.Name}(${entity.RootPackage}.${entity.Name} model)");
+      }
+   }
+
+   /**
+    * Stores the <code>${entity.Name}</code> in the database.
+    *
+    * @param model the data model to store
+    */
+   public void save${entity.Name}(${entity.RootPackage}.${entity.Name} model) throws GenericBusinessException {
+      // We have to create an object:
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         // Now update the data.
+         hibernateTemplate.update(model);
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished save${entity.Name}(${entity.RootPackage}.${entity.Name} model)");
+      }
+   }
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    */
+   public void delete${entity.Name}(${entity.PrimaryKeyType} id) throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         // First get the data.
+         ${entity.Name} bean = (${entity.Name}) hibernateTemplate.get(${entity.Name}.class, id);
+         hibernateTemplate.delete(bean);
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished delete${entity.Name}(${entity.PrimaryKeyType} id)");
+      }
+   }
+#end
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+#if ("false" == $entity.getIsAssociationEntity())
+   /**
+    * Retrieves a data object from the database by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name} the data object
+    */
+   public ${entity.RootPackage}.${entity.Name} get${entity.Name}(${entity.PrimaryKeyType} id) throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+      ${entity.Name} bean = (${entity.Name}) hibernateTemplate.get(${entity.Name}.class, id);
+      return bean;
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished get${entity.Name}(${entity.PrimaryKeyType} id)");
+      }
+   }
+
+   /**
+    * Returns a list of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a list of ${entity.Name} objects.
+    */
+   public List get${entity.Name}List() throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+
+      String queryString = "from " + ${entity.Name}.class.getName() + " e";
+#if ($entity.isCompositeKey())
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+      // Add a an order by on all primary keys to assure reproducable results.
+      String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+      orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+      queryString += orderByPart;
+#end
+#if (${config.templateSettings.serviceTier} != "Spring")
+      Query query = hibernateTemplate.createQuery(queryString);
+      List list = hibernateTemplate.list(query);
+#else
+      List list = hibernateTemplate.find(queryString);
+#end
+
+      return list;
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished get${entity.Name}List");
+      }
+   }
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * any zero/negative values are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a list of ${entity.Name} objects, of size <code>(endIndex - startIndex)</code>.
+    */
+   public List get${entity.Name}List(int startIndex, int endIndex) throws GenericBusinessException {
+      if (startIndex < 1) {
+         startIndex = 1;
+      }
+      if ( (endIndex - startIndex) < 0) {
+         // Just return an empty list.
+         return new ArrayList();
+      }
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         String queryString = "from " + ${entity.Name}.class.getName() + " e";
+#if ($entity.isCompositeKey())
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+         // Add a an order by on all primary keys to assure reproducable results.
+         String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+         orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+         queryString += orderByPart;
+#end
+#if (${config.templateSettings.serviceTier} != "Spring")
+         Query query = hibernateTemplate.createQuery(queryString);
+         query.setFirstResult(startIndex - 1);
+         query.setMaxResults(endIndex - startIndex + 1);
+         List list = hibernateTemplate.list(query);
+         return list;
+#else
+         final String queryStr = queryString;
+         final int start = startIndex;
+         final int end = endIndex;
+         return (List) hibernateTemplate.execute(new HibernateCallback() {
+             public Object doInHibernate(Session session) throws HibernateException {
+                Query query;
+                query = session.createQuery(queryStr);
+                query.setFirstResult(start - 1);
+                query.setMaxResults(end - start + 1);
+                return query.list();
+             }
+         });
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished get${entity.Name}List(int startIndex, int endIndex)");
+      }
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the database.
+    *
+    * @return an integer value.
+    */
+   public int get${entity.Name}ListSize() throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         String queryString = "select count(*) from " + ${entity.Name}.class.getName();
+#if (${config.templateSettings.serviceTier} != "Spring")
+         Query query = hibernateTemplate.createQuery(queryString);
+         List list = hibernateTemplate.list(query);
+#else
+         List list = hibernateTemplate.find(queryString);
+#end
+         Integer countResult = (Integer) list.get(0);
+         return countResult.intValue();
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished get${entity.Name}ListSize()");
+      }
+   }
+#end
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach ($field in $entity.NonRelationFields)
+#set ($searchable = "true")
+#if ($field.isPrimaryKey())
+#if ($entity.isCompositeKey())
+## If a primary key and composite, than not searchable.
+#set ($searchable = "false")
+#end
+#end
+#if ($searchable == "true")
+    /**
+     *
+     * Retrieves a list of data object for the specified $field.Name field.
+     * To use a wildcard search, use a % in the query.
+     *
+     * @param $field.Name the field
+     * @return List of ${entity.Name} data objects, empty list in case no results were found.
+     */
+    public java.util.List find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name) throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         String queryString = "from " + ${entity.Name}.class.getName() + " e where e.$field.Name like :$field.Name ";
+#if ($entity.isCompositeKey())
+## Do nothing in case it is a composite primary key.
+## Currently it is not clear how to do een order by on a composite primary key.
+#else
+         // Add a an order by on all primary keys to assure reproducable results.
+         String orderByPart = "";
+#set ($pkCount = 0)
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#set ($pkCount = $pkCount + 1)
+         orderByPart += "#if ($pkCount == 1) order by#end#if ($pkCount > 1),#end e.$field.Name";
+#end
+#end
+         queryString += orderByPart;
+#end
+#if (${config.templateSettings.serviceTier} != "Spring")
+         Query query = hibernateTemplate.createQuery(queryString);
+         hibernateTemplate.setQueryParameter(query, "$field.Name", $field.Name);
+         List list = hibernateTemplate.list(query);
+#else
+         List list = hibernateTemplate.findByNamedParam(queryString, "$field.Name", $field.Name);
+#end
+         return list;
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name)");
+      }
+    }
+#end
+#end
+#end
+#end
+##
+## Set the relation methods.
+##
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach($relation in $entity.Relations)
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+#if ($relation.isTargetMultiple())
+    * These objects are in a many-to-one relation by the ${relation.FieldName.Sentensized} member.
+#else
+    * These objects are in a one-to-one relation by the ${relation.FieldName.Sentensized} member.
+#end
+    *
+    * @param ${entity.Name.Desentensized} for which the related <code>${relation.RelatedEntity.Name.Desentensized}</code> should be retrieved.
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    */
+   public ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name} get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}) {
+      return ${entity.Name.Desentensized}.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+#if ($relation.isTargetMultiple())
+    * These objects are in a many-to-one relation by the ${relation.FieldName.Sentensized} member.
+#else
+    * These objects are in a one-to-one relation by the ${relation.FieldName.Sentensized} member.
+#end
+    *
+    * @param ${entity.Name.Desentensized} for which the <code>${relation.RelatedEntity.Name.Desentensized}</code> should be set.
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}, ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name} ${relation.RelatedEntity.Name.Desentensized}) {
+      ${entity.Name.Desentensized}.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name.Desentensized});
+   }
+#end
+#end
+#end
+
+##
+## Facade for the relations that point to this entity..
+##
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+
+   /**
+    * Add ${relation.localEntity.Name} to ${entity.Name} .
+    *
+    * @param ${entity.Name.Desentensized} the object
+    * @param ${relation.localEntity.Name.Desentensized} the object to be added.
+    */
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}, ${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized}) throws GenericBusinessException {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end
+      try {
+         ${entity.Name} data = ${entity.Name.Desentensized};
+         ${relation.localEntity.Name} relation = ${relation.localEntity.Name.Desentensized};
+         hibernateTemplate.saveOrUpdate(relation);
+         data.add${relation.FieldName.Sentensized}${relation.localEntity.Name}(relation);
+         hibernateTemplate.saveOrUpdate(data);
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}, ${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized})");
+      }
+   }
+
+   /**
+    * Get a list of related ${relation.localEntity.Name} objects of the ${entity.Name} object.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return List of ${relation.localEntity.Name} objects.
+    */
+   public java.util.List get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}) throws GenericBusinessException
+   {
+      ${entity.Name} data = ${entity.Name.Desentensized};
+      java.util.ArrayList result = new java.util.ArrayList();
+      java.util.Collection list;
+      list = data.get${relation.FieldName.Sentensized}${relation.localEntity.Name}List();
+      if (list == null) {
+         return new java.util.ArrayList();
+      }
+      for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+         ${relation.localEntity.Name} o = (${relation.localEntity.Name}) iterator.next();
+         result.add(o);
+      }
+      return result;
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name} related objects to the ${entity.Name} object.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}, java.util.List ${relation.localEntity.Name.Desentensized}List) throws GenericBusinessException
+   {
+#if (${config.templateSettings.serviceTier} != "Spring")
+      ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#end         
+      try {
+         ${entity.Name} data = ${entity.Name.Desentensized};
+         java.util.ArrayList result = new java.util.ArrayList();
+         if (${relation.localEntity.Name.Desentensized}List == null) {
+            return;
+         }
+         for (Iterator iterator = ${relation.localEntity.Name.Desentensized}List.iterator(); iterator.hasNext();) {
+            ${relation.localEntity.Name} rel =  (${relation.localEntity.Name}) iterator.next();
+            hibernateTemplate.save(rel);
+            result.add(rel);
+         }
+         data.set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(result);
+         hibernateTemplate.merge(data);
+#if (${config.templateSettings.serviceTier} == "Spring")
+      }
+      catch (DataAccessException e) {
+         log.error("DataAccessException", e);
+         throw new GenericBusinessException(e);
+#end
+      } finally {
+         log.debug("finished get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized})");
+      }
+   }
+##
+#else
+## This is a bidirectional one-to-one relation
+
+   /**
+    * Get a ${relation.localEntity.Name} object of the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name} object.
+    */
+    public ${relation.localEntity.Name} get${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+      ${entity.Name} data = ${entity.Name.Desentensized};
+      return data.get${relation.FieldName.Sentensized}${relation.localEntity.Name}();
+    }
+
+   /**
+    * Set a ${relation.localEntity.Name} object to the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized} the related object.
+    */
+    public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name} ${entity.Name.Desentensized}, ${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+      ${entity.Name} data = ${entity.Name.Desentensized};
+      data.set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name.Desentensized});
+    }
+
+#end
+#end
+#end
+#end
+#end
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach ($relation in $entity.Relations)
+    /**
+     * Retrieves#if (${relation.TargetMultiple}) a list of ${entity.Name} data objects#else the single corresponding ${entity.Name} data object#end for the specified subject field.
+     *
+     * @param ${relation.FieldName} the field
+     * @return#if (${relation.TargetMultiple}) List of ${entity.Name} data objects, empty list#else the single corresponding ${entity.Name} data object, or <code>null</code>#end if no results were found.
+     */
+	 public#if (${relation.TargetMultiple}) java.util.List#else ${entity.Name}#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName}) throws ${app.RootPackage}.exception.GenericBusinessException {
+		log.fatal("Not implemented");
+		return null;
+	}
+#end
+#end
+#end
+
+}
+#end
+#end

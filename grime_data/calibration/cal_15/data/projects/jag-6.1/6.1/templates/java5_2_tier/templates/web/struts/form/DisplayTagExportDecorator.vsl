@@ -1,0 +1,80 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+#if ($entityBean.isCompositeKey())
+////File: ./src/java-web/${app.RootPath}/decorator/${entityBean.Name}ExportDecorator.java
+package ${app.RootPackage}.decorator;
+
+import org.displaytag.decorator.TableDecorator;
+
+#foreach ($entity in $sessionBean.EntitiesAndReferences)
+#if ("false" == $entity.getIsAssociationEntity())
+import ${entity.RootPackage}.*;
+#end
+#end
+#foreach ($entity in $sessionBean.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+#end
+#end
+
+/**
+ * This class is a decorator for exporting the ${entityBean.Name} that we keep in our List.
+ *
+ */
+public class ${entityBean.Name}ExportDecorator extends TableDecorator {
+
+#foreach ($field in $entityBean.Fields)
+
+   /**
+    * Get a link
+    * @return String
+    */
+   public String get${field.Name.Sentensized}PrimaryKeyLink() {
+      ${entityBean.Name} object = (${entityBean.Name}) getCurrentRowObject();
+      return "" + object.get${field.Name.Sentensized}();
+   }
+#end
+
+#foreach($relation in $entityBean.Relations)
+
+#foreach ($field2 in ${relation.RelatedEntity.Fields})
+
+   /**
+    * Get a link to the related entity
+    * @return String
+    */
+   public String get${field2.Name.Sentensized}${relation.RelatedEntity.Name}PrimaryKeyLink() {
+      ${relation.RelatedEntity.Name} object = (${relation.RelatedEntity.Name}) getCurrentRowObject();
+      return "" + object.get${field2.Name.Sentensized}();
+   }
+#end
+#end
+}
+
+#end
+#end
+#end
+#end
+#end

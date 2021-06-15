@@ -1,0 +1,194 @@
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: toolbar.jspf,v 1.2.2.1 2005/10/08 17:13:35 colinmacleod Exp $
+//
+// Stores all the toolbar used in addressbook screens
+//
+// Since: ivata groupware 0.9 (2002-08-18)
+// Author: Colin MacLeod <colin.macleod@ivata.com>
+// $Revision: 1.2.2.1 $
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: toolbar.jspf,v $
+// Revision 1.2.2.1  2005/10/08 17:13:35  colinmacleod
+// For now, the groups and addressbooks share the same window (they use
+// the same mask form in the session to fix some bugs).
+//
+// Revision 1.2  2005/04/09 17:19:13  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:51:13  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.5  2004/11/12 15:57:09  colinmacleod
+// Removed dependencies on SSLEXT.
+// Moved Persistence classes to ivata masks.
+//
+// Revision 1.4  2004/07/14 22:50:21  colinmacleod
+// Replaced bean:define with extended igw:bean.
+//
+// Revision 1.3  2004/07/14 20:59:51  colinmacleod
+// Changed all occurrences of jsp:useBean to igw:bean (better tomcat compatibility).
+//
+// Revision 1.2  2004/03/21 21:16:20  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 20:25:41  colinmacleod
+// *** empty log message ***
+//
+// Revision 1.1.1.1  2004/01/27 20:58:03  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.4  2003/11/13 16:03:16  jano
+// commitng everything to CVS
+// can deploy and application is ruuning, can login into
+//
+// Revision 1.3  2003/11/07 14:54:15  jano
+// commitng after fixing some bugs
+//
+// Revision 1.19  2003/08/19 14:58:31  jano
+// fixing users & rights popup window
+//
+// Revision 1.18  2003/08/05 14:58:04  jano
+// addressBook extension
+//
+// Revision 1.17  2003/07/25 11:45:51  jano
+// adding functionality for addressBook extension
+//
+// Revision 1.16  2003/07/17 07:01:49  peter
+// user rights toolbarbutton commented out for now
+//
+// Revision 1.15  2003/06/02 23:54:02  colin
+// added user pop up
+//
+// Revision 1.14  2003/04/01 18:08:04  colin
+// changed hasScrollbars to hasScrollBars
+//
+// Revision 1.13  2003/02/25 17:13:40  colin
+// fixed display, recipients of mail subsystem
+//
+// Revision 1.12  2003/02/25 07:28:54  colin
+// restructured java file paths
+//
+// Revision 1.11  2003/02/20 16:06:06  colin
+// made the person popup wider
+//
+// Revision 1.10  2003/02/18 13:13:55  colin
+// reverted to single quotes for popups
+//
+// Revision 1.9  2003/02/18 10:38:26  colin
+// conversion to Struts and pop-ups
+//
+// Revision 1.8  2003/01/30 08:56:35  colin
+// updated for sslext, struts
+//
+// Revision 1.7  2003/01/23 16:52:21  peter
+// links and forms changed to sslext, checkLogin added
+//
+// Revision 1.6  2002/12/09 13:22:55  jano
+// we want bigger popup window
+//
+// Revision 1.5  2002/11/25 08:54:17  peter
+// internationalisation
+//
+// Revision 1.4  2002/09/25 11:42:30  colin
+// bugfix in image name/title attribute
+//
+// Revision 1.3  2002/09/23 13:22:31  colin
+// Improved tooltip values
+//
+// Revision 1.2  2002/09/19 14:47:50  jano
+// new attribute TITLE
+//
+// Revision 1.1  2002/08/26 09:23:03  colin
+// added new toolbar with three basic buttons:
+// new person
+// main list
+// group maintenance
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<igw:bean id='addressBookPopUp' scope='page' type='com.ivata.mask.web.javascript.JavaScriptWindow'/>
+<%-- TODO: for now, you can have either addressbook or group - these need to replace the following lines
+<jsp:setProperty name='addressBookPopUp' property='windowName' value='addressBookChooser'/>
+<jsp:setProperty name='addressBookPopUp' property='frameName' value='ivataAddressBookFrame'/>
+--%>
+  <jsp:setProperty name='addressBookPopUp' property='windowName' value='groupChooser'/>
+  <jsp:setProperty name='addressBookPopUp' property='frameName' value='ivataGroupFrame'/>
+<jsp:setProperty name='addressBookPopUp' property='page' value='/addressBook/groupFrame.action?mode=addressBook'/>
+<jsp:setProperty name='addressBookPopUp' property='pageContext' value='<%=pageContext%>'/>
+<jsp:setProperty name='addressBookPopUp' property='height' value='550'/>
+<jsp:setProperty name='addressBookPopUp' property='width' value='850'/>
+<jsp:setProperty name='addressBookPopUp' property='hasScrollBars' value='yes'/>
+
+<igw:bean id='userPopUp' scope='page' type='com.ivata.mask.web.javascript.JavaScriptWindow'/>
+<jsp:setProperty name='userPopUp' property='windowName' value='userChooser'/>
+<jsp:setProperty name='userPopUp' property='frameName' value='ivataUserFrame'/>
+<jsp:setProperty name='userPopUp' property='page' value='/addressBook/userRight.jsp?reset=true'/>
+<jsp:setProperty name='userPopUp' property='pageContext' value='<%=pageContext%>'/>
+<jsp:setProperty name='userPopUp' property='height' value='550'/>
+<jsp:setProperty name='userPopUp' property='width' value='450'/>
+<jsp:setProperty name='userPopUp' property='hasScrollBars' value='yes'/>
+
+<igw:bean id='userGroupPopUp' scope='page' type='com.ivata.mask.web.javascript.JavaScriptWindow'/>
+<jsp:setProperty name='userGroupPopUp' property='windowName' value='userGroupChooser'/>
+<jsp:setProperty name='userGroupPopUp' property='frameName' value='ivataUserGroupFrame'/>
+<jsp:setProperty name='userGroupPopUp' property='page' value='/addressBook/groupFrame?mode=userGroup'/>
+<jsp:setProperty name='userGroupPopUp' property='pageContext' value='<%=pageContext%>'/>
+<jsp:setProperty name='userGroupPopUp' property='height' value='550'/>
+<jsp:setProperty name='userGroupPopUp' property='width' value='750'/>
+<jsp:setProperty name='userGroupPopUp' property='hasScrollBars' value='yes'/>
+
+<%@include file='/addressBook/include/personPopUp.jspf'%>
+
+<imtheme:toolBar>
+  <imtheme:toolBarButton javaScript='<%=personPopUp.toString()%>' image='newcontact' bundle='addressBook' titleKey='toolbar.newContact.title'/>
+  <imtheme:toolBarSpacer/>
+
+  <%-- maintain addressBooks --%>
+  <imtheme:toolBarButton javaScript='<%=addressBookPopUp.toString()%>' image='addressBook' bundle='addressBook' titleKey='toolbar.maintainAddressBook.title'/>
+
+  <%-- maintain groups in addressBooks --%>
+  <jsp:setProperty name='addressBookPopUp' property='windowName' value='groupChooser'/>
+  <jsp:setProperty name='addressBookPopUp' property='frameName' value='ivataGroupFrame'/>
+  <jsp:setProperty name='addressBookPopUp' property='page' value='/addressBook/groupFrame.action?mode=group'/>
+  <jsp:setProperty name='addressBookPopUp' property='pageContext' value='<%=pageContext%>'/>
+  <imtheme:toolBarButton javaScript='<%=addressBookPopUp.toString()%>' image='addressBookGroup' bundle='addressBook' titleKey='toolbar.maintainAddressBookGroups.title'/>
+
+  <%-- no real user rights in ivata groupware 0.10 - these are out for now --%>
+  <%-- maintain users and their rights - - %>
+  <imtheme:toolBarButton javaScript='<%=userPopUp.toString()%>' image='user' bundle='addressBook' titleKey='toolbar.user.title'/>
+  <%-- maintain user's groups - - %>
+  <imtheme:toolBarButton javaScript='<%=userGroupPopUp.toString()%>' image='userGroup' bundle='addressBook' titleKey='toolbar.userGroup.title'/>
+  TODO: user buttons commented out for now --%>
+</imtheme:toolBar>

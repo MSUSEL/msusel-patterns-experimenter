@@ -1,0 +1,84 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+////File: ${paths.JspOutput}/Edit${entityBean.Name}.html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+   <head>
+      <title>The JAG Test Console</title>
+
+      <meta http-equiv="Expires" content="-1"/>
+      <meta http-equiv="Pragma" content="no-cache"/>
+      <meta http-equiv="Cache-Control" content="no-cache"/>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, print"/>
+   </head>
+
+   <body jwcid="@Body">
+      <div jwcid="@Header"/>
+      <div id="body">
+         <form id="${entityBean.Name}Form" method="post" action="Edit${entityBean.Name}.html" jwcid="@Form" delegate="ognl:validationDelegate">
+            <input type="hidden" jwcid="@Hidden" value="ognl:primaryKey"/>
+            <div class="exportlinks">&nbsp;<a href="Home.html" jwcid="@PageLink" page="Home"><strong>Index</strong></a>
+               &nbsp;&nbsp;|&nbsp;&nbsp;<a href="ListTUser.html" jwcid="@PageLink" page="List${entityBean.Name}"><strong>${entityBean.Name} List</strong></a>
+               &nbsp;&nbsp;|&nbsp;&nbsp;<a href="EditTUser.html" jwcid="@PageLink" page="Edit${entityBean.Name}"><strong>New ${entityBean.Name}</strong></a>
+            </div>
+            <table style="background-color:#f0e0a0">
+               <tr>
+                  <td colspan="4">
+                     <input type="hidden" jwcid="addingField"/>
+                     <input type="hidden" jwcid="populatedField"/>
+                     <input type="hidden" jwcid="previousPageField"/>
+                     <table cellspacing="0" cellpadding="0" style="background-color:#eeeeee">
+#set ($count = 0)
+#foreach ($field in $entityBean.Fields)
+                        <tr>
+#if ($entityBean.isCompositeKey())
+#if ($field.isPrimaryKey())
+#set ($count = $count + 1)
+#end
+                           <td colspan="2" class="itemCell"><b><span jwcid="#if ($field.isPrimaryKey())primaryKeyLabel#if ($count > 1)$count#end#else${field.Name}Label#end">${field.Name}</span>&nbsp;:</b></td>
+                           <td><input #if(${field.maxSize} != -1)maxlength="${field.maxSize}" #if(${field.maxSize} > 50 )size="50"#else size="${field.maxSize}"#end#end type="text" name="${field.Name}" value="" jwcid="#if ($field.isPrimaryKey())primaryKeyField#if ($count > 1)$count#end#else${field.Name}Field#end" /></td>
+#else
+                           <td colspan="2" class="itemCell"><b><span jwcid="#if ($field.isPrimaryKey())primaryKeyLabel#else${field.Name}Label#end">${field.Name}</span>&nbsp;:</b></td>
+                           <td><input #if(${field.maxSize} != -1)maxlength="${field.maxSize}" #if(${field.maxSize} > 50 )size="50"#else size="${field.maxSize}"#end#end type="text" name="${field.Name}" value="" jwcid="#if ($field.isPrimaryKey())primaryKeyField#else${field.Name}Field#end" /></td>
+#end
+                        </tr>
+#end
+                     </table>
+                  </td>
+               </tr>
+               <tr style="background-color:#f0e0a0">
+                  <td>&nbsp;</td>
+                  <td colspan="2">
+                     <input type="submit" name="save" value="Save" jwcid="saveButton"/>
+                     <input type="submit" name="delete" value="Delete" disabled="disabled" jwcid="deleteButton"/>
+                  </td>
+               </tr>
+            </table>
+         </form>
+      </div>
+      <div jwcid="@Footer"/>
+   </body>
+</html>
+#end
+#end
+#end

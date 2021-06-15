@@ -1,0 +1,73 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ${paths.ConfigOutput}/WEB-INF/validation.xml
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE form-validation PUBLIC
+"-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1.3//EN" "http://jakarta.apache.org/commons/dtds/validator_1_1_3.dtd">
+
+<form-validation>
+   <global>
+      <constant>
+         <constant-name>postcode</constant-name>
+         <constant-value>^[0-9]{4}[A-Za-z]{2}$</constant-value>
+      </constant>
+      <constant>
+         <constant-name>ten_digit_number</constant-name>
+         <constant-value>^[0-9]{1,10}$</constant-value>
+      </constant>
+      <constant>
+         <constant-name>date_format</constant-name>
+         <constant-value>${app.DateFormat}</constant-value>
+      </constant>
+      <constant>
+         <constant-name>timestamp_format</constant-name>
+         <constant-value>${app.TimestampFormat}</constant-value>
+      </constant>
+   </global>
+
+#foreach($sessionBean in $sessions)
+#set ($count = 0)
+#foreach ($entityBean in $sessionBean.Entities)
+#if ($count == 0)
+   <formset>
+#end
+      <form name="${entityBean.Name.Desentensized}Form">
+#foreach($relation in $entityBean.Relations)
+         <field property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.ForeignPkFieldName.CrazyStruts}" depends="${relation.ForeignPkField.ValidationDepends}">
+            <arg0 key="${entityBean.Name.Desentensized}Form.${relation.ForeignPkFieldName}.displayName"/>
+            <arg0 name="required" key="${entityBean.Name.Desentensized}Form.${relation.ForeignPkFieldName}.displayName"/>
+            ${relation.ForeignPkField.ValidationXml}
+         </field>
+#end
+#foreach($field in $entityBean.NonRelationFields)
+         <field property="${field.Name.CrazyStruts}" depends="${field.ValidationDepends}">
+            <arg0 key="${entityBean.Name.Desentensized}Form.${field.Name}.displayName"/>
+            <arg0 name="required" key="${entityBean.Name.Desentensized}Form.${field.Name}.displayName"/>
+            ${field.ValidationXml}
+         </field>
+
+#end
+      </form>
+#set ($count = $count + 1)
+#end
+#if ($count > 0)
+   </formset>
+#end
+#end
+</form-validation>
+#end

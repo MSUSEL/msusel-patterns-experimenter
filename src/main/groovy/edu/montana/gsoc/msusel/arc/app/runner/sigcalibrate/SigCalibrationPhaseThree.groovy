@@ -52,8 +52,8 @@ class SigCalibrationPhaseThree extends WorkFlow {
 
     @Override
     void initWorkflow(ConfigObject runnerConfig, int num) {
-        metrics   = context.getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
-        sigmain   = context.getRegisteredCommand(SigMainConstants.SIGCAL_CMD_NAME)
+        metrics = context.getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
+        sigmain = context.getRegisteredCommand(SigMainConstants.SIGCAL_CMD_NAME)
     }
 
     @Override
@@ -75,7 +75,7 @@ class SigCalibrationPhaseThree extends WorkFlow {
     }
 
     void runTools() {
-//        metrics.execute(context)
+        metrics.execute(context)
         sigmain.execute(context)
     }
 }

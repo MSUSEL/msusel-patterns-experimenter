@@ -1,0 +1,33 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "Sun ONE Application Server 7")
+////File: ${paths.ConfigOutput}/sunone_mergedir/sunone-pm-descriptors.xml
+<pm-descriptors>
+    <pm-descriptor>
+        <pm-identifier>SunONE</pm-identifier>
+        <pm-version>1.0</pm-version>
+        <pm-class-generator>com.iplanet.ias.persistence.internal.ejb.ejbc.JDOCodeGenerator</pm-class-generator>
+        <pm-mapping-factory>com.iplanet.ias.cmp.NullFactory</pm-mapping-factory>
+    </pm-descriptor>
+    <pm-inuse>
+        <pm-identifier>SunONE</pm-identifier>
+        <pm-version>1.0</pm-version>
+    </pm-inuse>
+</pm-descriptors>
+#end
+#end

@@ -1,0 +1,216 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package org.hsqldb.lib;
+
+import java.util.NoSuchElementException;
+
+import org.hsqldb.store.BaseHashMap;
+
+/**
+ * This class does not store null keys.
+ *
+ * @author Fred Toussi (fredt@users dot sourceforge.net)
+ * @version 1.9.0
+ * @since 1.9.0
+ */
+public class LongValueHashMap extends BaseHashMap {
+
+    Set keySet;
+
+    public LongValueHashMap() {
+        this(8);
+    }
+
+    public LongValueHashMap(int initialCapacity)
+    throws IllegalArgumentException {
+        super(initialCapacity, BaseHashMap.objectKeyOrValue,
+              BaseHashMap.longKeyOrValue, false);
+    }
+
+    public long get(Object key) throws NoSuchElementException {
+
+        if (key == null) {
+            throw new NoSuchElementException();
+        }
+
+        int hash   = key.hashCode();
+        int lookup = getLookup(key, hash);
+
+        if (lookup != -1) {
+            return longValueTable[lookup];
+        }
+
+        throw new NoSuchElementException();
+    }
+
+    public long get(Object key, int defaultValue) {
+
+        if (key == null) {
+            throw new NoSuchElementException();
+        }
+
+        int hash   = key.hashCode();
+        int lookup = getLookup(key, hash);
+
+        if (lookup != -1) {
+            return longValueTable[lookup];
+        }
+
+        return defaultValue;
+    }
+
+    public boolean get(Object key, long[] value) {
+
+        if (key == null) {
+            throw new NoSuchElementException();
+        }
+
+        int hash   = key.hashCode();
+        int lookup = getLookup(key, hash);
+
+        if (lookup != -1) {
+            value[0] = longValueTable[lookup];
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public Object getKey(long value) {
+
+        BaseHashIterator it = new BaseHashIterator(false);
+
+        while (it.hasNext()) {
+            long i = it.nextLong();
+
+            if (i == value) {
+                return objectKeyTable[it.getLookup()];
+            }
+        }
+
+        return null;
+    }
+
+    public boolean put(Object key, long value) {
+
+        if (key == null) {
+            throw new NoSuchElementException();
+        }
+
+        int oldSize = size();
+
+        super.addOrRemove(0, value, key, null, false);
+
+        return oldSize != size();
+    }
+
+    public boolean remove(Object key) {
+
+        int oldSize = size();
+
+        super.addOrRemove(0, 0, key, null, true);
+
+        return oldSize != size();
+    }
+
+    public boolean containsKey(Object key) {
+        return super.containsKey(key);
+    }
+
+    public Set keySet() {
+
+        if (keySet == null) {
+            keySet = new KeySet();
+        }
+
+        return keySet;
+    }
+
+    class KeySet implements Set {
+
+        public Iterator iterator() {
+            return LongValueHashMap.this.new BaseHashIterator(true);
+        }
+
+        public int size() {
+            return LongValueHashMap.this.size();
+        }
+
+        public boolean contains(Object o) {
+            return containsKey(o);
+        }
+
+        public Object get(Object key) {
+
+            int lookup = LongValueHashMap.this.getLookup(key, key.hashCode());
+
+            if (lookup < 0) {
+                return null;
+            } else {
+                return LongValueHashMap.this.objectKeyTable[lookup];
+            }
+        }
+
+        public boolean add(Object value) {
+            throw new RuntimeException();
+        }
+
+        public boolean addAll(Collection c) {
+            throw new RuntimeException();
+        }
+
+        public boolean remove(Object o) {
+
+            int oldSize = size();
+
+            LongValueHashMap.this.remove(o);
+
+            return size() != oldSize;
+        }
+
+        public boolean isEmpty() {
+            return size() == 0;
+        }
+
+        public void clear() {
+            LongValueHashMap.this.clear();
+        }
+    }
+
+    public void putAll(LongValueHashMap t) {
+
+        Iterator it = t.keySet().iterator();
+
+        while (it.hasNext()) {
+            Object key = it.next();
+
+            put(key, t.get(key));
+        }
+    }
+}

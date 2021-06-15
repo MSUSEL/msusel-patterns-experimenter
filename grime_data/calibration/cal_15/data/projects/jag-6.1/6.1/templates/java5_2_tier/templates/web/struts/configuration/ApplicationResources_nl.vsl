@@ -1,0 +1,68 @@
+#*  Copyright (C) 2003 Finalist IT Group
+ 
+    This file is part of JAG - the Java J2EE Application Generator
+ 
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/web/WEB-INF/classes/ApplicationResources_nl.properties
+#===============================
+#======== EXCEPTIONS ===========
+#===============================
+unspecified=Er heeft een ungespecificeerde exceptie plaatsgevonden.
+
+errors.header=
+errors.footer=
+
+# Struts Validator Error Messages
+errors.minlength={0} kan niet kleiner zijn dan {1} characters.
+errors.invalid={0} is ongeldig.
+errors.byte={0} moet een byte zijn.
+errors.short={0} moet een short zijn.
+errors.long={0} moet een long zijn.
+errors.double={0} moet een double zijn.
+errors.creditcard={0} is een ongeldig credit card nummer.
+errors.email={0} is een ongeldig e-mail address.
+errors.required='{0}' mag niet leeg zijn.
+errors.date=De datum '{0}' moet aan het formaat '${app.DateFormat}' voldoen
+errors.postcode='{0}' moet een geldige Nederlandse postcode zijn, bvb. 1234AB
+errors.maxlength='{0}' kan maximaal {1} karakters bevatten.
+errors.integer='{0}' moet een geheel getal zijn.
+errors.range='{0}' moet een geheel tussen {1} en {2} zijn.
+errors.somethingSelected=U moet een selectie maken voor het veld '{0}'.
+errors.ten_digit_number='{0}' moet een nummer tussen 1 en 9999999999 zijn.
+errors.decimal='{0}' moet maximaal {1} getallen achter de comma hebben en in totaal maximaal {2} getallen bevatten.
+errors.float='{0}' moet een float getal zijn.
+
+# Application messages
+entity.list=Lijst
+entity.new=Nieuw
+entity.index=Inhoud
+entity.components=Componenten
+
+# Display names used to represent form input field values in the presentation layer.
+#foreach($session in $sessions)
+#foreach($entity in $session.Entities)
+#foreach($field in $entity.NonRelationFields) 
+${entity.Name.Desentensized}Form.${field.Name.Desentensized}.displayName=${field.Name.Sentensized}
+#end
+#foreach($relation in $entity.Relations)
+${entity.Name.Desentensized}Form.${relation.FieldName}.displayName=${relation.FieldName}${relation.RelatedEntity.Name}
+${entity.Name.Desentensized}Form.${relation.ForeignPkFieldName}.displayName=${entity.Name.Desentensized}Form.${relation.ForeignPkFieldName}
+#end
+
+#end
+#end
+#end

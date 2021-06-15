@@ -1,0 +1,42 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+#id, #name, #hspace, #vspace, #class_name, #align {	width: 100px }
+#hspace, #vspace { width: 50px }
+#flash_quality, #flash_align, #flash_scale, #flash_salign, #flash_wmode { width: 100px }
+#flash_base, #flash_flashvars { width: 240px }
+#width, #height { width: 40px }
+#src, #media_type { width: 250px }
+#class { width: 120px }
+#prev { margin: 0; border: 1px solid black; width: 380px; height: 230px; overflow: auto }
+.panel_wrapper div.current { height: 390px; overflow: auto }
+#flash_options, #shockwave_options, #qt_options, #wmp_options, #rmp_options { display: none }
+.mceAddSelectValue { background-color: #DDDDDD }
+#qt_starttime, #qt_endtime, #qt_fov, #qt_href, #qt_moveid, #qt_moviename, #qt_node, #qt_pan, #qt_qtsrc, #qt_qtsrcchokespeed, #qt_target, #qt_tilt, #qt_urlsubstituten, #qt_volume { width: 70px }
+#wmp_balance, #wmp_baseurl, #wmp_captioningid, #wmp_currentmarker, #wmp_currentposition, #wmp_defaultframe, #wmp_playcount, #wmp_rate, #wmp_uimode, #wmp_volume { width: 70px }
+#rmp_console, #rmp_numloop, #rmp_controls, #rmp_scriptcallbacks { width: 70px }
+#shockwave_swvolume, #shockwave_swframe, #shockwave_swurl, #shockwave_swstretchvalign, #shockwave_swstretchhalign, #shockwave_swstretchstyle { width: 90px }
+#qt_qtsrc { width: 200px }

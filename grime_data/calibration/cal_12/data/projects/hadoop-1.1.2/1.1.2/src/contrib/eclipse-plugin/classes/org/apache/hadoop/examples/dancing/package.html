@@ -1,0 +1,103 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<body>
+
+This package is a distributed implementation of Knuth's <a
+href="http://en.wikipedia.org/wiki/Dancing_Links">dancing links</a>
+algorithm that can run under Hadoop. It is a generic model for
+problems, such as tile placement, where all of the valid choices can
+be represented as a large sparse boolean array where the goal is to
+pick a subset of the rows to end up with exactly 1 <b>true</b> value
+in each column.
+
+<p>
+
+The package includes two example applications: a <a
+href="http://en.wikipedia.org/wiki/Pentomino">pentomino</a> solver and
+a sudoku solver. 
+
+<p>
+
+The pentomino includes both a "normal" pentomino set and a one-sided
+set where the tiles that are different when flipped are
+duplicated. The pentomino solver has a Hadoop driver application to
+launch it on a cluster. In Knuth's paper on dancing links, he
+describes trying and failing to solve the one-sided pentomino in a
+9x10 board. With the advances of computers and a cluster, it takes a
+small (12 node) hadoop cluster 9 hours to find all of the solutions
+that Knuth estimated would have taken him months.
+
+<p>
+
+The sudoku solver is so fast, I didn't bother making a distributed
+version. (All of the puzzles that I've tried, including a 42x42 have
+taken around a second to solve.) On the command line, give the solver
+a list of puzzle files to solve. Puzzle files have a line per a row
+and columns separated by spaces. The squares either have numbers or
+'?' to mean unknown.
+
+<p>
+
+Both applications have been added to the examples jar, so they can be
+run as:
+
+<pre>
+bin/hadoop jar hadoop-examples-*.jar pentomino pent-outdir
+bin/hadoop jar hadoop-examples-*.jar sudoku puzzle.txt
+</pre>
+
+<p>
+
+I (Owen) implemented the original version of the distributed pentomino
+solver for a Yahoo Hack day, where Yahoos get to work on a project of
+their own choosing for a day to make something cool. The following
+afternoon, everyone gets to show off their hacks and gets a free
+t-shirt. I had a lot of fun doing it.
+
+</body>
+</html>

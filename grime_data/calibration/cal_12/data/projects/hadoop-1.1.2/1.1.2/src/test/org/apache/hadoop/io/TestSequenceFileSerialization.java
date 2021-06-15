@@ -1,0 +1,77 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.apache.hadoop.io;
+
+import junit.framework.TestCase;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.SequenceFile.Reader;
+import org.apache.hadoop.io.SequenceFile.Writer;
+
+public class TestSequenceFileSerialization extends TestCase {
+  
+  private Configuration conf;
+  private FileSystem fs;
+  
+  @Override
+  protected void setUp() throws Exception {
+    conf = new Configuration();
+    conf.set("io.serializations",
+        "org.apache.hadoop.io.serializer.JavaSerialization");
+    fs = FileSystem.getLocal(conf);  
+  }
+  
+  @Override
+  protected void tearDown() throws Exception {
+    fs.close();
+  }
+  
+  public void testJavaSerialization() throws Exception {
+    Path file = new Path(System.getProperty("test.build.data",".") +
+        "/test.seq");
+    
+    fs.delete(file, true);
+    Writer writer = SequenceFile.createWriter(fs, conf, file, Long.class,
+        String.class);
+    
+    writer.append(1L, "one");
+    writer.append(2L, "two");
+    
+    writer.close();
+    
+    Reader reader = new Reader(fs, file, conf);
+    assertEquals(1L, reader.next((Object) null));
+    assertEquals("one", reader.getCurrentValue((Object) null));
+    assertEquals(2L, reader.next((Object) null));
+    assertEquals("two", reader.getCurrentValue((Object) null));
+    assertNull(reader.next((Object) null));
+    reader.close();
+    
+  }
+}

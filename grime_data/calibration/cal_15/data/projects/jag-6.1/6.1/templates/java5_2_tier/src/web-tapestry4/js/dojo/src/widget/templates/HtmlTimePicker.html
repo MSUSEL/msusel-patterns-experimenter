@@ -1,0 +1,127 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<div class="timePickerContainer" dojoAttachPoint="timePickerContainerNode">
+	<table class="timeContainer" cellspacing="0" >
+		<thead>
+			<tr>
+				<td dojoAttachEvent="onClick: onSetSelectedHour;">Hour</td>
+				<td class="minutesHeading">Minute</td>
+				<td dojoAttachEvent="onClick: onSetSelectedHour;">&nbsp;</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td valign="top">
+					<table>
+						<tbody dojoAttachPoint="hourContainerNode"  
+							dojoAttachEvent="onClick: onSetSelectedHour;">
+							<tr>
+								<td>12</td>
+								<td>6</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>7</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>8</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>9</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>10</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>11</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td valign="top" class="minutes">
+					<table>
+						<tbody dojoAttachPoint="minuteContainerNode" 
+							dojoAttachEvent="onClick: onSetSelectedMinute;">
+							<tr>
+								<td>00</td>
+								<td>30</td>
+							</tr>
+							<tr>
+								<td>05</td>
+								<td>35</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>40</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>45</td>
+							</tr>
+							<tr>
+								<td>20</td>
+								<td>50</td>
+							</tr>
+							<tr>
+								<td>25</td>
+								<td>55</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td valign="top">
+					<table>
+						<tbody dojoAttachPoint="amPmContainerNode" 
+							dojoAttachEvent="onClick: onSetSelectedAmPm;">
+							<tr>
+								<td>AM</td>
+							</tr>
+							<tr>
+								<td>PM</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<div dojoAttachPoint="anyTimeContainerNode" 
+						dojoAttachEvent="onClick: onSetSelectedAnyTime;" 
+						class="anyTimeContainer">any</div>
+				</td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

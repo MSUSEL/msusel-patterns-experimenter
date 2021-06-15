@@ -1,0 +1,64 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($session in $sessions)
+////File: ${paths.EjbOutput}/${session.RootPath}/${session.Name}Util.java
+package ${session.RootPackage};
+
+/**
+ * Util class for JNDI lookups for ${session.Name} session bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $ $, $Date: 2005/06/29 20:56:25 $
+ */
+public class ${session.Name}Util
+{
+   /**
+    * The COMP name of the ${session.Name} EJB.
+    */
+   public static final String COMP_NAME="java:comp/env/ejb/${session.Name}";
+   /**
+    * The JNDI name of the ${session.Name} EJB.
+    */
+   public static final String JNDI_NAME="ejb/${session.RootPath}/${session.Name}";
+
+   /**
+    * Cached home (EJBHome). Uses lazy loading to obtain its value (loaded by getHome() methods).
+    */
+   private static ${session.RootPackage}.${session.Name}Home cachedHome = null;
+
+   /**
+    * Obtain local home interface from default initial context.
+    * @return Local home interface for ${session.Name}. Lookup using JNDI_NAME
+    * @throws javax.naming.NamingException if home interface couldn't be found.
+    */
+   public static ${session.RootPackage}.${session.Name}Home getHome() 
+           throws javax.naming.NamingException
+   {
+      if (cachedHome == null) {
+            cachedHome = (${session.RootPackage}.${session.Name}Home)
+            ${app.RootPackage}.LookupUtil.lookupHome(null, 
+                    JNDI_NAME, 
+                    ${session.RootPackage}.${session.Name}Home.class);
+      }
+      return cachedHome;
+   }
+}
+#end
+#end
+#end

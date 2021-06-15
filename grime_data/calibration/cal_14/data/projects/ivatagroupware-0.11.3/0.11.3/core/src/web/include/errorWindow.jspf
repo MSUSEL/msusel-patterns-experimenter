@@ -1,0 +1,94 @@
+<%@page import="org.apache.struts.Globals" %>
+<%@page import="org.apache.struts.action.ActionErrors" %>
+<%@page import="org.apache.struts.taglib.TagUtils" %>
+
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: errorWindow.jspf,v 1.3 2005/04/11 10:43:04 colinmacleod Exp $
+//
+// Display a window with error messages if there are any errors.
+//
+// Since: ivata groupware 0.9 (2003-02-22)
+// Author: Colin MacLeod <colin.macleod@ivata.com>
+// $Revision: 1.3 $
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: errorWindow.jspf,v $
+// Revision 1.3  2005/04/11 10:43:04  colinmacleod
+// Switched to using imhtml:errors.
+//
+// Revision 1.2  2005/04/09 17:19:38  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1  2005/03/10 19:23:44  colinmacleod
+// Moved to ivata groupware.
+//
+// Revision 1.4  2004/12/31 18:45:18  colinmacleod
+// Changed struts method empty() to the new version isEmpty().
+//
+// Revision 1.3  2004/12/27 14:52:00  colinmacleod
+// Removed unused references to RequestUtils.
+// Updated other references to Struts 1.2.4 class TagUtils.
+//
+// Revision 1.2  2004/03/21 21:16:24  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 21:32:34  colinmacleod
+// Moved core files to core subproject
+//
+// Revision 1.1.1.1  2004/01/27 20:58:16  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.1.1.1  2003/10/13 20:50:50  colin
+// Restructured portal into subprojects
+//
+// Revision 1.2  2003/02/28 07:30:50  colin
+// added a title
+//
+// Revision 1.1  2003/02/25 08:23:37  colin
+// first version
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<% ActionErrors actionErrorsTest =
+        TagUtils.getInstance().getActionErrors(pageContext, Globals.ERROR_KEY);%>
+<%-- we only want to show the error pane if there really is an error --%>
+<c:if test='<%=(actionErrorsTest != null) && !actionErrorsTest.isEmpty()%>'>
+  <imtheme:window titleKey='error.title.window'>
+    <imtheme:frame>
+      <imtheme:framePane propertiesName='propertiesError'><imhtml:errors/></imtheme:framePane>
+    </imtheme:frame>
+  </imtheme:window>
+  <br/>
+  <br/>
+</c:if>

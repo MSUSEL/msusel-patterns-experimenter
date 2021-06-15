@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project name="hadoopcontrib" default="compile" basedir=".">
+  
+  <!-- In case one of the contrib subdirectories -->
+  <!-- fails the build or test targets and you cannot fix it: -->
+  <!-- Then add to fileset: excludes="badcontrib/build.xml" -->
+
+  <!-- ====================================================== -->
+  <!-- Compile contribs.                                      -->
+  <!-- ====================================================== -->
+  <target name="compile">
+    <subant target="compile">
+      <fileset dir="." includes="*/build.xml"/>
+    </subant>
+  </target>
+  
+  <!-- ====================================================== -->
+  <!-- Package contrib jars.                                  -->
+  <!-- ====================================================== -->
+  <target name="package">
+    <subant target="package">
+      <fileset dir="." includes="*/build.xml"/>
+    </subant>
+  </target>
+  
+  <!-- ====================================================== -->
+  <!-- Test all the contribs.                               -->
+  <!-- ====================================================== -->
+  <target name="test">
+     <property name="hadoop.root" location="${root}/../../../"/>
+     <property name="build.contrib.dir" location="${hadoop.root}/build/contrib"/>
+     <delete file="${build.contrib.dir}/testsfailed"/>
+    <subant target="test">
+      <property name="continueOnFailure" value="true"/>
+      <fileset dir="." includes="hdfsproxy/build.xml"/>
+      <fileset dir="." includes="streaming/build.xml"/>
+      <fileset dir="." includes="fairscheduler/build.xml"/>
+      <fileset dir="." includes="capacity-scheduler/build.xml"/>
+      <fileset dir="." includes="gridmix/build.xml"/>
+    </subant>
+     <available file="${build.contrib.dir}/testsfailed" property="testsfailed"/>
+     <fail if="testsfailed">Tests failed!</fail>
+  </target>
+  
+  
+  <!-- ====================================================== -->
+  <!-- Test all the contrib system tests                     -->
+  <!-- ====================================================== -->
+  <target name="test-system-contrib">
+    <property name="hadoop.root" location="${root}/../../../"/>
+    <property name="build.contrib.dir" location="${hadoop.root}/build/contrib"/>
+    <delete file="${build.contrib.dir}/testsfailed"/>
+    <subant target="test-system">
+       <property name="continueOnFailure" value="true"/>
+       <property name="hadoop.home" value="${hadoop.home}"/>
+       <property name="hadoop.conf.dir" value="${hadoop.conf.dir}"/>
+       <property name="hadoop.conf.dir.deployed"
+           value="${hadoop.conf.dir.deployed}"/>
+       <fileset dir="." includes="hdfsproxy/build.xml"/>
+       <fileset dir="." includes="streaming/build.xml"/>
+       <fileset dir="." includes="fairscheduler/build.xml"/>
+       <fileset dir="." includes="capacity-scheduler/build.xml"/>
+       <fileset dir="." includes="gridmix/build.xml"/>
+    </subant>
+    <available file="${build.contrib.dir}/testsfailed" property="testsfailed"/>
+    <fail if="testsfailed">Tests failed!</fail>
+  </target>
+
+  <!-- ====================================================== -->
+  <!-- Clean all the contribs.                              -->
+  <!-- ====================================================== -->
+  <target name="clean">
+    <subant target="clean">
+      <fileset dir="." includes="*/build.xml"/>
+    </subant>
+  </target>
+
+</project>

@@ -1,0 +1,83 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/web/WEB-INF/error.tld
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+   <tlibversion>1.1</tlibversion>
+   <jspversion>1.1</jspversion>
+   <shortname>Struts 1.2 Error Tag Library</shortname>
+   <tag>
+      <name>exists</name>
+      <tagclass>com.finalist.strutstags.ErrorsExistsTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Check if error exists</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>inverse</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   <tag>
+      <name>errorclass</name>
+      <tagclass>com.finalist.strutstags.ErrorsHtmlClassTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Specify a HTML-class to use if a specific error exists</info>
+      <attribute>
+         <name>property</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>htmlClass</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+   <tag>
+      <name>td</name>
+      <tagclass>com.finalist.strutstags.ErrorsTDTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      <info>Use instead of a TD tag:
+            Either 'property' or 'properties' is required:
+                  'property' specifies a single form property to be watched for validation errors,
+                  'properties' specifies a comma separated list of properties.
+      </info>
+      <attribute>
+         <name>errorClass</name>
+         <required>true</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>htmlClass</name>
+         <required>false</required>
+         <rtexprvalue>false</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>property</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>properties</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>width</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+      <attribute>
+         <name>colspan</name>
+         <required>false</required>
+         <rtexprvalue>true</rtexprvalue>
+      </attribute>
+   </tag>
+
+</taglib>
+#end

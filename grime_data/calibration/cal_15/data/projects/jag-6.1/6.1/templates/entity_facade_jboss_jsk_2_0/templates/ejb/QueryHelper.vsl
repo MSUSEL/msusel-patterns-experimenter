@@ -1,0 +1,79 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.matchBusinessTier("EJB"))
+////File: ${paths.EjbOutput}/${app.RootPath}/QueryHelper.java
+package ${app.RootPackage};
+
+import com.finalist.tools.database.*;
+import com.finalist.util.log.*;
+import java.sql.*;
+import javax.ejb.EJBException;
+
+
+/**
+ * This class is a Helper for the StatementExecutor for getting a database connection.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2005/06/29 20:56:25 $
+ */
+public class QueryHelper extends StatementExecutor {
+
+    /**
+     * The logger
+     */
+    private static Logger log = LogService.getLogger(QueryHelper.class);
+
+    /**
+     * Creates a new instance of QueryHelper
+     */
+   public QueryHelper() {
+      super(createConnection(), new GenericRowMapper());
+   }
+
+    /**
+     * get connecion from datasource.
+     * @return a connection
+     * @throws EJBException
+     */   
+   private static Connection createConnection() throws EJBException {
+      Connection con = null;
+      try {
+         con = ConnectionManager.connect();
+      } 
+      catch (SQLException q) {
+         log.error("SQLException ocurred looking up connection from datasource ", q);
+         throw new EJBException(q);
+      }
+      return con;
+   }
+
+   /**
+    * Close the database connection.
+    */
+   public void close() {
+      try {
+         if (this.conn != null && !this.conn.isClosed()) {
+            conn.close();
+         }
+      } 
+      catch (SQLException e) {
+         log.warn("Error closing the connection", e);
+      }
+   }
+   
+}
+#end

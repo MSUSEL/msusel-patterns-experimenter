@@ -1,0 +1,57 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+/////File: ${paths.EjbOutput}/${app.RootPath}/LookupUtil.java
+package ${app.RootPackage};
+
+/**
+ * Util class for getting the home interface for EJBs.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $ $, $Date: 2005/06/29 20:56:25 $
+ */
+public class LookupUtil {
+   /**
+    * Lookup the home interface.
+    *
+    * @param environment for the JNDI context.
+    * @param jndiName name of the EJB in the JNDI tree.
+    * @param narrowTo class name to which the object has to be narrowed.
+    * @return the home interface for the passed jndi name of the ejb.
+    * @throws javax.naming.NamingException Thrown if lookup fails
+    */
+   public static Object lookupHome(java.util.Hashtable environment, String jndiName, Class narrowTo)
+   throws javax.naming.NamingException {
+      // Obtain initial context
+      javax.naming.InitialContext initialContext = new javax.naming.InitialContext(environment);
+      try {
+         Object objRef = initialContext.lookup(jndiName);
+         // only narrow if necessary
+         if (narrowTo.isInstance(java.rmi.Remote.class)) {
+            return javax.rmi.PortableRemoteObject.narrow(objRef, narrowTo);
+         }
+         else {
+            return objRef;
+         }
+      } finally {
+         initialContext.close();
+      }
+   }
+}
+#end
+#end

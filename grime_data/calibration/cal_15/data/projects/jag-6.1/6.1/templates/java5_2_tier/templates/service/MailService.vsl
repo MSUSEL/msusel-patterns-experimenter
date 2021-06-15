@@ -1,0 +1,207 @@
+////File: ./src/java-web/${app.RootPath}/mail/MailService.java
+package ${app.RootPackage}.mail;
+
+import java.io.File;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.URLDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.net.URL;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+
+/**
+ * Email Service.
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2006/01/13 12:31:22 $
+ *
+## This will add the Mailservice to the application context  * @spring.bean name="MailService"
+ */
+public class MailService {
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(MailService.class);
+
+   private JavaMailSenderImpl sender;
+
+   /**
+    * default and minimal constructor
+    */
+   public MailService() {
+      setSender(new JavaMailSenderImpl());
+   }
+
+   /**
+    * Get the mail sender
+    * @return mail sender
+    */
+   public JavaMailSenderImpl getSender() {
+      return sender;
+   }
+
+   /**
+    * Set the mail sender
+    */
+   public void setSender(JavaMailSenderImpl sender) {
+      this.sender = sender;
+   }
+
+   /**
+    * Set the mail host.
+    * @param host
+    */
+   public void setHost(String host) {
+      this.sender.setHost(host);
+   }
+
+   /**
+    * Set the password for sending email.
+    * @param password
+    */
+   public void setPassword(String password) {
+      if (sender != null) {
+         sender.setPassword(password);
+      }
+   }
+
+   /**
+    * Set the user name.
+    * @param userName
+    */
+   public void setUserName(String userName) {
+      if (sender != null) {
+         sender.setUsername(userName);
+      }
+   }
+
+   /**
+    * Send an HTML formatted mail and add possible attachments using fileNames.
+    * If one of the attachments is an image, it can be embedded in the HTML mail as follows:
+    * <img src="cid:fileName> where fileName is the name (excluding the path) of the image.
+    *
+    * @param from FROM adress.
+    * @param to The to address.
+    * @param cc The Carbon Copy address.
+    * @param bcc The blind carbon copy address.
+    * @param body The HTML body.
+    * @param subject of the mail
+    * @param fileNames list of filenames that should be sent as attachments.
+    */
+   public void send(String from, String to, String cc, String bcc, String body, String subject, String ... fileNames) {
+      MimeMessage message = sender.createMimeMessage();
+      try {
+         message.setSubject(subject);
+         message.setFrom(new InternetAddress(from));
+         if (to != null) {
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+         }
+         if (cc != null) {
+            message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc));
+         }
+         if (bcc != null) {
+            message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+         }
+
+         if (fileNames == null) {
+            message.setContent(body, "text/html");
+         }
+         else {
+            // It's a multipart message.
+            MimeMultipart multipart = new MimeMultipart("related");
+
+            // first part  (the html)
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(body, "text/html");
+            // add it
+            multipart.addBodyPart(messageBodyPart);
+
+            for (String fileName : fileNames) {
+               // second part (the image)
+               File file = new File(fileName);
+               messageBodyPart = new MimeBodyPart();
+               DataSource fds = new FileDataSource(fileName);
+               messageBodyPart.setFileName(file.getName());
+               messageBodyPart.setDataHandler(new DataHandler(fds));
+               messageBodyPart.setHeader("Content-ID", "<" + file.getName() + ">");
+               multipart.addBodyPart(messageBodyPart);
+            }
+            // put everything together
+            message.setContent(multipart);
+         }
+         sender.send(message);
+      }
+      catch (Exception e) {
+         log.error("Error while sending email", e);
+      }
+   }
+
+    /**
+     * Send an HTML formatted mail and add possible attachments using URLs.
+     * If one of the attachments is an image, it can be embedded in the HTML mail as follows:
+     * <img src="cid:urlPath> where urlPath is the path of the URL.
+     *
+     * @param from FROM adress.
+     * @param to The to address.
+     * @param cc The Carbon Copy address.
+     * @param bcc The blind carbon copy address.
+     * @param body The HTML body.
+     * @param subject of the mail
+     * @param urls list of filenames that should be sent as attachments.
+     */
+    public void send(String from, String to, String cc, String bcc, String body, String subject, java.net.URL ... urls) {
+        MimeMessage message = sender.createMimeMessage();
+        try {
+            message.setSubject(subject);
+            message.setFrom(new InternetAddress(from));
+            if (to != null) {
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            }
+            if (cc != null) {
+                message.addRecipient(Message.RecipientType.CC, new InternetAddress(cc));
+            }
+            if (bcc != null) {
+                message.addRecipient(Message.RecipientType.BCC, new InternetAddress(bcc));
+            }
+
+            if (urls == null) {
+                message.setContent(body, "text/html");
+            } else {
+                // It's a multipart message.
+                MimeMultipart multipart = new MimeMultipart("related");
+
+                // first part  (the html)
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(body, "text/html");
+                // add it
+                multipart.addBodyPart(messageBodyPart);
+
+                for (URL url : urls) {
+                    // second part (the image)
+                    messageBodyPart = new MimeBodyPart();
+                    DataSource fds = new URLDataSource(url);
+                    messageBodyPart.setFileName(url.getPath());
+                    messageBodyPart.setDataHandler(new DataHandler(fds));
+                    messageBodyPart.setHeader("Content-ID", "<" + url.getPath() + ">");
+                    multipart.addBodyPart(messageBodyPart);
+                }
+                // put everything together
+                message.setContent(multipart);
+            }
+            sender.send(message);
+        }
+        catch (Exception e) {
+            log.error("Error while sending email", e);
+        }
+    }
+
+}

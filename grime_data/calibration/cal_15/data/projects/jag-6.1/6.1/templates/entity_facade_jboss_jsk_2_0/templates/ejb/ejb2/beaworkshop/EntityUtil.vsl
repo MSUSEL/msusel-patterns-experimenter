@@ -1,0 +1,64 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($entity in $entities)
+////File: ${paths.EjbOutput}/${entity.RootPath}/${entity.Name}Util.java
+package ${entity.RootPackage};
+
+/**
+ * Util class for JNDI lookups for ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $ $, $Date: 2005/06/29 20:56:25 $
+ */
+public class ${entity.Name}Util
+{
+   /**
+    * The COMP name of the ${entity.Name} EJB.
+    */
+   public static final String COMP_NAME = "java:comp/env/ejb/${entity.Name}";
+   /**
+    * The JNDI name of the ${entity.Name} EJB.
+    */
+   public static final String JNDI_NAME = "ejb/local/${entity.RootPath}/${entity.Name}";
+
+   /**
+    * Cached local home (EJBLocalHome). Uses lazy loading to obtain its value (loaded by getLocalHome() methods).
+    */
+   private static ${entity.RootPackage}.${entity.Name}LocalHome cachedLocalHome = null;
+
+   /**
+    * Obtain local home interface from default initial context.
+    * @return Local home interface for ${entity.Name}. Lookup using JNDI_NAME
+    * @throws javax.naming.NamingException if home interface couldn't be found.
+    */
+   public static ${entity.RootPackage}.${entity.Name}LocalHome getLocalHome() 
+           throws javax.naming.NamingException
+   {
+      if (cachedLocalHome == null) {
+            cachedLocalHome = (${entity.RootPackage}.${entity.Name}LocalHome)
+            ${app.RootPackage}.LookupUtil.lookupHome(null, 
+                    JNDI_NAME, 
+                    ${entity.RootPackage}.${entity.Name}LocalHome.class);
+      }
+      return cachedLocalHome;
+   }
+}
+#end
+#end
+#end

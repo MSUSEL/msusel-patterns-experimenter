@@ -1,0 +1,191 @@
+#!/usr/bin/perl -Uw
+################################################################################
+# $Id: makeMaildir,v 1.2 2005/04/09 17:19:52 colinmacleod Exp $
+#
+# Create a mail directory for a new user. If you are using Cyrus, the supplied
+# mail user name and password are used to athenticate against the cyrus server.
+#
+# To allow the user which runs this and the other system scripts, the script
+# must be run in root user mode. This is achieved by running the sudo program
+# which must be installed on the system.
+#
+# Since: ivata groupware 0.10 (2005-03-02)
+# Author: Colin MacLeod <colin.macleod@ivata.com>
+# $Revision: 1.2 $
+#
+################################################################################
+# Copyright (c) 2001 - 2005 ivata limited.
+# All rights reserved.
+# ---------------------------------------------------------
+# ivata groupware may be redistributed under the GNU General Public
+# License as published by the Free Software Foundation;
+# version 2 of the License.
+#
+# These programs are free software; you can redistribute them and/or
+# modify them under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2 of the License.
+#
+# These programs are distributed in the hope that they will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# See the GNU General Public License in the file LICENSE.txt for more
+# details.
+#
+# If you would like a copy of the GNU General Public License write to
+#
+# Free Software Foundation, Inc.
+# 59 Temple Place - Suite 330
+# Boston, MA 02111-1307, USA.
+#
+#
+# To arrange commercial support and licensing, contact ivata at
+#                  http://www.ivata.com/contact.jsp
+#
+################################################################################
+#
+# $Log: makeMaildir,v $
+# Revision 1.2  2005/04/09 17:19:52  colinmacleod
+# Changed copyright text to GPL v2 explicitly.
+#
+# Revision 1.1.1.1  2005/03/10 17:49:17  colinmacleod
+# Restructured ivata op around Hibernate/PicoContainer.
+# Renamed ivata groupware.
+#
+#
+################################################################################
+
+################################################################################
+# includes
+use strict;
+use Exim;
+use Site;
+################################################################################
+
+################################################################################
+# variable declarations
+# password of the user who is adding this mailbox, for authentication against
+# the mail subsystem
+my $MAIL_PASSWORD;
+# user name of the user who is adding this mailbox, for authentication against
+# the mail subsystem
+my $MAIL_USER_NAME;
+# user name of the mailbox owner
+my $USER_NAME;
+################################################################################
+
+################################################################################
+# function prototypes
+sub makeMaildir();
+sub describeCommandLine();
+sub parseCommandLine();
+################################################################################
+
+################################################################################
+# main routine
+# if the command line parsing fails or the user specifies he wants help, then
+# bring up the help screen
+if(!parseCommandLine()) {
+    describeCommandLine();
+    dieInvalidArguments();
+# otherwise rock & roll
+} else {
+    makeMaildir();
+}
+################################################################################
+
+################################################################################
+# makeMaildir: does the funky stuff to make the mail directory
+# params:
+#        NONE
+# returns:
+#        NONE
+sub makeMaildir() {
+    my ($name,$passwd,$uid,$gid,$quota,$comment,$gcos,$dir,$shell)
+        = getpwnam($USER_NAME);
+
+    # if we're using cyrus, that's a whole different ball game
+    if ($MAIL_CYRUS) {
+        no strict;
+        require Cyrus::IMAP::Admin;
+        import Cyrus::IMAP::Admin;
+        my $cyrus = Cyrus::IMAP::Admin->new("localhost");
+        $cyrus->authenticate(
+                    -user => $MAIL_USER_NAME,
+                    -password => $MAIL_PASSWORD);
+        $cyrus->createmailbox("user.$USER_NAME");
+        die ($cyrus->error . "\n") if $cyrus->error;
+
+    # if we are using maildir, the maildirmake program will create the inbox
+    } elsif (-e $MAIL_MAILDIRMAKE) {
+        $FOLDER_PATH_MAILDIR_INBOX =~ s/(\$[_A-Z]+)/$1/gee;
+        system("$MAIL_MAILDIRMAKE $FOLDER_PATH_MAILDIR_INBOX");
+        chown($uid, $gid, $FOLDER_PATH_MAILDIR_INBOX);
+        # for Maildir, we need to process the subdirectories too!
+        opendir(DIR, $FOLDER_PATH_MAILDIR_INBOX)
+            || die($LOCKFILE_PASSWD,
+                "Can't opendir $FOLDER_PATH_MAILDIR_INBOX: $!\n");
+        my $subdir;
+        while (defined($subdir = readdir(DIR))) {
+            chown($uid, $gid, "$FOLDER_PATH_MAILDIR_INBOX/$subdir");
+        }
+        closedir(DIR);
+    # otherwise, assume mbox standard
+    } else {
+        $FOLDER_PATH =~ s/(\$[_A-Z]+)/$1/gee;
+        $FOLDER_PATH_INBOX =~ s/(\$[_A-Z]+)/$1/gee;
+        mkdir ($FOLDER_PATH, $HOME_DIR_MODE);
+        chown($uid, $gid, $FOLDER_PATH);
+
+        # create the inbox
+        system("$TOUCH /var/spool/mail/$USER_NAME");
+        chown($uid, $gid, $FOLDER_PATH_INBOX);
+        # link it into the home dir
+        symlink($FOLDER_PATH_INBOX, "$FOLDER_PATH/$USER_NAME");
+    }
+}
+
+################################################################################
+# describeCommandLine: print out command line options.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub describeCommandLine() {
+    print "\n";
+    print "                                 --- makeMaildir ---\n";
+    print "                   ivata's tool to create a mail dir on *NIX systems.\n";
+    print " Description:\n";
+    print "       This program must be run as root and will create a mail directory\n";
+    print "       appropriate to the current system system. The program will execute\n";
+    print "       without any feedback if everything is okay, otherwise an error is\n";
+    print "       sent to the standard error output.\n";
+    print "\n";
+    print "       You need perl installed on your system to use this tool.\n";
+    print "\n";
+    print " Usage: \n";
+    print "       makeMaildir {username} {mail_username} {mail_password}\n";
+    print "\n";
+    print " Key:\n";
+    print "  username        user name of the mail directory owner.\n";
+    print "  mail_username   user name of the current user, to authenticate (Cyrus).\n";
+    print "  mail_password   password of the current user, to authenticate (Cyrus).\n";
+    print "\n";
+}
+
+
+################################################################################
+# parseCommandLine: this converts all of the command line options to the
+#     variables.
+# params:
+#        NONE
+# returns:
+#        a boolean telling you whether to continue or not. non-zero = continue
+sub parseCommandLine() {
+    $USER_NAME = convertCommandLine($ARGV[0]);
+    $MAIL_USER_NAME = convertCommandLine($ARGV[1]);
+    $MAIL_PASSWORD = convertCommandLine($ARGV[2]);
+    return ($#ARGV == 2);
+}
+################################################################################
+

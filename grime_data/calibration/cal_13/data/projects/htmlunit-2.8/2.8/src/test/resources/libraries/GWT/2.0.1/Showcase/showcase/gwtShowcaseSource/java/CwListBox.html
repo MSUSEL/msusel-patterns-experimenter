@@ -1,0 +1,130 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<pre>  /**
+   * The constants used in this Content Widget.
+   */
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
+    String[] cwListBoxCars();
+
+    String[] cwListBoxCategories();
+
+    String cwListBoxDescription();
+
+    String cwListBoxName();
+
+    String cwListBoxSelectAll();
+
+    String cwListBoxSelectCategory();
+
+    String[] cwListBoxSports();
+
+    String[] cwListBoxVacations();
+  }
+
+  /**
+   * An instance of the constants.
+   */
+  private CwConstants constants;
+
+  /**
+   * Initialize this example.
+   */
+  @Override
+  public Widget onInitialize() {
+    // Create a panel to align the Widgets
+    HorizontalPanel hPanel = new HorizontalPanel();
+    hPanel.setSpacing(20);
+
+    // Add a drop box with the list types
+    final ListBox dropBox = new ListBox(false);
+    String[] listTypes = constants.cwListBoxCategories();
+    for (int i = 0; i &lt; listTypes.length; i++) {
+      dropBox.addItem(listTypes[i]);
+    }
+    dropBox.ensureDebugId("cwListBox-dropBox");
+    VerticalPanel dropBoxPanel = new VerticalPanel();
+    dropBoxPanel.setSpacing(4);
+    dropBoxPanel.add(new HTML(constants.cwListBoxSelectCategory()));
+    dropBoxPanel.add(dropBox);
+    hPanel.add(dropBoxPanel);
+
+    // Add a list box with multiple selection enabled
+    final ListBox multiBox = new ListBox(true);
+    multiBox.ensureDebugId("cwListBox-multiBox");
+    multiBox.setWidth("11em");
+    multiBox.setVisibleItemCount(10);
+    VerticalPanel multiBoxPanel = new VerticalPanel();
+    multiBoxPanel.setSpacing(4);
+    multiBoxPanel.add(new HTML(constants.cwListBoxSelectAll()));
+    multiBoxPanel.add(multiBox);
+    hPanel.add(multiBoxPanel);
+
+    // Add a handler to handle drop box events
+    dropBox.addChangeHandler(new ChangeHandler() {
+      public void onChange(ChangeEvent event) {
+        showCategory(multiBox, dropBox.getSelectedIndex());
+        multiBox.ensureDebugId("cwListBox-multiBox");
+      }
+    });
+
+    // Show default category
+    showCategory(multiBox, 0);
+    multiBox.ensureDebugId("cwListBox-multiBox");
+
+    // Return the panel
+    return hPanel;
+  }
+
+  /**
+   * Display the options for a given category in the list box.
+   * 
+   * @param listBox the ListBox to add the options to
+   * @param category the category index
+   */
+  private void showCategory(ListBox listBox, int category) {
+    listBox.clear();
+    String[] listData = null;
+    switch (category) {
+      case 0:
+        listData = constants.cwListBoxCars();
+        break;
+      case 1:
+        listData = constants.cwListBoxSports();
+        break;
+      case 2:
+        listData = constants.cwListBoxVacations();
+        break;
+    }
+    for (int i = 0; i &lt; listData.length; i++) {
+      listBox.addItem(listData[i]);
+    }
+  }
+
+</pre>

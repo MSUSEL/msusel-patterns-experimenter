@@ -1,0 +1,56 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
+18 tests, 35 assertions, 9 failures, 1 errors
+Status	Test	Message
+passed	testSelectorWithTagName	4 assertions, 0 failures, 0 errors
+passed	testSelectorWithId	2 assertions, 0 failures, 0 errors
+passed	testSelectorWithClassName	2 assertions, 0 failures, 0 errors
+passed	testSelectorWithTagNameAndId	2 assertions, 0 failures, 0 errors
+passed	testSelectorWithTagNameAndClassName	4 assertions, 0 failures, 0 errors
+passed	testSelectorWithIdAndClassName	4 assertions, 0 failures, 0 errors
+passed	testSelectorWithTagNameAndIdAndClassName	5 assertions, 0 failures, 0 errors
+passed	test$$MatchesAncestryWithTokensSeparatedByWhitespace	2 assertions, 0 failures, 0 errors
+passed	test$$CombinesResultsWhenMultipleExpressionsArePassed	1 assertions, 0 failures, 0 errors
+failed	testSelectorWithTagNameAndAttributeExistence	0 assertions, 3 failures, 0 errors
+Failure: assertEnumEqual: expected [<h1 class="title">], actual []
+Failure: assertEnumEqual: expected [<h1 class="title">], actual []
+Failure: assertEnumEqual: expected [<li id="item_3">], actual []
+failed	testSelectorWithTagNameAndSpecificAttributeValue	0 assertions, 2 failures, 0 errors
+Failure: assertEnumEqual: expected [<a id="link_1" class="first internal">, <a id="link_2" class="internal highlight">, <a id="link_3" class="external">], actual []
+Failure: assertEnumEqual: expected [<a id="link_1" class="first internal">, <a id="link_2" class="internal highlight">, <a id="link_3" class="external">], actual []
+failed	testSelectorWithTagNameAndWhitespaceTokenizedAttributeValue	0 assertions, 2 failures, 0 errors
+Failure: assertEnumEqual: expected [<a id="link_1" class="first internal">, <a id="link_2" class="internal highlight">], actual []
+Failure: assertEnumEqual: expected [<a id="link_1" class="first internal">, <a id="link_2" class="internal highlight">], actual []
+error	testSelectorWithUniversalAndHyphenTokenizedAttributeValue	0 assertions, 0 failures, 1 errorsError: Invalid argument.([object Error])
+failed	testSelectorWithTagNameAndNegatedAttributeValue	0 assertions, 1 failures, 0 errors
+Failure: assertEnumEqual: expected [], actual [<a id="link_1" class="first internal">, <a id="link_2" class="internal highlight">, <a id="link_3" class="external">]
+passed	test$$WithNestedAttributeSelectors	1 assertions, 0 failures, 0 errors
+failed	testSelectorWithMultipleConditions	1 assertions, 1 failures, 0 errors
+Failure: assertEnumEqual: expected [<a id="link_3" class="external">], actual []
+passed	testSelectorMatchElements	3 assertions, 0 failures, 0 errors
+passed	testSelectorFindElement	4 assertions, 0 failures, 0 errors

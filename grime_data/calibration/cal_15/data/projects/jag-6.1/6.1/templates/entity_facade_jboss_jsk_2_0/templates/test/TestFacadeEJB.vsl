@@ -1,0 +1,261 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+
+#foreach($sessionBean in $sessions)
+////File: ${paths.TestOutput}/${sessionBean.RootPath}/${sessionBean.Name}Test.java
+package ${sessionBean.RootPackage};
+
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+import org.springframework.test.AbstractTransactionalDataSourceSpringContextTests;
+#if ($config.matchBusinessTier("Hibernate 2"))
+import net.sf.hibernate.HibernateException;
+import net.sf.hibernate.Query;
+import net.sf.hibernate.Session;
+#else
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+#end
+#if ($config.matchBusinessTier("Hibernate 2"))
+import org.springframework.orm.hibernate.HibernateTemplate;
+import org.springframework.orm.hibernate.HibernateTransactionManager;
+import org.springframework.orm.hibernate.HibernateCallback	;
+#else
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate3.HibernateTransactionManager;
+import org.springframework.orm.hibernate3.HibernateCallback;
+#end
+#end
+import java.util.Iterator;
+
+/**
+ * Tests the <code>${sessionBean.Name}</code>.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.30 $, $Date: 2005/09/16 08:22:14 $
+ */
+public class ${sessionBean.Name}Test extends #if (${config.templateSettings.serviceTier} == "Spring")  AbstractTransactionalDataSourceSpringContextTests#else junit.framework.TestCase#end {
+
+   /* Test facade */
+   private ${sessionBean.Name}Service facade;
+
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+   /**
+    * Test constructor
+    */
+   public ${sessionBean.Name}Test(String testName) {
+      super(testName);
+   }
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+
+   public void set${sessionBean.Name.Sentensized}Service(${sessionBean.Name.Sentensized}Service ${sessionBean.Name.Desentensized}Service) {
+      this.facade = ${sessionBean.Name.Desentensized}Service;
+   }
+
+   private static final String[] CONTEXT = { "/WEB-INF/applicationContext.xml" };
+   protected String[] getConfigLocations() {
+      return CONTEXT;
+   }
+
+   public void onSetUpInTransaction() throws Exception {
+   // Put here database actions that should be transactional
+##      // Cleanup the database
+##      String[] tablesToDelete = null;
+##
+###foreach ($entity in $sessionBean.Entities)
+##      tablesToDelete = new String[]{ "${entity.TableName}"};
+##      deleteFromTables(tablesToDelete);
+###end
+    }
+
+#end
+
+   /**
+    * Main target to run the JUnit test.
+    */
+   public static void main(String[] args) {
+      junit.textui.TestRunner.run(suite());
+   }
+
+   /**
+    * Runs the test suite.
+    */
+   public static junit.framework.Test suite() {
+      junit.framework.TestSuite suite = new junit.framework.TestSuite(${sessionBean.Name}Test.class);
+      return suite;
+   }
+
+   /**
+    * Test if the service can be accessed.
+    */
+   public void testFacade() {
+      System.out.println("test facade");
+      try {
+         facade = getFacade();
+         assertNotNull("Didn't get the facade", facade);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+         fail("Exception thrown during test: " + e.getMessage());
+      }
+   }
+
+   /**
+    * Helper method to get the testfacade.
+    */
+   private ${sessionBean.Name}Service getFacade()  {
+      try {
+         if (facade == null) {
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+            facade = (${sessionBean.Name}Service) ServiceLocator.getService(ServiceLocator.${sessionBean.UpperCaseName}_SERVICE);
+#else
+            System.err.println("The facade should be set using spring injection.");
+#end
+         }
+         return facade;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return null;
+      }
+   }
+
+
+
+   /*******************************************************************************************************************
+    *              T E S T S    F O R   B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $sessionBean.businessMethods)
+   /**
+    * Junit test for $businessMethod.description .
+    *
+    */
+#set ($count = 0)
+   public void test$businessMethod.methodNameUpper () {
+#foreach($businessArgument in $businessMethod.argumentList)
+      $businessArgument.type $businessArgument.name;
+#end
+      fail("Junit test not implemented yet");
+      // getFacade().$businessMethod.methodName ( #foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0),#end $businessArgument.name #set ($count = $count + 1)#end );
+}
+#end                                                
+
+   /*******************************************************************************************************************
+    *              I N T E G R A T I O N   T E S T S  F O R   P E R S I S T E N C E   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $sessionBean.Entities)
+
+   public void testAdd${entity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   try {
+      ${entity.RootPackage}.${entity.Name}If model = new ${entity.RootPackage}.${entity.Name}Data();
+      // Fill the model.
+      ${entity.RootPackage}.${entity.Name}If result =
+      getFacade().add${entity.Name}(model);
+      assertEquals(getFacade().get${entity.Name}(model.getPrimaryKey()).getPrimaryKey(), model.getPrimaryKey());
+       } catch (Exception e) {
+            fail("No exception expected");
+       }
+   }
+
+   public void testSave${entity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   try {
+      ${entity.RootPackage}.${entity.Name}If model = null;
+      java.util.Collection list = getFacade().get${entity.Name}List(1,1);
+      for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+         model = (${entity.RootPackage}.${entity.Name}If) iterator.next();
+      }
+      // Now change the model and save it.
+      getFacade().save${entity.Name}(model);
+      ${entity.RootPackage}.${entity.Name}If result =
+         getFacade().get${entity.Name}(model.getPrimaryKey());
+       } catch (Exception e) {
+            fail("No exception expected");
+       }
+   }
+
+   public void testDelete${entity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   try {
+      ${entity.RootPackage}.${entity.Name}If model = null;
+      java.util.Collection list = getFacade().get${entity.Name}List();
+      int size1 = list.size();
+      for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+         model = (${entity.RootPackage}.${entity.Name}If) iterator.next();
+      }
+      getFacade().delete${entity.Name}(model.getPrimaryKey());
+      int size2 = getFacade().get${entity.Name}ListSize();
+      // Now try to read the object again.
+      assertEquals(size1 - 1, size2);
+       } catch (Exception e) {
+            fail("No exception expected");
+       }
+   }
+
+   public void testList${entity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+      try {
+      // These tests assume there is at least one entry in the database.
+      // We expect only one result.
+      java.util.Collection list = getFacade().get${entity.Name}List(1,1);
+      assertTrue(list.size()  == 1);
+
+      // Index 0 is not supported. We expect 1 result.
+      list = getFacade().get${entity.Name}List(0,1);
+      assertTrue(list.size() == 1);
+
+      // Negative indexes are reset to 1. We expect 1 result.
+      list = getFacade().get${entity.Name}List(-300,1);
+      assertTrue(list.size() == 1);
+
+      // Negative ranges result in empty lists.
+      list = getFacade().get${entity.Name}List(3,1);
+      assertTrue(list.size() == 0);
+      } catch (Exception e) {
+            fail("No exception expected");
+      }
+   }
+
+   public void testFindBy${entity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+      try {
+      java.util.Collection result;
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary key fields. They should be looked up with there get method.
+#else
+      $field.Type $field.Name;
+#if ($field.Type == "char" || $field.Type == "byte" || $field.Type == "short" || $field.Type == "int" || $field.Type == "long" || $field.Type == "float" || $field.Type == "double" || $field.Type == "boolean"  )
+## No need to initialize.
+#else
+      $field.Name = null;
+#end
+      // Set the field for testing!
+      result = getFacade().find${entity.Name}By${field.Name.Sentensized}($field.Name);
+      assertTrue(result.size() > 0);
+#end
+#end
+      } catch (Exception e) {
+            fail("No exception expected");
+      }
+   }
+
+
+#end
+}
+#end

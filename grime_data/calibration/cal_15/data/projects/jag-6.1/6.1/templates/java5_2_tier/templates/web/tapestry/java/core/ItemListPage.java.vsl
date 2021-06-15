@@ -1,0 +1,715 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/core/${app.Name.Sentensized}ItemListPage.java
+/*
+ * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ */
+package ${app.RootPackage}.core;
+
+import java.io.Serializable;
+import java.util.Collection;
+
+import ${app.RootPackage}.component.TableRow;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import com.finalist.util.*;
+import org.apache.tapestry.form.TextField;
+import org.apache.tapestry.form.Submit;
+import org.apache.tapestry.form.PropertySelection;
+import org.apache.tapestry.valid.FieldLabel;
+import org.apache.tapestry.PageRedirectException;
+import org.apache.tapestry.annotations.Component;
+import org.apache.tapestry.components.ForBean;
+import org.apache.tapestry.event.PageBeginRenderListener;
+import org.apache.tapestry.event.PageEvent;
+import java.util.List;
+import java.util.ArrayList;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.link.DirectLink;
+import org.apache.tapestry.form.Hidden;
+
+/**
+ * Page used for displaying a list of _items.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.19 $, $Date: 2006/04/20 06:58:16 $
+ */
+public abstract class ${app.Name.Sentensized}ItemListPage<I> extends ${app.Name.Sentensized}Page implements PageBeginRenderListener {
+   private static final Logger LOG = LogService.getLogger(${app.Name.Sentensized}ItemListPage.class);
+
+   // ---[ PAGE PROPERTIES ]--------------------------------------------------------------------------------------------
+
+   protected ItemSelectionModel<LabeledIdentifier> queryFieldSelectionModel = null;
+   protected ItemSelectionModel<LabeledIdentifier> pageSizeSelectionModel = null;
+   public static final int DEFAULT_PAGE_SIZE = 10;
+   protected int _pageSize = DEFAULT_PAGE_SIZE;
+   protected int resultCount;
+   private int currentPage;
+   private int pageCount;
+
+   // ---[ GENERAL ITEMLISTPAGE LOGIC ]---------------------------------------------------------------------------------
+
+
+   /**
+    * Since this page implements the PageBeginRenderListener, this method gets called by Tapestry before
+    * rendering the page. Since there are no FormComponents on this page, we'll never have a rewind-phase
+    * on this page, so we don't need to worry about database-actions being performed twice in a single
+    * request.
+    *
+    * @param event The Tapestry PageEvent.
+    * @see super.pageBeginRender(PageEvent)
+    */
+   public void pageBeginRender(PageEvent event) {
+      try {
+
+         Object[] params = getRequestCycle().getListenerParameters();
+         if (getQuery() == null || "".equals(getQuery())) {
+            // Check if the query was set as service parameter.
+            if (params != null && params.length >= 2) {
+               String q = (String ) params[1];
+               if (q != null) {
+                  setQuery(q);
+               }
+            }
+         }
+         if (getQueryFieldSelection() == null) {
+            if (params != null && params.length >= 3) {
+               LabeledIdentifier li = (LabeledIdentifier ) params[2];
+               if (li != null) {
+                  setQueryFieldSelection(li);
+               }
+            }
+         }
+         if (getPageSizeSelection() == null) {
+            if (params != null && params.length >= 4) {
+               LabeledIdentifier li = (LabeledIdentifier ) params[3];
+               if (li != null) {
+                  setPageSizeSelection(li);
+               }
+            }
+         }
+         if (getSelectedDirectionField() == null) {
+            if (params != null && params.length >= 5) {
+               String direction = (String) params[4];
+               if (direction != null) {
+                  setSelectedDirectionField(direction);
+               }
+            }
+         }
+
+         if (getSelectedColumnField() == null) {
+            if (params != null && params.length >= 6) {
+               String column = (String) params[5];
+               if (column != null) {
+                  setSelectedColumnField(column);
+               }
+            }
+         }
+
+         if (getPageSizeSelection() != null) {
+            _pageSize = new Integer(getPageSizeSelection().getId());
+         } else {
+            _pageSize = DEFAULT_PAGE_SIZE;
+            LabeledIdentifier li = new LabeledIdentifier();
+            li.setName("" + DEFAULT_PAGE_SIZE);
+            li.setId("" + DEFAULT_PAGE_SIZE);
+            setPageSizeSelection(li);
+         }
+         setSorting();
+         setItems(fetchItems());
+         initializeForResultCount(resultCount, getPageNumber());
+      }
+      catch (GenericBusinessException e) {
+         LOG.error("Problem reading items");
+         throw new PageRedirectException(PAGE_ERROR);
+      }
+   }
+
+
+   /**
+    * Helper method to make sure the sorting is set correctly.
+    * Should be set in the pageBeginRender
+    */
+   private void setSorting() {
+      if (getSelectedColumnField() == null) {
+         setSelectedDirectionField("asc");
+      }
+      else {
+         // Determine if we have to toggle the direction.
+         String field = getSelectedColumnField();
+         boolean toggle = false;
+         int index = field.indexOf(",toggle");
+         if (index != -1) {
+            field = field.substring(0, index);
+            setSelectedColumnField(field);
+            toggle = true;
+         }
+         if (toggle) {
+            if (getSelectedDirectionField().equals("asc")) {
+               setSelectedDirectionField("desc");
+            }
+            else {
+               setSelectedDirectionField("asc");
+            }
+         }
+         // otherwise no change is required.
+      }
+   }
+
+   // ---[ PROPERTY ACCESSORS ]-----------------------------------------------------------------------------------------
+
+
+   /**
+    * Getter for property 'queryFieldSelectionModel'.
+    * @return The value for property 'queryFieldSelectionModel'.
+    */
+   public ItemSelectionModel<LabeledIdentifier> getPageSizeSelectionModel() {
+      if (pageSizeSelectionModel == null) {
+         ArrayList<LabeledIdentifier> items = new ArrayList<LabeledIdentifier>();
+         LabeledIdentifier li;
+         li = new LabeledIdentifier();
+         li.setName("5");
+         li.setId("5");
+         items.add(li);
+         li = new LabeledIdentifier();
+         li.setName("10");
+         li.setId("10");
+         items.add(li);
+         li = new LabeledIdentifier();
+         li.setName("20");
+         li.setId("20");
+         items.add(li);
+         li = new LabeledIdentifier();
+         li.setName("50");
+         li.setId("50");
+         items.add(li);
+         li = new LabeledIdentifier();
+         li.setName("100");
+         li.setId("100");
+         items.add(li);
+         pageSizeSelectionModel = new ItemSelectionModel<LabeledIdentifier>(items) {
+            public String getLabelForItem(LabeledIdentifier item) {
+               return item.getName();
+            }
+         };
+      }
+      return pageSizeSelectionModel;
+   }
+
+   /**
+    * Getter for property 'pageSizeSelection'.
+    *
+    * @return Value for property 'pageSizeSelection'.
+    */
+   public abstract LabeledIdentifier getPageSizeSelection();
+   /**
+    * Setter for property 'pageSizeSelection'.
+    *
+    * @param queryFieldSelection Value to set for property 'pageSizeSelection'.
+    */
+   public abstract void setPageSizeSelection(LabeledIdentifier queryFieldSelection);
+
+   /**
+    * Tapestry component for rendering the pageSize. This PropertySelection is bound to the page property 'pageSizeSelection' and
+    * uses the ItemSelectionModel 'pageSizeSelectionModel'.
+    * @return The PropertySelection component to use for setting/editing the page size.
+    */
+   @Component(type = "PropertySelection", bindings = {"value=pageSizeSelection","model=pageSizeSelectionModel","validators=validators:required","displayName=literal:Size"})
+   public abstract PropertySelection getPageSizeField();
+
+
+   /**
+    * Tapestry component for defining the label that will be displayed before the pageSizeField.
+    * @return The FieldLabel component to use for the pageSizeField.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:pageSizeField"})
+   public abstract FieldLabel getPageSizeLabel();
+
+
+   /**
+    * Getter for page property 'queryFieldSelection'.
+    * @return The value for page property 'queryFieldSelection'.
+    */
+   public abstract LabeledIdentifier getQueryFieldSelection();
+
+   /**
+    * Setter for page property 'queryFieldSelection'.
+    * @param queryFieldSelection Value to set for page property 'tripId'.
+    */
+   public abstract void setQueryFieldSelection(LabeledIdentifier queryFieldSelection);
+
+   /**
+    * Setter for the Collection of items that should be listed on this page.
+    *
+    * @param items Collection of items to list on this page.
+    */
+   public abstract void setItems(Collection<I> items);
+
+   /**
+    * Getter for the Collection of items that are listed on this page.
+    * @return collection of items that are listed on the page.
+    */
+   public abstract Collection<I> getItems();
+
+
+   /**
+    * Getter for a single item. This getter only gets used during rendering, when each item is being
+    * iterated over. While a single item is being rendered, this method returns the rendering item.
+    *
+    * @return The item that is currently being rendered.
+    */
+   public abstract I getItem();
+
+   /**
+    * Getter for the index in the collection of a single item. This getter only gets used during rendering,
+    * when each item is being iterated over. While a single item is being rendered, this method returns
+    * the index in the items-collection of the rendering item.
+    *
+    * @return The index in the items-collection of the item that is currently being rendered.
+    */
+   public abstract int getItemIndex();
+
+   /**
+    * This method creates an array of parameters for the item that is currently being rendered. It is used
+    * for creating the parameters for the edit-page, so clicking on the item will bring you to the edit-page
+    * for the proper item.
+    *
+    * @return An array of parameters for the editPage.
+    */
+   public Object[] getEditPageParams() {
+      I item = getItem();
+      if(item != null) {
+         return new Object[] {getPrimaryKey(item), getPageName()};
+      }
+      return new Object[] { getPageName() };
+   }
+
+   /**
+    * This method creates an array of parameters for a relation of the item that is currently being rendered.
+    * It is used for creating the parameters for the edit-page of the relation, so clicking on the item will
+    * bring you to the proper edit-page for the proper relation.
+    *
+    * @param key The unique key of the items' relation to edit.
+    * @return An array of parameters for the editPage.
+    */
+   public Object[] getEditPageParams(Serializable key) {
+      if(key != null) {
+         return new Object[] {key, getPageName()};
+      }
+      return new Object[] { getPageName() };
+   }
+
+   /**
+    * Tapestry component for rendering and handling the Delete Selection-button.
+    *
+    * @return The Submit component to use as a Delete Selection-button on the page.
+    */
+   @Component(type = "Submit", bindings = {"action=listener:deleteSelectionClicked"})
+   public abstract Submit getDeleteSelectionButton();
+
+
+   // ---[ SORTING LOGIC ]---------------------------------------------------------------------------------
+
+   /**
+    * Get the name of the selected sorting column
+    * @return name
+    */
+   public abstract String getSelectedColumnField();
+
+   /**
+    * Set the name of the selected sorting column
+    * @param column name
+    */
+   public abstract void setSelectedColumnField(String column);
+
+   /**
+    * Get the direction of selected sorting column: asc or desc
+    * @return name
+    */
+   public abstract String getSelectedDirectionField();
+
+   /**
+    * Set the direction of selected sorting column: asc or desc
+    * @param direction
+    */
+   public abstract void setSelectedDirectionField(String direction);
+
+   /**
+    * Keep track of the previes sorting direction.
+    * @return sorting direction
+    */
+   @Component(type = "Hidden", bindings = {"id=selectedDirection", "value=selectedDirectionField"})
+   public abstract Hidden getSelectedDirection();
+
+
+   /**
+    * Get the direction of sorting. If not set, default asc will be used.
+    * @return direction of sorting.
+    */
+   public String getSortingDirection() {
+      // If no column was seleted, the direction is'n set either.
+      if (getSelectedColumnField() == null) {
+         return null;
+      }
+      else {
+         if (getSelectedDirectionField() == null) {
+            return "asc";
+         }
+         return getSelectedDirectionField();
+      }
+   }
+
+   // ---[ PAGING LOGIC ]---------------------------------------------------------------------------------
+
+   /**
+    * Set the current page range.
+    * @param range the page range.
+    */
+   public abstract void setPageRange(PageRange range);
+
+
+   /**
+    * Get all available page ranges for the current page count and page number.
+    * @return list of page ranges.
+    */
+   public List<PageRange> getPageRanges() {
+      return SearchPageRange.getPageRange(getPageNumber(), getPageCount(), 7);
+   }
+
+   /**
+    * Get the pageNumber from the request parameter or from the tapestry parameter binding.
+    * @return current pageNumber. Return "1" if the pageNumber wasn't found.
+    */
+   public int getPageNumber() {
+         Object[] params = getRequestCycle().getListenerParameters();
+         if (params != null && params.length >= 2) {
+            return (Integer) params[0];
+         }
+         return 1;
+   }
+
+
+   /**
+    * Set the number of results.
+    * @param resultCount count
+    */
+   public void setResultCount(int resultCount) {
+      LOG.debug("Setting result count to: " + resultCount);
+      this.resultCount = resultCount;
+   }
+
+
+   /**
+    * Get the current page to display
+    * @return current page.
+    */
+   public int getCurrentPage() {
+      return currentPage;
+   }
+
+
+   /**
+    * Set the current page.
+    * @param currentPage number
+    */
+   public void setCurrentPage(int currentPage) {
+      this.currentPage = currentPage;
+   }
+
+
+   /**
+    * Make sure all settings are updated depending on the resultCount and currentPage.
+    * @param resultCount total number of hits.
+    * @param currentPage current page to display.
+    */
+   public void initializeForResultCount(int resultCount, int currentPage) {
+      setResultCount(resultCount);
+      setCurrentPage(currentPage);
+      setPageCount(computePageCount());
+   }
+
+
+   /**
+    * Get the page count.
+    * @return nuber of pages.
+    */
+   public int getPageCount() {
+      return pageCount;
+   }
+
+
+   /**
+    * Set the page count.
+    * @param pageCount number of pages.
+    */
+   public void setPageCount(int pageCount) {
+      this.pageCount = pageCount;
+   }
+
+
+   private int computePageCount() {
+      // For 0 ... pageSize  elements, its just one page.
+      if (resultCount <= _pageSize) {
+         return 1;
+      }
+      // We need the number of results divided by the results per page.
+      int result = resultCount / _pageSize;
+      // If there's any left-over, then we need an additional page.
+      if (resultCount % _pageSize > 0) {
+         result++;
+      }
+      return result;
+   }
+
+
+   /**
+    * Determine if back should be disabled.
+    * @return true if back should be disabled.
+    */
+   public boolean getDisableBack() {
+      return getCurrentPage() <= 1;
+   }
+
+
+   /**
+    * Determine if next should be disabled.
+    * @return true if next should be disabled.
+    */
+   public boolean getDisableNext() {
+      return getCurrentPage() >= getPageCount();
+   }
+
+
+   /**
+    * Display the range that is currently shown.
+    * @return the range.
+    */
+   public String getRange() {
+      int currentPage = getCurrentPage();
+      int low = (currentPage - 1) * _pageSize + 1;
+      int high = Math.min(currentPage * _pageSize, resultCount);
+
+      return low + " - " + high;
+   }
+
+   public Object[] getFirstPage() {
+      return new Object[]{1, getQuery(), getQueryFieldSelection(), getPageSizeSelection(), getSelectedDirectionField(), getSelectedColumnField()};
+   }
+
+   public Object[] getLastPage() {
+      return new Object[]{getPageCount(), getQuery(), getQueryFieldSelection(), getPageSizeSelection(), getSelectedDirectionField(), getSelectedColumnField()};
+   }
+
+   public Object[] getPreviousPage() {
+      int previous = Math.max(getCurrentPage() - 1, 1);
+      return new Object[]{previous, getQuery(), getQueryFieldSelection(), getPageSizeSelection(), getSelectedDirectionField(), getSelectedColumnField()};
+   }
+
+   public Object[] getNextPage() {
+      int next = Math.min(getCurrentPage() + 1, getPageCount());
+      return new Object[]{next, getQuery(), getQueryFieldSelection(), getPageSizeSelection(), getSelectedDirectionField(), getSelectedColumnField()};
+   }
+
+   /**
+    * Get the currently selecte page.
+    * @return the selected page and the used query.
+    */
+   public Object[] getSelectedPage() {
+      int selectedIndex = getSelectedIndex();
+      List<PageRange> ranges = getPageRanges();
+      PageRange r;
+      if (selectedIndex >= ranges.size()) {
+         r = ranges.get(ranges.size() - 1);
+      } else {
+         r = ranges.get(selectedIndex);
+      }
+      int number = 0;
+      if (r.isLink()) {
+         number = new Integer(r.getPageNumber());
+      }
+      return new Object[]{number, getQuery(), getQueryFieldSelection(), getPageSizeSelection(), getSelectedDirectionField(), getSelectedColumnField()};
+   }
+
+   /**
+    * Check to see if the selected page is disabled.
+    *
+    * @return true if the selected page should be disabled.
+    */
+   public boolean isDisableSelectedPage() {
+      int selectedIndex = getSelectedIndex();
+      List<PageRange> ranges = getPageRanges();
+      PageRange r;
+      if (selectedIndex >= ranges.size()) {
+         r = ranges.get(ranges.size() - 1);
+      } else {
+         r = ranges.get(selectedIndex);
+      }
+      return !r.isLink();
+   }
+
+   /**
+    * Get the currently selected index.
+    * @return selected index.
+    */
+   public abstract int getSelectedIndex();
+
+
+   /**
+    * Set the selected index.
+    * @param index
+    */
+   public abstract void setSelectedIndex(int index);
+
+
+   /**
+    * Listener for selected page.
+    * @param cycle
+    */
+   public void selectPage(IRequestCycle cycle) {
+      // Nothing to do. Just return to current page.
+   }
+
+
+
+   // ---[ TAPESTRY COMPONENTS ]----------------------------------------------------------------------------------------
+
+   /**
+    * Tapestry component for looping over the items-collection inside a tbody element.
+    *
+    * @return The For component to use for looping over the items.
+    * @see #setItems(Collection<I>)
+    * @see #getItem()
+    * @see #getItemIndex()
+    */
+   @Component(type = "For", bindings = {"source=items","value=item","index=itemIndex","element=literal:tbody"})
+   public abstract ForBean getItemIterator();
+
+   /**
+    * Tapestry component for rendering a single table-row (and flipping the odd/even style).
+    *
+    * @return The custom TableRow component to use for rendering the current table row.
+    * @see #getItemIndex()
+    */
+   @Component(type = "TableRow", bindings = {"currentIndex=itemIndex"})
+   public abstract TableRow getTableRow();
+
+   // ---[ METHOD DEFINITIONS SUBCLASSES SHOULD IMPLEMENT ]-------------------------------------------------------------
+
+   /**
+    * Retrieves the collection of items from the database.
+    *
+    * @return The Collection of items to show (empty list if nothing available).
+    * @throws GenericBusinessException If something goes wrong while fetching the items.
+    */
+   public abstract Collection<I> fetchItems() throws GenericBusinessException;
+
+   /**
+    * Retrieves the unique key for a single item.
+    *
+    * @param item The item to retrieve the unique key for.
+    * @return The unique key of the item.
+    */
+   public abstract Serializable getPrimaryKey(I item);
+
+   /**
+    * Retrieves the name of the edit-page for the items being listed on this page.
+    *
+    * @return The name of the edit-page for the items being listed on this page.
+    */
+   public abstract String getEditPage();
+
+   /**
+    * Get the Query.
+    */
+   public abstract String getQuery();
+
+   /**
+    * Set the query.
+    *
+    * @param query The query that was use to search the list.
+    */
+   public abstract void setQuery(String query);
+
+    /**
+     * Tapestry component for rendering the primaryKeyField. This textfield is bound to the page property 'key'.
+     *
+     * @return The TextField component to use for setting/editing the key.
+     */
+    @Component(type = "TextField", bindings = {"value=query"})
+    public abstract TextField getQueryField();
+
+   /**
+    * Tapestry component for defining the label that will be displayed before the queryField.
+    * @return The FieldLabel component to use for the userIdField.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:queryField","displayName=literal:Query"})
+   public abstract FieldLabel getQueryLabel();
+
+    /**
+     * Tapestry component for rendering and handling the Save-button.
+     *
+     * @return The Submit component to use as a Save-button on the page.
+     */
+    @Component(type = "Submit", bindings = {"action=listener:queryClicked"})
+    public abstract Submit getQueryButton();
+
+   /**
+    * Tapestry component for rendering the queryFields. This PropertySelection is bound to the page property 'queryFieldSelection' and
+    * uses the ItemSelectionModel 'queryFieldSelectionModel'.
+    * @return The PropertySelection component to use for setting/editing the user.
+    */
+   @Component(type = "PropertySelection", bindings = {"value=queryFieldSelection","model=queryFieldSelectionModel","validators=validators:required","displayName=literal:Field"})
+   public abstract PropertySelection getQueryFieldField();
+
+   /**
+    * Tapestry component for defining the label that will be displayed before the queryFieldField.
+    * @return The FieldLabel component to use for the userIdField.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:queryFieldField"})
+   public abstract FieldLabel getQueryFieldLabel();
+
+   /**
+    * Since we want to display the same page again, we just return to the current page.
+    */
+   @Component(type = "DirectLink", bindings = {"listener=listener:selectPage","parameters=selectedPage","disabled=disableSelectedPage"})
+   public abstract DirectLink getSelect();
+
+   /**
+    * Binding parameters that will be passed if the previous page link will be clicked.
+    * @return pageNumber and query.
+    */
+   @Component(type = "DirectLink", bindings = {"listener=listener:selectPage","parameters=previousPage","disabled=disableBack"})
+   public abstract DirectLink getPrevious();
+
+   /**
+    * Binding parameters that will be passed if the next page link will be clicked.
+    * @return pageNumber and query.
+    */
+   @Component(type = "DirectLink", bindings = {"listener=listener:selectPage","parameters=nextPage","disabled=disableNext"})
+   public abstract DirectLink getNext();
+
+   @Component(type = "For", bindings = {"source=pageRanges","value=pageRange","index=selectedIndex"})
+   public abstract ForBean getSelectLoop();
+
+
+
+}
+#end

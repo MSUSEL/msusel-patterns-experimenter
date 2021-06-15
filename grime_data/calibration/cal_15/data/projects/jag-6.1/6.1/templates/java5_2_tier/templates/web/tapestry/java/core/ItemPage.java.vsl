@@ -1,0 +1,477 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/core/${app.Name.Sentensized}ItemPage.java
+package ${app.RootPackage}.core;
+
+import java.io.Serializable;
+
+import ${app.RootPackage}.valid.${app.Name.Sentensized}ValidationDelegate;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import org.apache.tapestry.IExternalPage;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.PageRedirectException;
+import org.apache.tapestry.annotations.Bean;
+import org.apache.tapestry.annotations.Component;
+import org.apache.tapestry.event.PageBeginRenderListener;
+import org.apache.tapestry.event.PageDetachListener;
+import org.apache.tapestry.event.PageEvent;
+import org.apache.tapestry.form.Hidden;
+import org.apache.tapestry.form.Submit;
+import org.apache.tapestry.valid.FieldLabel;
+import org.apache.tapestry.valid.ValidationDelegate;
+
+/**
+ * Page used for displaying, editing or adding a single item/record from the database. It supports
+ * Generics, so you can extend it with a &lt;Key-type, Item-type&gt;, which means the developers
+ * implementing this class will have less casting to do.
+ *
+ * Note: Tapestry doesn't handle Generics all that well when it creates its getter/setter (not
+ *       written towards Java5), so sadly we cannot add the key as a Generic type like we do with the Item
+ *       itself: the key needs to be parsed back-and-forth and if the type is generic, Tapestry might mix up
+ *       types causing ClassCastExceptions to occur.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.6 $, $Date: 2006/02/02 21:24:39 $
+ */
+public abstract class ${app.Name.Sentensized}ItemPage<I> extends ${app.Name.Sentensized}Page
+      implements PageBeginRenderListener, PageDetachListener, IExternalPage {
+   private static final Logger LOG = LogService.getLogger(${app.Name.Sentensized}ItemPage.class);
+
+   // This property is concrete, since we require a lazy getter for it, which is not what Tapestry would generate.
+   // It is just an optimization-step: If we wouldn't make this property concrete and took control of cleaning
+   // it up, Tapestry would fill the property in rewind AND render-phase, which means two database-actions
+   // for a single request.
+   private I _item;
+
+   // ---[ GENERAL ITEMPAGE LOGIC ]-------------------------------------------------------------------------------------
+
+   /**
+    * Since this page implements the PageBeginRenderListener, this method gets called by Tapestry before rendering
+    * (or rewinding) the page.
+    * If the page is able to retrieve an item, this page is considered to be an edit-page (for editing the current
+    * item), otherwise the page will be an add-page (for adding a new item to the database).
+    *
+    * @param event The Tapestry PageEvent.
+    * @see super.pageBeginRender(PageEvent)
+    */
+   public void pageBeginRender(PageEvent event) {
+      if(!event.getRequestCycle().isRewinding()) {
+         // only (re)-populate properties on page render.
+         I item = getItem();
+         if(item == null) {
+            // The given item is not available.. make sure we go to add-mode
+            setAdding(true);
+         } else {
+            // We have a valid item: Edit-mode
+            setAdding(false);
+            if (!isPopulated()) {
+               // Make sure we populate the page-properties
+               populateProperties(item);
+               setPopulated(true);
+            }
+         }
+      }
+   }
+
+   /**
+    * Listener-method that gets called when the save-button is clicked. It will call the addItem or updateItem
+    * method depending on wether the current page is in edit-mode or add-mode.
+    *
+    * @param cycle The Tapestry requestCycle.
+    */
+   public void saveClicked(IRequestCycle cycle) {
+      // Re-render the current page if there were validation-errors
+      if(!validateProperties()) {
+         return;
+      }
+
+      // Validation ok
+      try {
+         if (isAdding()) {
+            // Add the item to the database
+            setPrimaryKey(addItem(cycle, getPrimaryKey()));
+         }
+         else {
+            I item = getItem();
+            if(item != null) {
+               // Update the item in the database
+               setPrimaryKey(updateItem(cycle, item));
+            }
+         }
+         // Make sure the item is refetched from the database in the next render-phase;
+         // Insert/update triggers or sequences may have altered the properties and you want the new properties to show up.
+         setItem(null);
+         setPopulated(false);
+         String previousPage = getPreviousPage();
+         if(previousPage != null) {
+            cycle.activate(previousPage);
+         }
+      }
+      catch (Throwable t) {
+         LOG.error("Error while saving changes", t);
+         throw new PageRedirectException(PAGE_ERROR);
+      }
+   }
+
+   /**
+    * Listener-method that gets called when the delete-button is clicked. It will call the deleteItem method.
+    *
+    * @param cycle The Tapestry requestCycle.
+    */
+   public void deleteClicked(IRequestCycle cycle) {
+      // Ignore any validation-errors on the page
+      clearValidationErrors();
+      if (!isAdding()) {
+         // Only delete if we're in edit-mode
+         try {
+            deleteItem(cycle, getItem());
+            // Clear current item and properties...
+            setPrimaryKey(null);
+            setItem(null);
+            setPopulated(false);
+            // Return to list overview
+            String previousPage = getPreviousPage();
+            if(previousPage != null) {
+               cycle.activate(previousPage);
+            }
+         }
+         catch (Throwable t) {
+            LOG.error("Error while deleting item", t);
+            throw new PageRedirectException(PAGE_ERROR);
+         }
+      }
+   }
+
+   /**
+    * Because this page implements the IExternalPage interface, the page may be called through
+    * the external service rather than just the page service. This basically means that each page
+    * extending this Class can be bookmarked and jumped into with a set of service-parameters on
+    * the url for settings this pages' state before rendering.
+    * Tapestry calls this method for reading the parameters and setting the state before the page
+    * gets rendered.<br /><br />
+    *
+    * This page accepts up to two parameters:<br />
+    * 1. The key of the item to edit (optional, leave out for adding a new item).<br />
+    * 2. The name of the page to return to after we're done with this page.
+    *
+    * @param objects The service-parameters that were on the url.
+    * @param iRequestCycle The Tapestry IRequestCycle.
+    * @see super.activateExternalPage(Object[], IRequestCycle)
+    */
+   public void activateExternalPage(Object[] objects, IRequestCycle iRequestCycle) {
+      if(objects != null && objects.length > 0) {
+         if(objects.length > 1) {
+            // If more than 1 parameter available, the first one is the key of the item to edit.
+            setPrimaryKey((Serializable) objects[0]);
+         }
+         // The last parameter is always the name of the page to return to when we're done with this page
+         setPreviousPage(objects[objects.length - 1].toString());
+      }
+   }
+
+   /**
+    * Convenience method for clearing the validation errors.
+    */
+   protected void clearValidationErrors() {
+      ValidationDelegate delegate = getValidationDelegate();
+      if(delegate != null) {
+         delegate.clear();
+      }
+   }
+
+   /**
+    * Convenience method for converting dates from java.util.Date into java.sql.Date.
+    *
+    * @param date The java.util.Date to convert into a java.sql.Date.
+    * @return The converted value or null if the date you provides was null.
+    */
+   protected java.sql.Date toSqlDate(java.util.Date date) {
+      return date == null ? null : new java.sql.Date(date.getTime());
+   }
+
+   /**
+    * Validates the page-properties. The default implementation only checks the normal validated fields
+    * that are available on the pages' validationDelegate.
+    *
+    * @return True if all properties are ok, false if there were validation-errors.
+    */
+   public boolean validateProperties() {
+      ValidationDelegate delegate = getValidationDelegate();
+      if(delegate != null) {
+         if(delegate.getHasErrors()) {
+            return false;
+         }
+      } else {
+         LOG.error("No ValidationDelegate available, HMTL's Form-component should define a delegate!");
+      }
+      return true;
+   }
+
+   /**
+    * Because this page implements the PageDetachListener, this method gets called by Tapestry before the
+    * page is returned to the pool.
+    * Since Tapestry pools the pages, any values you may set in the page will stay there.
+    * To reduce the risk of a user seeing sensitive data of another user when this page gets reused, all
+    * abstract properties are cleared automagically by Tapestry. However, the concrete properties you
+    * added yourself will not be automatically cleared.
+    * This method allows you to clean up those concrete properties yourself, so no sensitive user-data
+    * is ever available in the pooled pages.
+    *
+    * @param event The Tapestry PageEvent.
+    * @see super.pageDetached(PageEvent)
+    */
+   public void pageDetached(PageEvent event) {
+      if(!event.getRequestCycle().isRewinding()) {
+         // Only reset the item after the render-phase. After the rewind-phase it may stay, since
+         // rendering will be done with the same page-instance and retrieving it from the database
+         // again after it was already retrieved in the rewind-phase seems like overkill.
+         setItem(null);
+      }
+   }   
+
+   // ---[ PROPERTY ACCESSORS ]-----------------------------------------------------------------------------------------
+
+   /**
+    * Getter for the item's primary key. Note that the key must be Serializable, since Tapestry will use this value
+    * as the unique identifier and may send it along in the HTML to the client (as form-parameters for example).
+    *
+    * @return The primary key for the item to edit.
+    * @see #setPrimaryKey(Serializable key)
+    */
+   public abstract Serializable getPrimaryKey();
+
+   /**
+    * Setter for the item's key.
+    *
+    * @param key Value to set for the key of the item to edit.
+    * @see #getPrimaryKey()
+    */
+   public abstract void setPrimaryKey(Serializable key);
+
+   /**
+    * Getter for the item. Note: This is a Lazy getter. If the item is not yet available on the page
+    * the item will be fetched. This is most likely to happen when a listener method is being executed,
+    * since that's right after the key was set and right before the next pageBeginRender method will
+    * fetch the item.
+    *
+    * @return The item to edit.
+    * @see #setItem(Object)
+    */
+   public I getItem() {
+      if(_item == null) {
+         Serializable key = getPrimaryKey();
+         if(key != null) {
+            try {
+               _item = fetchItem(key);
+            }
+            catch (Throwable t) {
+               LOG.error("Unable to fetch item from database", t);
+               throw new PageRedirectException(PAGE_ERROR);
+            }
+         }
+      }
+      return _item;
+   }
+
+   /**
+    * Setter for the item.
+    *
+    * @param item Item to edit.
+    * @see #getItem()
+    */
+   public void setItem(I item) {
+      this._item = item;
+   }
+
+   /**
+    * Getter for 'adding' state. If this method returns true, we are currently adding a new page to the
+    * database. If this method return false, we are editing an existing page.
+    *
+    * @return True if we're currently adding a new item, false if we're editing an existing one.
+    * @see #setAdding(boolean)
+    */
+   public abstract boolean isAdding();
+
+   /**
+    * Setter for 'adding' state. This method is best not called externally, since it will be based on the key and
+    * the fetched value then.
+    *
+    * @param adding True for add-mode, false for edit-mode.
+    * @see #isAdding()
+    */
+   public abstract void setAdding(boolean adding);
+
+
+   /**
+    * Getter for 'populated' state. If this method returns true, we have already populated the page-properties
+    * with the values from this item (first render of this page).
+    *
+    * @return True if this pages' properties have been populated.
+    * @see #setPopulated(boolean)
+    */
+   public abstract boolean isPopulated();
+
+   /**
+    * Setter for 'populated' state. This method is best not called externally, since it will be populated
+    * properly by the pageBeginRender method then.
+    *
+    * @param populated True if this pages' properties have been populated.
+    * @see #isPopulated()
+    */
+   public abstract void setPopulated(boolean populated);
+
+   /**
+    * Getter for 'previousPage' property.
+    *
+    * @return The name of the page to return to after the current item is succesfully edited/added/deleted.
+    * @see #setPreviousPage(String)
+    */
+   public abstract String getPreviousPage();
+
+   /**
+    * Setter for 'previousPage' property. Overview pages will generally pass the previousPage
+    * the user should be returned to after the user succesfully edited/added/delete the current item.
+    *
+    * @param previousPage previousPage to return to after the current item was deleted.
+    * @see #getPreviousPage()
+    */
+   public abstract void setPreviousPage(String previousPage);
+
+   /**
+    * Retrieves the ValidationDelegate the page uses for validating the fields. Each edit/add item page will have
+    * a validationDelegate assigned to its Form component. That ValidationDelegate handles validation for the form
+    * components and renders invalid fields properly.<br /><br />
+    *
+    * This method is annotated to make sure Tapestry will inject the ValidationDelegate bean into the page, so it
+    * can be used by the Form component.
+    *
+    * @return The validationDelegate to use for this page.
+    */
+   @Bean(${app.Name.Sentensized}ValidationDelegate.class)
+   public abstract ${app.Name.Sentensized}ValidationDelegate getValidationDelegate();
+
+   // ---[ TAPESTRY COMPONENTS ]----------------------------------------------------------------------------------------
+   /**
+    * Tapestry component for rendering the hidden field that stores the adding-state.
+    * If you want to keep state without making properties persistent, you can pass them on with each
+    * form-submit if you store them in Hidden component in the Forms.
+    *
+    * @return The Hidden component to use for passing the adding-state to the next request.
+    * @see #isAdding()
+    * @see #setAdding(boolean)
+    */
+   @Component(type = "Hidden", bindings = {"value=adding"})
+   public abstract Hidden getAddingField();
+
+   /**
+    * Tapestry component for rendering the hidden field that stores the populated-state.
+    *
+    * @return The Hidden component to use for passing the populated-state to the next request.
+    * @see #isPopulated()
+    * @see #setPopulated(boolean)
+    */
+   @Component(type = "Hidden", bindings = {"value=populated"})
+   public abstract Hidden getPopulatedField();
+
+   /**
+    * Tapestry component for rendering the hidden field that stores the previousPage-value.
+    *
+    * @return The Hidden component to use for passing the previousPage-value to the next request.
+    * @see #getPreviousPage()
+    * @see #setPreviousPage(String)
+    */
+   @Component(type = "Hidden", bindings = {"value=previousPage"})
+   public abstract Hidden getPreviousPageField();
+
+   /**
+    * Tapestry component for defining the label for the primaryKeyField.
+    *
+    * @return The FieldLabel component to use for the primaryKeyField.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:primaryKeyField"})
+   public abstract FieldLabel getPrimaryKeyLabel();
+
+   /**
+    * Tapestry component for rendering and handling the Save-button.
+    *
+    * @return The Submit component to use as a Save-button on the page.
+    */
+   @Component(type = "Submit", bindings = {"action=listener:saveClicked"})
+   public abstract Submit getSaveButton();
+
+   /**
+    * Tapestry component for rendering and handling the Delete-button.
+    *
+    * @return The Submit component to use as a Delete-button on the page.
+    */
+   @Component(type = "Submit", bindings = {"action=listener:deleteClicked","disabled=adding"})
+   public abstract Submit getDeleteButton();
+
+   // ---[ METHOD DEFINITIONS SUBCLASSES SHOULD IMPLEMENT ]-------------------------------------------------------------
+   /**
+    * Fetches the item from the database. Every page that subclasses the ${app.Name.Sentensized}ItemPage should implement this method.
+    *
+    * @param key The unique identifier required for fetching the proper item from the database.
+    *
+    * @return The item for the given key or null if it cannot be found.
+    * @throws GenericBusinessException If something goes wrong while fetching the item.
+    */
+   public abstract I fetchItem(Serializable key) throws GenericBusinessException;
+
+   /**
+    * Populates the page's properties when editing an item. Every page that subclasses the ${app.Name.Sentensized}ItemPage should
+    * implement this method.
+    *
+    * @param item The item we're editing and that should be used for populating the page's properties.
+    */
+   public abstract void populateProperties(I item);
+
+   /**
+    * Updates the item that we're currently editing, comitting the changes into the database.
+    *
+    * @param cycle The Tapestry RequestCycle.
+    * @param item The item to update in the database.
+    * @return The key for fetching the newly updated item.
+    * @throws GenericBusinessException If something goes wrong while updating.
+    */
+   public abstract Serializable updateItem(IRequestCycle cycle, I item) throws GenericBusinessException;
+
+   /**
+    * Adds a new item to the database, based on the values that we're set in the page-properties.
+    *
+    * @param cycle The Tapestry RequestCycle.
+    * @param key The key of the item to create/add.
+    * @return The key for fetching the newly created item.
+    * @throws GenericBusinessException If something goes wrong while adding the new item.
+    */
+   public abstract Serializable addItem(IRequestCycle cycle, Serializable key) throws GenericBusinessException;
+
+   /**
+    * Deletes the item we're currently editing from the database.
+    *
+    * @param cycle The Tapestry RequestCycle.
+    * @param item The item to delete from the database.
+    * @throws GenericBusinessException If something goes wrong while deleting the item.
+    */
+   public abstract void deleteItem(IRequestCycle cycle, I item) throws GenericBusinessException;
+}
+#end

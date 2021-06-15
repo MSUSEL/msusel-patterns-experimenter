@@ -1,0 +1,100 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Tableau des t�ches</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Tableau des t�ches</h3>
+
+<p>GanttProject affiche les t�ches du projet dans un tableau <i>hi�rarchique</i>.
+De cette fa�on, un grand nombre d'informations peut �tre visible rapidement.
+Par d�faut, seuls les Nom, Date de d�but et Date de fin de la t�che sont affich�s.<br \>
+Cependant, il est possible d'afficher&nbsp;:
+<ul>
+	<li>identifiant&nbsp;;</li>
+	<li>nom&nbsp;;</li>
+	<li>date de d�but&nbsp;;</li>
+	<li>date de fin&nbsp;;</li>
+	<li>dur�e (affich�e en jours)&nbsp;;</li>
+	<li>avanc�e (pourcentage)&nbsp;;</li>
+	<li>type (t�che m�re, simple t�che, ...)&nbsp;;</li>
+	<li>priorit�&nbsp;;</li>
+	<li>responsable&nbsp;;</li>
+	<li>information (pour l'instant seuls les �ventuels retards)&nbsp;;</li>
+	<li>liste de pr�c�desseurs.</li>
+</ul>
+
+Pour afficher ces informations, activez le menu contextuel de l'ent�te du tableau
+et s�lectionnez les informations que vous voulez afficher.
+</p>
+
+<h4>Colonnes personnalis�es</h4>
+<p>
+En outre, vous pouvez d�finir des colonnes de propri�t�s personnalis�es, puis les
+afficher dans ce tableau.</p>
+
+<p>
+Pour ajouter des colonnes personnalis�es, activez le menu contextuel de l'ent�te du tableau
+ et cliquez sur <b>Ajouter une colonne personnalis�e</b>. Une fen�tre
+appara�t vous permettant de d�finir le nom, le type (texte, entier, r�el, date ou bool�en)
+et la valeur par d�faut de la colonne. Une fois ajout�e, la colonne pourra, de la m�me 
+mani�re que les autres colonnes, �tre affich�e ou non. </p>
+<p>
+Pour supprimer une colonne personnalis�e, activez le menu contextuel de l'ent�te du tableau 
+(sur la colonne que vous voulez supprimer) et cliquez sur <b>Supprimer colonne personnalis�e</b>.
+<br \>
+<b>N.B.</b>&nbsp;: Si le menu <b>Supprimer colonne personnalis�e</b> est gris�, c'est qu'il ne
+s'agit pas d'une colonne personnalis�e.
+</p>
+
+<center><img src="../images/treetable1.png"></center>
+
+<p>
+<b color="red">ATTENTION</b>&nbsp;: Les colonnes de propri�t�s personnalis�es sont valables 
+pour toutes les t�ches du projet.</p>
+
+
+<h4>Saisie des informations sur les t�ches</h4>
+<p>La plupart des informations pr�sent�es sont directement �ditables via ce tableau
+pour plus de rapidit�.
+</p>
+
+<h4>Personnalisation</h4>
+Lorsque vous enregistrez votre projet, les colonnes affich�es ainsi que leur ordre d'affichage
+sont stock�s. La position du s�parateur entre le tableau et le diagramme de Gantt et la largeur des
+colonnes sont �galement stock�es.
+Vous aurez, donc, � l'ouverture du projet, les m�mes colonnes affich�es que lors de votre
+dernier enregistrement.
+
+</body>
+</html>

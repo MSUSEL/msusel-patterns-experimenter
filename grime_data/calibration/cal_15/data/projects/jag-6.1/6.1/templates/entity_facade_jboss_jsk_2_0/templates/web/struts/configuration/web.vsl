@@ -1,0 +1,278 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ${paths.ConfigOutput}/WEB-INF/web.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+
+<web-app>
+   <filter>
+      <filter-name>Set Character Encoding</filter-name>
+      <filter-class>filters.SetCharacterEncodingFilter</filter-class>
+      <init-param>
+         <param-name>encoding</param-name>
+         <param-value>UTF-8</param-value>
+       </init-param>
+   </filter>
+    <!-- Filters for the display tag functionality -->
+    <filter>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <filter-class>org.displaytag.filter.ResponseOverrideFilter</filter-class>
+    </filter>
+#if ($config.matchBusinessTier("Hibernate"))
+<filter>
+    <filter-name>databaseSession</filter-name>
+    <filter-class>
+#if (${config.templateSettings.serviceTier} == "Spring")
+#if ($config.matchBusinessTier("Hibernate 2"))
+      org.springframework.orm.hibernate.support.OpenSessionInViewFilter
+#end
+#if ($config.matchBusinessTier("Hibernate 3"))
+      org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
+#end
+#else
+      ${app.RootPackage}.SessionFilter
+#end
+    </filter-class>
+</filter>
+#end
+
+   <filter-mapping>
+      <filter-name>Set Character Encoding</filter-name>
+      <servlet-name>action</servlet-name>
+   </filter-mapping>
+    <filter-mapping>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ResponseOverrideFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+#if ($config.matchBusinessTier("Hibernate"))
+<filter-mapping>
+     <filter-name>databaseSession</filter-name>
+     <url-pattern>*.do</url-pattern>
+</filter-mapping>
+#end
+
+#if ($config.useWebService())
+<!-- Axis servlets -->
+  <servlet>
+    <servlet-name>AxisServlet</servlet-name>
+    <display-name>Apache-Axis Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AxisServlet
+    </servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>AdminServlet</servlet-name>
+    <display-name>Axis Admin Servlet</display-name>
+    <servlet-class>
+        org.apache.axis.transport.http.AdminServlet
+    </servlet-class>
+    <!--
+    By default, Axis runs in production mode.
+    For testing it can be convenient to put it in development mode:
+    -->
+    <!--
+    <init-param>
+      <param-name>axis.development.system</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    -->
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <display-name>SOAPMonitorService</display-name>
+    <servlet-class>
+        org.apache.axis.monitor.SOAPMonitorService
+    </servlet-class>
+    <init-param>
+      <param-name>SOAPMonitorPort</param-name>
+      <param-value>5001</param-value>
+    </init-param>
+    <load-on-startup>100</load-on-startup>
+  </servlet>
+#end
+
+#if ($app.LogFramework.equals("log4j"))
+  <!-- Initialize the log4j logger by calling a init servlet -->
+  <servlet>
+     <servlet-name>log4j-init</servlet-name>
+     <servlet-class>${app.RootPackage}.${app.Name}.util.log.InitLoggerServlet</servlet-class>
+     <load-on-startup>1</load-on-startup>
+  </servlet>
+#end
+			  
+  <!-- Action Servlet Configuration -->
+  <servlet>
+    <servlet-name>action</servlet-name>
+    <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+    <init-param>
+      <param-name>application</param-name>
+      <param-value>ApplicationResources</param-value>
+    </init-param>
+    <init-param>
+      <param-name>config</param-name>
+      <param-value>/WEB-INF/struts-config.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>debug</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>detail</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>validate</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+#if (${config.templateSettings.serviceTier} == "Spring")
+<context-param> 
+     <param-name>contextConfigLocation</param-name>
+     <param-value>/WEB-INF/declarativeServices.xml /WEB-INF/applicationContext.xml</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+#end
+#if ($config.useWebService())
+<!-- Axis servlet mappings -->
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/servlet/AxisServlet</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>*.jws</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AxisServlet</servlet-name>
+    <url-pattern>/services/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>SOAPMonitorService</servlet-name>
+    <url-pattern>/SOAPMonitor</url-pattern>
+  </servlet-mapping>
+
+ <!-- uncomment the servlet mapping if you want the admin servlet,
+      an set the AdminServlet in development mode
+      by specifying an init-param (see the servlet definition).
+      The following commands will be available:
+            /servlet/AdminServlet?cmd=start
+            /servlet/AdminServlet?cmd=stop
+            /servlet/AdminServlet?cmd=list
+ -->
+ <!--
+  <servlet-mapping>
+    <servlet-name>AdminServlet</servlet-name>
+    <url-pattern>/servlet/AdminServlet</url-pattern>
+  </servlet-mapping>
+ -->
+#end
+
+  <!-- Action Servlet Mapping -->
+  <servlet-mapping>
+    <servlet-name>action</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+
+#if ($config.useWebService())
+    <!-- Axis specific mime mappings -->
+
+    <!-- currently the W3C havent settled on a media type for WSDL;
+    http://www.w3.org/TR/2003/WD-wsdl12-20030303/#ietf-draft
+    for now we go with the basic 'it's XML' response -->
+  <mime-mapping>
+    <extension>wsdl</extension>
+     <mime-type>text/xml</mime-type>
+  </mime-mapping>
+
+
+  <mime-mapping>
+    <extension>xsd</extension>
+    <mime-type>text/xml</mime-type>
+  </mime-mapping>
+#end
+   
+   <mime-mapping>
+      <extension>.css</extension>
+      <mime-type>text/css</mime-type>
+   </mime-mapping>
+   <mime-mapping>
+      <extension>.js</extension>
+      <mime-type>application/x-javascript</mime-type>
+   </mime-mapping>
+   <mime-mapping>
+      <extension>.ico</extension>
+      <mime-type>image/x-icon</mime-type>
+   </mime-mapping>
+
+    
+  <!-- The Welcome File List -->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>main.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>main.html</welcome-file>
+  </welcome-file-list>
+
+  <!-- Finalist Tag Library Descriptor -->
+  <taglib>
+    <taglib-uri>/WEB-INF/finalist.tld</taglib-uri>
+    <taglib-location>/WEB-INF/finalist.tld</taglib-location>
+  </taglib>
+    
+  <!-- Application Tag Library Descriptor -->
+
+  
+  <!-- Struts Tag Library Descriptors -->
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+  </taglib>
+  
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-ext.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-ext.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+  </taglib>
+
+  <taglib>
+    <taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+    <taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+  </taglib>
+
+</web-app>
+#end

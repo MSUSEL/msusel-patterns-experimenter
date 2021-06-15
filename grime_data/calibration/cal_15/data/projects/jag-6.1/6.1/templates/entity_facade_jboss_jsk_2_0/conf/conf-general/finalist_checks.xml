@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.1//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_1.dtd">
+
+<module name="Checker">
+
+   <!-- enforce package documentation -->
+   <!--OFF <module name="PackageHtml"/> -->
+
+
+   <!-- Check if two property files describing one and the same context are consistent
+        and contain the same keys. -->
+   <module name="Translation"/>
+
+
+   <!-- Checks whether files end with a new line. -->
+   <!-- OFF <module name="NewlineAtEndOfFile"/> -->
+
+
+   <!-- Duplicate Code -->
+   <!-- OFF <module name="StrictDuplicateCode">
+       <property name="min" value="10"/>
+   </module> --> <!-- Since 3.3; off until comments/javadoc are no longer included in newer version-->
+
+
+   <!-- TreeWalker checks individual Java source files and defines properties that are
+        applicable to checking such files. -->
+   <module name="TreeWalker">
+
+      <property name="tabWidth" value="3"/>
+
+
+      <!-- Javadoc Comments -->
+      <module name="JavadocType">
+         <property name="authorFormat" value="\S+"/>
+         <property name="versionFormat" value="\$Revision:.*\S ?, ?\SDate:.*\S"/>
+      </module>
+      <module name="JavadocMethod">
+         <property name="scope" value="protected"/>
+         <property name="allowUndeclaredRTE" value="true"/>
+         <property name="allowThrowsTagsForSubclasses" value="false"/>
+      </module>
+      <module name="JavadocVariable">
+         <property name="scope" value="protected"/>
+      </module>
+      <module name="JavadocStyle">
+         <property name="scope" value="protected"/>
+         <property name="checkFirstSentence" value="false"/> <!-- New in 3.3, false until new project -->
+         <property name="checkHtml" value="true"/>
+      </module>
+
+
+      <!-- Naming Conventions -->
+      <!-- TEMP OFF <module name="AbstractClassName"/> --> <!-- New in 3.3, off until new project -->
+      <module name="ConstantName"/>
+      <module name="LocalFinalVariableName"/>
+      <module name="LocalVariableName"/>
+      <module name="MemberName"/>
+      <module name="MethodName"/>
+      <module name="PackageName"/>
+      <module name="ParameterName"/>
+      <module name="StaticVariableName"/>
+      <module name="TypeName"/>
+
+
+      <!-- Headers -->
+      <!--OFF <module name="Header"/> -->
+      <!--OFF <module name="RegexpHeader"/> -->
+
+
+      <!-- Imports -->
+      <!-- OFF <module name="AvoidStarImport"/> -->
+      <!-- TEMP OFF <module name="ImportOrder">
+        <property name="groups" value="java,javax,com,nl,org.apache,org.mmbase"/>
+        <property name="ordered" value="false"/>
+        <property name="separated" value="true"/>
+      </module> --> <!-- New in 3.3, off until new project -->
+      <module name="IllegalImport">
+         <property name="illegalPkgs" value="sun"/>
+      </module>
+      <module name="RedundantImport"/>
+      <module name="UnusedImports"/>
+
+
+      <!-- Size Violations -->
+      <!-- OFF module name="ExecutableStatementCount">
+         <property name="max" value="50"/>
+      </module> -->
+      <module name="FileLength">
+         <property name="max" value="2000"/>
+      </module>
+      <module name="LineLength">
+         <property name="max" value="150"/>
+         <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
+      </module>
+      <module name="MethodLength">
+         <property name="max" value="150"/>
+         <property name="countEmpty" value="false"/>
+      </module>
+      <module name="AnonInnerLength">
+         <property name="max" value="25"/>
+      </module>
+      <module name="ParameterNumber">
+         <property name="max" value="8"/>
+      </module>
+
+
+      <!-- Whitespace -->
+      <module name="EmptyForIteratorPad">
+         <property name="option" value="space"/>
+      </module>
+      <module name="NoWhitespaceAfter"/>
+      <module name="NoWhitespaceAfter">
+         <property name="tokens" value="DEC, DOT, INC, UNARY_MINUS, UNARY_PLUS"/>
+         <property name="allowLineBreaks" value="false"/>
+      </module>
+      <module name="NoWhitespaceBefore">
+         <property name="tokens" value="SEMI, POST_DEC, DOT, POST_INC"/>
+         <property name="allowLineBreaks" value="false"/>
+      </module>
+      <!-- Arithmetic or shift operators may be at the end of a line -->
+      <module name="OperatorWrap">
+         <property name="tokens" value="ASSIGN, DIV_ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, MOD_ASSIGN, SR_ASSIGN, BSR_ASSIGN, SL_ASSIGN, DIV, COLON, MINUS, MOD, PLUS, STAR, SL, SR"/>
+         <property name="option" value="eol"/>
+      </module>
+      <!-- Logical operators may NEVER be at the end of a line, except ? (=QUESTION) -->
+      <module name="OperatorWrap">
+         <property name="tokens" value="BAND, BOR, BSR, BXOR, BXOR_ASSIGN, BOR_ASSIGN, BAND_ASSIGN, EQUAL, GE, GT, LE, LT, LAND, LITERAL_INSTANCEOF, LOR, NOT_EQUAL"/>
+         <property name="option" value="nl"/>
+      </module>
+      <module name="ParenPad"/>
+      <module name="TypecastParenPad">
+         <property name="option" value="nospace"/>
+      </module>
+      <module name="TabCharacter"/>
+      <module name="WhitespaceAfter"/>
+      <module name="WhitespaceAround"/>
+
+
+      <!-- Modifiers -->
+      <!--OFF <module name="ModifierOrder"/> -->
+      <module name="RedundantModifier"/>
+
+
+      <!-- Blocks -->
+      <module name="EmptyBlock">
+         <property name="option" value="stmt"/>
+      </module>
+      <module name="LeftCurly"/>
+      <module name="NeedBraces"/>
+      <module name="RightCurly">
+         <property name="option" value="alone"/>
+      </module>
+      <module name="AvoidNestedBlocks">
+         <property name="allowInSwitchCase" value="true"/>
+      </module>
+
+
+      <!-- Coding Problems -->
+      <!-- OFF <module name="ArrayTrailingComma"/>-->
+      <!-- OFF <module name="AvoidInlineConditionals"/> -->
+      <module name="CovariantEquals"/>
+      <!-- OFF <module name="DeclarationOrder"/> -->
+      <module name="DoubleCheckedLocking"/>
+      <module name="EmptyStatement"/>
+      <module name="EqualsHashCode"/>
+      <!-- OFF <module name="ExplicitInitialization"/> -->
+      <!-- OFF <module name="FinalLocalVariable"/> -->
+      <module name="HiddenField">
+         <property name="ignoreConstructorParameter" value="true"/>
+         <property name="ignoreSetter" value="true"/>
+      </module>
+      <!-- OFF <module name="IllegalCatch"/> -->
+      <module name="IllegalInstantiation">
+         <property name="classes" value="java.lang.Boolean"/>
+      </module>
+      <!-- OFF <module name="IllegalToken">
+         <property name="tokens" value="LITERAL_NATIVE"/>
+      </module> -->
+      <!-- OFF <module name="IllegalTokenText"/> -->
+      <module name="IllegalType"/>
+      <module name="InnerAssignment"/>
+      <!-- TEMP OFF <module name="JUnitTestCase"/> --> <!-- New in 3.3, off until new project -->
+      <module name="MagicNumber">
+         <!-- Ignore low numbers, powers of 2, some very common high numbers and time unit constants -->
+         <property name="ignoreNumbers" 
+                    value="-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 16, 20, 24, 28, 29, 30, 31, 32, 60, 64, 100, 128, 255, 256, 512, 1000, 1024, 10000"/>
+      </module>
+      <module name="MissingSwitchDefault"/>
+      <!-- OFF <module name="NestedIfDepth">
+         <property name="max" value="1"/>
+      </module> -->
+      <module name="NestedTryDepth">
+         <property name="max" value="3"/>
+      </module>
+      <module name="PackageDeclaration"/>
+      <!-- <module name="ParameterAssignment"/> -->
+      <module name="RedundantThrows">
+         <property name="allowUnchecked" value="true"/>
+         <property name="allowSubclasses" value="true"/>
+      </module>
+      <!--
+      <module name="ReturnCount">
+         <property name="max" value="10"/>
+      </module>
+      -->
+      <module name="SimplifyBooleanExpression"/>
+      <module name="SimplifyBooleanReturn"/>
+      <module name="StringLiteralEquality"/>
+      <module name="SuperClone"/>
+      <module name="SuperFinalize"/>
+
+
+      <!-- Class Design -->
+      <!-- OFF <module name="DesignForExtension"/> -->
+      <module name="FinalClass"/>
+      <module name="HideUtilityClassConstructor"/>
+      <module name="InterfaceIsType"/>
+      <!-- OFF <module name="MutableException"/> -->
+      <!-- OFF <module name="ThrowsCount"/> -->
+      <module name="VisibilityModifier">
+         <property name="protectedAllowed" value="true"/>
+      </module>
+
+
+      <!-- Metrics Checks -->
+      <!-- OFF <module name="CyclomaticComplexity"/> -->
+
+
+      <!-- Miscellaneous Checks -->
+      <module name="ArrayTypeStyle"/>
+      <!-- OFF <module name="DescendantToken"/> -->
+      <!-- OFF <module name="FinalParameters"/> -->
+      <module name="GenericIllegalRegexp">
+         <property name="format" value="System\.exit"/>
+         <property name="format" value="System\.out"/>
+      </module>
+      <!-- OFF <module name="Indentation">
+         <property name="basicOffset" value="3"/>
+         <property name="braceAdjustment" value="0"/>
+         <property name="caseIndent" value="3"/>
+      </module> -->
+      <module name="TodoComment"/>
+      <module name="UncommentedMain"/>
+      <module name="UpperEll"/>
+
+   </module>
+
+</module>

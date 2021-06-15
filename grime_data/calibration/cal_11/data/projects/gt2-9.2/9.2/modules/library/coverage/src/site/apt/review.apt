@@ -1,0 +1,114 @@
+~~
+~~ The MIT License (MIT)
+~~
+~~ MSUSEL Arc Framework
+~~ Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+~~ Software Engineering Laboratory and Idaho State University, Informatics and
+~~ Computer Science, Empirical Software Engineering Laboratory
+~~
+~~ Permission is hereby granted, free of charge, to any person obtaining a copy
+~~ of this software and associated documentation files (the "Software"), to deal
+~~ in the Software without restriction, including without limitation the rights
+~~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+~~ copies of the Software, and to permit persons to whom the Software is
+~~ furnished to do so, subject to the following conditions:
+~~
+~~ The above copyright notice and this permission notice shall be included in all
+~~ copies or substantial portions of the Software.
+~~
+~~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+~~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+~~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+~~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+~~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+~~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+~~ SOFTWARE.
+~~
+
+Module Coverage
+~~~~~~~~~~~~~~~
+
+  Module Maintainer: Martin
+
+  IP Review:
+
+    * Jody Garnett August 10th, 2006
+
+    * Adrian Custer June 6, 2008
+    
+    * Alessio Fabiani July 8, 2008
+
+  STATUS: CLEAN
+  
+    * Presume appropriation of 2ie Technology to IRD and thereby to OSGeo
+
+    * Presume use of some text from the OGC specs can be considered fair use for 
+      specification implementors.
+    
+
+* org.geotools.coverage
+  ~~~~~~~~~~~~~~~~~~~~~
+
+    * some files include following credit to OGC
+
+----------------------------------------------------------------
+This package contains documentation from OpenGIS specifications.
+OpenGIS consortium's work is fully acknowledged here.
+----------------------------------------------------------------
+
+  
+* org.geotools.coverage.grid
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    * some files include following credit to OGC
+
+----------------------------------------------------------------
+This package contains documentation from OpenGIS specifications.
+OpenGIS consortium's work is fully acknowledged here.
+----------------------------------------------------------------
+
+
+* org.geotools.coverage.io
+  ~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+* org.geotools.coverage.processing
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+* org.geotools.coverage.processing.operation
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  QA: CannotCropException missing serializationId
+
+  * Interpolate, Resample and SelectSampleDimension operation files to credit the OGC
+
+
+* org.geotools.image.*
+  ~~~~~~~~~~~~~~~~~~~~
+
+    * (C) 2003, 2ie Technologie
+
+  2ie Technologie do not exists anymore. Their work were very closely
+  related to "Institut de Recherche pour le D�veloppement" (IRD). Actually, IRD was the
+  funder if I remember right. I wonder if we could remove this last copyright...
+  (actually merge it with the "Institut de Recherche pour le Développement" copyright,
+  which I believe is close to what the situation really was).
+
+
+* org.geotools.resources.image
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    * updated headers
+
+
+* org.geotools.coverage (test)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+* org.geotools.coverage.grid (test)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+* org.geotools.coverage.io (test)
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

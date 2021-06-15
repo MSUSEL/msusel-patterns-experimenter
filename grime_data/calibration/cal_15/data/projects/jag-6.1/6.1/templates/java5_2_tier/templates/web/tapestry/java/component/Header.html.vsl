@@ -1,0 +1,66 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp.
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/web/WEB-INF/Header.html
+<html>
+<body jwcid="$content$" >
+#if ($config.check("useAjax"))
+<script type="text/javascript">
+djConfig = { isDebug: false,
+             baseRelativePath: "js/dojo",
+             preventBackButtonFix: false,
+             parseWidgets: false
+           };
+</script>
+
+<div id="debugContainer" style="display:none;">
+    <div id="dojoDebug">This console displays your debug information</div>
+</div>
+#end
+<div id="header">
+    <h1>The JAG Test Console</h1>
+    <b>
+        <script language="JavaScript">
+            var version = "$Name: JAG_v6_1 $"
+            version = version.slice(7, version.length - 1);
+            if (version.length > 0) {
+                document.write("Version: ");
+                document.write(version);
+            }
+        </script>
+    </b>
+    <br/>
+    <ul>
+        <li><a href="http://jag.sourceforge.net">JAG Documentation</a></li>
+        <li><a href="http://www.finalist.com">Finalist IT Group</a></li>
+#if ($config.useSecurity())
+        <li><a jwcid="@ContextLink" href="/login/logout.jsp">Logout</a></li>
+#end
+#if ($config.check("useRss"))        
+        <li><a jwcid="@ContextLink" href="/feed/?id=LIST_ENTITIES"><img alt="rss feed" src="images/rss_icon.gif"/></a></li>
+#end
+#if ($config.check("useJasper"))
+        <li><a jwcid="@ContextLink" href="/pdf?reportName=Pie">PDF Pie Chart</a></li>
+        <li><a jwcid="@ContextLink" href="/pdf?reportName=Bar">PDF Bar Chart</a></li>
+#end
+    </ul>
+</div>
+</body>
+</html>
+#end

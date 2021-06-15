@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<document>
+
+    <properties>
+        <title>Keyboard Navigation Tutorial</title>
+        <author email="mbowler@GargoyleSoftware.com">Mike Bowler</author>
+        <revision>$Revision: 2827 $</revision>
+    </properties>
+
+    <body>
+        <section>
+            <p>
+                For a given WebClient, the focus can be on at most one element at any given time.  Focus
+                doesn't have to be on any element within the WebClient.
+            </p>
+            <p>
+                There are several ways to move the focus from one element to another.  The simplest is to call
+                HtmlPage.setFocusedElement(HtmlElement).
+                This method will remove focus from whatever element currently has it, if any, and will set
+                it to the new component.  Along the way, it will fire off any "onfocus" and "onblur" handlers
+                that have been defined.
+            </p>
+            <p>
+                The element currently owning the focus can be determined with a call to
+                HtmlPage.getFocusedElement().
+            </p>
+            <p>
+                To simulate keyboard navigation via the tab key, you can call
+                HtmlPage.tabToNextElement() and HtmlPage.tabToPreviousElement()
+                to cycle forward or backwards through the defined tab order.  This tab order is
+                defined by the
+                <a href="http://www.w3.org/TR/html401/interact/forms.html#adef-tabindex">tabindex</a>
+                attribute on the various elements as defined by the HTML specification.  You can query
+                the defined tab order with the method
+                HtmlPage.getTabbableElements()
+                which will return a list of all tabbable elements in defined tab order.
+            </p>
+            <p>
+                Access keys, often called keyboard mnemonics, can be simulated with the method
+                HtmlPage.pressAccessKey(char).
+            </p>
+            <p>
+                Finally, there is an assertion for testing that will verify that every tabbable element
+                has a defined tabindex attribute.  This is done with
+                WebAssert.assertAllTabIndexAttributesSet().
+            </p>
+        </section>
+    </body>
+
+</document>
+

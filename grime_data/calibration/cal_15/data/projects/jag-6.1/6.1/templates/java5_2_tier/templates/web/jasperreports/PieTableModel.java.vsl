@@ -1,0 +1,19 @@
+#if ($config.check("useJasper"))
+////File: ./src/java-web/${app.RootPath}/reports/PieTableModel.java
+package ${app.RootPackage}.reports;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * @author jag
+ * @version $Id: PieTableModel.java.vsl,v 1.2 2006/02/27 20:02:21 ekkelenkamp Exp $
+ */
+public class PieTableModel extends ReportBaseTableModel {
+
+    public PieTableModel() {
+        columnNames = new String[]{""};
+        result = Arrays.asList("");
+    }
+}
+#end

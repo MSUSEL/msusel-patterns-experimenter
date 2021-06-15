@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<schema targetNamespace="http://www.opengis.net/wcs/1.1.1" 
+	xmlns:wcs="http://www.opengis.net/wcs/1.1.1" 
+	xmlns:ows="http://www.opengis.net/ows/1.1" 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	elementFormDefault="qualified" version="1.1.1" xml:lang="en">
+	<annotation>
+		<appinfo>wcsCoverages.xsd 2007-07-01</appinfo>
+		<documentation>This XML Schema Document specifies types and elements for groups of coverages, allowing each coverage to include or reference multiple files. 
+		Copyright (c) 2007 Open Geospatial Consortium, Inc. All Rights Reserved. </documentation>
+	</annotation>
+	<!-- ==============================================================
+		includes and imports
+	============================================================== -->
+	<import namespace="http://www.opengis.net/ows/1.1" schemaLocation="../../ows/1.1.0/owsAll.xsd"/>
+	<!-- ==========================================================
+		Types and elements
+	    ========================================================== -->
+	<element name="Coverages" type="wcs:CoveragesType"/>
+	<!-- ========================================================== -->
+	<complexType name="CoveragesType">
+		<annotation>
+			<documentation>Group of coverages that can be used as the response from the WCS GetCoverage operation, allowing each coverage to include or reference multiple files. This Coverages element may also be used for outputs from, or inputs to, other OWS operations. </documentation>
+		</annotation>
+		<sequence>
+			<element ref="wcs:Coverage" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<!-- ========================================================== -->
+	<element name="Coverage" type="ows:ReferenceGroupType" substitutionGroup="ows:ReferenceGroup">
+		<annotation>
+			<documentation>Complete data for one coverage, referencing each coverage file either remotely or locally in the same message. </documentation>
+		</annotation>
+	</element>
+	<!-- ========================================================== -->
+</schema>

@@ -1,0 +1,246 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#foreach ($session in $sessions)
+////File: ${paths.ServiceOutput}/${session.RootPath}/${session.Name}Service.java
+package ${session.RootPackage};
+
+/**
+ * The <code>${session.Name}Service</code> bean exposes the business methods in the interface.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.29 $, $Date: 2005/08/21 13:04:12 $
+ */
+public interface ${session.Name}Service {
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#set ($count = 0)
+   $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) throws ${app.RootPackage}.exception.GenericBusinessException;
+#end
+
+   /*******************************************************************************************************************
+    *                                  P E R S I S T E N C E    M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $session.Entities)
+
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the storage.
+    *
+    * @param model a data object
+    * @return ${entity.Name}If a data object with the primary key
+    */
+   ${entity.RootPackage}.${entity.Name}If add${entity.Name}(${entity.RootPackage}.${entity.Name}If model) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Stores the <code>${entity.Name}If</code>.
+    *
+    * @param model the data model to store
+    */
+   void save${entity.Name}(${entity.RootPackage}.${entity.Name}If model) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    */
+   void delete${entity.Name}(${entity.PrimaryKeyType} id) throws ${app.RootPackage}.exception.GenericBusinessException;
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * Retrieves a data object from the storage by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name}If the data object
+    */
+   ${entity.RootPackage}.${entity.Name}If get${entity.Name}(${entity.PrimaryKeyType} id) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Returns a collection of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a collection of ${entity.Name}If objects.
+    */
+   java.util.Collection#if (${config.useJava5()})<${entity.RootPackage}.${entity.Name}If>#end get${entity.Name}List() throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * any zero/negative values are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a collection of ${entity.Name}If objects, of size <code>(endIndex - startIndex)</code>.
+    * throws GenericBusinessException if the chosen underlying data-retrieval mechanism does not support returning partial result sets.
+    */
+   java.util.Collection#if (${config.useJava5()})<${entity.RootPackage}.${entity.Name}If>#end get${entity.Name}List(int startIndex, int endIndex) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the storage.
+    * <b>NOTE:</b>If this session façade is configured <b>not</b> to use the FastLaneReader,
+    * this call will be very computationally wasteful as it will first have to retrieve all entities from
+    * the entity bean's <code>findAll</code> method.
+    *
+    * @return an integer value.
+    */
+   int get${entity.Name}ListSize() throws ${app.RootPackage}.exception.GenericBusinessException;
+#end
+##
+##   The following mthods might me added in the interface in the future:
+##
+## If an entity has been marked with a relation, the relation is many-to-one or one-to-one.
+##
+##
+##   #foreach ($entity in $session.Entities)
+##   #foreach($relation in $entity.Relations)
+##
+##    /**
+##     * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+## #if ($relation.isTargetMultiple())
+##     * These objects are in a many-to-one relation by the ${relation.FieldName.Sentensized} member.
+## #else
+##     * These objects are in a one-to-one relation by the ${relation.FieldName.Sentensized} member.
+## #end
+##     *
+##     * @param ${entity.Name.Desentensized} for which the related <code>${relation.RelatedEntity.Name.Desentensized}</code> should be retrieved.
+##     * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+##     *
+##     */
+##    ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}If get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized});
+##
+##    /**
+##     * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+## #if ($relation.isTargetMultiple())
+##     * These objects are in a many-to-one relation by the ${relation.FieldName.Sentensized} member.
+## #else
+##     * These objects are in a one-to-one relation by the ${relation.FieldName.Sentensized} member.
+## #end
+##     *
+##     * @param ${entity.Name.Desentensized} for which the <code>${relation.RelatedEntity.Name.Desentensized}</code> should be set.
+##     * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+##     */
+##     void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}If ${relation.RelatedEntity.Name.Desentensized});
+## #end
+## #end
+##
+##
+## Facade for the relations that point to this entity..
+## These are the entities on the "other" side.
+## Here we have to check if the relations are bidirectional.
+##
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+#if ($relation.isTargetMultiple())
+## this is a bidirectional one-to-many relation
+
+   /**
+    * Get a list of related ${relation.localEntity.Name}If objects of the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return Collection of ${relation.localEntity.Name}If objects.
+    */
+   java.util.Collection#if (${config.useJava5()})<${relation.localEntity.RootPackage}.${relation.localEntity.Name}If>#end get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Set a list of ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, java.util.Collection#if (${config.useJava5()})<${relation.localEntity.RootPackage}.${relation.localEntity.Name}If>#end ${relation.localEntity.Name.Desentensized}List) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Add ${relation.localEntity.Name}If to ${entity.Name}If.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} the object
+    * @param ${relation.localEntity.Name.Desentensized} the object to be added.
+    */
+   void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.RootPackage}.${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException;
+##
+#else
+## This is a bidirectional one-to-one relation
+
+   /**
+    * Get a ${relation.localEntity.Name}If object of the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name}If object.
+    */
+    ${relation.localEntity.RootPackage}.${relation.localEntity.Name}If get${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+   /**
+    * Set a ${relation.localEntity.Name}If object to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized} the related object.
+    */
+   void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.RootPackage}.${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException;
+
+#end
+#end
+#end
+#end
+##
+#foreach ($entity in $session.EntitiesAndReferences)
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary key fields. They should be looked up with there get method.
+#else
+    /**
+     *
+     * Retrieves a list of data object for the specified $field.Name field.
+     *
+     * @param $field.Name the field
+     * @return Collection of ${entity.Name}If data objects, empty list in case no results were found.
+     */
+    java.util.Collection#if (${config.useJava5()})<${entity.RootPackage}.${entity.Name}If>#end find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name) throws ${app.RootPackage}.exception.GenericBusinessException;
+#end    
+#end
+#foreach ($relation in $entity.Relations)
+    /**
+     * Retrieves#if (${relation.TargetMultiple}) a list of ${entity.Name}If data objects#else the single corresponding ${entity.Name}If data object#end for the specified subject field.
+     *
+     * @param ${relation.ForeignPkFieldName} the field
+     * @return#if (${relation.TargetMultiple}) Collection of ${entity.Name}If data objects, empty list#else the single corresponding ${entity.Name}If data object, or <code>null</code>#end if no results were found.
+     */
+#if (${relation.TargetMultiple})    java.util.Collection#if (${config.useJava5()})<${entity.RootPackage}.${entity.Name}If>#end#else    ${entity.RootPackage}.${entity.Name}If#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName}) throws ${app.RootPackage}.exception.GenericBusinessException;
+#end
+
+#end
+}
+#end

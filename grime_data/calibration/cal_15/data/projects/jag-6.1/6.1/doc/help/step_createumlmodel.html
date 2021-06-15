@@ -1,0 +1,78 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+   <link rel="stylesheet" href="help.css">
+</head>
+
+<body>
+<table height="95%"><tr><td valign="top">
+<h3>Create the UML class diagram</h3>
+<img src="images/uml.jpg"><br>
+
+JAG allows you to generate a J2EE application from the basis of a UML class diagram.  There are many commercial and
+open-source products currently available that enable you to produce such diagrams; for example
+<a href="http://www.gentleware.com/!!!EXTERNAL!!!">PoseidonUML</a> has a freely-available 'community edition'.
+<p>
+The only requirement for the UML modelling tool is that it can export the diagram in
+<a href="http://www.omg.org/technology/documents/formal/xmi.htm/!!!EXTERNAL!!!">XMI format</a> (a format that enables
+easy interchange of metadata between modeling tools).
+<p>
+The components in the class diagram that are important to JAG are:
+<ul>
+<li>Entity classes and the associations between them</li>
+<li>Service classes and their references to entities</li>
+</ul>
+<h4>Stereotypes</h4>
+JAG makes use of <i>stereotypes</i> to determine the roles of the various components in the UML class diagram.
+Stereotypes are basically reusable named tags that you can assign to individual components in the UML diagram,
+allowing for further differentiation between components.
+<p>
+The following stereotypes must be adhered to for JAG to be able to read in the information correctly:
+<ul>
+<li>Entity classes must have the stereotype <code>"Entity"</code>.</li>
+<li>Service classes must have the stereotype <code>"Service"</code>.</li>
+<li>An entity class must have at least one attribute marked as primary key.  You can mark an attribute as
+a primary key by giving it the stereotype <code>"PrimaryKey"</code>.</li>
+<li>A service class must have at least one reference to an entity.  This is achieved in the UML by drawing a
+<i>dependency link</i> from the service to an entity, and giving it the stereotype <code>"EntityRef"</code>.</li>
+<li>Relations between entities are drawn as <i>association links</i>.  For example, to represent a relation
+from entity 'Address' to entity 'User' (such that 'Address' has a foreign key field
+'userID' which maps to the primary key of 'User'), you would draw an association link from
+'Address' to 'User'.<br><b>NOTE:</b> the association must be named after the imported foreign key
+('userID' in this case).
+
+
+
+
+</td></tr></table>
+
+<p>
+<table width="100%"><tr><td align="center">Next step: <a href="step_import_uml.html">Import the UML model into JAG</a></td></tr></table>
+<a href="help.html">&lt;&lt;Start page</a>

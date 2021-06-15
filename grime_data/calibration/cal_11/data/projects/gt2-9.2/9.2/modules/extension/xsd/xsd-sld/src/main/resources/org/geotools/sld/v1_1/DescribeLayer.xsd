@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<xsd:schema targetNamespace="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:wfs="http://www.opengis.net/wfs" xmlns:se="http://www.opengis.net/se" xmlns:ows="http://www.opengis.net/ows" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" version="1.1.0 2010-02-01">
+	
+	<xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://schemas.opengis.net/gml/3.1.1/base/feature.xsd"/>
+	<xsd:import namespace="http://www.opengis.net/se" schemaLocation="http://schemas.opengis.net/se/1.1.0/FeatureStyle.xsd"/>
+	<xsd:import namespace="http://www.opengis.net/wfs" schemaLocation="http://schemas.opengis.net/wfs/1.1.0/wfs.xsd"/>
+	<xsd:import namespace="http://www.opengis.net/ows" schemaLocation="http://schemas.opengis.net/ows/1.0.0/owsCommon.xsd"/>
+	<xsd:include schemaLocation="StyledLayerDescriptor.xsd"/>
+	<xsd:annotation>
+		<xsd:documentation>
+			<description>Styled Layer Descriptor version 1.1.0 (2010-02-01)</description>
+			<copyright>
+				SLD is an OGC Standard.
+				Copyright (c) 2007,2010 Open Geospatial Consortium, Inc. All Rights Reserved.
+				To obtain additional rights of use, visit http://www.opengeospatial.org/legal/ .
+			</copyright>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="DescribeLayerResponse" type="sld:DescribeLayerResponseType"/>
+	<xsd:complexType name="DescribeLayerResponseType">
+		<xsd:sequence>
+			<xsd:element name="Version" type="ows:VersionType"/>
+			<xsd:element name="LayerDescription" type="sld:LayerDescriptionType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="LayerDescriptionType">
+		<xsd:sequence>
+			<xsd:element name="owsType" type="sld:owsTypeType"/>
+			<xsd:element ref="se:OnlineResource"/>
+			<xsd:element name="TypeName" type="sld:TypeNameType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TypeNameType">
+		<xsd:choice>
+			<xsd:element ref="se:FeatureTypeName"/>
+			<xsd:element ref="se:CoverageName"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:simpleType name="owsTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="wfs"/>
+			<xsd:enumeration value="wcs"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

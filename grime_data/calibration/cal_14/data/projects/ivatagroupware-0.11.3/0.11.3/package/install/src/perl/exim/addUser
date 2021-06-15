@@ -1,0 +1,328 @@
+#!/usr/bin/perl -Uw
+################################################################################
+# $Id: addUser,v 1.2 2005/04/09 17:19:52 colinmacleod Exp $
+#
+# Add a user to the system. This script is suited for UNIX-style operating
+# system which uses shadow password security.
+#
+# To allow the user which runs this and the other system scripts, the script
+# must be run in root user mode. This is achieved by running the sudo program
+# which must be installed on the system.
+#
+# Since: ivata groupware 0.9 (2002-07-20)
+# Author: Colin MacLeod <colin.macleod@ivata.com>
+# $Revision: 1.2 $
+#
+################################################################################
+# Copyright (c) 2001 - 2005 ivata limited.
+# All rights reserved.
+# ---------------------------------------------------------
+# ivata groupware may be redistributed under the GNU General Public
+# License as published by the Free Software Foundation;
+# version 2 of the License.
+#
+# These programs are free software; you can redistribute them and/or
+# modify them under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2 of the License.
+#
+# These programs are distributed in the hope that they will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# See the GNU General Public License in the file LICENSE.txt for more
+# details.
+#
+# If you would like a copy of the GNU General Public License write to
+#
+# Free Software Foundation, Inc.
+# 59 Temple Place - Suite 330
+# Boston, MA 02111-1307, USA.
+#
+#
+# To arrange commercial support and licensing, contact ivata at
+#                  http://www.ivata.com/contact.jsp
+#
+################################################################################
+#
+# $Log: addUser,v $
+# Revision 1.2  2005/04/09 17:19:52  colinmacleod
+# Changed copyright text to GPL v2 explicitly.
+#
+# Revision 1.1.1.1  2005/03/10 17:49:17  colinmacleod
+# Restructured ivata op around Hibernate/PicoContainer.
+# Renamed ivata groupware.
+#
+# Revision 1.3  2004/11/03 18:32:31  colinmacleod
+# Cleaned up code.
+# Made the mail dir a setting in Site.pm.
+#
+# Revision 1.2  2004/03/21 21:16:32  colinmacleod
+# Shortened name to ivata op.
+#
+# Revision 1.1  2004/02/05 21:54:07  colinmacleod
+# Moved from webmail subproject.
+#
+# Revision 1.1.1.1  2004/01/27 20:59:57  colinmacleod
+# Moved ivata op to sourceforge.
+#
+# Revision 1.2  2003/10/15 14:11:33  colin
+# fixing for XDoclet
+#
+# Revision 1.4  2003/05/23 12:54:01  jano
+# homeDir of user has to be 757
+#
+# Revision 1.3  2003/05/23 12:38:27  jano
+# we changed name of directory "item" to "drive"
+#
+# Revision 1.2  2003/05/15 11:33:00  peter
+# added creation of upload directories
+#
+# Revision 1.1  2003/02/24 19:09:24  colin
+# moved to business
+#
+# Revision 1.10  2002/11/21 12:00:00  jano
+# chmod 755 for mail directory in home directory of new user
+#
+# Revision 1.9  2002/11/15 10:48:25  ivatashop
+# make link to home and change ownership
+#
+# Revision 1.8  2002/11/11 10:16:38  ivatashop
+# we creating empty inbox, only touch /var/spool/mail, for new user, and change owner
+#
+# Revision 1.7  2002/11/07 15:54:35  ivatashop
+# using function getGroupId
+#
+# Revision 1.6  2002/10/31 15:10:44  ivatashop
+# fixed mkdir bug with the version of perl on raq3
+#
+# Revision 1.5  2002/10/25 14:07:01  jano
+# directory of users is diffrent
+#
+# Revision 1.4  2002/10/25 12:05:57  jano
+# whne user is creating make a home directory
+#
+# Revision 1.3  2002/10/25 07:31:06  jano
+# using new method for converitng arguments from command line
+#
+# Revision 1.2  2002/10/24 11:51:26  colin
+# Testing in London Red Hat/Sub Cobalt server
+#
+# Revision 1.1  2002/08/11 11:44:27  colin
+# first version
+# scripts written for and tested on Debian exim server
+#
+################################################################################
+
+################################################################################
+# includes
+use strict;
+use Exim;
+use Site;
+################################################################################
+
+################################################################################
+# variable declarations
+# full name of the user
+my $FULL_NAME;
+# used to store all the ids in the system
+my @UIDS = ();
+# system user name
+my $USER_NAME;
+# an error message, if any is necessary (allows us to go to the end and always
+# create a mail box
+my $UID = 0;
+################################################################################
+
+################################################################################
+# function prototypes
+sub addUser();
+sub describeCommandLine();
+sub getFirstFreeUid();
+sub initialize();
+sub parseCommandLine();
+################################################################################
+
+################################################################################
+# main routine
+# if the command line parsing fails or the user specifies he wants help, then
+# bring up the help screen
+if(!parseCommandLine()) {
+    describeCommandLine();
+    dieInvalidArguments();
+# otherwise rock & roll
+} else {
+    initialize();
+    addUser();
+    unlockFile($LOCKFILE_PASSWD);
+}
+################################################################################
+
+################################################################################
+# addUser: does the funky stuff to add the user to the system.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub addUser() {
+    unless ($UID) {
+        $UID = getFirstFreeUid();
+    }
+    my $gid = $GID;
+
+    # this regex replaces global variables in the text
+    $HOME_DIR =~ s/(\$[_A-Z]+)/$1/gee;
+
+
+    # if you specified the useradd command, use that
+    if($USERADD) {
+        system($USERADD, '-g', $gid, '-d', $HOME_DIR, '-s',
+               $SHELL, '-u', $UID, $USER_NAME, '-c', $FULL_NAME)
+           # rely on useradd to provide the error message
+           && unlockAndDie($LOCKFILE_PASSWD, "\n");;
+    } else {
+        # we'll have to handle the files ourselves
+
+        # set the last changed time to the number of days since 1 Jan 1970
+        my $lastChange = int(time()/(60*60*24));
+        # create a temporary passwd file and print to that first. this preserves
+        # NIS markers from the end of the file
+        open(PASSWD, "$PASSWD")
+            || unlockAndDie($LOCKFILE_PASSWD, "Can't open $PASSWD: $!\n");
+        open(TEMP, ">$PASSWD.tmp")
+            || unlockAndDie($LOCKFILE_PASSWD, "Can't open $PASSWD.tmp: $!\n");
+        print TEMP "$USER_NAME:x:$UID:$gid:$FULL_NAME:$HOME_DIR:$SHELL\n";
+        while(<PASSWD>) {
+            print TEMP;
+        }
+        close(TEMP) ;
+        close(PASSWD) ;
+        rename($PASSWD, "$PASSWD.ivata");
+        rename("$PASSWD.tmp", $PASSWD);
+        open(SHADOW, ">>$SHADOW")
+            || unlockAndDie($LOCKFILE_PASSWD, "Can't open $SHADOW: $!\n");
+        print SHADOW "$USER_NAME:*:$lastChange:$SHADOW_MIN_CHANGE:" .
+            "$SHADOW_MAX_CHANGE:$SHADOW_WARN_EXPIRE:"
+            . "$SHADOW_INACTIVE:$SHADOW_EXPIRE:\n";
+        close(SHADOW) ;
+    }
+
+    # create the home and mail directories
+    mkdir ($HOME_DIR, $HOME_DIR_MODE);
+    chown($UID, $gid, $HOME_DIR);
+
+    # if we are using maildir, the maildirmake program will create the inbox
+    if (-e $MAIL_MAILDIRMAKE) {
+        $FOLDER_PATH_MAILDIR_INBOX =~ s/(\$[_A-Z]+)/$1/gee;
+        system("$MAIL_MAILDIRMAKE $FOLDER_PATH_MAILDIR_INBOX");
+        chown($UID, $gid, $FOLDER_PATH_MAILDIR_INBOX);
+        # for Maildir, we need to process the subdirectories too!
+        opendir(DIR, $FOLDER_PATH_MAILDIR_INBOX)
+            || unlockAndDie($LOCKFILE_PASSWD, "Can't opendir $FOLDER_PATH_MAILDIR_INBOX: $!\n");
+        my $subdir;
+        while (defined($subdir = readdir(DIR))) {
+            chown($UID, $gid, "$FOLDER_PATH_MAILDIR_INBOX/$subdir");
+        }
+        closedir(DIR);
+    } else {
+        $FOLDER_PATH =~ s/(\$[_A-Z]+)/$1/gee;
+        $FOLDER_PATH_INBOX =~ s/(\$[_A-Z]+)/$1/gee;
+        mkdir ($FOLDER_PATH, $HOME_DIR_MODE);
+        chown($UID, $gid, $FOLDER_PATH);
+
+        # create the inbox
+        system("$TOUCH /var/spool/mail/$USER_NAME");
+        chown($UID, $gid, $FOLDER_PATH_INBOX);
+        # link it into the home dir
+        symlink($FOLDER_PATH_INBOX, "$FOLDER_PATH/$USER_NAME");
+    }
+}
+
+################################################################################
+# describeCommandLine: print out command line options.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub describeCommandLine() {
+    print "\n";
+    print "                                 --- addUser ---\n";
+    print "                   ivata's tool to add a user to *NIX systems.\n";
+    print " Description:\n";
+    print "       This program must be run as root and will add a user to the operating\n";
+    print "       system. The program will execute without any feedback if everything is\n";
+    print "       okay, otherwise an error is sent to the standard error output.\n";
+    print "\n";
+    print "       You need perl installed on your system to use this tool.\n";
+    print "\n";
+    print " Usage: \n";
+    print "       addUser {username} {fullname}\n";
+    print "\n";
+    print " Key:\n";
+    print "  username      user name to set.\n";
+    print "  fullname      full name of the user in the form first names, followed by last\n";
+    print "                name. Spaces should be used, but the parameter will have to be\n";
+    print "                surrounded by quotes (\" in bash) to prevent the shell from\n";
+    print "                interpreting this as separate parameters.\n";
+    print "\n";
+}
+
+
+################################################################################
+# getFirstFreeUid: return the first free id, which is higher than the
+#     minimum specified by $UID_FIRST.
+# params:
+#        NONE
+# returns:
+#        user id as a number
+sub getFirstFreeUid() {
+    # check the ids are all sorted
+    my @sorted = sort {$a <=> $b} @UIDS;
+    my $id = $UID_FIRST;
+
+    while(defined($sorted[0]) &&
+      ($id >= $sorted[0])) {
+    # if this id is the same as the id found, increase the id
+    if($id == $sorted[0]) {
+        ++$id;
+    }
+    shift @sorted;
+    }
+
+    return $id;
+}
+
+################################################################################
+# initialize: variable initialization.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub initialize() {
+    lockFile($LOCKFILE_PASSWD);
+    # get all of the user ids
+    my @userDetails;
+    setpwent();
+    while (@userDetails = getpwent()) {
+        push(@UIDS, $userDetails[2]);
+        # check the username doen't already exist
+        if($userDetails[0] eq $USER_NAME) {
+            unlockAndDie($LOCKFILE_PASSWD, "$USER_NAME already exists.\n");
+        }
+    }
+    endpwent();
+}
+
+################################################################################
+# parseCommandLine: this converts all of the command line options to the
+#     variables.
+# params:
+#        NONE
+# returns:
+#        a boolean telling you whether to continue or not. non-zero = continue
+sub parseCommandLine() {
+    $USER_NAME = convertCommandLine($ARGV[0]);
+    $FULL_NAME = convertCommandLine($ARGV[1]);
+    return ($#ARGV == 1);
+}
+################################################################################
+

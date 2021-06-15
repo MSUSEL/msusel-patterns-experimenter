@@ -1,0 +1,121 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package org.hsqldb.scriptio;
+
+import java.io.IOException;
+
+import org.hsqldb.Database;
+import org.hsqldb.NumberSequence;
+import org.hsqldb.Session;
+import org.hsqldb.Table;
+import org.hsqldb.persist.PersistentStore;
+
+/**
+ * Base class for all script readers.
+ *
+ * @author Fred Toussi (fredt@users dot sourceforge.net)
+ * @version 1.9.0
+ * @since 1.7.2
+ */
+public abstract class ScriptReaderBase {
+
+    public static final int ANY_STATEMENT        = 1;
+    public static final int DELETE_STATEMENT     = 2;
+    public static final int INSERT_STATEMENT     = 3;
+    public static final int COMMIT_STATEMENT     = 4;
+    public static final int SESSION_ID           = 5;
+    public static final int SET_SCHEMA_STATEMENT = 6;
+    Database                database;
+    int                     lineCount;
+
+    ScriptReaderBase(Database db) {
+        this.database = db;
+    }
+
+    public void readAll(Session session) throws IOException {
+        readDDL(session);
+        readExistingData(session);
+    }
+
+    protected abstract void readDDL(Session session) throws IOException;
+
+    protected abstract void readExistingData(Session session)
+    throws IOException;
+
+    public abstract boolean readLoggedStatement(Session session)
+    throws IOException;
+
+    int             statementType;
+    int             sessionNumber;
+    boolean         sessionChanged;
+    Object[]        rowData;
+    long            sequenceValue;
+    String          statement;
+    Table           currentTable;
+    PersistentStore currentStore;
+    NumberSequence  currentSequence;
+    String          currentSchema;
+
+    public int getStatementType() {
+        return statementType;
+    }
+
+    public int getSessionNumber() {
+        return sessionNumber;
+    }
+
+    public Object[] getData() {
+        return rowData;
+    }
+
+    public String getLoggedStatement() {
+        return statement;
+    }
+
+    public NumberSequence getCurrentSequence() {
+        return currentSequence;
+    }
+
+    public long getSequenceValue() {
+        return sequenceValue;
+    }
+
+    public Table getCurrentTable() {
+        return currentTable;
+    }
+
+    public String getCurrentSchema() {
+        return currentSchema;
+    }
+
+    public int getLineNumber() {
+        return lineCount;
+    }
+
+    public abstract void close();
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<PointSymbolizer version="1.1.0" xmlns="http://www.opengis.net/se" uom="http://www.opengeospatial.org/se/units/pixel">
+    <Name>MyPointSymbolizer</Name>
+    <Description>
+        <Title>Example Pointsymbolizer</Title>
+        <Abstract>This is just a simple example of a point symbolizer.</Abstract>
+    </Description>
+    <Graphic>
+        <Mark>
+            <InlineContent encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAK3RFWHRDcmVhdGlvbiBUaW1lAFd0IDE0IHdyeiAyMDEwIDEyOjA2OjAyICswMTAweoAlkgAAAAd0SU1FB9oJDgo6HdmGt90AAAAJcEhZcwAACxIAAAsSAdLdfvwAAAAEZ0FNQQAAsY8L/GEFAAABfklEQVR42mP8//8/AwYACn779o2bmxtTiokBG9iwboOfq9+1K9eI0vDp06cZk2e8ffp2zuQ5mPZj0bB963aGLwxTI6YdO3QMiyX/UcHz58/tLeyXZ674O+NfgVthWnTaz58/kRWg27B8yXKu31yeGp6MjIwpVimnjp86fvg4Tic9ffp0zfI1ZU7lfBx8QK6WpFasSdzMiTN//fqFRQPQusULFsvzyFsqWMIFw4zDHt5+uH/Xfiwarl27tnj+4nSzdDYWNrigtIB0iF5IZ1MnMOhQNACNnztjrq64roWiJQMqCDUO+/D6w/YN21E0XLp06fD+w3l2+cjGwy1Jt82YO3Pe+/fvoRqAfupq6bKVs7VQsMAa8REmEf8+/V04fSFUw/Hjxy+cvZBklgwMSqwagIGWYpm6cOEiYDCyAI2fPnG6mrD6n39/Lj25xIADAB325/vvVQtXsXz58uX7z+8vfr7I2ZrNgBew87HfvnebERg+X79+/ffvHwMRgJWVFQBa4Mt756r78AAAAABJRU5ErkJggg==</InlineContent>
+            <Format>image/png</Format>
+        </Mark>
+        <Size>15.0</Size>
+    </Graphic>
+</PointSymbolizer>

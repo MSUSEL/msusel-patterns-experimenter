@@ -1,0 +1,294 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($session in $sessions)
+////File: ${paths.EjbOutput}/${session.RootPath}/${session.Name}Bean.ejb
+package ${session.RootPackage};
+
+
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import weblogic.ejb.GenericSessionBean;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.rmi.*;
+import javax.ejb.*;
+import weblogic.ejb.GenericSessionBean;
+
+import com.finalist.util.log.*;
+#foreach ($entity in $session.EntitiesAndReferences)
+import ${entity.RootPackage}.*;
+import ${app.RootPackage}.dao.${entity.Name}DAO;
+#end
+
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans and read-only DAO classes.
+ * <p>
+ * This class uses the <a href="http://java.sun.com/blueprints/patterns/FastLaneReader.html">Fast Lane Reader</a>
+ * J2EE design pattern.  If enabled, collections of read-only data are accessed directly from the datastore
+ * using JDBC, thus avoiding the EJB layer and unnecessarily expensive calls to entity bean finder methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2005/06/29 20:56:25 $
+ *
+ * @ejbgen:session enable-call-by-reference="true" 
+ *                 ejb-name="${session.Name}" 
+ *                 type="Stateless" 
+ *                 trans-timeout-seconds="0" 
+ *                 initial-beans-in-free-pool="0" 
+ *                 max-beans-in-free-pool="1000"
+ * @ejbgen:jndi-name remote="ejb/${session.RootPath}/${session.Name}"
+ * @ejbgen:file-generation local-class="false" 
+ *                         remote-home-name="${session.Name}Home" 
+ *                         remote-class-name="${session.Name}" 
+ *                         remote-home="true" 
+ *                         local-home="false" 
+ *                         remote-class="true"
+ * @ejbgen:create-default-dbms-tables
+#foreach ($entity in $session.EntitiesAndReferences)
+ * @ejbgen:ejb-local-ref jndi-name="ejb/${session.RootPath}/${entity.Name}"
+ *                       home="${entity.RootPackage}.${entity.Name}LocalHome" 
+ *                       link="${entity.Name}" 
+ *                       type="Entity" 
+ *                       local="${entity.RootPackage}.${entity.Name}Local" 
+ *                       name="ejb/${entity.Name}"
+#end
+ */
+public class ${session.Name}Bean extends GenericSessionBean {
+   /**
+    * Configures whether or not the getXXXList methods use the Fast Lane Reader pattern.
+    */
+   private boolean useFastLane = true;
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${session.Name}.class);
+
+   /**
+    * The bean context.
+    */
+   private SessionContext context = null;
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * The ${entity.Name.Desentensized}Home property.
+    */
+   private ${entity.Name}LocalHome ${entity.Name.Desentensized}Home = null;
+
+#end
+   /*******************************************************************************************************************
+    *                                  B E A N   U T I L I T Y   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $session.Entities)
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the database.
+    *
+    * @param model a data object
+    * @return ${entity.Name}Data a data object with the primary key
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public ${entity.RootPackage}.${entity.Name}Data 
+           add${entity.Name}(${entity.RootPackage}.${entity.Name}Data model) {
+      try {
+         getReferences();
+         return ${entity.Name.Desentensized}Home.create(model).get${entity.Name}Data();
+      }
+      catch (CreateException exc) {
+         log.error("Create exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Stores the <code>${entity.Name}Data</code> in the database.
+    *
+    * @param model the data model to store
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public void save${entity.Name}(${entity.RootPackage}.${entity.Name}Data model) {
+      try {
+         getReferences();
+#if (!$entity.isCompositeKey())
+         ${entity.PrimaryKey.Type} id = model.get${entity.PrimaryKey.Name.Sentensized}();
+#else
+         ${entity.PrimaryKeyType} id = model.getPrimaryKey();
+#end
+         ${entity.RootPackage}.${entity.Name}Local ${entity.Name.Desentensized}Ref = ${entity.Name.Desentensized}Home.findByPrimaryKey(id);
+         ${entity.Name.Desentensized}Ref.set${entity.Name}Data(model);
+      }
+      catch (FinderException exc) {
+         log.error("Finder Exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+    }
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public void delete${entity.Name}(${entity.PrimaryKeyType} id) {
+      try {
+         getReferences();
+         ${entity.Name.Desentensized}Home.remove(id);
+      }
+      catch (RemoveException exc) {
+         log.error("RemoveException", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * Retrieves a data object from the database by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name}Data the data object
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public ${entity.RootPackage}.${entity.Name}Data 
+       get${entity.Name}(${entity.PrimaryKeyType} id) {
+##
+##  RE: We shouldn't mix reading using a DAO and writing with an Entity EJB.
+##  So let's remove this one...
+##      if (useFastLane) {
+##         return ${entity.Name}DAO.getInstance().get${entity.Name}(id);
+##      }
+##
+      try {
+         getReferences();
+         return ${entity.Name.Desentensized}Home.findByPrimaryKey(id).get${entity.Name}Data();
+      }
+      catch (FinderException exc) {
+         log.error("Finder Exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Returns a collection of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a collection of ${entity.Name}Data objects.
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public Collection get${entity.Name}List() {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}List();
+      }
+
+      try {
+         getReferences();
+         Collection collection = ${entity.Name.Desentensized}Home.findAll();
+         Iterator   iterator   = collection.iterator();
+         ArrayList  resultList = new ArrayList(collection.size());
+         while (iterator.hasNext()) {
+            ${entity.RootPackage}.${entity.Name}Local ${entity.Name.Desentensized}Ref =
+                  (${entity.RootPackage}.${entity.Name}Local) iterator.next();
+            resultList.add(${entity.Name.Desentensized}Ref.get${entity.Name}Data());
+         }
+         return resultList;
+      }
+      catch (FinderException exc) {
+         log.error("FinderException", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * -1 is a special value that will cause this method to ignore start and end values,
+    * any zero/negative values (other than -1) are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a collection of ${entity.Name}Data objects, of size <code>(endIndex - startIndex)</code>.
+    * throws EJBException if the chosen underlying data-retrieval mechanism does not support returning partial result sets.
+    *
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public Collection get${entity.Name}List(int startIndex, int endIndex) {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}List(startIndex, endIndex);
+      }
+      else {
+         throw new EJBException("Entity bean finder methods do not support partial result sets (yet).");
+      }
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the database.
+    * <b>NOTE:</b>If this session façade is configured <b>not</b> to use the FastLaneReader,
+    * this call will be very computationally wasteful as it will first have to retrieve all entities from
+    * the entity bean's <code>findAll</code> method.
+    *
+    * @return an integer value.
+    * @ejbgen:remote-method transaction-attribute="Required"
+    */
+   public int get${entity.Name}ListSize() {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}ListSize();
+      }
+      else {
+         return get${entity.Name}List().size();
+      }
+   }
+#end
+
+   /**
+    * Retrieves an instance of the home interface.
+    */
+   private void getReferences() {
+#foreach ($entity in $session.EntitiesAndReferences)
+      try {
+         if (${entity.Name.Desentensized}Home == null) {
+            ${entity.Name.Desentensized}Home = ${entity.Name}Util.getLocalHome();
+
+         }
+      }
+      catch (javax.naming.NamingException ne) {
+         log.error("NamingException", ne);
+      }
+
+#end
+   }
+
+   /*******************************************************************************************************************
+    *                            C O N T A I N E R   C A L L B A C K S   M E T H O D S
+    *******************************************************************************************************************/
+
+   /**
+    * Method that allows for the container to create a bean instance.
+    *
+    * @throws CreateException when the bean could not be created.
+    */
+   public void ejbCreate() throws CreateException {
+   }
+}
+#end
+#end
+#end

@@ -1,0 +1,100 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Impression</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Impression</h3>
+GanttProject vous permet d'imprimer vos projet.
+
+<h4>Aper�u avant impression</h4>
+<ul>
+	<li>menu <b>Fichier</b>, <b>Aper�u avant impression</b>&nbsp;;</li>
+	<li>ou bouton <b>Aper�u avant impression</b> <img src="../images/preview_16.gif"> dans la barre d'outils&nbsp;;</li>
+	<li>ou bouton <b>Aper�u avant impression</b> dans le menu contextuel du tableau des t�ches.</li> 
+</ul>
+Voici la fen�tre d'aper�u&nbsp;:
+<center><img src="../images/printPreview.png"></center>
+<p>
+Par d�faut, la vue propos�e pour l'impression est la m�me que cette dans la vue Gantt, en 
+ce qui concerne les dates de d�but et de fin du diagramme. De m�me, ce sont les t�ches s�lectionn�es
+(s'il y en a) qui seront imprim�es.
+</p>
+Les fonctionnalit�s suivantes sont disponibles&nbsp;:
+<ul>
+	<li>orientation de la page</li>
+	<ul>
+		<li>cliquez sur le bouton <b>Portrait</b> <img src="../images/portrait_16.gif">&nbsp; 
+		pour obtenir l'orientation des pages en portrait&nbsp;;</li>
+		<li>cliquez sur le bouton <b>Paysage</b> <img src="../images/landscape_16.gif">&nbsp; 
+		pour obtenir l'orientation des pages en paysage.</li>
+	</ul>
+	<li>zoom</li>
+	<ul>
+		<li>la liste d�roulante <b>Zoom</b> permet de choisir le zoom de l'aper�u. Par d�faut
+		il est � 50 %. Si vous avez beaucoup de pages � imprimer, pour avoir une vue globale de ce
+		que l'impression va donner, utilisez un zoom inf�rieur.
+	</ul>
+	
+	<li>format du papier</li>
+	<ul>
+		<li>Afin d'am�liorer l'aper�u de l'impression, il est possible de sp�cifier le format
+		du papier que vous voulez utiliser directement lors de l'aper�u.</li>
+		<li><b color="red">Attention</b> si votre imprimante ne supporte pas le papier choisi,
+		ce qui sera imprim� risque de ne pas correspondre � l'aper�u.</li>
+	</ul>
+	
+	<li>zone imprim�e</li>
+	<ul>
+		<li>vous pouvez modifier la zone imprim�e en modifiant les dates de d�but
+		et de fin concernant l'impression du diagramme de Gantt. Ceci permet d'imprimer
+		une partie du projet plut�t que sa totalit� par exemple&nbsp;;</li>
+		<li>le bouton <b>Tout le projet</b> permet de fixer la zone d'impression � tout 
+		le projet.</li>
+		<li>les boutons <b>R�duire le garphique</b> et <b>Elargir le graphique</b> permettent 
+		de modifier le zoom du projet. De cette fa�on, vous changez l'�chelle du temps et r�duisez
+		ou �largissez le diagramme.
+	</ul>
+	<li>imprimer en cliquant sur le bouton <b>Imprimer</b><img src="../images/print_16.gif">.</li>
+</ul>
+
+
+<h4>Impression sans aper�u</h4>
+<ul>
+	<li>menu <b>Fichier</b>, <b>Imprimer</b>&nbsp;;</li>
+	<li>ou bouton <b>Imprimer</b> <img src="../images/print_16.gif"> dans la barre d'outils&nbsp;;</li>
+	<li>ou bouton <b>Imprimer</b> dans le menu contextuel du tableau des t�ches.</li> 
+</ul>
+Par d�faut, l'impression se fait sur du papier A4, concerne les t�ches s�lectionn�es et imprime l'ensemble du projet.
+</body>
+</html>

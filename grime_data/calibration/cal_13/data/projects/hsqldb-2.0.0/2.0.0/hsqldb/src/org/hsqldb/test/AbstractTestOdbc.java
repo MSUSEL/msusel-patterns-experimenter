@@ -1,0 +1,219 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package org.hsqldb.test;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.hsqldb.persist.HsqlProperties;
+import org.hsqldb.server.Server;
+import org.hsqldb.server.ServerConstants;
+
+/**
+ * Base test class for ODBC testing with JUnit 3.x.
+ *
+ * Provides utility testrunner method, plus sets up and runs a HyperSQL
+ * listener.
+ * <P>
+ * You MUST have a native (non-Java) ODBC DSN configured with the HyperSQL
+ * ODBC driver, DSN name "HSQLDB_UTEST", DSN database "/", port "9797".
+ * The user name and password don't matter.
+ * We use the word <I>query</i> how it is used in the JDBC API, to mean a
+ * SELECT statement, not in the more general way as used in the ODBC API.
+ * </P> <P>
+ * The DSN name and port may be changed from these defaults by setting Java
+ * system properties "test.hsqlodbc.dsnname" and/or "test.hsqlodbc.port".
+ * </P> <P>
+ *   <B>This class badly needs JUnit 4.x.
+ *   Test runs take about 50x as long as they should because JUnit 3.x does
+ *   not have a way to do one-time-per-class setUp and tearDown.</B>
+ *   We should instantiate and start up the Server one time, and repopulate
+ *   the catalog contents in the traditional setUp().
+ * </P>
+ */
+public abstract class AbstractTestOdbc extends junit.framework.TestCase {
+    protected Connection netConn = null;
+    protected Server server = null;
+    static protected String portString = null;
+    static protected String dsnName = null;
+
+    public AbstractTestOdbc() {}
+
+    /**
+     * Accommodate JUnit's test-runner conventions.
+     */
+    public AbstractTestOdbc(String s) {
+        super(s);
+    }
+
+    static {
+        try {
+            Class.forName("org.hsqldb.jdbc.JDBCDriver");
+        } catch (ClassNotFoundException cnfe) {
+            throw new RuntimeException(
+                "<clinit> failed.  JDBC Driver class not in CLASSPATH");
+        }
+        portString = System.getProperty("test.hsqlodbc.port");
+        dsnName = System.getProperty("test.hsqlodbc.dsnname");
+        if (portString == null) {
+            portString = "9797";
+        }
+        if (dsnName == null) {
+            dsnName = "HSQLDB_UTEST";
+        }
+    }
+
+    /**
+     * JUnit convention for cleanup.
+     *
+     * Called after each test*() method.
+     */
+    protected void tearDown() throws SQLException {
+        if (netConn != null) {
+            netConn.rollback();
+            // Necessary to prevent the SHUTDOWN command from causing implied
+            // transaction control commands, which will not be able to
+            // complete.
+            netConn.createStatement().executeUpdate("SHUTDOWN");
+            netConn.close();
+            netConn = null;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ie) {
+            }
+        }
+        if (server != null
+            && server.getState() != ServerConstants.SERVER_STATE_SHUTDOWN) {
+            throw new RuntimeException("Server failed to shut down");
+        }
+    }
+
+    /**
+     * Specifically, this opens a mem-only DB, populates it, starts a
+     * HyperSQL Server to server it, and opens network JDBC Connection
+     * "netConn" to it,
+     *
+     * Invoked before each test*() invocation by JUnit.
+     */
+    protected void setUp() {
+        try {
+            Connection setupConn = DriverManager.getConnection(
+                "jdbc:hsqldb:mem:test", "SA", "");
+            setupConn.setAutoCommit(false);
+            Statement st = setupConn.createStatement();
+            st.executeUpdate("SET PASSWORD 'sapwd'");
+            populate(st);
+            st.close();
+            setupConn.commit();
+            setupConn.close();
+        } catch (SQLException se) {
+            throw new RuntimeException(
+                "Failed to set up in-memory database", se);
+        }
+        try {
+            server = new Server();
+            HsqlProperties properties = new HsqlProperties();
+            if (System.getProperty("VERBOSE") == null) {
+                server.setLogWriter(null);
+                server.setErrWriter(null);
+            } else {
+                properties.setProperty("server.silent", "false");
+                properties.setProperty("server.trace", "true");
+            }
+            properties.setProperty("server.database.0", "mem:test");
+            properties.setProperty("server.dbname.0", "");
+            properties.setProperty("server.port", AbstractTestOdbc.portString);
+            server.setProperties(properties);
+            server.start();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ie) {
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(
+                "Failed to set up in-memory database", e);
+        }
+        if (server.getState() != ServerConstants.SERVER_STATE_ONLINE) {
+            throw new RuntimeException("Server failed to start up");
+        }
+        try {
+            netConn = DriverManager.getConnection(
+                "jdbc:odbc:" + dsnName, "SA", "sapwd");
+            //netConn.setAutoCommit(false);
+        } catch (SQLException se) {
+            if (se.getMessage().indexOf("No suitable driver") > -1) {
+                throw new RuntimeException(
+                    "You must install the native library for Sun's jdbc:odbc "
+                    + "JDBC driver");
+            }
+            if (se.getMessage().indexOf("Data source name not found") > -1) {
+                throw new RuntimeException(
+                    "You must configure ODBC DSN '" + dsnName
+                    + "' (you may change the name and/or port by setting Java "
+                    + "system properties 'test.hsqlodbc.port' or "
+                    + "'test.hsqlodbc.dsnname'");
+            }
+            throw new RuntimeException(
+                "Failed to set up JDBC/ODBC network connection", se);
+        }
+    }
+
+    protected void enableAutoCommit() {
+        try {
+            netConn.setAutoCommit(false);
+        } catch (SQLException se) {
+            junit.framework.AssertionFailedError ase
+                = new junit.framework.AssertionFailedError(se.getMessage());
+            ase.initCause(se);
+            throw ase;
+        }
+    }
+
+    /**
+     * This method allows to easily run this unit test independent of the other
+     * unit tests, and without dealing with Ant or unrelated test suites.
+     *
+     * Invoke like this:<PRE><CODE>
+     *  static public void main(String[] sa) {
+     *      staticRunner(TestOdbcService.class, sa);
+     *  }
+     *</CODE></PRE>, but give your subclass name in place of
+     * <CODE>TestOdbcService</CODE>
+     */
+    static public void staticRunner(Class c, String[] sa) {
+            junit.textui.TestRunner runner = new junit.textui.TestRunner();
+            junit.framework.TestResult result =
+                runner.run(runner.getTest(c.getName()));
+
+            System.exit(result.wasSuccessful() ? 0 : 1);
+    }
+
+    abstract protected void populate(Statement st) throws SQLException;
+}

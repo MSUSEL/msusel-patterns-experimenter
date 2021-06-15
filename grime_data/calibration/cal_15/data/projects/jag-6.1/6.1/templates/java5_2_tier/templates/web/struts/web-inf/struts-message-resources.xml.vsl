@@ -1,0 +1,5 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/web/WEB-INF/struts-message-resources.xml
+<message-resources null="false" parameter="ApplicationResources" />
+<!-- ApplicationResources, null = false will show which resources weren't found. -->
+#end

@@ -1,0 +1,280 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package com.gargoylesoftware.htmlunit.html;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.gargoylesoftware.htmlunit.BrowserRunner;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.HttpMethod;
+import com.gargoylesoftware.htmlunit.MockWebConnection;
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebTestCase;
+
+/**
+ * Tests for {@link HtmlTextArea}.
+ *
+ * @version $Revision: 5905 $
+ * @author <a href="mailto:mbowler@GargoyleSoftware.com">Mike Bowler</a>
+ * @author Marc Guillemot
+ * @author Ahmed Ashour
+ * @author Sudhan Moghe
+ * @author Amit Khanna
+ */
+@RunWith(BrowserRunner.class)
+public class HtmlTextAreaTest extends WebTestCase {
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void formSubmission() throws Exception {
+        formSubmission("foo", "foo");
+        formSubmission("\r\nfoo\r\n", "foo%0D%0A");
+        formSubmission("\nfoo\n", "foo%0D%0A");
+        formSubmission("\r\n\r\nfoo\r\n", "%0D%0Afoo%0D%0A");
+    }
+
+    private void formSubmission(final String textAreaText, final String expectedValue) throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'>" + textAreaText + "</textarea>\n"
+            + "<input type='submit' id='mysubmit'/>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final MockWebConnection webConnection = getMockConnection(page);
+        final HtmlForm form = page.getHtmlElementById("form1");
+
+        final HtmlTextArea textArea = form.getTextAreaByName("textArea1");
+        assertNotNull(textArea);
+
+        final Page secondPage = page.getElementById("mysubmit").click();
+
+        assertEquals("url", getDefaultUrl() + "?textArea1=" + expectedValue,
+                secondPage.getWebResponse().getWebRequest().getUrl());
+        assertSame("method", HttpMethod.GET, webConnection.getLastMethod());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void testFormSubmission_NewValue() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'>foo</textarea>\n"
+            + "<input type='submit' id='mysubmit'/>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final MockWebConnection webConnection = getMockConnection(page);
+        final HtmlForm form = page.getHtmlElementById("form1");
+
+        final HtmlTextArea textArea = form.getTextAreaByName("textArea1");
+        textArea.setText("Flintstone");
+        final Page secondPage = page.getElementById("mysubmit").click();
+
+        assertEquals("url", getDefaultUrl() + "?textArea1=Flintstone",
+                secondPage.getWebResponse().getWebRequest().getUrl());
+        assertSame("method", HttpMethod.GET, webConnection.getLastMethod());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void testGetText() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'> foo \n bar </textarea>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final HtmlForm form = page.getHtmlElementById("form1");
+
+        final HtmlTextArea textArea = form.getTextAreaByName("textArea1");
+        assertNotNull(textArea);
+        Assert.assertEquals("White space must be preserved!", " foo \n bar ", textArea.getText());
+        Assert.assertEquals(" foo \n bar ", textArea.getDefaultValue());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void asXml() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'> foo \n bar </textarea>\n"
+            + "<textarea name='textArea2'></textarea>\n"
+            + "<textarea name='textArea3'>1 &lt; 2 &amp; 3 &gt; 2</textarea>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final HtmlForm form = page.getHtmlElementById("form1");
+
+        final HtmlTextArea textArea1 = form.getTextAreaByName("textArea1");
+        assertEquals("<textarea name=\"textArea1\"> foo \n bar </textarea>", textArea1.asXml());
+
+        final HtmlTextArea textArea2 = form.getTextAreaByName("textArea2");
+        assertEquals("<textarea name=\"textArea2\"></textarea>", textArea2.asXml());
+
+        final HtmlTextArea textArea3 = form.getTextAreaByName("textArea3");
+        assertEquals("<textarea name=\"textArea3\">1 &lt; 2 &amp; 3 &gt; 2</textarea>", textArea3.asXml());
+    }
+
+    /**
+     * @throws Exception if an error occurs
+     */
+    @Test
+    public void testPreventDefault() throws Exception {
+        testPreventDefault(BrowserVersion.FIREFOX_3);
+        testPreventDefault(BrowserVersion.INTERNET_EXPLORER_7);
+    }
+
+    private void testPreventDefault(final BrowserVersion browserVersion) throws Exception {
+        final String html =
+              "<html><head><script>\n"
+            + "  function handler(e) {\n"
+            + "    if (e && e.target.value.length > 2)\n"
+            + "      e.preventDefault();\n"
+            + "    else if (!e && window.event.srcElement.value.length > 2)\n"
+            + "      return false;\n"
+            + "  }\n"
+            + "  function init() {\n"
+            + "    document.getElementById('text1').onkeydown = handler;\n"
+            + "  }\n"
+            + "</script></head>\n"
+            + "<body onload='init()'>\n"
+            + "<textarea id='text1'></textarea>\n"
+            + "</body></html>";
+
+        final HtmlPage page = loadPage(browserVersion, html, null);
+        final HtmlTextArea text1 = page.getHtmlElementById("text1");
+        text1.type("abcd");
+        assertEquals("abc", text1.getText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void type() throws Exception {
+        final String html = "<html><head></head><body><textarea id='t'></textarea></body></html>";
+        final HtmlPage page = loadPage(html, null);
+        final HtmlTextArea t = page.getHtmlElementById("t");
+        t.type("abc");
+        assertEquals("abc", t.getText());
+        t.type('\b');
+        assertEquals("ab", t.getText());
+        t.type('\b');
+        assertEquals("a", t.getText());
+        t.type('\b');
+        assertEquals("", t.getText());
+        t.type('\b');
+        assertEquals("", t.getText());
+        t.type("ab\ncd");
+        assertEquals("ab\ncd", t.getText());
+        t.type("\r\nef");
+        assertEquals("ab\ncd\r\nef", t.getText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void typeWhileDisabled() throws Exception {
+        final String html = "<html><body><textarea id='t' disabled='disabled'></textarea></body></html>";
+        final HtmlPage page = loadPage(html);
+        final HtmlTextArea t = page.getHtmlElementById("t");
+        t.type("abc");
+        assertEquals("", t.getText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void asText() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'> foo \n bar "
+            + "<p>html snippet</p>\n"
+            + "</textarea>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final HtmlForm form = page.getHtmlElementById("form1");
+        final HtmlTextArea textArea = form.getTextAreaByName("textArea1");
+        assertNotNull(textArea);
+        Assert.assertEquals("White space must be preserved!",
+            " foo " + LINE_SEPARATOR + " bar <p>html snippet</p>" + LINE_SEPARATOR, textArea.asText());
+    }
+
+    /**
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void testParentAsText() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1'> foo \n bar "
+            + "<p>html snippet</p>\n"
+            + "</textarea>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final HtmlForm form = page.getHtmlElementById("form1");
+        Assert.assertEquals(" foo " + LINE_SEPARATOR + " bar <p>html snippet</p>" + LINE_SEPARATOR, form.asText());
+    }
+
+    /**
+     * Style=visibility:hidden should not affect getText().
+     * @throws Exception if the test fails
+     */
+    @Test
+    public void getTextAndVisibility() throws Exception {
+        final String content
+            = "<html><head><title>foo</title></head><body>\n"
+            + "<form id='form1'>\n"
+            + "<textarea name='textArea1' style='visibility:hidden'> foo \n bar "
+            + "</textarea>\n"
+            + "</form></body></html>";
+        final HtmlPage page = loadPage(content);
+        final HtmlForm form = page.getHtmlElementById("form1");
+        final HtmlTextArea textArea = form.getTextAreaByName("textArea1");
+        assertNotNull(textArea);
+        assertEquals(" foo \n bar ", textArea.getText());
+        assertEquals("", textArea.asText());
+    }
+}

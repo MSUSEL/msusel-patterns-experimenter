@@ -1,0 +1,58 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+////File: ./src/java-web/${app.RootPath}/actions/DownloadFileAction.java
+
+package ${app.RootPackage}.actions;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletOutputStream;
+import java.io.InputStream;
+
+import ${app.RootPackage}.entity.upload.FileUpload;
+#if (${config.templateSettings.serviceTier} == "Spring")
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.context.WebApplicationContext;
+#end
+
+public class DownloadFileAction extends Action {
+#if (${config.templateSettings.serviceTier} == "Spring")
+    /**
+     * hibernate template that will be injected by spring.
+     */
+    private HibernateTemplate hibernateTemplate;
+
+#end
+
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+
+
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+            ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#else
+        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+        hibernateTemplate = (HibernateTemplate) context.getBean("hibernateTemplate");
+#end
+        FileUpload fu = (FileUpload) hibernateTemplate.load(FileUpload.class,  new Long((String)request.getParameter("id")) );
+
+        response.setContentLength  (fu.getSize());
+        response.setContentType    ( fu.getFiletype() );
+        response.setHeader         ("Content-disposition", "attachment; filename=" + fu.getFilename());
+        response.setHeader         ("Cache-Control", "max-age=600");
+        ServletOutputStream outStream = response.getOutputStream();
+        outStream.write(fu.getData(), 0, fu.getData().length);
+        outStream.flush();
+        return (null);
+    }
+}
+#end
+#end

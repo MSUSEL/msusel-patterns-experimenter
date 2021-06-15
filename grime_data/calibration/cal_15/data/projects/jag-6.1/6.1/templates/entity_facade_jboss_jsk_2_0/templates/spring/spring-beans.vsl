@@ -1,0 +1,63 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.serviceTier} == "Spring")
+////File: ${paths.ConfigOutput}/WEB-INF/spring-beans.xml
+ <!--standard beans to be configured and added to the applicationContext.xml-->
+#if ($config.matchBusinessTier("Hibernate 2"))
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate.LocalSessionFactoryBean">
+#else
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+#end
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+        <property name="configurationClass">
+            <value>org.hibernate.cfg.AnnotationConfiguration</value>
+        </property>
+#end                
+    </bean>
+#if ($config.matchBusinessTier("Hibernate 2"))
+    <bean id="transactionManager" class="org.springframework.orm.hibernate.HibernateTransactionManager">
+#else
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+#end
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+#if ($config.matchBusinessTier("Hibernate 2"))
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate.HibernateTemplate">
+#else
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+#end
+        <property name="sessionFactory">
+             <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
+    <!-- Bean definition is needed to rollback transactions after a test. -->
+     <bean id="dataSource"
+   class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+   destroy-method="close">
+      <property name="driverClassName" value="${datasource.Database.DriverClass}" />
+      <property name="url" value="${datasource.JdbcUrl}" />
+      <property name="username" value="${datasource.UserName}" />
+      <property name="password" value="${datasource.Password}" />
+    </bean>
+
+#end

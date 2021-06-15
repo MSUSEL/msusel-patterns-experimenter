@@ -1,0 +1,56 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
+Passed: 27
+Failed: 0
+ok - isoDate year ok
+ok - isoDate day ok
+ok - isoDate month ok
+ok - matches string date
+ok - toISODate ok
+ok - isoDate year ok
+ok - isoDate day ok
+ok - isoDate month ok
+ok - matches string date
+ok - toISODate ok
+ok - isoDate year ok for year < 1000
+ok - isoDate day ok for year < 1000
+ok - isoDate month ok for year < 1000
+ok - matches string date for year < 1000
+ok - toISODate ok for year < 1000
+ok - dates compare eq
+ok - dates compare lt
+ok - dates compare gt
+ok - americanDate eq
+ok - toAmericanDate eq
+ok - isoTimestamp eq
+ok - isoTimestamp (real ISO) eq
+ok - toISOTimestamp eq
+ok - toISOTimestamp (real ISO) eq
+ok - equal with local tz
+ok - equal with specific tz
+ok - test suite finished!

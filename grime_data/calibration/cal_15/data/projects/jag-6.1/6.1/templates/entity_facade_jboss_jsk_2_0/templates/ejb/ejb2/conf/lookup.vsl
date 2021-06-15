@@ -1,0 +1,257 @@
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+////File: ${paths.ConfigOutput}/lookup.xdt
+##
+## This patch makes sure no public static final Strings are generated in the
+## Home interfaces (on which Sun ONE Application server will fail).
+## Also the JNDI names for local and remote interfaces are the same!
+##
+
+/*
+ * <XDtI18n:getString resource="do_not_edit"/>
+ */
+package <XDtPackage:packageOf><XDtEjbUtilObj:utilClass/></XDtPackage:packageOf>;
+
+
+/**
+ * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="utility_class_for" arguments="<XDtEjb:ejbName/>"/>
+<XDtClass:classCommentTags indent="0"/> */
+public class <XDtClass:classOf><XDtEjbUtilObj:utilClass/></XDtClass:classOf>
+{
+
+ <XDtEjb:ifIsAConcreteEJBean>
+   public static final String COMP_NAME="java:comp/env/<XDtEjbHome:compName prefixWithEjbSlash="true" type="remote"/>";
+   public static final String JNDI_NAME="<XDtEjbHome:jndiName type="remote"/>";
+#if (${config.templateSettings.appserver} == "Sun ONE Application Server 7")
+   // Sun ONE application server 7 doesn't differentiate between a local and remote JNDI name for EJBs.
+   public static final String COMP_NAME_LOCAL="java:comp/env/<XDtEjbHome:compName prefixWithEjbSlash="true" type="remote"/>";
+   public static final String JNDI_NAME_LOCAL="<XDtEjbHome:jndiName type="remote"/>";
+#else
+   public static final String COMP_NAME_LOCAL="java:comp/env/<XDtEjbHome:compName prefixWithEjbSlash="true" type="local"/>";
+   public static final String JNDI_NAME_LOCAL="<XDtEjbHome:jndiName type="local"/>";
+#end
+ </XDtEjb:ifIsAConcreteEJBean>
+
+ <XDtConfig:ifConfigParamEquals paramName="cacheHomes" value="true">
+  <XDtEjbIntf:ifRemoteEjb>
+   /** <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_cached_remote"/> */
+   private static <XDtEjbHome:homeInterface type="remote"/> cachedRemoteHome = null;
+  </XDtEjbIntf:ifRemoteEjb>
+  <XDtEjbIntf:ifLocalEjb>
+
+   /** <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_cached_local"/> */
+   private static <XDtEjbHome:homeInterface type="local"/> cachedLocalHome = null;
+  </XDtEjbIntf:ifLocalEjb>
+ </XDtConfig:ifConfigParamEquals>
+
+   private static Object lookupHome(java.util.Hashtable environment, String jndiName, Class narrowTo) throws javax.naming.NamingException {
+    <XDtEjbUtilObj:ifNotGenerateLocalProxy>
+      // Obtain initial context
+      javax.naming.InitialContext initialContext = new javax.naming.InitialContext(environment);
+      try {
+         Object objRef = initialContext.lookup(jndiName);
+         // only narrow if necessary
+         if (narrowTo.isInstance(java.rmi.Remote.class))
+            return javax.rmi.PortableRemoteObject.narrow(objRef, narrowTo);
+         else
+            return objRef;
+      } finally {
+         initialContext.close();
+      }
+    </XDtEjbUtilObj:ifNotGenerateLocalProxy>
+    <XDtEjbUtilObj:ifGenerateLocalProxy>
+       return java.lang.reflect.Proxy.newProxyInstance(<XDtEjb:shortEjbName/>HomeProxy.class.getClassLoader(),
+               new Class[] {<XDtEjb:shortEjbName/>Home.class}, new <XDtEjb:shortEjbName/>HomeProxy());
+    </XDtEjbUtilObj:ifGenerateLocalProxy>
+   }
+
+   // <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_home_lookups"/>
+
+   <XDtEjbIntf:ifRemoteEjb>
+   /**
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_obtain_home_def_ic"/>
+    * @return <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="home_interface_for" arguments="<XDtEjb:ejbName/>"/> <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_lookup_using" arguments="<XDtEjbUtilObj:lookupKind/>"/>
+    */
+   public static <XDtEjbHome:homeInterface type="remote"/> getHome() throws javax.naming.NamingException
+   {
+      <XDtConfig:ifConfigParamEquals paramName="cacheHomes" value="true">
+      if (cachedRemoteHome == null) {
+            // cachedRemoteHome = (<XDtEjbHome:homeInterface type="remote"/>) lookupHome(null, <XDtEjbHome:homeInterface type="remote"/>.<XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="remote"/>.class);
+            cachedRemoteHome = (<XDtEjbHome:homeInterface type="remote"/>) lookupHome(null, <XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="remote"/>.class);
+            // JNDI_NAME
+      }
+      return cachedRemoteHome;
+      </XDtConfig:ifConfigParamEquals>
+      <XDtConfig:ifConfigParamNotEquals paramName="cacheHomes" value="true">
+         // return (<XDtEjbHome:homeInterface type="remote"/>) lookupHome(null, <XDtEjbHome:homeInterface type="remote"/>.<XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="remote"/>.class);
+         return (<XDtEjbHome:homeInterface type="remote"/>) lookupHome(null, <XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="remote"/>.class);
+
+      </XDtConfig:ifConfigParamNotEquals>
+   }
+
+   /**
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_obtain_home_param_ic"/>
+    * @param environment <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_ic_parameters"/>
+    * @return <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="home_interface_for" arguments="<XDtEjb:ejbName/>"/> <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_lookup_using" arguments="<XDtEjbUtilObj:lookupKind/>"/>
+    */
+   public static <XDtEjbHome:homeInterface type="remote"/> getHome( java.util.Hashtable environment ) throws javax.naming.NamingException
+   {
+       return (<XDtEjbHome:homeInterface type="remote"/>) lookupHome(environment, <XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="remote"/>.class);
+   }
+   </XDtEjbIntf:ifRemoteEjb>
+
+   <XDtEjbIntf:ifLocalEjb>
+   /**
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_obtain_localhome_def_ic"/>
+    * @return <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="local_home_interface_for" arguments="<XDtEjb:ejbName/>"/> <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_lookup_using" arguments="<XDtEjbUtilObj:lookupKind/>"/>
+    */
+   public static <XDtEjbHome:homeInterface type="local"/> getLocalHome() throws javax.naming.NamingException
+   {
+      <XDtConfig:ifConfigParamEquals paramName="cacheHomes" value="true">
+      if (cachedLocalHome == null) {
+            // cachedLocalHome = (<XDtEjbHome:homeInterface type="local"/>) lookupHome(null, <XDtEjbHome:homeInterface type="local"/>.<XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="local"/>.class);
+            cachedLocalHome = (<XDtEjbHome:homeInterface type="local"/>) lookupHome(null, <XDtEjbUtilObj:lookupKind/>_LOCAL, <XDtEjbHome:homeInterface type="local"/>.class);
+      }
+      return cachedLocalHome;
+      </XDtConfig:ifConfigParamEquals>
+      <XDtConfig:ifConfigParamNotEquals paramName="cacheHomes" value="true">
+      // return (<XDtEjbHome:homeInterface type="local"/>) lookupHome(null, <XDtEjbHome:homeInterface type="local"/>.<XDtEjbUtilObj:lookupKind/>, <XDtEjbHome:homeInterface type="local"/>.class);
+      return (<XDtEjbHome:homeInterface type="local"/>) lookupHome(null, <XDtEjbUtilObj:lookupKind/>_LOCAL, <XDtEjbHome:homeInterface type="local"/>.class);
+      </XDtConfig:ifConfigParamNotEquals>
+   }
+   </XDtEjbIntf:ifLocalEjb>
+
+   <XDtMerge:merge file="util-custom.xdt">
+   </XDtMerge:merge>
+
+   <XDtConfig:ifConfigParamEquals paramName="includeGUID" value="true">
+   /** <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_ip"/> */
+   private static String hexServerIP = null;
+
+   // <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_securerandom"/>
+   private static final java.security.SecureRandom seeder = new java.security.SecureRandom();
+
+   /**
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_1"/>
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_2"/>
+    *
+    * <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_usage"/>
+    */
+   public static final String generateGUID(Object o) {
+       StringBuffer tmpBuffer = new StringBuffer(16);
+       if (hexServerIP == null) {
+           java.net.InetAddress localInetAddress = null;
+           try {
+               // <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_localinetaddress"/>
+               localInetAddress = java.net.InetAddress.getLocalHost();
+           }
+           catch (java.net.UnknownHostException uhe) {
+               System.err.println("<XDtClass:classOf><XDtEjbUtilObj:utilClass/></XDtClass:classOf>: <XDtI18n:getString bundle="xdoclet.modules.ejb.XDocletModulesEjbMessages" resource="util_guid_unknownhost"/>");
+               // todo: find better way to get around this...
+               uhe.printStackTrace();
+               return null;
+           }
+           byte serverIP[] = localInetAddress.getAddress();
+           hexServerIP = hexFormat(getInt(serverIP), 8);
+       }
+       String hashcode = hexFormat(System.identityHashCode(o), 8);
+       tmpBuffer.append(hexServerIP);
+       tmpBuffer.append(hashcode);
+
+       long timeNow      = System.currentTimeMillis();
+       int timeLow       = (int)timeNow & 0xFFFFFFFF;
+       int node          = seeder.nextInt();
+
+       StringBuffer guid = new StringBuffer(32);
+       guid.append(hexFormat(timeLow, 8));
+       guid.append(tmpBuffer.toString());
+       guid.append(hexFormat(node, 8));
+       return guid.toString();
+   }
+
+   private static int getInt(byte bytes[]) {
+       int i = 0;
+       int j = 24;
+       for (int k = 0; j >= 0; k++) {
+           int l = bytes[k] & 0xff;
+           i += l << j;
+           j -= 8;
+       }
+       return i;
+   }
+
+   private static String hexFormat(int i, int j) {
+       String s = Integer.toHexString(i);
+       return padHex(s, j) + s;
+   }
+
+   private static String padHex(String s, int i) {
+       StringBuffer tmpBuffer = new StringBuffer();
+       if (s.length() < i) {
+           for (int j = 0; j < i - s.length(); j++) {
+               tmpBuffer.append('0');
+           }
+       }
+       return tmpBuffer.toString();
+   }
+   </XDtConfig:ifConfigParamEquals>
+
+   <XDtEjbUtilObj:ifGenerateLocalProxy>
+    private static <XDtClass:classOf><XDtEjbSession:sessionClass/></XDtClass:classOf> singleton = null;
+
+    static public Object newConcreteProxyInstance() {
+        if (singleton == null) {
+            singleton = new <XDtClass:classOf><XDtEjbSession:sessionClass/></XDtClass:classOf>();
+        }
+        return java.lang.reflect.Proxy.newProxyInstance(singleton.getClass().getClassLoader(),
+                new Class[] {<XDtEjb:shortEjbName/>.class}, new <XDtEjb:shortEjbName/>Proxy(singleton));
+    }
+
+    public static class <XDtEjb:shortEjbName/>HomeProxy implements java.lang.reflect.InvocationHandler {
+        public <XDtEjb:shortEjbName/>HomeProxy() {
+        }
+
+        public Object invoke(Object proxy, java.lang.reflect.Method m, Object[] args)
+                throws Throwable {
+            if (m.getName().equals("create") && m.getParameterTypes().length == 0) {
+                return newConcreteProxyInstance();
+            } else {
+                throw new UnsupportedOperationException(m.getName()+": only no-argument create() method supported");
+            }
+        }
+    }
+
+    public static class <XDtEjb:shortEjbName/>Proxy implements java.lang.reflect.InvocationHandler
+    {
+        Object real;
+        java.util.HashMap methodMap = new java.util.HashMap();
+
+        public <XDtEjb:shortEjbName/>Proxy(Object obj)
+        {
+            real = obj;
+        }
+
+        public Object invoke(Object proxy, java.lang.reflect.Method m, Object[] args) throws Throwable
+        {
+            try {
+                // do something
+                return getMethod(m, m.getParameterTypes()).invoke(real, args);
+            } catch (java.lang.reflect.InvocationTargetException e) {
+                throw e.getTargetException();
+            } catch (Exception e) {
+                throw e;
+            }
+        }
+
+        // this uses the method object as the key to the hash for caching our local object methods
+        private java.lang.reflect.Method getMethod(java.lang.reflect.Method m, Class[] parameterTypes) throws NoSuchMethodException {
+            java.lang.reflect.Method localMethod = (java.lang.reflect.Method)methodMap.get(m);
+            if (localMethod == null) {
+                localMethod = real.getClass().getMethod(m.getName(), parameterTypes);
+                methodMap.put(m, localMethod);
+            }
+            return localMethod;
+        }
+    }
+   </XDtEjbUtilObj:ifGenerateLocalProxy>
+}
+#end

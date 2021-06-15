@@ -1,0 +1,481 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} != "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($entity in $entities)
+////File: ${paths.EjbOutput}/${entity.RootPath}/${entity.Name}EJB.java
+package ${entity.RootPackage};
+
+## AJR: java.util, java.rmi and java.naming are never used
+## import java.util.*;
+## import java.rmi.*;
+import javax.ejb.*;
+## import javax.naming.*;
+import com.finalist.util.log.*;
+## AJR: now use full ref for UniqueIdGenerator
+## import com.finalist.util.ejb.UniqueIdGenerator;
+#foreach ($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+
+/**
+ * The ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.14 $, $Date: 2005/06/29 20:56:25 $
+ * @ejb.bean name="${entity.Name}"
+ *       view-type="local"
+ *       local-jndi-name="ejb/local/${entity.RootPath}/${entity.Name}"
+ *       jndi-name="ejb/local/${entity.RootPath}/${entity.Name}"
+ *       type="CMP"
+ *       schema="${entity.TableName}"
+ *       cmp-version="2.x"
+#if (!$entity.isCompositeKey())
+ *       primkey-field="${entity.PrimaryKey.Name}"
+#end
+ * @ejb.pk class="${entity.PrimaryKeyType}"
+ *
+ *
+ * @ejb.finder signature="java.util.Collection findAll()"
+ *             view-type ="local"
+ *             method-intf="LocalHome"
+ *             query="select distinct object (a) from ${entity.TableName} a"
+ *
+#foreach ($field in $entity.NonRelationFields)
+## Create findBy.. methods for all fields.
+ * @ejb.finder signature="java.util.Collection findBy${field.Name.Sentensized}($field.Type $field.Name)"
+ *             view-type ="local"
+ *             method-intf="LocalHome"
+ *             query="select distinct object (a) from ${entity.TableName} a where a.${field.Name} = ?1 "
+ *
+#end
+#foreach ($relation in $entity.Relations)
+ * @ejb.finder signature="#if (${relation.TargetMultiple})java.util.Collection #else${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName})"
+ *             view-type ="local"
+ *             method-intf="LocalHome"
+ *             query="select distinct object (a) from ${entity.TableName} a where a.${relation.FieldName} = ?1"
+ *
+#end
+ * @ejb.transaction type="Required"
+ * @ejb.permission unchecked="True"
+#if (${config.templateSettings.appserver} == "Sun ONE Application Server 7")
+ * @ejb.util generate="logical"
+#else
+ * @ejb.util generate="physical"
+#end
+ * @ejb.value-object match="*"
+ * @ejb.persistence table-name="${entity.TableName}"
+ * @jboss.persistence
+ *       create-table="true"
+ *       remove-table="false"
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1")
+ * @weblogic.enable-call-by-reference True
+#end
+ */
+public abstract class ${entity.Name}EJB implements EntityBean {
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}EJB.class);
+
+   /**
+    * Context for entity bean.
+    */
+   private EntityContext ctx;
+
+   /**
+    * Default constructor.
+    */
+   public ${entity.Name}EJB() {
+   }
+
+   /*******************************************************************************************************************
+    *                            C O N T A I N E R   C A L L B A C K S   M E T H O D S
+    *******************************************************************************************************************/
+
+   /**
+    * Creates a new entity bean and returns the primary key.
+    * If the primary key of the value object has been set, this key will be used.
+    * If the primary key is set to null, the UniqueId generator will be used to generate a primary key.
+    *
+    * @param value a <code>${entity.Name}Data</code> instance
+    * @return the primary key for this ${entity.Name}
+    * @ejb.create-method
+    * @throws CreateException Thrown if creation fails
+    */
+   public ${entity.PrimaryKeyType} ejbCreate(${entity.RootPackage}.${entity.Name}Data value) throws CreateException {
+#foreach ($field in $entity.NonRelationFields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+#if ($entity.Relations.size() == 0)
+      set${entity.Name}Data(value);
+#end
+## Make sure we set the CMR fields, in case they are not primary key fields.
+#if (!${config.useRelations()} || ${config.templateSettings.appserver} != "BEA WebLogic 8.1" )
+#foreach ($field in $entity.FkFields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary keys...
+#else
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+#end
+#end
+#foreach ($pkField in $entity.PkFields)
+#if ($pkField.HasAutoGenPrimaryKey)
+#if ($pkField.Type.equals("java.lang.Integer"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getIntegerId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Long"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getLongId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.String"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getStringId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Short"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getShortId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Byte"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getByteId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Double"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(com.finalist.util.ejb.UniqueIdGenerator.getInstance().getDoubleId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#else
+#if ( ${pkField.isRelation()} && ${config.useRelations()} && ${config.templateSettings.appserver} == "BEA WebLogic 8.1" )
+## If the PK is also a FK, CMR is used and we want to deploy on a Weblogic 8.1 server
+## The PK may not be set in the ejbcreate but in the postcreate
+#else
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+
+#end
+#end
+      return null;
+   }
+
+   /**
+    * Initializes the entity bean with data.
+    *
+    * @param value <code>${entity.Name}Data</code> object
+    * @throws CreateException Thrown if creation fails.
+    */
+   public void ejbPostCreate(${entity.RootPackage}.${entity.Name}Data value) throws CreateException {
+#if ($entity.Relations.size() > 0)
+      //EJB 2.0 Spec. 10.5.2 states that CMR fields must be set in ejbPostCreate, not ejbCreate.
+      try {
+#foreach ($relation in $entity.Relations)
+         if (value.get${relation.FieldName.Sentensized}() != null) {
+            $relation.RelatedEntity.PrimaryKeyType ${relation.RelatedEntity.Name.Desentensized}Pk = value.get${relation.FieldName.Sentensized}();
+            ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}LocalHome home = ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Util.getLocalHome();
+            ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local relation = home.findByPrimaryKey(${relation.RelatedEntity.Name.Desentensized}Pk);
+            set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(relation);
+         }
+         else {
+            set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(null);
+         }
+#end
+      }
+      catch (Exception e) {
+         throw new CreateException("Failure setting relations in ejbPostCreate: " + e);
+      }
+
+#end
+   }
+
+   /**
+    * A container invokes this method before it removes the EJB object that is currently associated with the instance.
+    * This method is invoked when a client invokes a remove operation on the enterprise Bean's home interface or the
+    * EJB object's Remote interface. This method transitions the instance from the ready state to the pool of available
+    * instances.<p>This method is called in the transaction context of the remove operation.
+    *
+    * @throws RemoveException The enterprise Bean does not allow destruction of the object.
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void ejbRemove() throws RemoveException, EJBException {
+   }
+
+   /**
+    * Set the associated entity context. The container invokes this method on an instance after the instance has been
+    * created.<p>This method is called in an unspecified transaction context.
+    *
+    * @param ctx An EntityContext interface for the instance. The instance should store the reference to the context in
+    *            an instance variable.
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void setEntityContext(EntityContext ctx) throws EJBException {
+      this.ctx = ctx;
+   }
+
+   /**
+    * A container invokes this method when the instance is taken out of the pool of available instances to become
+    * associated with a specific EJB object. This method transitions the instance to the ready state.<p>This method
+    * executes in an unspecified transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void ejbActivate() throws EJBException {
+   }
+
+   /**
+    * A container invokes this method on an instance before the instance becomes disassociated with a specific EJB
+    * object. After this method completes, the container will place the instance into the pool of available instances.
+    * <p>This method executes in an unspecified transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void ejbPassivate() throws EJBException {
+   }
+
+   /**
+    * A container invokes this method to instruct the instance to synchronize its state by loading it state from the
+    * underlying database.<p>This method always executes in the transaction context determined by the value of the
+    * transaction attribute in the deployment descriptor.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void ejbLoad() throws EJBException {
+   }
+
+   /**
+    * A container invokes this method to instruct the instance to synchronize its state by storing it to the underlying
+    * database.<p>This method always executes in the transaction context determined by the value of the transaction
+    * attribute in the deployment descriptor.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void ejbStore() throws EJBException {
+   }
+
+   /**
+    * Unset the associated entity context. The container calls this method before removing the instance.<p>This is the
+    * last method that the container invokes on the instance. The Java garbage collector will eventually invoke the
+    * finalize() method on the instance.<p>This method is called in an unspecified transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    */
+   public void unsetEntityContext() throws EJBException {
+      this.ctx = null;
+   }
+
+   /*******************************************************************************************************************
+    *                                            B E A N   M E T H O D S
+    *******************************************************************************************************************/
+
+
+
+   /**
+    * Value object.
+    */
+   ${entity.RootPackage}.${entity.Name}Data the${entity.Name}Data = null;
+
+
+   /**
+    * Returns the <code>${entity.Name}Data</code> object and related objects..
+    *
+    *
+    * @return the <code>${entity.Name}Data</code> object
+    * @ejb.interface-method
+    */
+   public ${entity.RootPackage}.${entity.Name}Data get${entity.Name}Data() {
+      return get${entity.Name}Data(true);
+   }
+
+   /**
+    * Returns the <code>${entity.Name}Data</code> object.
+    * This method allows to specify a lazy loading scheme.
+    * Be default, related objects will be loaded.
+    * By passing false to this method, the related methods will nog be loaded.
+    *
+    *
+    * @return the <code>${entity.Name}Data</code> object
+    */
+   public ${entity.RootPackage}.${entity.Name}Data get${entity.Name}Data(boolean getRelatedObjects)
+   {
+      ${entity.Name}Data the${entity.Name}Data = new ${entity.Name}Data();
+      try
+         {
+#foreach ($field in $entity.Fields)
+            the${entity.Name}Data.set${field.Name.Sentensized}(get${field.Name.Sentensized}());
+#end
+#foreach ($relation in $entity.Relations)
+            // copy the relation by value
+            if (getRelatedObjects) {
+                if (get${relation.FieldName.Sentensized}() != null) {
+                    ${relation.RelatedEntity.Name}LocalHome home =
+                        ${relation.RelatedEntity.Name}Util.getLocalHome();
+                    ${relation.RelatedEntity.Name}Local
+                    the${relation.RelatedEntity.Name} =
+                       home.findByPrimaryKey(get${relation.FieldName.Sentensized}());
+                    the${entity.Name}Data.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(the${relation.RelatedEntity.Name}.get${relation.RelatedEntity.Name}Data());
+                }
+            }
+#end
+
+         }
+         catch (Exception e)
+         {
+            throw new javax.ejb.EJBException(e);
+         }
+	  return the${entity.Name}Data;
+   }
+
+   /**
+    * Sets the <code>${entity.Name}Data</code> object.
+    * Only set the data for non primary fields, since they should be set in the ejbCreate.
+    *
+    * @param data a <code>${entity.Name}Data</code> object
+    * @ejb.interface-method
+    */
+   public void set${entity.Name}Data(${entity.RootPackage}.${entity.Name}Data data)
+   {
+	  try
+	  {
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary keys...
+#else
+#if (!${field.isRelation()} || !${config.useRelations()} || !(${config.templateSettings.appserver} == "BEA WebLogic 8.1" && $entity.FkFields.contains($field)))
+       set${field.Name.Sentensized}(data.get${field.Name.Sentensized}());
+#else
+         //set the related entity bean object, looked up from the data
+		 if (data.get${field.Name.Sentensized}() != null) {
+         ${field.relation.RelatedEntity.PrimaryKeyType} ${field.relation.RelatedEntity.Name.Desentensized}Pk =
+            data.get${field.Name.Sentensized}();
+		 	${field.relation.RelatedEntity.Name}LocalHome home =
+            ${field.relation.RelatedEntity.Name}Util.getLocalHome();
+		 	${field.relation.RelatedEntity.Name}Local the${field.relation.RelatedEntity.Name} =
+            home.findByPrimaryKey(${field.relation.RelatedEntity.Name.Desentensized}Pk);
+	      this.set${field.Name.Sentensized}${field.relation.RelatedEntity.Name}(the${field.relation.RelatedEntity.Name});
+		 }
+#end
+#end
+#end
+	  }
+	  catch (Exception e)
+	  {
+		 throw new javax.ejb.EJBException(e);
+	  }
+   }
+
+#foreach ($relation in $entity.Relations)
+   /**
+    * Returns the ${relation.RelatedEntity.Name} related through this entity's ${relation.FieldName} field.
+    *
+    * @return the $relation.FieldName.
+    * @ejb:interface-method
+    * @ejb:relation name="$relation.Name" role-name="$relation.Name"
+    *       target-ejb="$relation.RelatedEntity.Name" target-role-name="$relation.TargetName"
+    *       target-multiple="#if ($relation.isTargetMultiple())yes#else no #end"
+    * @ejb.value-object
+    *       aggregate="${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Data"
+    *       aggregate-name="${relation.FieldName.Sentensized}$relation.RelatedEntity.Name"
+    *       members="${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local"
+    *       members-name="${relation.RelatedEntity.Name}Data"
+    *       relation="external"
+    * @jboss.relation related-pk-field="${relation.ForeignPkFieldName}"
+    *                 fk-column="${relation.LocalColumn}"
+    * @weblogic.column-map foreign-key-column="${relation.LocalColumn}"
+    *                      key-column="${relation.ForeignColumn}"
+    * @sunone.relation column="${entity.TableName}.${relation.LocalColumn}" target="${relation.RelatedEntity.TableName}.${relation.ForeignColumn}"
+    * @jag.relation field="${relation.FieldName}" column="${relation.LocalColumn}"
+    *       session-facade="#foreach ($facade in $sessions)
+#foreach($containedEntity in $facade.EntitiesAndReferences)
+#if ($containedEntity.TableName.equals($relation.ForeignTable))${facade.RootPackage}.${facade.Name}#end
+#end
+#end"
+    *       field-capitalised="${relation.FieldName.Sentensized}"
+    *       fk-type="#foreach ($fields2 in $relation.RelatedEntity.Fields)
+#if ($fields2.ColumnName.equals($relation.ForeignColumn))${fields2.Type}#end
+#end"
+    */
+   public abstract ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+
+   /**
+    * Sets the ${relation.RelatedEntity.Name} related through this entity's ${relation.FieldName} field.
+    *
+    * @param ${relation.FieldName} the ${relation.FieldName}.
+    * @ejb:interface-method
+    */
+   public abstract void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local ${relation.FieldName});
+
+#end
+#foreach ($field in $entity.Fields)
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    * @return the value of the <code>${field.Name}</code> property
+    * @ejb.persistence column-name="${field.ColumnName}"
+#if ($field.JdbcType)
+    *       jdbc-type ="$field.JdbcType"
+#end
+#if ($field.SqlType)
+    *       sql-type ="$field.SqlType"
+#end
+#if ($field.isPrimaryKey())
+    * @ejb.pk-field
+#end
+    */
+   public abstract $field.Type get${field.Name.Sentensized}();
+#if (!${config.useRelations()} || !(${config.templateSettings.appserver} == "BEA WebLogic 8.1" && $entity.FkFields.contains($field) && ${field.isRelation()}))
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+   public abstract void set${field.Name.Sentensized}($field.Type $field.Name);
+
+#end
+#end
+
+   /**
+    * The name of the database table behind the entity bean.
+    */
+   public static final String TABLE_NAME = "${entity.TableName}";
+
+   /**
+    * A mapping of container-managed persitent field --> corresponding database column name.
+    */
+   public static final java.util.Map COLUMNS_MAP = new java.util.HashMap();
+   static {
+#foreach ($field in $entity.Fields)
+      COLUMNS_MAP.put("${field.Name}", "${field.ColumnName}");
+#end
+   }
+
+}
+#end
+#end
+#end

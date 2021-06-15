@@ -1,0 +1,133 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#foreach ($entity in $entities)
+#if ($entity.isCompositeKey())
+////File: ${paths.ServiceOutput}/${entity.RootPath}/${entity.Name}PK.java
+package ${entity.RootPackage};
+
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+#if (${config.templateSettings.businessTier} == "EJB 3.0" )
+import javax.persistence.Embeddable;
+#end
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+import javax.persistence.Embeddable;
+#end
+/**
+ * The ${entity.PrimaryKeyType} composite primary key.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.13 $, $Date: 2006/03/06 20:01:14 $
+ *
+ */
+#if (${config.templateSettings.businessTier} == "EJB 3.0" )
+@Embeddable
+#end
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+@Embeddable
+#end
+public class ${entity.Name}PK implements java.io.Serializable {
+
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Column(name="${field.ColumnName}")
+#end
+   public $field.Type ${field.Name};
+#end
+#end
+
+   public ${entity.Name}PK()
+   {
+   }
+#set ($seperator = "")
+
+   public ${entity.Name}PK(#foreach ($field in $entity.Fields)#if ($field.isPrimaryKey())${seperator}$field.Type ${field.Name}#set ($seperator = ", ")
+#end
+#end
+) {
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+      this.${field.Name} = ${field.Name};
+#end
+#end
+   }
+
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+   public $field.Type get${field.Name.Sentensized}()
+   {
+      return ${field.Name};
+   }
+
+   public void set${field.Name.Sentensized}($field.Type $field.Name)
+   {
+      this.$field.Name = $field.Name;
+   }
+#end
+#end
+
+   public int hashCode() {
+      String code = "";
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+      code +=  ${field.Name};
+#end
+#end
+      return code.hashCode();
+   }
+
+   public boolean equals(Object object)
+   {
+       ${entity.Name}PK pk = (${entity.Name}PK) object;
+
+       boolean eq = true;
+
+       if( object == null )
+       {
+          eq = false;
+       }
+       else
+       {
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+         // if both fields are null, they are equal.
+         if( this.${field.Name} == null && pk.${field.Name} == null )
+         {
+            eq = eq && true;
+         }
+         else
+         {
+            // So not both fields are null, than if either one is null, they are not equal.
+            if(this.${field.Name} == null || pk.${field.Name} == null)
+            {
+               eq = false;
+            }
+            else
+            {
+               // If neither one is null, check the equality.
+               eq = eq && this.${field.Name}.equals(pk.${field.Name});
+            }
+         }
+#end
+#end
+      }
+      return eq;
+   }
+}
+#end
+#end

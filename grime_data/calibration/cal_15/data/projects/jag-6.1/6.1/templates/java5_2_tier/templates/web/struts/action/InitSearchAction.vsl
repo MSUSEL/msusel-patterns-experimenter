@@ -1,0 +1,198 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ./src/java-web/${app.RootPath}/actions/Init${entityBean.Name}SearchAction.java
+package ${app.RootPackage}.actions;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
+
+import javax.servlet.http.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+import org.apache.struts.action.*;
+import org.apache.commons.beanutils.BeanUtils;
+
+import com.finalist.util.log.*;
+import ${sessionBean.RootPackage}.*;
+import ${app.RootPackage}.forms.${entityBean.Name}SearchForm;
+import ${entityBean.RootPackage}.*;
+
+/**
+ * The initialise Action for the ${entityBean.Name.Desentensized} search screen.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.15 $, $Date: 2006/02/02 18:28:43 $
+ * @struts.action path="/init${entityBean.Name}Search"
+#if (${config.templateSettings.serviceTier} == "Spring")
+ *                type="org.springframework.web.struts.DelegatingActionProxy"
+#else
+ *                type="${app.RootPackage}.actions.Init${entityBean.Name}SearchAction"
+#end
+ *                name="${entityBean.Name.Desentensized}SearchForm"
+ *                scope="request"
+ *                validate="false"
+ * @struts.action-forward name="success" path="/${entityBean.Name.Lower}List.jsp"
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ *@spring.bean name="/init${entityBean.Name}Search"
+#end
+ */
+public class Init${entityBean.Name}SearchAction extends ServiceAction {
+
+   private static Logger log = LogService.getLogger(Init${entityBean.Name}SearchAction.class);
+   private final static int MAX_LIST_SIZE = 1000;
+
+   /**
+    * Performs an action.
+    *
+    * @param mapping The ActionMapping used to select this instance
+    * @param actionForm The optional ActionForm bean for this request (if any)
+    * @param request The optional ActionForm bean for this request (if any)
+    * @param response The HTTP response we are creating
+    * @return describes where and how control should be forwarded, or <code>null</code> if the response has already
+    *         been completed
+    * @throws Exception in case of an error
+    */
+   public ActionForward doPerform(ActionMapping mapping, ActionForm actionForm, HttpServletRequest request,
+                                  HttpServletResponse response) throws Exception {
+
+      if (request.getParameter("Delete") != null) {
+         java.util.Enumeration en = request.getParameterNames();
+         while (en.hasMoreElements()) {
+            String param = (String) en.nextElement();
+            String checkbox = "checkbox";
+            if (param.indexOf(checkbox) != -1) {
+               param = param.substring(checkbox.length());
+               java.util.StringTokenizer tokenizer = new java.util.StringTokenizer(param, "_");
+               String[] ids = new String[tokenizer.countTokens()];
+               int i = 0;
+               while (tokenizer.hasMoreTokens() ) {
+                  ids[i] = tokenizer.nextToken();
+                  i++;
+               }
+               ${entityBean.PrimaryKeyType} id${entityBean.Name};
+#if (${entityBean.isCompositeKey()})
+               id${entityBean.Name} = new ${entityBean.PrimaryKeyType}();
+#set ($count = 0)
+#foreach ($primaryKeyField in $entityBean.PkFields)
+               id${entityBean.Name}.set${primaryKeyField.Name.Sentensized}(
+#if (${primaryKeyField.Type.equals("java.sql.Date")})
+                  new java.sql.Date(DATE_FORMATTER.parse(ids[$count]).getTime()));
+#elseif (${primaryKeyField.Type.equals("java.sql.Timestamp")})
+                  new java.sql.Timestamp(TIMESTAMP_FORMATTER.parse(ids[$count]).getTime()));
+#else
+                  new ${primaryKeyField.Type}(ids[$count]));
+#end
+#set ($count = $count + 1)
+#end
+#else
+               id${entityBean.Name} = new ${entityBean.PrimaryKeyType}(ids[0]);
+#end
+               get${sessionBean.Name}Service().delete${entityBean.Name}(id${entityBean.Name});
+            }
+         }
+      }
+
+      String queryString = ((${entityBean.Name}SearchForm) actionForm).getQuery();
+      String queryField = ((${entityBean.Name}SearchForm) actionForm).getQueryField();
+      Collection ${entityBean.Name.Desentensized}List = null;
+      if (queryString == null || "".equals(queryString) || queryField == null || "".equals(queryField)) {
+        ${entityBean.Name.Desentensized}List =
+            get${sessionBean.Name}Service().get${entityBean.Name}List();
+            // To limit the list, you may use:
+            // get${sessionBean.Name}Service().get${entityBean.Name}List(1, MAX_LIST_SIZE);
+      } else {
+            // Here the specify findBy method should be called.
+#foreach ($field in $entityBean.NonRelationFields)
+#set ($searchable = "true")
+#if ($field.isPrimaryKey())
+#if ($entityBean.isCompositeKey())
+## If a primary key and composite, than not searchable.
+#set ($searchable = "false")
+#end
+#end
+#if ($field.isPrimaryKey())
+#if ($searchable == "true")
+            if (queryField.equals("${field.Name}")) {
+## This should be done using a get..Data calll.
+                try {
+#if (("java.util.Date" == ${field.Type}) || ("java.sql.Date" == ${field.Type}) )
+                ${field.Type} query = new ${field.Type}(DATE_FORMATTER.parse(queryString).getTime());
+#else
+#if ("java.sql.Timestamp" == ${field.Type} )
+                ${field.Type} query = new ${field.Type}(TIMESTAMP_FORMATTER.parse(queryString).getTime());
+#else
+                ${field.Type} query = new ${field.Type}(queryString);
+#end
+#end
+                 ${entityBean.Name} result = get${sessionBean.Name}Service().get${entityBean.Name.Sentensized}(query);
+                 java.util.ArrayList list = new java.util.ArrayList();
+                 if (result != null) {
+                    list.add(result);
+                 }
+                 ${entityBean.Name.Desentensized}List = list;
+                 } catch (Exception e) {
+                   log.error("Error while parsing the query string", e);
+                   ${entityBean.Name.Desentensized}List = new java.util.ArrayList();
+                 }
+
+            }
+#end
+#else
+            if (queryField.equals("${field.Name}")) {
+               try {
+#if (("java.util.Date" == ${field.Type}) || ("java.sql.Date" == ${field.Type}) )
+                ${field.Type} query = new ${field.Type}(DATE_FORMATTER.parse(queryString).getTime());
+#else
+#if ("java.sql.Timestamp" == ${field.Type} )
+                ${field.Type} query = new ${field.Type}(TIMESTAMP_FORMATTER.parse(queryString).getTime());
+#else
+#if ("java.lang.String" == ${field.Type})
+                ${field.Type} query = queryString;
+#else
+                ${field.Type} query = new ${field.Type}(queryString);
+#end
+#end
+#end
+                ${entityBean.Name.Desentensized}List = get${sessionBean.Name}Service().find${entityBean.Name}By${field.Name.Sentensized}(query);
+                } catch (Exception e) {
+                  log.error("Error while parsing the query string", e);
+                  ${entityBean.Name.Desentensized}List = new java.util.ArrayList();
+                }
+            }
+#end
+
+#end
+      }
+      ((${entityBean.Name}SearchForm) actionForm).set${entityBean.Name}List(${entityBean.Name.Desentensized}List);
+      return mapping.findForward("success");
+   }
+}
+
+#end
+#end
+#end
+#end

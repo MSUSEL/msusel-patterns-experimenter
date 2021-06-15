@@ -1,0 +1,26 @@
+#if (!$config.matchServiceTier("Spring"))
+////File: ${paths.ServiceOutput}/${app.RootPath}/servicelocator/LocatableService.java
+package ${app.RootPackage}.servicelocator;
+
+import ${app.RootPackage}.exception.*;
+
+/**
+ * Services have to implement the LocatebleService interface.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2005/06/29 20:56:26 $
+ */
+public interface LocatableService {
+    /**
+     * init.
+     * @throws GenericBusinessException the business exception.
+     */
+    void init() throws GenericBusinessException;
+
+    /**
+     * destroy.
+     * @throws GenericBusinessException the business exception.
+     */
+    void destroy() throws GenericBusinessException;
+}
+#end

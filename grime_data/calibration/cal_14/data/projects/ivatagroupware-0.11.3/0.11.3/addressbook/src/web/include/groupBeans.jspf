@@ -1,0 +1,84 @@
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: groupBeans.jspf,v 1.4 2005/04/30 13:04:11 colinmacleod Exp $
+//
+// Lumps together the beans used by groupTree.jsp and groupList.jsp to avoid
+// repetition.
+//
+// Since: ivata groupware 0.10 (2005-01-17)
+// Author: Colin MacLeod <colin.macleod@ivata.com>
+// $Revision: 1.4 $
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: groupBeans.jspf,v $
+// Revision 1.4  2005/04/30 13:04:11  colinmacleod
+// Fixes reverting id type from String to Integer.
+//
+// Revision 1.3  2005/04/28 18:47:09  colinmacleod
+// Fixed XHMTL, styles and resin compatibility.
+// Added support for URL rewriting.
+//
+// Revision 1.2  2005/04/09 17:19:13  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:51:13  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<igw:bean id='contentFrameName' name='groupForm' property='contentFrameName' type="java.lang.String"/>
+<igw:bean id='deleteKey' name='groupForm' property='deleteKey' type="java.lang.String"/>
+<igw:bean id='groupMap' name='groupForm' property='groupMap' type="java.util.Map"/>
+<igw:bean id='inputMask' name='groupForm' property='inputMask' type="java.lang.String"/>
+<igw:bean id='menuFrameURI' name='groupForm' property='menuFrameURI' type="java.lang.String"/>
+<igw:bean id='resourceFieldPath' name='groupForm' property='resourceFieldPath' type="java.lang.String"/>
+<igw:bean id='selectedId' name='groupForm' property='selectedId' type="java.lang.Integer"/>
+
+<imutil:map id='uRLParams'>
+  <imutil:mapEntry name='baseClass' value='com.ivata.groupware.business.addressbook.person.group.GroupDO'/>
+  <imutil:mapEntry name='className' value='com.ivata.groupware.business.addressbook.person.group.GroupDO'/>
+  <imutil:mapEntry name='bundle' value='addressBook'/>
+  <imutil:mapEntry name='resourceFieldPath' value='<%=resourceFieldPath%>'/>
+  <imutil:mapEntry name='deleteKey' value='<%=deleteKey%>'/>
+  <imutil:mapEntry name='inputMask' value='<%=inputMask%>'/>
+  <imutil:mapEntry name='menuFrameName' value='<%=contentFrameName + "List"%>'/>
+  <imutil:mapEntry name='menuFrameURI' value='<%=menuFrameURI%>'/>
+</imutil:map>
+<igw:bean id='newURL'>
+  <imhtml:rewrite page="/mask/new.action" name='uRLParams'/>
+</igw:bean>
+<igw:bean id='findURL'>
+  <imhtml:rewrite page="/mask/find.action" name='uRLParams'/>&idString=
+</igw:bean>
+

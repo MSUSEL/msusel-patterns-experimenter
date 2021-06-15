@@ -1,0 +1,178 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+////File: ${paths.JspOutput}/${entityBean.Name.Lower}List.jsp
+<%@ include file="inc/header.jsp" %>
+<%@ page import="${entityBean.RootPackage}.${entityBean.Name}If"%>
+<div class="exportlinks">&nbsp;<a href="index.jsp"><strong><bean:message key="entity.index"/></strong></a>
+&nbsp;&nbsp;|&nbsp;&nbsp;<a href="init${entityBean.Name}Search.do"><strong>${entityBean.Name} <bean:message key="entity.list"/></strong></a>
+&nbsp;&nbsp;|&nbsp;&nbsp;<a href="init${entityBean.Name}.do?#foreach($pk in $entityBean.PkFields)$pk.Name=null&#end"><strong><bean:message key="entity.new"/> ${entityBean.Name}</strong></a>
+</div>
+<display:table requestURI="init${entityBean.Name.Sentensized}Search.do" id="parent" name="${entityBean.Name.Desentensized}SearchForm.${entityBean.Name.Desentensized.CrazyStruts}List" export="true" sort="list" pagesize="10"
+#if ($entityBean.isCompositeKey())
+    decorator="${app.RootPackage}.decorator.${entityBean.Name}Decorator" >
+   <display:setProperty name="export.excel.decorator" value="${app.RootPackage}.decorator.${entityBean.Name}ExportDecorator"/>
+   <display:setProperty name="export.csv.decorator" value="${app.RootPackage}.decorator.${entityBean.Name}ExportDecorator"/>
+   <display:setProperty name="export.pdf.decorator" value="${app.RootPackage}.decorator.${entityBean.Name}ExportDecorator"/>
+   <display:setProperty name="export.xml.decorator" value="${app.RootPackage}.decorator.${entityBean.Name}ExportDecorator"/>
+#else
+ >
+#end
+#set ($count = 1)
+#foreach ($field in $entityBean.Fields)
+#if ($entityBean.isCompositeKey())
+  <display:column title="${field.Name}" property="${field.Name}PrimaryKeyLink" group="$count" sortable="true" headerClass="sortable" />
+#else
+  <display:column property="${field.Name}" group="$count" sortable="true" headerClass="sortable" href="init${entityBean.Name.Sentensized}.do" paramId="${entityBean.primaryKey.Name}" paramProperty="primaryKey" />
+#end
+#set ($count = $count + 1)
+#end
+#set ($relcount = 0)
+#foreach($relation in $entityBean.Relations)
+#set ($relcount = $relcount + 1)
+#if ($relation.isTargetMultiple())
+## Currently no support for one-to-one relations.
+ <%
+#set ($sessioncount = 0)
+#foreach ($session2 in $sessions)
+#if (($sessioncount == 0) && ($session2.EntitiesAndReferences.contains(${relation.RelatedEntity})))
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+${session2.RootPackage}.${session2.Name}Service service${relcount} = ${app.RootPackage}.forms.${entityBean.Name}SearchForm.get${session2.Name}Service();
+#end
+#set ($sessioncount = 1)
+## This will ensure only one service will be called.
+#end
+#end
+    ${entityBean.RootPackage}.${entityBean.Name}If rel${relcount} = (${entityBean.RootPackage}.${entityBean.Name}If)pageContext.getAttribute("parent");
+    java.util.Collection rel${relcount}List = new java.util.ArrayList();
+    if (rel${relcount} != null) {
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+	   ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}If o = service${relcount}.get${relation.RelatedEntity.Name}(rel${relcount}.get${relation.FieldName.Sentensized}());
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+	   ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}If o = rel${relcount}.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+#end
+	   if (o != null) {	   
+       	  rel${relcount}List.add(new ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Data(o));
+       }
+    }
+    request.setAttribute("rel${relcount}List", rel${relcount}List);
+   %>
+  <display:column media="html" title="${relation.RelatedEntity.Name}">
+     <display:table name="rel${relcount}List"
+#if ($entityBean.isCompositeKey()) decorator="${app.RootPackage}.decorator.${entityBean.Name}Decorator">
+   <display:setProperty name="export.excel.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.csv.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.pdf.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.xml.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+#else
+     >
+#end
+#foreach ($field2 in ${relation.RelatedEntity.Fields})
+#if ($entityBean.isCompositeKey())
+        <display:column title="${field2.Name}" property="${field2.Name}${relation.RelatedEntity.Name}PrimaryKeyLink" />
+#else
+        <display:column property="${field2.Name}" headerClass="sortable" href="init${relation.RelatedEntity.Name.Sentensized}.do" paramId="${entityBean.primaryKey.Name}" paramProperty="primaryKey" />
+#end
+#end
+     </display:table>
+  </display:column>
+#end
+#end
+#if (${config.templateSettings.businessTier} != "EJB 2.0")
+#foreach($relation in $entityBean.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#set ($relcount = $relcount + 1)
+ <%
+#set ($sessioncount = 0)
+#foreach ($session2 in $sessions)
+#if (($sessioncount == 0) && ($session2.EntitiesAndReferences.contains(${relation.RelatedEntity})))
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")   
+   ${session2.RootPackage}.${session2.Name}Service service${relcount} = ${app.RootPackage}.forms.${entityBean.Name}SearchForm.get${session2.Name}Service();
+#end
+#set ($sessioncount = 1)
+## This will ensure only one service will be called.
+#end
+#end
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+    ${entityBean.RootPackage}.${entityBean.Name}If rel${relcount} = (${entityBean.RootPackage}.${entityBean.Name}If)pageContext.getAttribute("parent");
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+##    ${entityBean.RootPackage}.${entityBean.Name}Data rel${relcount} = (${entityBean.RootPackage}.${entityBean.Name}Data)pageContext.getAttribute("parent");
+    ${entityBean.RootPackage}.${entityBean.Name}Data rel${relcount} = null;
+#end
+    java.util.ArrayList result${relcount}List = new java.util.ArrayList();
+    if (rel${relcount} != null) {
+#if ($relation.isTargetMultiple())   
+## In this case it's a bidirectional one-to-many relation.
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+        java.util.Collection rel${relcount}List = service${relcount}.get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(rel${relcount});
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+##        java.util.Collection rel${relcount}List = rel${relcount}.get${relation.localEntity.Name}List();
+        java.util.Collection rel${relcount}List = new java.util.ArrayList();
+#end
+        for (java.util.Iterator iterator = rel${relcount}List.iterator(); iterator.hasNext();) {
+          ${relation.localEntity.RootPackage}.${relation.localEntity.Name}If o = (${relation.localEntity.RootPackage}.${relation.localEntity.Name}If) iterator.next();
+		  if (o != null) {
+          	result${relcount}List.add(new ${relation.localEntity.RootPackage}.${relation.localEntity.Name}Data(o));
+          }
+        }
+#else
+## In this case it's a bidirectional one-to-one relation, not supported for now!
+##        ${relation.localEntity.RootPackage}.${relation.localEntity.Name}If o = service${relcount}.get${relation.FieldName.Sentensized}${relation.localEntity.Name}(rel${relcount});
+##        if (o != null) {
+##           result${relcount}List.add(new ${relation.localEntity.RootPackage}.${relation.localEntity.Name}Data(o));
+##        }
+#end        
+    }
+    request.setAttribute("rel${relcount}List", result${relcount}List);
+   %>
+  <display:column media="html" title="${relation.localEntity.Name}">
+     <display:table name="rel${relcount}List"
+#if ($relation.localEntity.isCompositeKey())
+                    decorator="${app.RootPackage}.decorator.${relation.localEntity.Name}Decorator">
+   <display:setProperty name="export.excel.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.csv.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.pdf.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+   <display:setProperty name="export.xml.decorator" value="${app.RootPackage}.decorator.${relation.localEntity.Name}ExportDecorator"/>
+#else
+    >
+#end
+#foreach ($field2 in ${relation.localEntity.Fields})
+#if ($relation.localEntity.isCompositeKey())
+        <display:column title="${field2.Name}" property="${field2.Name}PrimaryKeyLink" />
+#else
+        <display:column property="${field2.Name}" headerClass="sortable" href="init${relation.localEntity.Name.Sentensized}.do" paramId="${entityBean.primaryKey.Name}" paramProperty="primaryKey" />
+#end
+#end
+     </display:table>
+  </display:column>
+#else
+## If the relation is not bidirectional, we do nothing.
+#end
+#end
+#end
+</display:table>
+<%@ include file="inc/footer.jsp" %>
+#end
+#end
+#end

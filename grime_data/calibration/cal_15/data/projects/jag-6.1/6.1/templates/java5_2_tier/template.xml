@@ -1,0 +1,103 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<jag-template name="Java 5 | Hibernate3 | Struts1.2/Tapestry 4 | Spring"
+              description="This template generates a 2-tier web applications with a Hibernate 3 persistence business layer
+                           using a server layer using the ServiceLocator pattern or the Spring framework, with a Struts 1.2 or Tapestry 4 web layer."
+              template-engine="velocity">
+   <config-params>
+      <param id="appserver" 
+             name="Application server" 
+             description="Select the appropriate target application server."
+             type="list">
+         <value>Tomcat 5</value>
+         <value>JBoss 4.x</value>
+         <value>JBoss 3.2.2-7</value>
+         <value>JBoss 3.2.0-1</value>
+         <value>JBoss 3.0</value>
+      </param>
+    <param id="webTier"
+           name="Presentation tier"
+           description="Select the presentation tier implementation."
+           type="list">
+       <value>Struts 1.2</value>
+       <value>Tapestry 4</value>
+        <!--
+       <value>Swing</value>
+       -->
+    </param>
+    <param id="businessTier"
+           name="Business tier"
+           description="Select the business tier implementation."
+           type="list">
+       <value>Hibernate 3</value>
+    </param>
+   <param id="serviceTier"
+          name="Service tier"
+          description="Select the service tier implementation."
+          type="list">
+      <value>ServiceLocator</value>
+      <value>Spring</value>
+   </param>
+   <param id="useRelations"
+          name="Use relations"
+          description="Check this option to use relations in the business layer."
+          type="checkbox"/>
+
+    <param id="useWebService"
+           name="Use web service"
+           description="Expose the business methods as an Axis or XFire WebService."
+           type="checkbox"/>
+
+      <param id="useSecurity"
+             name="Use Acegi Security"
+             description="Protect the webapplication using Acegi Security"
+             type="checkbox"/>
+
+      <param id="useRss"
+             name="Use Rss Feed"
+             description="Add support for a RSS Feed Servlet"
+             type="checkbox"/>
+       <!-- Experimental file upload support
+       <param id="useUpload"
+              name="Use File Upload"
+              description="Add support for a File upload servlet"
+              type="checkbox"/-->
+
+       <param id="useJasper"
+              name="Use Jasper reports"
+              description="Add support for a Jasper reports"
+              type="checkbox"/>
+
+      <!-- param id="useAjax"
+             name="Use Ajax autocompletion"
+             description="Add support for Ajax autocompletion"
+             type="checkbox"/ -->
+
+    </config-params>
+</jag-template>

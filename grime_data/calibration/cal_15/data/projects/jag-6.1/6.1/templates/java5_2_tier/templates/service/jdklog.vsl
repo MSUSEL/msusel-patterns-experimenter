@@ -1,0 +1,57 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($app.LogFramework.equals("jdklogging"))
+////File: ${paths.ConfigOutput}/jdklogfinalist-${app.Name}.xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+   Logging configuration for web- and EJB-container using logging framework jdk 1.4.x +
+   
+   You can add as many as appenders as you want in the following style
+   <appender name="blabla1"/>
+   <appender name="blabla2"/>
+   <appender name="blabla3"/>
+   
+   Explanation attriutes to set for the logging framework within the appender tag
+   
+   logfile, default set to finalist%g.log. The com.finalist.logDir property will be put logdir in front of it
+   append, default set to true
+   maxbackupindex, default set to 1. This will set the number of logs that will be made when a certain capacity is
+                  reached  like the maxfilesize below
+   maxfilesize, default set to 1. amount is in megabytes
+   shownumberoflastpackages,  default set to 0. 0 will show the whole package and classname. 3 fot example will
+                              show util.log.LogService. The original can be com.finalist.util.log.LogService
+   datepattern, default set yyyy-MM-dd HH:mm:ss,SSS.
+   messageseparator, default set to "-". This will be placed between the package and the message
+   loglevel, default set to INFO. Options are OFF, ALL, FINEST, FINER, FINE, CONFIG, DEBUG, INFO, WARNING, ERROR, SEVERE.
+         If one of these levels is set, all levels will with an higher ranking will be logged. So level set to INFO,
+         only INFO, WARNING, ERROR ans SEVERE will show up in the log file
+ -->
+ 
+<logging>
+   <appender name="${app.RootPackage}"
+      logfile="${app.Name}%g.log"
+      append="true"
+      maxbackupindex="5"
+      maxfilesize="1"
+      shownumberoflastpackages="3"
+      datepattern="yyyy-MM-dd HH:mm:ss,SSS"
+      messageseparator="-"
+      loglevel="DEBUG">
+   </appender>
+</logging>
+#end

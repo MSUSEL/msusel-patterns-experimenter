@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>ActiveX support</title>
+    </properties>
+
+    <body>
+        <section name="Motivation">
+            <p>
+                Although HtmlUnit is a pure Java implementation that simulates browsers, there are some cases
+                where platform-specific features require integration of other libraries, and ActiveX is one of them.
+            </p>
+            <p>
+                Internet Explorer on Windows can run arbitrary ActiveX components (provided that security level is
+                lowered on purpose, if the user trusts the website). Neither HtmlUnit nor Internet Explorer has any
+                control on the behavior of the run ActiveX, so you have to be careful before using that feature.
+            </p>
+        </section>
+
+        <section name="Jacob">
+            <p>
+                The current implementation depends on <a href="http://jacob-project.wiki.sourceforge.net/">Jacob</a>,
+                and because it has .dll dependency, it was not uploaded to maven repository. The dependency is optional,
+                i.e. Jacob jar is not needed for compiling or usual usage of HtmlUnit.
+            </p>
+            <p>
+                To use Jacob, add jacob.jar to the classpath and configure the .dll so that the following code
+                works for you:
+            </p>
+            <source><![CDATA[
+final ActiveXComponent activeXComponent = new ActiveXComponent("InternetExplorer.Application");
+final boolean busy = activeXComponent.getProperty("Busy").getBoolean();
+System.out.println(busy);]]></source>
+        </section>
+
+        <section name="Permit HtmlUnit to use ActiveX">
+            <p>
+                The only thing needed is setting WebClient property:
+            </p>
+            <source><![CDATA[
+webClient.setActiveXNative(true);
+]]></source>
+            <p>
+                and there you go!
+            </p>
+        </section>
+    </body>
+</document>

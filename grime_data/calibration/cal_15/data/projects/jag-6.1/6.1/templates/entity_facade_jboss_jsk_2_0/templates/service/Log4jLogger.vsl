@@ -1,0 +1,197 @@
+/*   Copyright (C) 2003 Finalist IT Group
+ *
+ *   This file is part of JAG - the Java J2EE Application Generator
+ *
+ *   JAG is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *   JAG is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *   You should have received a copy of the GNU General Public License
+ *   along with JAG; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+#if ($app.LogFramework.equals("log4j"))
+////File: ${paths.ServiceOutput}/com/finalist/util/log/Log4jLogger.java
+package com.finalist.util.log;
+
+import org.apache.log4j.Category;
+
+/**
+ * This class is wil log messages to the log file using log4j logging framework.
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2005/06/29 20:56:26 $
+ */
+public final class Log4jLogger implements Logger {
+
+   /** the log object to log to */
+   private Category logger = null;
+
+
+   /**
+    * Constructor for creating a logger object using jdk 1.4 or higher logging.
+    *
+    * @param cls the class which wants to log
+    */
+   public Log4jLogger(Class cls) {
+      logger = Category.getInstance(cls);
+   }
+
+
+   /**
+    * Logging a finest message.
+    * @param message the message to log
+    */
+   public void finest(String message) {
+      logger.debug(message);
+   }
+
+
+   /**
+    * Logging a finer message.
+    * @param message the message to log
+    */
+   public void finer(String message) {
+      logger.debug(message);
+   }
+
+
+   /**
+    * Logging a fine message
+    * @param message the message to log.
+    */
+   public void fine(String message) {
+      logger.debug(message);
+   }
+
+
+   /**
+    * Logging a config message.
+    * @param message the message to log
+    */
+   public void config(String message) {
+      logger.debug(message);
+   }
+
+
+   /**
+    * Logging a info message.
+    * @param message the message to log
+    */
+   public void info(String message) {
+      logger.info(message);
+   }
+
+
+   /**
+    * Logging a warning message.
+    * @param message the message to log
+    */
+   public void warning(String message) {
+      logger.warn(message);
+   }
+
+
+   /**
+    * Logging a severe message.
+    * @param message the message to log
+    */
+   public void severe(String message) {
+      logger.error(message);
+   }
+
+   //****************************************************
+   //*  The methods from log4j also implemented below   *
+   //****************************************************
+
+
+   /**
+    * Logging a debug message.
+    * @param message the message to log
+    */
+   public void debug(String message) {
+      logger.debug(message);
+   }
+
+
+   /**
+    * Logging a debug message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void debug(String message, Throwable t) {
+      logger.debug(message, t);
+   }
+
+
+   /**
+    * Logging an info message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void info(String message, Throwable t) {
+      logger.info(message, t);
+   }
+
+
+   /**
+    * Logging a warning message.
+    * @param message the message to log
+    */
+   public void warn(String message) {
+      logger.warn(message);
+   }
+
+
+   /**
+    * Logging a warning message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void warn(String message, Throwable t) {
+      logger.warn(message, t);
+   }
+
+
+   /**
+    * Logging an error message.
+    * @param message the message to log
+    */
+   public void error(String message) {
+      logger.error(message);
+   }
+
+
+   /**
+    * Logging an error message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void error(String message, Throwable t) {
+      logger.error(message, t);
+   }
+
+
+   /**
+    * Logging a fatal message.
+    * @param message the message to log
+    */
+   public void fatal(String message) {
+      logger.fatal(message);
+   }
+
+
+   /**
+    * Logging a fatal message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void fatal(String message, Throwable t) {
+      logger.fatal(message, t);
+   }
+}
+#end

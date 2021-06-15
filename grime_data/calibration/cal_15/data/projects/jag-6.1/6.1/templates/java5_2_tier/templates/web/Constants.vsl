@@ -1,0 +1,82 @@
+#*  Copyright (C) 2003 Finalist IT Group
+ 
+    This file is part of JAG - the Java J2EE Application Generator
+ 
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2" || ${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/com/finalist/Constants.java
+package com.finalist;
+
+import java.text.SimpleDateFormat;
+
+/**
+ * Manifest constants for the ${app.Name} application.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2006/01/20 13:10:18 $
+ */
+public final class Constants {
+
+   /**
+    * This value is a threshold number, over which value a foreign-key relation field will not be displayed for
+    * input as a select list.
+    * <p>
+    * In a "create/edit entity" JSP, a foreign-key relation field may input by means of a select drop-down list
+    * of all possible foreign-key values.  However, if there are a very large number of such values it is not
+    * reasonable to expect the user to scroll through a drop-down list with, say, 15 thousand options.
+    */
+   public static final String FOREIGNKEY_AS_SELECTLIST_THRESHOLD = "250";
+
+   /**
+    * the empty select options string
+    */
+   public static final String EMPTY_SELECT_OPTION = "[selecteer]";
+
+   /**
+    * The request parameter name to be used for form submit buttons that require server-side validation
+    * to be skipped, e.g. cancel buttons.  With Struts Validation Framework (1.1) this can be used in conjunction
+    * with the JavaScript variable 'bCancel', which when set to 'true', skips client-side validation also.
+    */
+   public static final String SUBMIT_NO_VALIDATION = "cancel";
+
+   /**
+    * Determines the format for displaying dates that originate as JDBC type DATE (i.e. dates that have NO
+    * additional hours, minutes, seconds, nanos information).
+    * See {@link java.text.SimpleDateFormat} for an explanation of the syntax.
+    */
+   public static final String DATE_DISPLAY_FORMAT = "${app.DateFormat}";
+
+   /**
+    * Determines the format for displaying dates that originate as JDBC type TIMESTAMP (i.e. dates that DO have
+    * additional hours, minutes, seconds, nanos information).
+    * See {@link java.text.SimpleDateFormat} for an explanation of the syntax.
+    */
+   public static final String TIMESTAMP_DISPLAY_FORMAT = "${app.TimestampFormat}";
+
+   /**
+    * Timestamp formatter.
+    */
+   public static final SimpleDateFormat TIMESTAMP_FORMATTER =
+         new SimpleDateFormat(Constants.TIMESTAMP_DISPLAY_FORMAT);
+
+   /**
+    * Date formatter.
+    */
+   public static final SimpleDateFormat DATE_FORMATTER =
+         new SimpleDateFormat(Constants.DATE_DISPLAY_FORMAT);
+
+}
+#end

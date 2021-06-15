@@ -1,0 +1,219 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+
+##
+## Example of an Image entity that might be used to store BLOBS.
+##
+#if ($config.matchBusinessTier("Hibernate"))
+##////File: ./src/java-web/${app.RootPath}/Image.java
+package ${app.RootPackage};
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratorType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.LobType;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.Type;
+
+
+/**
+ * @version 1.0
+ */
+@Entity
+@Table(name = "t_image")
+@SequenceGenerator(name = "SEQ_IMAGE", sequenceName = "image_sequence")
+public class Image {
+
+   private byte[] data;
+
+   private Integer id;
+
+   private int size;
+
+   private int width;
+
+   private int height;
+
+   private String filename;
+
+   private Date timestamp;
+
+
+   /** Constructs a new Image. */
+   public Image() {
+
+   }
+
+
+   /**
+    * Getter for property 'data'.
+    *
+    * @return Value of property 'data'.
+    */
+   @Lob(type = LobType.BLOB, fetch = FetchType.LAZY)
+   public byte[] getData() {
+      return data;
+   }
+
+
+   /**
+    * Setter for property 'data'.
+    *
+    * @param data Value to set for property 'data'.
+    */
+   public void setData(byte[] data) {
+      this.data = data;
+   }
+
+
+   /**
+    * Getter for property 'id'.
+    *
+    * @return Value of property 'id'.
+    */
+   @Id(generate = GeneratorType.SEQUENCE, generator = "seq_t_image")
+   public Integer getId() {
+      return id;
+   }
+
+
+   /**
+    * Setter for property 'id'.
+    *
+    * @param id Value to set for property 'id'.
+    */
+   public void setId(Integer id) {
+      this.id = id;
+   }
+
+
+   /**
+    * Getter for property 'size'.
+    *
+    * @return Value of property 'size'.
+    */
+   @Column(name = "size", nullable = false)
+   public int getSize() {
+      return size;
+   }
+
+
+   /**
+    * Setter for property 'size'.
+    *
+    * @param size Value to set for property 'size'.
+    */
+   public void setSize(int size) {
+      this.size = size;
+   }
+
+
+   /**
+    * Getter for property 'width'.
+    *
+    * @return Value of property 'width'.
+    */
+   @Column(nullable = false)
+   public int getWidth() {
+      return width;
+   }
+
+
+   /**
+    * Setter for property 'width'.
+    *
+    * @param width Value to set for property 'width'.
+    */
+   public void setWidth(int width) {
+      this.width = width;
+   }
+
+
+   /**
+    * Getter for property 'height'.
+    *
+    * @return Value of property 'height'.
+    */
+   @Column(nullable = false)
+   public int getHeight() {
+      return height;
+   }
+
+
+   /**
+    * Setter for property 'height'.
+    *
+    * @param height Value to set for property 'height'.
+    */
+   public void setHeight(int height) {
+      this.height = height;
+   }
+
+
+   /**
+    * Getter for property 'filename'.
+    *
+    * @return Value of property 'filename'.
+    */
+   @Column(length = 25)
+   public String getFilename() {
+      return filename;
+   }
+
+
+   /**
+    * Setter for property 'filename'.
+    *
+    * @param filename Value to set for property 'filename'.
+    */
+   public void setFilename(String filename) {
+      this.filename = filename;
+   }
+
+
+   /**
+    * Getter for property 'timestamp'.
+    *
+    * @return Value of property 'timestamp'.
+    */
+   @Column(nullable = false)
+   public Date getTimestamp() {
+      return timestamp;
+   }
+
+
+   /**
+    * Setter for property 'timestamp'.
+    *
+    * @param timestamp Value to set for property 'timestamp'.
+    */
+   public void setTimestamp(Date timestamp) {
+      this.timestamp = timestamp;
+   }
+}
+
+#end

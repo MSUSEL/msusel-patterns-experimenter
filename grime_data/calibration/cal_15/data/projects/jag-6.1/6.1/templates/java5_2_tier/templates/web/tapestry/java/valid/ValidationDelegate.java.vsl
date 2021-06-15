@@ -1,0 +1,68 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/valid/${app.Name.Sentensized}ValidationDelegate.java
+/*
+ * Copyright (c) 2005 Your Corporation. All Rights Reserved.
+ */
+package ${app.RootPackage}.valid;
+
+
+import org.apache.tapestry.valid.ValidationDelegate;
+import org.apache.tapestry.valid.IValidator;
+import org.apache.tapestry.form.IFormComponent;
+import org.apache.tapestry.IMarkupWriter;
+import org.apache.tapestry.IRequestCycle;
+
+/**
+ * ValidationDelegate that will color the label of the faulty fields red.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2006/01/20 13:10:18 $
+ */
+public class ${app.Name.Sentensized}ValidationDelegate extends ValidationDelegate {
+   /** {@inheritDoc} */
+   @Override
+   public void writeLabelPrefix(IFormComponent component, IMarkupWriter writer, IRequestCycle cycle) {
+      if(isInError(component)) {
+         writer.begin("span");
+         writer.attribute("class", "inputerror");
+         writer.attribute("title", getCurrentFieldTracking().getErrorRenderer().toString());
+      }
+   }
+
+   /** {@inheritDoc} */
+   @Override
+   public void writeLabelSuffix(IFormComponent component, IMarkupWriter writer, IRequestCycle cycle) {
+      if(isInError(component)) {
+         writer.end();
+      }
+   }
+
+   /** {@inheritDoc} */
+   @Override
+   public void writePrefix(IMarkupWriter writer, IRequestCycle cycle, IFormComponent component, IValidator validator) {
+   }
+
+   /** {@inheritDoc} */
+   @Override
+   public void writeSuffix(IMarkupWriter writer, IRequestCycle cycle, IFormComponent component, IValidator validator) {
+   }
+}
+#end

@@ -1,0 +1,40 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ${paths.JspOutput}/Error.html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+   <head>
+      <title>The JAG Test Console</title>
+      <meta http-equiv="Expires" content="-1"/>
+      <meta http-equiv="Pragma" content="no-cache"/>
+      <meta http-equiv="Cache-Control" content="no-cache"/>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+      <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, print"/>
+   </head>
+
+   <body jwcid="@Body">
+      <div jwcid="@Header"/>
+      <div id="body">
+         <span class="pagebanner">An error occured</span>
+      </div>
+      <div jwcid="@Footer"/>
+   </body>
+</html>
+#end

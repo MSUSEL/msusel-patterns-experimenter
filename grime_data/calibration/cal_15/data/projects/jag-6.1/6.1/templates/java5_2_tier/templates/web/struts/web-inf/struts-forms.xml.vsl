@@ -1,0 +1,9 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+////File: ./src/web/WEB-INF/struts-forms.xml
+<!-- Start upload and download file handling -->
+    <form-bean name="uploadFileForm" type="org.apache.struts.action.DynaActionForm" dynamic="true">
+      <form-property name="myFile" type="org.apache.struts.upload.FormFile"/>
+    </form-bean>
+#end
+#end

@@ -1,0 +1,73 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.matchBusinessTier("Hibernate"))
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+////File: ./src/java-web/${app.RootPath}/SessionFilter.java
+package ${app.RootPackage};
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import ${app.RootPackage}.servicelocator.*;
+
+
+ /**
+  * Make sure that after every request, the database session is closed.
+  *
+ * @author  $config.authorText  $config.companyText
+  * @version $Revision: 1.2 $, $Date: 2006/01/20 13:10:17 $
+  */
+public class SessionFilter implements Filter {
+    /**
+     * Unused.
+     */
+    public void init(FilterConfig config) {
+    }
+
+    /**
+     * Unused.
+     */
+    public void destroy() {
+    }
+
+    /**
+     * process the chain and close the database session.
+     *
+     * @param request the servlet request
+     * @param response the servlet response
+     * @param chain the chain
+     * @throws IOException
+     * @throws ServletException
+     */
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+       try {
+          chain.doFilter(request, response);
+       }
+       finally {
+         try {
+             DatabaseSessionService service = (DatabaseSessionService) ServiceLocator.getService(ServiceLocator.DATABASE_SESSION_SERVICE);
+             service.close();
+          } catch (Exception e) {
+             e.printStackTrace();
+         }
+       }
+    }
+}
+#end
+#end

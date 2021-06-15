@@ -1,0 +1,69 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE></TITLE>
+  </HEAD>
+  <BODY>
+  Defines the DataStoreAPI via which all data is imported or exported.
+<p>
+  All DataStores (e.g. PostGIS, Shapefile(tm), GML...) must provide
+implementations of the DataStore interface and the DataStoreFactorySpi
+interface.  These interfaces allow new types of datastore to be plugged into
+applications which use geotools without the need to modify any code.
+<p>
+Example:</p>
+<pre>
+<code>
+FeatureStore postgis = new PostGisDataStore( ... );
+Query all = Query.ALL;
+FeatureType roadType = postgis.getFeatureType( "roads" );
+
+// reader 1 streams over all roads
+FeatureReader reader1 = postgis.getFeatureReader( roadsType, all, Transaction.AUTO_COMMIT );
+
+// allRoads = featureResults is a prepaired query of all roads
+FeatureSource roads = postgis.getFeatureSource( "roads" );
+FeatureResults allRoads = roads.getFeatures( all );
+
+// reader 2 & 3 streams over all roads in the same manner as reader 1
+FeatureReader reader2 = allRoads.reader();
+FeatureReader reader3 = allRoads.reader();
+
+// bounds1 returns the bounding box of roads, may be null depending on expense
+Envelope bounds1 = roads.getBounds( all );
+
+// bounds2 returns the bounding box of roads, may actually calculate by going over the entire dataset
+Envelope bounds 2 = allRoads.getBounds(); 
+<code>
+</pre>
+  </BODY>
+</HTML>

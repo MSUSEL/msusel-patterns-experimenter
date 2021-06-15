@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project
+    xmlns:ant="jelly:ant"
+    xmlns:j="jelly:core"
+    xmlns:u="jelly:util"
+    default="install:install">
+  <preGoal name="xdoc:jelly-transform">
+    <!-- generate a faq from XML -->
+    <attainGoal name="faq"/>
+  </preGoal>
+  <goal
+      name="install:install">
+    <j:set
+        var="install.prefix"
+        value="${pom.groupId}-${pom.currentVersion}"/>
+    <ant:mkdir dir="${maven.build.dest}"/>
+    <ant:echo>Building UNIX tgz file</ant:echo>
+    <ant:fixcrlf
+        srcdir="${basedir}/src/perl"
+        includes="setupSudo.config"
+        eol="crlf"
+        eof="remove"/>
+    <ant:fixcrlf
+        srcdir="${basedir}/src/perl"
+        includes="setupSudo.config"
+        eol="lf"
+        eof="remove"/>
+    <ant:tar
+        destfile="${maven.build.dir}/${maven.final.name}.tar">
+      <j:forEach var="lib" items="${pom.artifacts}">
+        <j:set var="dep" value="${lib.dependency}"/>
+        <j:if test="${dep.getProperty('install.bundle')=='true'}">
+          <ant:echo>Bundling: ${dep.type} - ${dep.id}</ant:echo>
+          <ant:tarfileset
+              prefix="${install.prefix}"
+              dir="${lib.file.parent}">
+            <ant:include name="${lib.file.name}"/>
+          </ant:tarfileset>
+        </j:if>
+      </j:forEach>
+      <ant:tarfileset
+          file="${basedir}/src/text/README.txt"
+          prefix="${install.prefix}"/>
+      <ant:tarfileset
+          file="${basedir}/../../LICENSE.txt"
+          prefix="${install.prefix}"/>
+      <ant:tarfileset
+          file="${basedir}/../../RELEASE.txt"
+          prefix="${install.prefix}"/>
+      <ant:tarfileset
+          dir="${basedir}/src/perl/exim"
+          prefix="${install.prefix}/mailserver/exim"
+          excludes="*/CVS"/>
+      <ant:tarfileset
+          file="${basedir}/src/perl/setupSudo.config"
+          prefix="${install.prefix}"/>
+      <ant:tarfileset
+          file="${basedir}/src/perl/setupSudo.pl"
+          prefix="${install.prefix}"/>
+      <ant:tarfileset
+          dir="${basedir}/src/sh"
+          prefix="${install.prefix}"
+          excludes="*/CVS, cvs/, mailserver/exim/"/>
+      <ant:tarfileset
+          dir="${basedir}/src/db"
+          prefix="${install.prefix}/db"
+          excludes="*/CVS"/>
+      <ant:tarfileset
+          dir="${basedir}/../../target/docs"
+          prefix="${install.prefix}/docs"
+          excludes="*/CVS"/>
+    </ant:tar>
+    <ant:gzip
+        zipfile="${maven.build.dir}/${maven.final.name}.tar.gz"
+        src="${maven.build.dir}/${maven.final.name}.tar"/>
+    <ant:delete
+        file="${maven.build.dir}/${maven.final.name}.tar"/>
+    <ant:echo>Building Win 32 zip file</ant:echo>
+    <!--
+      copy over the text files so we can fix their crlf
+    -->
+    <j:set var='txtDir' value='${basedir}/target/txt'/>
+    <ant:mkdir dir='${txtDir}'/>
+    <ant:copy todir='${txtDir}'>
+      <ant:fileset
+          file="${basedir}/src/text/README.txt"/>
+      <ant:fileset
+          file="${basedir}/../../LICENSE.txt"/>
+      <ant:fileset
+          file="${basedir}/../../RELEASE.txt"/>
+    </ant:copy>
+    <!-- fix the text files -->
+    <ant:fixcrlf
+        srcdir="${txtDir}"
+        eol="lf"
+        eof="remove"/>
+    <ant:fixcrlf
+        srcdir="${txtDir}"
+        eol="crlf"
+        eof="remove"/>
+    <!-- now fix the perl config file -->
+    <ant:fixcrlf
+        srcdir="${basedir}/src/perl"
+        includes="setupSudo.config"
+        eol="lf"
+        eof="remove"/>
+    <ant:fixcrlf
+        srcdir="${basedir}/src/perl"
+        includes="setupSudo.config"
+        eol="crlf"
+        eof="remove"/>
+    <ant:available
+        file="${basedir}/jcom.dll"
+        type="file" property="jcom_dll_exists"/>
+    <j:if test="${not(jcom_dll_exists)}">
+      <ant:fail>
+        JCOM.DLL is missing. You need to copy it to ${basedir} for Windows.
+      </ant:fail>
+    </j:if>
+    <ant:zip
+        destfile="${maven.build.dir}/${maven.final.name}-win32.zip"
+        compress="true">
+      <j:forEach var="lib" items="${pom.artifacts}">
+        <j:set var="dep" value="${lib.dependency}"/>
+        <j:if test="${dep.getProperty('install.bundle')=='true'}">
+          <ant:echo>Bundling: ${dep.type} - ${dep.id}</ant:echo>
+          <ant:zipfileset
+              prefix="${install.prefix}"
+              dir="${lib.file.parent}">
+            <ant:include name="${lib.file.name}"/>
+          </ant:zipfileset>
+        </j:if>
+      </j:forEach>
+      <ant:zipfileset
+          dir="${txtDir}"
+          prefix="${install.prefix}"/>
+      <ant:zipfileset
+          file="${basedir}/jcom.dll"
+          prefix="${install.prefix}"/>
+      <ant:zipfileset
+          dir="${basedir}/src/db"
+          prefix="${install.prefix}/db"
+          excludes="*/CVS"/>
+      <ant:zipfileset
+          dir="${basedir}/../../target/docs"
+          prefix="${install.prefix}/docs"
+          excludes="*/CVS"/>
+    </ant:zip>
+    <ant:echo>Building source zip file</ant:echo>
+    <j:set
+        var="install.prefix"
+        value="${pom.groupId}-src-${pom.currentVersion}"/>
+    <ant:zip
+        destfile="${maven.build.dir}/${src.final.name}.zip"
+        compress="true">
+      <ant:zipfileset
+          dir="${basedir}/../.."
+          prefix="${install.prefix}"
+          excludes="**/.metadata/, **/.cvsignore, **/CVS/, **/target/, **/*.log, **/testWeb/, **/jcom.dll"/>
+    </ant:zip>
+  </goal>
+</project>
+

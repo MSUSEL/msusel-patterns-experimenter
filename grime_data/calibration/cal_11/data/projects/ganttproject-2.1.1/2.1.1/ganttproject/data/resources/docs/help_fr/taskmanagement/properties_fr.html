@@ -1,0 +1,96 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>&Eacute;dition des propri�t�s</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>&Eacute;dition des propri�t�s</h3>
+
+<h4>G�n�ral</h4>
+<p>
+Pour chaque t�che vous pouvez �diter les propri�t�s gr�ce � une bo�te de
+dialogue en utilisant le menu <b>T�ches</b> puis <b>Propri�t�s
+t�ches</b>, ou en double-cliquant sur le nom de la t�che ou sur sa barre
+graphique.</p>
+<p>La bo�te de dialogue permet d'�diter le nom, la dur�e, le pourcentage
+d'ex�cution, la priorit�, les dates de d�but, de fin et une date relative � une contrainte, 
+la couleur sur le graphique, son lien internet etc.</p>
+<center><img src="../images/propertiesGeneral.png"></center>
+<p>Vous pouver �galement sp�cifier que votre t�che est un point bilan en cochant la case <b>
+Point bilan</b>.</p>
+
+<h4>Pr�d�cesseurs</h4>
+<p>Vous pouvez �galement d�finir les relations entre les t�ches en
+choisissant les pr�d�cesseurs. 
+<center><img src="../images/propertiesPredecessors.png"></center>
+<p> Quatre types de relations sont possibles&nbsp;: 
+<ul>
+	<li>Fin-D�but&nbsp;;</li>
+	<li>Fin-Fin&nbsp;;</li>
+	<li>D�but-Fin&nbsp;;</li>
+	<li>D�but-D�but.</li>
+</ul>
+</p>
+<p>Il est �galement possible de sp�cifier un �cart dans la relation. Cet �cart est compt� en nombre de jours.
+<p>La suppression d'une relation de d�pendance s'effectue en s�lectionnant la relation � supprimer puis en cliquant 
+sur la croix <img src="../images/delete_16.gif">.</p>
+
+<h4>Ressources</h4>
+<p>
+Vous pouvez affecter des ressources � la t�che via l'onglet <b>Ressources</b>. Par d�faut, la premi�re ressource
+affect�e sera responable de la t�che. Il est possible de d�cocher la case <b>Responsable</b> si on ne veut pas
+que cette ressource soit responsable. GanttProject vous permet de d�finir aucun ou plusieurs responsables pour
+les t�ches.</p>
+<p> Par d�faut la charge des ressources lors de leur affectation est de 100 %. Mais on peut tr�s facilement modifier
+cette valeur.
+</p>
+<p>
+GanttProject vous permet de sp�cifier le r�le de chaque ressource au sein de chaque t�che qui lui est affect�e.
+Par d�faut, son r�le sera celui d�fini lors de la cr�ation de la ressource, mais vous pouvez choisir un
+autre r�le pour la ressource pour une t�che donn�e.
+</p>
+<p>La suppression d'une affectation s'effectue en s�lectionnant l'affectation � supprimer puis en cliquant 
+sur la croix <img src="../images/delete_16.gif">.
+
+<center><img src="../images/propertiesResources.png"></center>
+
+<h4>Colonnes personnalis�es</h4>
+<p>L'onglet <b>Colonnes personnalis�es</b> vous permet d'ajouter, supprimer, renommer et modifier les valeurs par
+d�faut des colonnes personnalis�es <b>pour toutes les t�ches du projet</b>. Bien que cet onglet se trouve dans
+la fen�tre des propri�t�s d'une t�ches les modifications effectu�es concerneront toutes les t�ches du projet.
+</p>
+
+<center><img src="../images/propertiesCustomCol.png"></center>
+
+</body>
+</html>

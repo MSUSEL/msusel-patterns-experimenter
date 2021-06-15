@@ -1,0 +1,65 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ${paths.ConfigOutput}/ApplicationResources.properties
+#===============================
+#======== EXCEPTIONS ===========
+#===============================
+unspecified=An unspecified exception has occured.
+
+errors.header=
+errors.footer=
+
+# Struts Validator Error Messages
+errors.invalid={0} is invalid.
+errors.maxlength={0} can not be greater than {1} characters.
+errors.minlength={0} can not be less than {1} characters.
+errors.range={0} is not in the range {1} through {2}.
+errors.required={0} is required.
+errors.byte={0} must be an byte.
+errors.date={0} the date '{0}' shoud be in the format '${app.DateFormat}'
+errors.double={0} must be an double.
+errors.float={0} must be an float.
+errors.integer={0} must be an integer.
+errors.long={0} must be an long.
+errors.short={0} must be an short.
+errors.creditcard={0} is not a valid credit card number.
+errors.email={0} is an invalid e-mail address.
+errors.postcode='{0}' must be a valid Dutch postal code, for example: 1234AB
+errors.somethingSelected=You must make a selection for field '{0}'.
+errors.ten_digit_number='{0}' must be a digit between 1 and 9999999999.
+errors.decimal='{0}' has a maximum of {1} digits after the . and have a total number {2} digits.
+
+# Application messages
+entity.list=List
+entity.new=New
+entity.index=Index
+entity.components=Components
+
+# Display names used to represent form input field values in the presentation layer.
+#foreach($session in $sessions)
+#foreach($entity in $session.Entities)
+#foreach($field in $entity.NonRelationFields)
+${entity.Name.Desentensized}Form.${field.Name.Desentensized}.displayName=${field.Name.Sentensized}
+#end
+#foreach($relation in $entity.Relations)
+${entity.Name.Desentensized}Form.${relation.FieldName}.displayName=${relation.FieldName}${relation.RelatedEntity.Name}
+#end
+
+#end
+#end
+#end

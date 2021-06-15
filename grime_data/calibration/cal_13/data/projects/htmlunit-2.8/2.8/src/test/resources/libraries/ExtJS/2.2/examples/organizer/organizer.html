@@ -1,0 +1,64 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Organizing Images into Albums</title>
+<link rel="stylesheet" type="text/css" href="../../resources/css/ext-all.css" />
+
+    <!-- GC -->
+ 	<!-- LIBS -->
+ 	<script type="text/javascript" src="../../adapter/ext/ext-base.js"></script>
+ 	<!-- ENDLIBS -->
+
+    <script type="text/javascript" src="../../ext-all.js"></script>
+
+     <script type="text/javascript" src="../view/data-view-plugins.js"></script>
+<script type="text/javascript" src="organizer.js"></script>
+
+<!-- Common Styles for the examples -->
+<link rel="stylesheet" type="text/css" href="../shared/examples.css" />
+
+<link rel="stylesheet" type="text/css" href="organizer.css" />
+</head>
+<body>
+<script type="text/javascript" src="../shared/examples.js"></script><!-- EXAMPLES -->
+<h1>Organizing Images into Albums</h1>
+<p>This example shows demonstrates how you can drop anything into the tree.</p>
+<p>This example also shows how a customized DragZone can be 
+applied to a JsonView to get automatic lightweight drag and drop of asynchronously loaded data.</p>
+<p>The js is not minified so it is readable. See <a href="organizer.js">organizer.js</a>. The multi image drag drop added a little complexity to the code, but hopefully it is still easy to follow.
+<p>For simplicity, there is no validation on the names you enter in the tree node editor and you can drag the same picture 
+into an album as many times as you want.</p>   
+<p>Hold shift/control to select multiple images in the main images view. You can drag those images into the tree.</b>
+
+<div id="layout"></div>
+<br /><br /><br /><br /><br />
+</body>
+</html>

@@ -1,0 +1,59 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+////File: ./src/java-web/${app.RootPath}/actions/UploadFileAction.java
+package ${app.RootPackage}.actions;
+
+import org.apache.struts.action.*;
+import org.apache.struts.upload.FormFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import ${app.RootPackage}.entity.upload.FileUpload;
+#if (${config.templateSettings.serviceTier} == "Spring")
+import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.context.WebApplicationContext;
+#end
+public class UploadFileAction extends Action {
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+    /**
+     * hibernate template that will be injected by spring.
+     */
+    private HibernateTemplate hibernateTemplate;
+
+#end
+    public ActionForward execute(ActionMapping mapping,
+                                 ActionForm form,
+                                 HttpServletRequest request,
+                                 HttpServletResponse response) throws Exception {
+
+        if (form != null) {
+            DynaActionForm df = (DynaActionForm) form;
+            FormFile myFile = (FormFile) df.get("myFile");
+            if (myFile == null) {
+                return (mapping.findForward("exception_page"));
+            }
+            FileUpload fu = new FileUpload();
+            fu.setFilename(myFile.getFileName());
+            fu.setSize(myFile.getFileSize());
+            fu.setFiletype(myFile.getContentType());
+            fu.setData(myFile.getFileData());
+            fu.setTimestamp(new java.util.Date());
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+            ${app.RootPackage}.HibernateQueryHelper hibernateTemplate = new ${app.RootPackage}.HibernateQueryHelper();
+#else
+            WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+            hibernateTemplate = (HibernateTemplate) context.getBean("hibernateTemplate");
+            hibernateTemplate.getSessionFactory().getCurrentSession().setFlushMode(org.hibernate.FlushMode.AUTO);
+#end
+               hibernateTemplate.save(fu);
+
+        }
+        return (mapping.findForward("success"));
+    }
+
+}
+#end
+#end

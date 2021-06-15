@@ -1,0 +1,58 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+body, td, pre {color:#000; font-family:Verdana, Arial, Helvetica, sans-serif; font-size:10px; margin:8px;}
+body {background:#FFF;}
+body.mceForceColors {background:#FFF; color:#000;}
+h1 {font-size: 2em}
+h2 {font-size: 1.5em}
+h3 {font-size: 1.17em}
+h4 {font-size: 1em}
+h5 {font-size: .83em}
+h6 {font-size: .75em}
+.mceItemTable, .mceItemTable td, .mceItemTable th, .mceItemTable caption, .mceItemVisualAid {border: 1px dashed #BBB;}
+a.mceItemAnchor {width:12px; line-height:6px; overflow:hidden; padding-left:12px; background:url(../default/img/items.gif) no-repeat bottom left;}
+img.mceItemAnchor {width:12px; height:12px; background:url(../default/img/items.gif) no-repeat;}
+img {border:0;}
+table {cursor:default}
+table td, table th {cursor:text}
+ins {border-bottom:1px solid green; text-decoration: none; color:green}
+del {color:red; text-decoration:line-through}
+cite {border-bottom:1px dashed blue}
+acronym {border-bottom:1px dotted #CCC; cursor:help}
+abbr, html\:abbr {border-bottom:1px dashed #CCC; cursor:help}
+
+/* IE */
+* html body {
+scrollbar-3dlight-color:#F0F0EE;
+scrollbar-arrow-color:#676662;
+scrollbar-base-color:#F0F0EE;
+scrollbar-darkshadow-color:#DDD;
+scrollbar-face-color:#E0E0DD;
+scrollbar-highlight-color:#F0F0EE;
+scrollbar-shadow-color:#F0F0EE;
+scrollbar-track-color:#F5F5F5;
+}

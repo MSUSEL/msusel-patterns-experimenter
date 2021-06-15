@@ -1,0 +1,78 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.useWebService())
+#foreach ($session in $sessions)
+////File: ${paths.TestOutput}/${session.Name}WebServiceTest.java
+
+import junit.framework.TestCase;
+import org.codehaus.xfire.XFireFactory;
+import org.codehaus.xfire.annotations.AnnotationServiceFactory;
+import org.codehaus.xfire.annotations.jsr181.Jsr181WebAnnotations;
+import org.codehaus.xfire.client.XFireProxyFactory;
+import org.codehaus.xfire.service.Service;
+import org.codehaus.xfire.transport.TransportManager;
+
+
+
+/**
+ * Tests case for the XFire webservice client for the <code>${session.Name}WebService</code>.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2006/03/08 08:49:34 $
+ */
+public class ${session.Name}WebServiceTest extends junit.framework.TestCase {
+
+    /**
+     * Test constructor
+     */
+    public ${session.Name}WebServiceTest(String testName) {
+        super(testName);
+    }
+
+    /**
+     * Main target to run the JUnit test.
+     */
+    public static void main(String[] args) {
+        junit.textui.TestRunner.run(suite());
+    }
+
+    /**
+     * Runs the test suite.
+     */
+    public static junit.framework.Test suite() {
+        junit.framework.TestSuite suite = new junit.framework.TestSuite(${session.Name}WebServiceTest.class);
+        return suite;
+    }
+
+    /**
+     * Testcase for the webservice. Should be extended with business method tests that are
+     * exposed in the webservice.
+     */
+    public void testWebServiceUserManagerWebService() throws Exception {
+        TransportManager tm = XFireFactory.newInstance().getXFire().getTransportManager();
+        AnnotationServiceFactory factory =
+                new AnnotationServiceFactory(new Jsr181WebAnnotations(), tm);
+        Service serviceModel = factory.create(${session.Name}WebService.class);
+        I${session.Name}WebService service = (I${session.Name}WebService)
+                new XFireProxyFactory().create(serviceModel, "http://localhost:8080/${app.Name}/xservices/${session.Name}WebService");
+        assertNotNull(service);
+    }
+}
+#end
+#end

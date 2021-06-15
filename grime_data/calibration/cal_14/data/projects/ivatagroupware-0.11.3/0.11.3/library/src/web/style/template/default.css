@@ -1,0 +1,369 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+/* -----------------------------------------------------------------------------
+ title divs in general for library themes
+*/
+.documentThemeTitleLeft, .documentThemeTitleRight, .fAQThemeTitleLeft, .fAQThemeTitleRight, .noteThemeTitleLeft, .noteThemeTitleRight {
+  background-repeat: no-repeat;
+  font-family: Trebuchet, Arial, sans;
+  font-size: 16pt;
+  font-weight: bold;
+  height: 2em;
+  padding-top: 1px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.documentThemeTitleLeft, fAQThemeTitleLeft, ooteThemeTitleLeft, .pageLinksLeft {
+  float: left;
+  padding-left: 8px;
+}
+.documentThemeTitleRight, fAQThemeTitleRight, noteThemeTitleRight, .pageLinksRight {
+  float: right;
+  padding-right: 8px;
+}
+.pageLinks {
+  margin-top: 20px;
+}
+img.printer {
+  clear: none;
+  display: block;
+}
+/* -----------------------------------------------------------------------------
+ button frames in general for library themes
+*/
+.documentThemeButtonFrame,
+.documentSummaryThemeButtonFrame,
+.fAQThemeButtonFrame,
+.noteThemeButtonFrame {
+  margin-top: 10px;
+  text-align: right;
+}
+.documentThemeButtonFrame input[type='button'], input[type='submit'],
+.documentSummaryThemeButtonFrame input[type='button'], input[type='submit'],
+.fAQThemeButtonFrame input[type='button'], input[type='submit'],
+.noteThemeButtonFrame input[type='button'], input[type='submit'] {
+  background-color: #eee;
+}
+
+/* -----------------------------------------------------------------------------
+ summary
+*/
+.librarySummary {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.libraryCreatedLabel, .libraryModifiedLabel, .libraryCreated, .libraryModified {
+  font-size: 8pt;
+}
+.libraryCreatedLabel, .libraryModifiedLabel {
+  font-weight: bold;
+}
+/* -----------------------------------------------------------------------------
+ comment theme
+*/
+td.commentEvenThreadEvenReply, td.commentEvenThreadEvenReplySubject {
+  background-color: #f3f3f3;
+}
+td.commentEvenThreadEvenReplySubject {
+  font-weight: bold;
+}
+td.commentEvenThreadOddReply, td.commentEvenThreadOddReplySubject {
+  background-color: #fcfcfc;
+}
+td.commentEvenThreadOddReplySubject {
+  font-weight: bold;
+}
+td.commentOddThreadEvenReply, td.commentOddThreadEvenReplySubject {
+  background-color: #d9e2e8;
+}
+td.commentOddThreadEvenReplySubject {
+  font-weight: bold;
+}
+td.commentOddThreadOddReply, td.commentOddThreadOddReplySubject {
+  background-color: #f2f5f7;
+}
+td.commentOddThreadOddReplySubject {
+  font-weight: bold;
+}
+/*******************************************************************************
+ * DOCUMENT THEME
+ ******************************************************************************/
+div.documentThemeWindowLeft {
+  width: 30px;
+}
+table.documentThemeWindow {
+  border: none;
+  margin: none;
+  margin-left: auto;
+  margin-right: auto;
+  padding: none;
+  width: 95%;
+}
+.documentThemeWindowContents {
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/background.gif);
+  width: 100%;
+}
+td.documentThemeWindow {
+  border: none;
+  height: 100%;
+  margin: none;
+  padding: none;
+  width: 100%;
+}
+td.documentThemeWindowBottom {
+  background-color: white;
+  border-bottom: 1px solid #cccccc;
+  height: 15px;
+}
+td.documentThemeWindowLeft {
+  background-attachment: scroll;
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/middleLeft.gif);
+  background-repeat: repeat-y;
+  width: 32px;
+}
+td.documentThemeWindowRight {
+  background-attachment: scroll;
+  background-color: white;
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/middleRight.gif);
+  background-position: right;
+  background-repeat: repeat-y;
+  vertical-align: bottom;
+  width: 30px;
+}
+td.documentThemeWindowTopCenter {
+  background-attachment: scroll;
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/topCenter.gif);
+  height: 11px;
+}
+td.documentThemeWindowTopLeft {
+  background-attachment: scroll;
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/topLeft.gif);
+  width: 32px;
+}
+td.documentThemeWindowTopRight {
+  background-attachment: scroll;
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/document/topRight.gif);
+  width: 32px;
+}
+td.documentThemeWindowTitle {
+  background-color: white;
+  background-image: none;
+  text-align: center;
+}
+tr.documentThemeWindowTop {
+  height: 9px;
+}
+/* -----------------------------------------------------------------------------
+ summary frame round corners - like round theme
+*/
+/* In the CSS below, the numbers used are the following:
+    1px: the width of the border
+    3px: a fudge factor needed for IE5/win (see below)
+    4px: the width of the border (1px) plus the 3px IE5/win fudge factor
+    17px: the width or height of the border image
+*/
+.documentSummaryThemeFrameTopLeft, .documentSummaryThemeFrameTopRight, .documentSummaryThemeFrameBottomLeft, .documentSummaryThemeFrameBottomRight {
+  border: 0px;
+  height: 17px;
+  padding: 0px;
+  width: 17px;
+  z-index: 99;
+}
+.documentSummaryThemeFrameTopLeft, .documentSummaryThemeFrameBottomLeft {
+  float: left;
+  clear: both;
+  z-order: 1;
+}
+.documentSummaryThemeFrameTopRight, .documentSummaryThemeFrameBottomRight {
+  float: right;
+  clear: right;
+  z-order: 1;
+}
+.documentSummaryThemeFrameTopLeft {
+  margin: -1px 0px 0px -1px;
+}
+.documentSummaryThemeFrameTopRight {
+  margin: -1px -1px 0px 0px;
+}
+.documentSummaryThemeFrameBottomLeft {
+  margin: -17px 0px 0px 0px;
+}
+.documentSummaryThemeFrameBottomRight {
+  margin: -17px 0px 0px 0px;
+}
+/* IE5-5.5/win needs the border scooted to the left or right by an
+   additional 3px! Why? */
+.documentSummaryThemeFrameTopLeft {
+  margin-left: -4px;
+  ma\rgin-left: -1px;
+}
+html>body .documentSummaryThemeFrameTopLeft {
+  margin-left: -1px;
+}
+.documentSummaryThemeFrameTopRight {
+  margin-right: -4px;
+  ma\rgin-right: -3px;
+}
+html>body .documentSummaryThemeFrameTopRight {
+  margin-right: -1px;
+}
+.documentSummaryThemeFrameBottomLeft {
+  margin-left: -3px;
+  ma\rgin-left: 0px;
+}
+html>body .documentSummaryThemeFrameBottomLeft {
+  margin-left: 0px;
+}
+.documentSummaryThemeFrameBottomRight {
+  margin-right: -3px;
+  ma\rgin-right: -2px;
+}
+html>body .documentSummaryThemeFrameBottomRight {
+  margin-right: 0px;
+}
+/* To get around a known bug in IE5/win, apply the
+   border (no margin, padding or positioning) to the
+   content class and apply whatever positioning you
+   want to the contentWrapper class. */
+.documentSummaryThemeFrame {
+  border: 1px solid #90adc1;
+  margin: 0px;
+  padding: 0px;
+  background-color: #d9e2e8;
+}
+/* -----------------------------------------------------------------------------
+ summary frame and pane
+*/
+.documentSummaryThemeFramePane {
+  padding: 15px;
+}
+.documentSummaryThemeButtonFrame, .documentSummaryThemeFramePadding {
+  margin-left: auto;
+  margin-right: auto;
+  width: 95%;
+}
+/* -----------------------------------------------------------------------------
+ frame and pane
+*/
+.documentThemeFrame {
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: 0px;
+  margin-top: 10px;
+  width: 95%;
+}
+
+/*******************************************************************************
+ * FAQ THEME
+ ******************************************************************************/
+.fAQThemeWindow {
+  background-image: URL(PROPERTY(pathContext)/library/theme/images/fAQ/background.gif);
+  border: 1px solid #999;
+  padding: 15px;
+}
+/* no hilight color for faq */
+.fAQThemeWindow .hilight {
+  background-color: none;
+}
+.fAQThemeWindowSurround {
+/* position this div however you want, but
+     keep its padding and border at zero */
+  border: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  width: 95%;
+}
+
+/*******************************************************************************
+ * NOTE THEME
+ ******************************************************************************/
+table.noteThemeWindow {
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  /* should be important as we don't want a larger window ever */
+  width: 435px;
+  width: 435px !important;
+}
+.noteThemeWindowTopCenter,
+.noteThemeWindowTopLeft,
+.noteThemeWindowTopRight,
+.noteThemeWindowTitle,
+.noteThemeWindowMiddleLeft,
+.noteThemeWindowMiddleRight,
+.noteThemeWindowBottomCenter,
+.noteThemeWindowBottomLeft,
+.noteThemeWindowBottomRight {
+  margin: 0px;
+  padding: 0px;
+}
+.noteThemeWindowTopLeft,
+.noteThemeWindowTopRight,
+.noteThemeWindowMiddleLeft,
+.noteThemeWindowMiddleRight
+.noteThemeWindowBottomLeft,
+.noteThemeWindowBottomRight {
+  width: 35px;
+}
+.noteThemeWindowTopCenter,
+.noteThemeWindowTopLeft,
+.noteThemeWindowTopRight,
+.noteThemeWindowBottomCenter,
+.noteThemeWindowBottomLeft,
+.noteThemeWindowBottomRight {
+  height: 35px;
+  font-size: 1px;
+}
+
+.noteThemeWindowTopCenter,
+.noteThemeWindowTitle,
+.noteThemeWindowMiddleLeft,
+.noteThemeWindowMiddleRight,
+.noteThemeWindowBottomCenter,
+.noteThemeTitle,
+.noteThemeWindowContents {
+  background-color: #d9e2e8;
+}
+.noteThemeWindowTopCenter {
+  border-top: 1px solid #90adc1;
+}
+.noteThemeWindowMiddleLeft {
+  border-left: 1px solid #90adc1;
+}
+.noteThemeWindowMiddleRight {
+  border-right: 1px solid #90adc1;
+}
+.noteThemeWindowBottomCenter {
+  border-bottom: 1px solid #90adc1;
+}
+.noteThemeWindowContents {
+  padding: 14px;
+}

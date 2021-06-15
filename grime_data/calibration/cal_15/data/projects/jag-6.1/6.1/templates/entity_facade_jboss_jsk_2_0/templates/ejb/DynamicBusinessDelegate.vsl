@@ -1,0 +1,132 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.matchBusinessTier("EJB"))
+#foreach ($session in $sessions)
+////File: ${paths.EjbOutput}/${session.RootPath}/${session.Name}DynamicBusinessDelegate.java
+package ${session.RootPackage};
+
+import ${app.RootPackage}.DynamicBusinessDelegateBase;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.naming.NamingException;
+import javax.naming.InitialContext;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import ${app.RootPackage}.servicelocator.*;
+
+
+/**
+ * Business delegate for the Session EJB that hides architecture specific details to the web client.
+ * The web client will only see this interface.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2005/06/29 20:56:25 $
+ */
+public class ${session.Name}DynamicBusinessDelegate extends DynamicBusinessDelegateBase implements InvocationHandler {
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+    private ${session.Name}Service service;
+#end
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+    private ${session.Name} service;
+#end
+
+    private Map availableMethods;
+
+    /**
+     * the logger.
+     */
+    private static Logger log = LogService.getLogger(${session.Name}DynamicBusinessDelegate.class);
+
+    public ${session.Name}DynamicBusinessDelegate() throws GenericBusinessException {
+        initService();
+    }
+
+    /**
+     * Determine all methods in the remote interface and put them in a hashmap.
+     * @throws GenericBusinessException
+     */
+    public void initService() throws GenericBusinessException {
+        // Look up and obtain our session bean
+        try {
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+            InitialContext ctx = new InitialContext();
+            service = (${session.Name}Service) ctx.lookup(${session.Name}Remote.class.getName());
+            // Get the methods available for use in proxying
+            availableMethods = getMethods(${session.Name}Service.class);
+#end
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+            service = ${session.Name}Util.getHome().create();
+            // Get the methods available for use in proxying
+            availableMethods = getMethods(${session.Name}.class);
+#end
+        } catch (Exception e) {
+            throw new GenericBusinessException(e);
+        }
+    }
+
+    /**
+     * Implement the Locatable interface (init and destroy)
+     * and map all Service methods to the Session EJB implementation,
+     * using a dynamic proxy.
+     *
+     * @param proxy the proxy
+     * @param method the method
+     * @param args the arguments
+     * @return Object the resulting object after invocation.
+     * @throws Throwable the exception
+     */
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        try {
+            // See if this is init() or destroy()
+            if (method.getName().equals("init")) {
+                initService();
+                return null;
+            } else if (method.getName().equals("destroy")) {
+                // Nothing to do.
+                return null;
+            } else {
+                Method theMethod;
+                String methodName = getUniqueMethodName(method);
+                theMethod = (Method) availableMethods.get(methodName);
+                // See if we found anything
+                if (theMethod != null) {
+                    return theMethod.invoke(service, args);
+                } else {
+                    log.warn("The Service doesn't support the method: " + theMethod.getName());
+                    throw new
+                            NoSuchMethodException("The Service doesn't support the method " +
+                            theMethod.getName() + " method.");
+                }
+            }
+        } catch (InvocationTargetException e) {
+            // Package a Remote exception in a Busines Exception
+            if (e.getTargetException() instanceof RemoteException) {
+                throw new GenericBusinessException((RemoteException) e.getTargetException());
+            } else {
+                throw e.getTargetException();
+            }
+        }
+    }
+}
+#end
+#end

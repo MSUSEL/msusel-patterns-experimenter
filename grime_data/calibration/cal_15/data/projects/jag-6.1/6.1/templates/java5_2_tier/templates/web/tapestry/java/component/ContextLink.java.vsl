@@ -1,0 +1,66 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/component/ContextLink.java
+package ${app.RootPackage}.component;
+
+import org.apache.tapestry.AbstractComponent;
+import org.apache.tapestry.IMarkupWriter;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.annotations.ComponentClass;
+import org.apache.tapestry.annotations.InjectObject;
+import org.apache.tapestry.annotations.Parameter;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * Render a link using the current context.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.1 $, $Date: 2006/01/23 20:29:07 $
+ */
+@ComponentClass(allowBody = true, allowInformalParameters = true, reservedParameters = "href")
+public abstract class ContextLink extends AbstractComponent {
+
+    @InjectObject("service:tapestry.globals.HttpServletRequest")
+    public abstract HttpServletRequest getHttpServletRequest();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void renderComponent(
+            IMarkupWriter writer, IRequestCycle cycle) {
+        writer.begin("a");
+        String link = getHref();
+        writer.attribute("href", getHttpServletRequest().getContextPath() + link);
+        renderInformalParameters(writer, cycle);
+        renderBody(writer, cycle);
+        writer.end();
+    }
+
+    /**
+     * Retrieves href value of the link.
+     *
+     * @return The Href of the link.
+     */
+    @Parameter(required = true)
+    public abstract String getHref();
+}
+#end

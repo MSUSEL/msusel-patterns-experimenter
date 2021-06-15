@@ -1,0 +1,37 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+
+////File: maven/maven.xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns:maven="jelly:maven" xmlns:j="jelly:core">
+   <preGoal name="java:compile">
+   <path id="path.all.src">
+      <pathelement location="../src/java-service"/>
+      <pathelement location="../src/java-web"/>
+#if ($config.matchBusinessTier("EJB 2"))
+      <pathelement location="../src/java-generated"/>
+#end
+#if ($config.matchBusinessTier("EJB"))
+      <pathelement location="../src/java-ejb"/>
+#end
+#if ($config.matchBusinessTier("Hibernate 2"))
+      <pathelement location="../src/java-hibernate"/>
+#end
+   </path>       
+   <maven:addPath id="maven.compile.src.set"  refid="path.all.src"/>
+   </preGoal>
+</project>

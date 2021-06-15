@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+
+<!-- Put hdfsproxy specific properties in this file. -->
+
+<configuration>
+
+<property>
+  <name>hdfsproxy.https.address</name>
+  <value>0.0.0.0:8443</value>
+  <description>the SSL port that hdfsproxy listens on
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.hosts</name>
+  <value>hdfsproxy-hosts</value>
+  <description>location of hdfsproxy-hosts file
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.dfs.namenode.address</name>
+  <value>localhost:54321</value>
+  <description>namenode address of the HDFS cluster being proxied
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.https.server.keystore.resource</name>
+  <value>ssl-server.xml</value>
+  <description>location of the resource from which ssl server keystore
+  information will be extracted
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.user.permissions.file.location</name>
+  <value>user-permissions.xml</value>
+  <description>location of the user permissions file
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.user.certs.file.location</name>
+  <value>user-certs.xml</value>
+  <description>location of the user certs file
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.ugi.cache.ugi.lifetime</name>
+  <value>15</value>
+  <description> The lifetime (in minutes) of a cached ugi
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.ldap.initial.context.factory</name>
+  <value>com.sun.jndi.ldap.LdapCtxFactory</value>
+  <description> ldap initial context factory
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.ldap.provider.url</name>
+  <value>ldap://localhost:389</value>
+  <description> ldap server address
+  </description>
+</property>
+
+<property>
+  <name>hdfsproxy.ldap.role.base</name>
+  <value>ou=proxyroles,dc=mycompany,dc=com</value>
+  <description> ldap role base
+  </description>
+</property>
+
+<property>
+    <name>hdfsproxy.kerberos.principle</name>
+    <value>hdfsproxy@LOCALHOST</value>
+    <description> kerberos principle to be used by hdfsproxy </description>
+</property>
+
+<property>
+    <name>hdfsproxy.kerberos.keytab</name>
+    <value>hdfsproxy.keytab</value>
+    <description> kerberos keytab to be used by hdfsproxy </description>
+</property>
+
+<property>
+    <name>hdfsproxy.kerberos.default.realm</name>
+    <value>/component1/componentN@realm</value>
+    <description> kerberos default realm appended to non-qualified userIds </description>
+</property>
+
+</configuration>
+

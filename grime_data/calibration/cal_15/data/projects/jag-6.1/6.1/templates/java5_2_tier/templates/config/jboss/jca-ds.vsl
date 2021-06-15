@@ -1,0 +1,37 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.matchAppserver("JBoss 3.2") || $config.matchAppserver("JBoss 4"))
+////File: ${paths.ConfigOutput}/${app.Name}-${datasource.TypeMapping.Lower}-ds.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  JBoss Server Configuration                                           -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<datasources>
+  <local-tx-datasource>
+    <jndi-name>${datasource.JndiName}</jndi-name>
+    <connection-url>${datasource.JdbcUrl}</connection-url>
+    <driver-class>${datasource.Database.DriverClass}</driver-class>
+    <user-name>${datasource.UserName}</user-name>
+    <password>${datasource.Password}</password>
+#if (${datasource.TypeMapping.Lower} == "oracle7" || ${datasource.TypeMapping.Lower} == "oracle8" || ${datasource.TypeMapping.Lower} == "oracle9i")
+    <exception-sorter-class-name>org.jboss.resource.adapter.jdbc.vendor.OracleExceptionSorter</exception-sorter-class-name>
+#end
+  </local-tx-datasource>
+</datasources>
+#end

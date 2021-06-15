@@ -1,0 +1,156 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+////File: ${paths.JspOutput}/${entityBean.Name.Lower}.jsp
+<%@ include file="inc/header.jsp" %>
+<html:form action='/save${entityBean.Name}' method='post' onsubmit="return validate${entityBean.Name}Form(this);">
+<html:hidden property="mode"/>
+<html:errors/>
+<p>&nbsp;</p>
+<div class="exportlinks">&nbsp;<a href="index.jsp"><strong><bean:message key="entity.index"/></strong></a>
+&nbsp;&nbsp;|&nbsp;&nbsp;<a href="init${entityBean.Name}Search.do"><strong>${entityBean.Name} <bean:message key="entity.list"/></strong></a>
+&nbsp;&nbsp;|&nbsp;&nbsp;<a href="init${entityBean.Name}.do?#foreach($pk in $entityBean.PkFields)$pk.Name=null&#end"><strong><bean:message key="entity.new"/> ${entityBean.Name}</strong></a>
+</div>
+    <table bgcolor="#f0e0a0">
+      <tbody>
+      <tr>
+        <td colspan="4">
+                      <table cellspacing="0" cellpadding="0" bgcolor="#eeeeee">
+#foreach ($pkField in $entityBean.PkFields)
+#if (!$pkField.isForeignKey())
+#if (!$pkField.getHasAutoGenPrimaryKey())
+                      <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="new">
+                        <tr bgcolor="#eeeeee">
+                          <error:td errorClass="inputerror" property="${pkField.Name.CrazyStruts}" width="254"><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">
+                           </font><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="${entityBean.Name.Desentensized}Form.${pkField.Name.Desentensized}.displayName"/>
+                             </font></b></font> <font face="Verdana, Arial, Helvetica, sans-serif">:
+                           </font></b></font></error:td>
+                          <td width="23" align="center" nowrap height="15"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"></font>
+                          </td>
+                          <td colspan=2 width="354" height="15"><html:text property="${pkField.Name.CrazyStruts}" size="50"/>
+                          </td>
+                        </tr>
+                      </logic:equal>
+                      <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="change">
+                      <html:hidden property="${pkField.Name.CrazyStruts}"/>
+                        <tr bgcolor="#eeeeee">
+                          <error:td errorClass="inputerror" property="${pkField.Name.CrazyStruts}" width="254"><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">
+                           </font><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="${entityBean.Name.Desentensized}Form.${pkField.Name.Desentensized}.displayName"/></font></b></font> <font face="Verdana, Arial, Helvetica, sans-serif">:
+                           </font></b></font></error:td>
+                          <td width="23" align="center" nowrap height="15"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"></font>
+                          </td>
+                          <td colspan=2 width="354" height="15"><html:text property="${pkField.Name.CrazyStruts}" size="50" disabled="true"/>
+                          </td>
+                        </tr>
+                      </logic:equal>
+#else
+                      <html:hidden property="${pkField.Name.CrazyStruts}"/>
+                      <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="change">
+                        <tr bgcolor="#eeeeee">
+                          <error:td errorClass="inputerror" property="${pkField.Name.CrazyStruts}" width="254"><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">
+                           </font><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="${entityBean.Name.Desentensized}Form.${pkField.Name.Desentensized}.displayName"/></font></b></font> <font face="Verdana, Arial, Helvetica, sans-serif">:
+                           </font></b></font></error:td>
+                          <td width="23" align="center" nowrap height="15"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"></font>
+                          </td>
+                          <td colspan=2 width="354" height="15"><html:text property="${pkField.Name.CrazyStruts}" size="50" disabled="true"/>
+                          </td>
+                        </tr>
+                      </logic:equal>
+#end
+#end
+#end
+#foreach ($relation in $entityBean.Relations)
+#set ($pk = "false")
+#foreach ($field in $entityBean.PkFields)
+## check if the relation is a primary key..
+#if (${field.Name} == ${relation.FieldName})
+#set ($pk = "true")
+#end
+#end
+                        <tr bgcolor="#eeeeee">
+                          <error:td errorClass="inputerror" property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.RelatedEntity.PrimaryKey}" width="254"><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">
+                           </font><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="${entityBean.Name.Desentensized}Form.${relation.FieldName}.displayName"/></font></b></font> <font face="Verdana, Arial, Helvetica, sans-serif">:
+                           </font></b></font></error:td>
+                          <td width="23" align="center" nowrap height="15"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"></font>
+                          </td>
+                          <td colspan=2 width="354" height="15"><logic:lessEqual name="${entityBean.Name.Desentensized}Form" property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.listSize" value="<%=Constants.FOREIGNKEY_AS_SELECTLIST_THRESHOLD%>">
+                          <bean:define id='${relation.FieldName}List' name='${entityBean.Name.Desentensized}Form' property='${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.list'/>
+#if ($pk == "true")
+## Enable in case primary key is true, and autogeneration is off.
+                          <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="new">
+                           <html:select property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.RelatedEntity.PrimaryKey}">
+                              <html:options collection="${relation.FieldName}List" labelProperty="${relation.RelatedEntity.PrimaryKey}" property="${relation.RelatedEntity.PrimaryKey.Name.CrazyStruts}"/>
+                           </html:select>
+                          </logic:equal>
+## Make disabled in case we want to change a primary key.
+                          <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="change">
+                           <html:select disabled='true' property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.RelatedEntity.PrimaryKey}">
+                              <html:options collection="${relation.FieldName}List" labelProperty="${relation.RelatedEntity.PrimaryKey}" property="${relation.RelatedEntity.PrimaryKey.Name.CrazyStruts}"/>
+                           </html:select>
+                          </logic:equal>
+
+#else
+                           <html:select property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.RelatedEntity.PrimaryKey}">
+                              <html:options collection="${relation.FieldName}List" labelProperty="${relation.RelatedEntity.PrimaryKey}" property="${relation.RelatedEntity.PrimaryKey.Name.CrazyStruts}"/>
+                           </html:select>
+#end
+                          </logic:lessEqual><logic:greaterThan name="${entityBean.Name.Desentensized}Form" property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.listSize" value="<%=Constants.FOREIGNKEY_AS_SELECTLIST_THRESHOLD%>"><html:text property="${relation.FieldName.Desentensized.CrazyStruts}${relation.RelatedEntity.Name}.${relation.RelatedEntity.PrimaryKey}" size="50"/></logic:greaterThan>
+                          </td>
+                        </tr>
+#end
+#foreach ($field in $entityBean.NonPkFields)
+#if (!($field.isRelation()))
+                        <tr bgcolor="#eeeee">
+                          <error:td errorClass="inputerror" property="${field.Name.CrazyStruts}" width="254"><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">
+                           </font><font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif"><bean:message key="${entityBean.Name.Desentensized}Form.${field.Name.Desentensized}.displayName"/></font></b></font> <font face="Verdana, Arial, Helvetica, sans-serif">:
+                           </font></b></font></error:td>
+                          <td width="23" align="center" nowrap height="15"><font face="Verdana, Arial, Helvetica, sans-serif" size="2"></font>
+                          </td>
+                          <td colspan=2 width="354" height="15"><html:text property="${field.Name.CrazyStruts}" size="50"/>
+                          </td>
+                        </tr>
+#end
+#end
+          </table>
+        </td>
+      </tr>
+      <tr bgcolor="#f0e0a0">
+        <td>
+          <div align="center"> &nbsp; </div>
+        </td>
+        <td>&nbsp;</td>
+        <td align="right">
+          <html:submit property="submit" value="Save"/>
+          <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="new">
+             <html:submit property="<%=Constants.SUBMIT_NO_VALIDATION%>" value="Delete" onclick="bCancel=true" disabled="true"/>
+          </logic:equal>
+          <logic:equal name="${entityBean.Name.Desentensized}Form" property="mode" value="change">
+             <html:submit property="<%=Constants.SUBMIT_NO_VALIDATION%>" value="Delete" onclick="bCancel=true"/>
+          </logic:equal>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+      </tbody>
+    </table>
+</html:form>
+<html:javascript formName="${entityBean.Name.Desentensized}Form" />
+<%@ include file="inc/footer.jsp" %>
+#end
+#end
+#end

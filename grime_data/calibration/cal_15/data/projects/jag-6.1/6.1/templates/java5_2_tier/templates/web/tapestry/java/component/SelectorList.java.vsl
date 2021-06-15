@@ -1,0 +1,188 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/component/SelectorList.java
+package ${app.RootPackage}.component;
+
+import org.apache.tapestry.valid.ValidatorException;
+
+import java.util.*;
+
+/**
+ * Abstract SelectorList implementation for rendering and handling a Selector component. This is just a basic List
+ * of items, but it requires you to implements 3 methods for retrieving an item by its key and for getting the
+ * key and display-name for an item. That way, this list can be used for any type of object.
+ */
+public abstract class SelectorList<Z> implements List<Z> {
+   private List<Z> items;
+
+   /**
+    * Constructs a new SelectorList based on the List of items you provide.
+    *
+    * @param items The list of items this SelectorList wraps around.
+    */
+   protected SelectorList(List<Z> items) {
+      this.items = items;
+   }
+
+   /**
+    * Retrieves the key to use for uniquely identifying this item in the list.
+    * This needs to be a String-value, since it will be used in either the dropdown box
+    * (invisible to end-user)
+	* or the text-area (visible to end-user).
+    *
+    * @param item The item for which to retrieve the key.
+    * @return A String holding the key for uniquely identifying the item in the list.
+    */
+   public abstract String getKeyForItem(Z item);
+
+   /**
+    * Retrieves the label to display for this component (only used in dropdown).
+    *
+    * @param item The item for which to retrieve the label.
+    * @return A String holding the label to display in the dropdown box.
+    */
+   public abstract String getLabelForItem(Z item);
+
+   /**
+    * Retrieves the item back by its key. This method will be called if there are to many items in the list
+    * to use a dropdown. You can choose wether you want to retrieve the item from the database or want to
+    * iterate over a possibly large list.
+    *
+    * @param key The key for which to retrieve the item.
+    * @return the item for the given key.
+    */
+   public abstract Z getItemByKey(String key) throws ValidatorException;
+
+   /** {@inheritDoc} */
+   public int size() {
+      return items.size();
+   }
+
+   /** {@inheritDoc} */
+   public boolean isEmpty() {
+      return items.isEmpty();
+   }
+
+   /** {@inheritDoc} */
+   public boolean contains(Object o) {
+      return items.contains(o);
+   }
+
+   /** {@inheritDoc} */
+   public Iterator<Z> iterator() {
+      return items.iterator();
+   }
+
+   /** {@inheritDoc} */
+   public Object[] toArray() {
+      return items.toArray();
+   }
+
+   /** {@inheritDoc} */
+   public <T>T[] toArray(T[] a) {
+      return items.toArray(a);
+   }
+
+   /** {@inheritDoc} */
+   public boolean add(Z o) {
+      return items.add(o);
+   }
+
+   /** {@inheritDoc} */
+   public boolean remove(Object o) {
+      return items.remove(o);
+   }
+
+   /** {@inheritDoc} */
+   public boolean containsAll(Collection<?> c) {
+      return items.containsAll(c);
+   }
+
+   /** {@inheritDoc} */
+   public boolean addAll(Collection<? extends Z> c) {
+      return items.addAll(c);
+   }
+
+   /** {@inheritDoc} */
+   public boolean addAll(int index, Collection<? extends Z> c) {
+      return items.addAll(index, c);
+   }
+
+   /** {@inheritDoc} */
+   public boolean removeAll(Collection<?> c) {
+      return items.removeAll(c);
+   }
+
+   /** {@inheritDoc} */
+   public boolean retainAll(Collection<?> c) {
+      return items.retainAll(c);
+   }
+
+   /** {@inheritDoc} */
+   public void clear() {
+      items.clear();
+   }
+
+   /** {@inheritDoc} */
+   public Z get(int index) {
+      return items.get(index);
+   }
+
+   /** {@inheritDoc} */
+   public Z set(int index, Z element) {
+      return items.set(index, element);
+   }
+
+   /** {@inheritDoc} */
+   public void add(int index, Z element) {
+      items.add(index, element);
+   }
+
+   /** {@inheritDoc} */
+   public Z remove(int index) {
+      return items.remove(index);
+   }
+
+   /** {@inheritDoc} */
+   public int indexOf(Object o) {
+      return items.indexOf(o);
+   }
+
+   /** {@inheritDoc} */
+   public int lastIndexOf(Object o) {
+      return items.lastIndexOf(o);
+   }
+
+   /** {@inheritDoc} */
+   public ListIterator<Z> listIterator() {
+      return items.listIterator();
+   }
+
+   /** {@inheritDoc} */
+   public ListIterator<Z> listIterator(int index) {
+      return items.listIterator(index);
+   }
+
+   /** {@inheritDoc} */
+   public List<Z> subList(int fromIndex, int toIndex) {
+      return items.subList(fromIndex, toIndex);
+   }
+}
+#end

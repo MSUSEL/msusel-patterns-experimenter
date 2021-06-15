@@ -1,0 +1,82 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($app.LogFramework.equals("log4j"))
+////File: ./src/web/WEB-INF/classes/log4jfinalist-${app.Name}.xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+   Logging configuration for web- and EJB-container using Log4j 1.1.3 or later
+
+   When using JBoss be sure that not to include log4.jar in war-file, since
+   JBoss is using Log4j.
+ -->
+
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
+                     debug="true">
+
+  <!-- console-appender -->
+  <appender name="console_appender" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern"
+             value="%5p %c{3} %d{ISO8601} - %m%n" />
+<!-- Other patterns:
+      <param name="ConversionPattern"
+             value="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+      <param name="ConversionPattern"
+             value="-%5p %d{HH:mm:ss,SSS} (%F@%M:%L) [%t] - %m%n" />
+      <param name="ConversionPattern"
+             value="%5p %c %d{yyyy-MM-dd HH:mm:ss} :: %m%n" />
+-->
+    </layout>
+  </appender>
+  <!-- put appender in async-wrapper to gain performance -->
+  <appender name="console_appender_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="console_appender"/>
+  </appender>
+
+   <appender name="file_appender" class="org.apache.log4j.RollingFileAppender">
+      <param name="Append" value="true" />
+      <param name="File" value="${com.finalist.logDir}/${app.Name}.log" />
+      <param name="MaxBackupIndex" value="5" />
+      <param name="MaxFileSize" value="50MB" />
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern"
+                value="%5p %c{3} %d{ISO8601} - %m%n" />
+      </layout>
+   </appender>
+   <!-- put appender in async-wrapper to gain performance -->
+   <appender name="file_appender_async" class="org.apache.log4j.AsyncAppender">
+      <appender-ref ref="file_appender" />
+   </appender>
+
+   <category name="${app.RootPackage}">
+      <priority value="debug" />
+      <appender-ref ref="file_appender_async" />
+   </category>
+   
+   <category name="org.apache.commons.beanutils">
+      <priority value="fatal" />
+      <appender-ref ref="file_appender_async" />
+      <appender-ref ref="console_appender_async" />
+   </category>
+
+</log4j:configuration>
+#end

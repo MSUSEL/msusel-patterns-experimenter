@@ -1,0 +1,85 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.matchBusinessTier("EJB"))
+////File: ${paths.EjbOutput}/${app.RootPath}/DynamicBusinessDelegateBase.java
+package ${app.RootPackage};
+
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.ejb.CreateException;
+import javax.naming.NamingException;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import ${app.RootPackage}.servicelocator.*;
+
+
+/**
+ * Base class for Dynamic Business delegates with common methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2005/06/29 20:56:25 $
+ */
+public class DynamicBusinessDelegateBase {
+
+    /**
+     * the logger.
+     */
+    private static Logger log = LogService.getLogger(DynamicBusinessDelegateBase.class);
+
+    /**
+     * Create a string with a unique method name appended with the parameter types.
+     * @param method
+     * @return
+     */
+    public String getUniqueMethodName(Method method) {
+        String name = "";
+        name = method.getName();
+        for (int i = 0; i < method.getParameterTypes().length; i++) {
+            Class theType = method.getParameterTypes()[i];
+            name += "_" + theType.getName();
+        }
+        return name;
+    }
+
+    /**
+     * Determine all methods in the class and put them in a hashmap. Use a unique method string as entry.
+     * @throws GenericBusinessException
+     */
+    public Map getMethods(Class theClass) throws GenericBusinessException {
+        Map availableMethods;
+        try {
+            // Get the methods from the class.
+            availableMethods = new HashMap();
+            Method[] methods = theClass.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                String methodName = getUniqueMethodName(methods[i]);
+                availableMethods.put(methodName,
+                        methods[i]);
+            }
+        } catch (Exception e) {
+            throw new GenericBusinessException(e);
+        }
+        return availableMethods;
+    }
+}
+#end

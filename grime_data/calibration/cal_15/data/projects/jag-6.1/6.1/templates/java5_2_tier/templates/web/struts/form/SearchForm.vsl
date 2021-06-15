@@ -1,0 +1,160 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ./src/java-web/${app.RootPath}/forms/${entityBean.Name}SearchForm.java
+package ${app.RootPackage}.forms;
+
+import java.util.Collection;
+import javax.servlet.http.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+#foreach ($session2 in $sessions)
+import ${session2.RootPackage}.I${session2.Name};
+#end
+import org.apache.struts.action.*;
+import com.finalist.Constants;
+import com.finalist.util.LabeledIdentifier;
+
+
+/**
+ * Form bean for the ${entityBean.Name.Desentensized} search page.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.8 $, $Date: 2006/02/01 07:25:19 $
+ * @struts.form name="${entityBean.Name.Desentensized}SearchForm"
+#if (${config.templateSettings.serviceTier} == "Spring")
+ *
+ * @spring.bean name="/${entityBean.Name.Desentensized}SearchForm"
+#end
+ */
+public final class ${entityBean.Name}SearchForm extends ServiceBaseForm {
+   private String queryField;
+   private String query;
+   private Collection ${entityBean.Name.Desentensized}List;
+
+
+    /**
+     * Return a list of fields that can be searched on.
+     * @return list of LabeledIdentifier objects.
+     */
+    public Collection<LabeledIdentifier> getQueryFields() {
+        java.util.ArrayList<LabeledIdentifier> list = new java.util.ArrayList<LabeledIdentifier>();
+        LabeledIdentifier bean;
+        // Currently only searching on string fields is supported:
+#foreach ($field in $entityBean.NonRelationFields)
+#set ($searchable = "true")
+#if ($field.isPrimaryKey())
+#if ($entityBean.isCompositeKey())
+## If a primary key and composite, than not searchable.
+#set ($searchable = "false")
+#end
+#end
+#if ($searchable == "true")
+        bean = new LabeledIdentifier();
+        bean.setName("${field.Name.Sentensized}");
+        bean.setId("${field.Name}");
+        list.add(bean);
+#end
+#end
+        return list;
+    }
+
+    public String getQueryField() {
+        return queryField;
+    }
+
+    public void setQueryField(String queryField) {
+        this.queryField = queryField;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+   /**
+    * Gets the list of ${entityBean.Name.Desentensized} beans, set in the {@link ${app.RootPackage}.actions.Init${entityBean.Name}SearchAction}.
+    * @return Collection
+    */
+   public Collection get${entityBean.Name}List() {
+      return ${entityBean.Name.Desentensized}List;
+   }
+
+   /**
+    * Sets the list of ${entityBean.Name.Desentensized} beans.
+    * @param ${entityBean.Name.Desentensized}List the list.
+    */
+   public void set${entityBean.Name}List(Collection ${entityBean.Name.Desentensized}List) {
+      this.${entityBean.Name.Desentensized}List = ${entityBean.Name.Desentensized}List;
+   }
+
+#foreach ($relation in $entityBean.Relations)
+   /**
+    * Retrieves the list of all ${relation.RelatedEntity.Name}, since ${entityBean.Name} has a relation with ${relation.RelatedEntity.Name}.
+    *
+    * @throws Exception exception
+    * @return a Collection of ${relation.RelatedEntity.Name} objects.
+    */
+   public Collection get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}List() throws Exception {
+#set ($count = 0)
+#foreach ($session2 in $sessions)
+#if (($count == 0) && ($session2.EntitiesAndReferences.contains(${relation.RelatedEntity})))
+      return get${session2.Name}Service().get${relation.RelatedEntity.Name}List();
+#set ($count = 1)
+## This will ensure only one service will be called.    
+#end
+#end
+   }
+
+#end
+   /**
+    * Performs server-side validation on the properties that have been set from this HTTP request,
+    * and returns an <code>ActionErrors</code> object that encapsulates any
+    * validation errors that have been found.  If no errors are found, returns
+    * <code>null</code> or an <code>ActionErrors</code> object with no
+    * recorded error messages.
+    * <p>
+    * <b>NOTE:</b> Please override this method and not the ValidatorForm 'validate'
+    * method - any errors thrown in an overwritten 'validate' method will not be handled
+    * by the GenericExceptionHandling framework.
+    *
+    * @param mapping The mapping used to select this instance
+    * @param request The servlet request we are processing
+    * @return a list with errors or <code>null</code> iIf no errors are found
+    * @throws Exception - all exceptions are handled by the GenericExceptions framework
+    * (no stack trace dumps shown to the user!)
+    */
+   public ActionErrors doValidate(ActionMapping mapping, HttpServletRequest request) throws Exception {
+      boolean noValidate = (request.getParameter(Constants.SUBMIT_NO_VALIDATION) != null);
+      return noValidate ? null : super.doValidate(mapping, request);
+   }
+
+}
+
+#end
+#end
+#end
+#end

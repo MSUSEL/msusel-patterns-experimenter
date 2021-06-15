@@ -1,0 +1,366 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+#foreach ($entity in $entities)
+////File: ${paths.EjbOutput}/${entity.RootPath}/${entity.Name}EJB.java
+package ${entity.RootPackage};
+
+import java.io.Serializable;
+import javax.ejb.*;
+import javax.persistence.*;
+import com.finalist.util.log.*;
+import com.finalist.util.ejb.UniqueIdGenerator;
+
+#foreach ($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+
+/**
+ * The ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.14 $, $Date: 2005/07/07 14:31:52 $
+ */
+@Table(name = "${entity.TableName}")
+@Entity
+public class ${entity.Name}EJB implements Serializable, ${entity.Name}If {
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}EJB.class);
+
+#foreach($relation in $entity.Relations)
+   private ${relation.RelatedEntity.Name}EJB ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+#end
+
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+   private java.util.Collection<${relation.localEntity.Name}EJB> ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List;
+#end
+#end
+#end
+   @Inject
+   private EntityManager manager;
+#if ($entity.isCompositeKey())
+
+    /**
+     * the composite primary key.
+     */
+   private ${entity.PrimaryKeyType} primaryKey;
+#end
+
+## Display the fields that are not part of relations or a composite primary key..
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+## Do nothing for primary keys...
+#else
+   private ${field.Type} ${field.Name};
+#end
+#end
+
+   /**
+    * Default constructor.
+    */
+   public ${entity.Name}EJB() {
+   }
+
+   /**
+    * Value object constructor.
+    */
+   public ${entity.Name}EJB(${entity.RootPackage}.${entity.Name}If value) {
+#foreach ($field in $entity.Fields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+   }
+
+   /**
+    * Creates a new entity bean and returns the primary key.
+    * If the primary key of the value object has been set, this key will be used.
+    * If the primary key is set to null, the UniqueId generator will be used to generate a primary key.
+    *
+    * @param value a <code>${entity.Name}If</code>
+    * @return the primary key for this ${entity.Name}
+    */
+   public ${entity.PrimaryKeyType} create(${entity.RootPackage}.${entity.Name}If value) {
+#foreach ($field in $entity.NonRelationFields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+## Make sure we set the CMR fields, in case they are not primary key fields.
+#foreach ($field in $entity.FkFields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+#foreach ($pkField in $entity.PkFields)
+#if ($pkField.HasAutoGenPrimaryKey)
+#if ($pkField.Type.equals("java.lang.Integer"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getIntegerId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Long"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getLongId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.String"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getStringId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Short"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getShortId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Byte"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getByteId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Double"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getDoubleId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#else
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#end
+      return value.getPrimaryKey();
+   }
+
+#if ($entity.isCompositeKey())
+    /**
+     * Return the composite primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     */
+   @EmbeddedId({
+#set ($seperator = "")
+#foreach ($pkField in $entity.PkFields)
+   ${seperator}@AttributeOverride(name = "${pkField.Name.Sentensized}", column = {@Column(name = "${pkField.ColumnName}")} )
+#set ($seperator = ",")
+#end
+   })
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+      return primaryKey;
+   }
+#else
+    /**
+     * Return the primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     */
+   @javax.persistence.Transient
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+        return get${entity.PrimaryKeyName.Sentensized}();
+    }
+#end
+#if ($entity.isCompositeKey())
+
+    /**
+     * Set the composite primary key.
+     *
+     * @param primaryKey the primary key
+     */
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+#else
+## There is no composite key, just one field..
+
+    /**
+     * Set the primary key.
+     *
+     * @param primaryKey the primary key
+     */
+   @javax.persistence.Transient
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+       set${entity.PrimaryKeyName.Sentensized}(primaryKey);
+    }
+#end
+#foreach ($field in $entity.NonRelationFields)
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    */
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+##
+#else
+   @Column(name = "${field.ColumnName}")
+#if ($field.isPrimaryKey())
+   @Id(generate = GeneratorType.NONE)
+#end
+#end
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+   @javax.persistence.Transient
+   public $field.Type get${field.Name.Sentensized}() {
+      if (primaryKey == null) {
+	     return null;
+      }   
+      return primaryKey.get${field.Name.Sentensized}();
+   }
+#else
+   public $field.Type get${field.Name.Sentensized}() {
+      return ${field.Name};
+   }
+#end
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+   @javax.persistence.Transient
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+	   if (primaryKey == null) {
+		   primaryKey = new ${entity.PrimaryKeyType}();
+	   }
+      primaryKey.set${field.Name.Sentensized}($field.Name);
+   }
+#else
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+      this.${field.Name} = ${field.Name};
+   }
+#end
+#end
+#foreach($relation in $entity.Relations)
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    */
+#if ($relation.isTargetMultiple())
+   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+#else
+   @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+#end
+   @JoinColumn(name = "${relation.LocalColumn}")
+   public ${relation.RelatedEntity.Name}EJB getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(){
+      return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   public void setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}EJB ${relation.RelatedEntity.Name.Desentensized}) {
+      this. ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = ${relation.RelatedEntity.Name.Desentensized};
+   }
+#end
+#foreach($relation in $entity.Relations)
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    */
+   @javax.persistence.Transient
+   public ${relation.RelatedEntity.Name}If get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}() {
+      return getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   @javax.persistence.Transient
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}If ${relation.RelatedEntity.Name.Desentensized}) {
+      setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(new ${relation.RelatedEntity.Name}EJB(${relation.RelatedEntity.Name.Desentensized}));
+   }
+#end
+#foreach($relation in $entity.Relations)
+#set ($field = ${relation.ForeignPkField})
+
+      /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    */
+   @javax.persistence.Transient
+   public $field.Type get${relation.FieldName.Sentensized}() {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} != null) {
+         return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.get${field.Name.Sentensized}();
+      } else {
+         return null;
+      }
+   }
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+   @javax.persistence.Transient
+   public void set${relation.FieldName.Sentensized}($field.Type $field.Name) {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} == null) {
+         ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = new ${relation.RelatedEntity.Name}EJB();
+      }
+      ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.set${field.Name.Sentensized}($field.Name);
+   }
+#end
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @JoinColumn(name = "${relation.LocalColumn}")
+   public java.util.Collection<${relation.localEntity.Name}EJB> get${relation.FieldName.Sentensized}${relation.localEntity.Name}List()
+   {
+      return ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List;
+   }
+
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(java.util.Collection<${relation.localEntity.Name}EJB> ${relation.localEntity.Name.Desentensized}List)
+   {
+      this.${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = ${relation.localEntity.Name.Desentensized}List;
+   }
+
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name}EJB ${relation.localEntity.Name.Desentensized}) {
+      if (${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List == null) {
+         ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = new java.util.ArrayList<${relation.localEntity.Name}EJB>();
+      }
+      ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List.add(${relation.localEntity.Name.Desentensized});
+   }
+
+#end   
+#end
+#end
+#end
+}
+#end
+#end

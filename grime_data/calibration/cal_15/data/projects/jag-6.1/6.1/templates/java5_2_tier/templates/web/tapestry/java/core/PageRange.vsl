@@ -1,0 +1,93 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp.
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/core/PageRange.java
+/*
+ *
+ */
+package ${app.RootPackage}.core;
+
+import java.io.Serializable;
+
+/**
+ * Holds information about a result page range.
+ * @author Rudie Ekkelenkamp, Finalist IT Group
+ * @version $Revision: 1.1 $, $Date: 2006/02/06 20:12:41 $
+ */
+public class PageRange implements Serializable {
+   private String pageNumber;
+   private boolean link;
+   private boolean selected;
+   private static final long serialVersionUID = 8871894880815059731L;
+
+
+   /**
+    * Getter for property 'pageNumber'.
+    * @return Value for property 'pageNumber'.
+    */
+   public String getPageNumber() {
+      return pageNumber;
+   }
+
+
+   /**
+    * Setter for property 'pageNumber'.
+    * @param pageNumber Value to set for property 'pageNumber'.
+    */
+   public void setPageNumber(String pageNumber) {
+      this.pageNumber = pageNumber;
+   }
+
+
+   /**
+    * Getter for property 'link'.
+    * @return Value for property 'link'.
+    */
+   public boolean isLink() {
+      return link;
+   }
+
+
+   /**
+    * Setter for property 'link'.
+    * @param link Value to set for property 'link'.
+    */
+   public void setLink(boolean link) {
+      this.link = link;
+   }
+
+
+   /**
+    * Getter for property 'selected'.
+    * @return Value for property 'selected'.
+    */
+   public boolean isSelected() {
+      return selected;
+   }
+
+
+   /**
+    * Setter for property 'selected'.
+    * @param selected Value to set for property 'selected'.
+    */
+   public void setSelected(boolean selected) {
+      this.selected = selected;
+   }
+}
+#end 

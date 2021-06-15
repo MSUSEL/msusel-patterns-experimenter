@@ -1,0 +1,62 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.useSecurity())
+////File: ./src/java-web/${app.RootPath}/security/CustomAuthenticationManager.java
+package ${app.RootPackage}.security;
+
+import org.acegisecurity.Authentication;
+import org.acegisecurity.AuthenticationException;
+import org.acegisecurity.AuthenticationManager;
+import org.acegisecurity.GrantedAuthorityImpl;
+import org.acegisecurity.BadCredentialsException;
+import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
+
+/**
+ * Custom Authenticator for Acegi Security. This method has to validate that the principal and user are valid. And add
+ * authorities to the user.
+ * To use this Custom Authentication manager, add or replace a bean
+ * with the name: authenticationManager to the applicationContext.xml with the class name.
+ * For example:
+ * <bean id="authenticationManager" class="${app.RootPackage}.security.CustomAuthenticationManager">
+ * </bean>
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2006/02/26 13:08:48 $
+ *
+ */
+public class CustomAuthenticationManager implements AuthenticationManager {
+   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+      // An example of a custom authentication manager.
+      // Only username/password jag/jag is allowed.
+      if (!"jag".equals(authentication.getCredentials())) {
+         throw new BadCredentialsException("bad credential");
+      }
+      if (!"jag".equals(authentication.getPrincipal())) {
+         throw new BadCredentialsException("bad principal");
+      }
+      GrantedAuthorityImpl[] authorities = new GrantedAuthorityImpl[2];
+      GrantedAuthorityImpl role1 = new GrantedAuthorityImpl("ROLE_USER");
+      GrantedAuthorityImpl role2 = new GrantedAuthorityImpl("ROLE_SUPERVISOR");
+      authorities[0] = role1;
+      authorities[1] = role2;
+      return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(),
+                                                     authorities);
+   }
+}
+#end

@@ -1,0 +1,299 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ./src/java-web/${app.RootPath}/page/List${entityBean.Name}.java
+package ${app.RootPackage}.page;
+import ${app.RootPackage}.core.*;
+import ${app.RootPackage}.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#else
+import org.springframework.orm.hibernate3.HibernateTemplate;
+#end
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+import com.finalist.util.*;
+import com.finalist.util.log.*;
+import java.util.ArrayList;
+import ${sessionBean.RootPackage}.*;
+import ${entityBean.RootPackage}.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.io.Serializable;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.annotations.Component;
+import org.apache.tapestry.form.LinkSubmit;
+import org.apache.tapestry.form.Hidden;
+
+import ${app.RootPackage}.exception.*;
+
+/**
+ * Page class for the application's List${entityBean.Name} page.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.16 $, $Date: 2006/04/29 12:53:51 $
+ */
+public abstract class List${entityBean.Name} extends ${app.Name.Sentensized}ItemListPage<${entityBean.Name}> {
+
+   private static final Logger LOG = LogService.getLogger(List${entityBean.Name}.class);
+
+   private static final String EDIT_PAGE = "Edit${entityBean.Name}";
+
+#if ($config.check("useAjax"))
+   private String[] findCompletions(String typed) {
+      HashMap<Integer, String> fieldMap = new HashMap<Integer, String>();
+      try {
+         if (typed.equals("")) {
+            return null;
+         }
+         String[] res = typed.split(",");
+         typed = res[0];
+         String field = res[1];
+#set ($count = 0)
+#foreach ($field in $entityBean.NonRelationFields)
+#set ($searchable = "true")
+#if ($field.isPrimaryKey())
+#if ($entityBean.isCompositeKey())
+## If a primary key and composite, than not searchable.
+#set ($searchable = "false")
+#end
+#end
+#if ($searchable == "true")
+#if ($field.Type != "java.lang.String")
+         // Only fields of string type are allowed.
+         fieldMap.put(${count},null);
+#else
+         fieldMap.put(${count},"${field.Name}");
+#end
+#set ($count = $count + 1)
+#end
+#end
+         String fieldName = fieldMap.get(new Integer(field));
+         if (fieldName == null) {
+            return new String[] {typed};
+         }
+         List completions = new ArrayList();
+         HashMap<String, Object> map = new HashMap<String, Object>();
+         map.put(fieldName, typed + "%");
+#if (${config.templateSettings.serviceTier} == "Spring")
+          org.springframework.context.ApplicationContext context = (org.springframework.context.ApplicationContext) getApplicationContext();
+          org.springframework.orm.hibernate3.HibernateTemplate hibernateTemplate = (org.springframework.orm.hibernate3.HibernateTemplate) context.getBean("hibernateTemplate");
+#else
+         HibernateQueryHelper hibernateTemplate = new HibernateQueryHelper();
+#end
+         List<${app.Name.Sentensized}ModelBase> result =
+            HibernateFinderHelper.findByField(hibernateTemplate, ${entityBean.Name}.class, map, false, true, null, 1, 2);
+         // Get a maximum of 2 results.
+         if (result.size() != 1) {
+            // Only complete the query if we have one exact match, otherwise return the typed query!
+            return new String[] {typed};
+         }
+         for (${app.Name.Sentensized}ModelBase u : result) {
+#foreach ($field in $entityBean.NonRelationFields)
+            if ("${field.Name}".equals(fieldName)) {
+               completions.add(((${entityBean.Name}) u).get${field.Name.Sentensized}());
+            }
+#end
+         }
+         if (completions.size() != 1) {
+            return new String[] {typed};
+         }
+         return (String[]) completions.toArray(new String[completions.size()]);
+      }
+      catch (Exception e) {
+         // In case of an error, just return the typed string.
+         return new String[] {typed};
+      }
+   }
+
+
+   /**
+    * Ajax call back to handle the query completion.
+    * @param cycle
+    */
+   public void handleCallback(IRequestCycle cycle) {
+      Object[] params = cycle.getListenerParameters();
+      if (params.length == 0) {
+         return;
+      }
+      String typed = params[0].toString();
+      String[] ret = findCompletions(typed);
+      cycle.setListenerParameters(ret);
+   }
+#end
+
+#foreach ($field in $entityBean.NonRelationFields)
+   /**
+    * Handle sorting the field.
+    * @return link submit to sort the table
+    */
+   @Component(type = "LinkSubmit", bindings = {"selected=selectedColumnField", "tag=literal:${field.Name},toggle"})
+   public abstract LinkSubmit getSort${field.Name.Sentensized}();
+
+#end
+
+   /** {@inheritDoc} */
+   public Collection<${entityBean.Name}> fetchItems() throws GenericBusinessException {
+      if (!getRequestCycle().isRewinding()) {
+         String queryString = getQuery();
+         LOG.debug("Query is: " + queryString);
+         String queryField = null;
+         if (getQueryFieldSelection() != null) {
+            queryField = getQueryFieldSelection().getId();
+         }
+         LOG.debug("Query field is: " + queryField);
+
+         // Fill a map with the query fields and with the order fields.
+         HashMap<String, Object> map = new HashMap<String, Object>();
+         LinkedHashMap<String, Boolean> orderMap = new LinkedHashMap<String, Boolean>();
+         if (queryString == null || "".equals(queryString) || queryField == null || "".equals(queryField)) {
+            map = null;
+         }
+         if (getSelectedColumnField() != null) {
+            if ("asc".equals(getSelectedDirectionField())) {
+               orderMap.put(getSelectedColumnField(), true);
+            } else {
+               orderMap.put(getSelectedColumnField() ,false);
+            }
+            LOG.debug("Ordermap contains: " + getSelectedColumnField() + " for " + getSelectedDirectionField() );
+         }
+
+         Collection ${entityBean.Name.Desentensized}List;
+#foreach ($field in $entityBean.NonRelationFields)
+         if (queryField != null && queryString !=null && queryField.equals("${field.Name}")) {
+            try {
+#if (("java.util.Date" == ${field.Type}) || ("java.sql.Date" == ${field.Type}) )
+               ${field.Type} query = new ${field.Type}(com.finalist.Constants.DATE_FORMATTER.parse(queryString).getTime());
+#else
+#if ("java.sql.Timestamp" == ${field.Type} )
+               ${field.Type} query = new ${field.Type}(com.finalist.Constants.TIMESTAMP_FORMATTER.parse(queryString).getTime());
+#else
+               ${field.Type} query = new ${field.Type}(queryString);
+#end
+#end
+               if (map != null) {
+                  map.put(queryField, query);
+               }
+            }
+            catch (Exception e) {
+               LOG.error("Error while parsing the query string", e);
+               return new java.util.ArrayList();
+            }
+         }
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+          org.springframework.context.ApplicationContext context = (org.springframework.context.ApplicationContext) getApplicationContext();
+          org.springframework.orm.hibernate3.HibernateTemplate hibernateTemplate = (org.springframework.orm.hibernate3.HibernateTemplate) context.getBean("hibernateTemplate");
+#else
+         HibernateQueryHelper hibernateTemplate = new HibernateQueryHelper();
+#end
+         resultCount = HibernateFinderHelper.findByFieldSize(hibernateTemplate, ${entityBean.Name.Sentensized}.class, map, false, true);
+         int startIndex = (getPageNumber() - 1) * _pageSize;
+         int endIndex = startIndex + _pageSize;
+         if (endIndex >= resultCount) {
+            endIndex = resultCount;
+         }
+         ${entityBean.Name.Desentensized}List = HibernateFinderHelper.findByField(hibernateTemplate, ${entityBean.Name.Sentensized}.class, map, false, true, orderMap, startIndex, endIndex);
+         return ${entityBean.Name.Desentensized}List;
+      } else {
+         // No query during rewind.
+         return null;
+      }
+   }
+
+   /** {@inheritDoc} */
+   public Serializable getPrimaryKey(${entityBean.Name} bean) {
+      return bean.getPrimaryKey();
+   }
+
+   /** {@inheritDoc} */
+   public String getEditPage() {
+      return EDIT_PAGE;
+   }
+
+    /**
+     * Listener-method that gets called when the query-button is clicked.
+     * method depending on wether the current page is in edit-mode or add-mode.
+     *
+     * @param cycle The Tapestry requestCycle.
+     */
+    public void queryClicked(IRequestCycle cycle) {
+        // Nothing to handle.
+    }
+
+   /**
+    * Listener-method that gets called when the deleteSelection-button is clicked. All selected items on the page will be
+    * deleted..
+    * @param cycle The Tapestry requestCycle.
+    */
+   public void deleteSelectionClicked(IRequestCycle cycle) {
+      try {
+         for (${entityBean.Name} item : getItems()) {
+            if (item.isSelected()) {
+               get${sessionBean.Name}Service().delete${entityBean.Name}(item.getPrimaryKey());
+               LOG.debug("Delete item with primary key: " + item.getPrimaryKey());
+            }
+         }
+      }
+      catch (Exception e) {
+         LOG.error("Error while deleting items.", e);
+      }
+   }
+
+   /**
+    * Getter for property 'queryFieldSelectionModel'.
+    * @return The value for property 'queryFieldSelectionModel'.
+    */
+   public ItemSelectionModel<LabeledIdentifier> getQueryFieldSelectionModel() {
+      if (queryFieldSelectionModel == null) {
+         ArrayList<LabeledIdentifier> items = new ArrayList<LabeledIdentifier>();
+         LabeledIdentifier li;
+#foreach ($field in $entityBean.NonRelationFields)
+#set ($searchable = "true")
+#if ($field.isPrimaryKey())
+#if ($entityBean.isCompositeKey())
+## If a primary key and composite, than not searchable.
+#set ($searchable = "false")
+#end
+#end
+#if ($searchable == "true")
+         li = new LabeledIdentifier();
+         li.setName("${field.Name.Sentensized}");
+         li.setId("${field.Name}");
+         items.add(li);
+#end
+#end
+         queryFieldSelectionModel = new ItemSelectionModel<LabeledIdentifier>(items) {
+            public String getLabelForItem(LabeledIdentifier item) {
+               return item.getName();
+            }
+         };
+      }
+      return queryFieldSelectionModel;
+   }
+
+}
+#end
+#end
+#end
+#end

@@ -1,0 +1,298 @@
+<%@page import='com.ivata.groupware.business.calendar.event.meeting.MeetingDO'
+        %>
+<%@page import='com.ivata.groupware.business.calendar.struts.IndexFormConstants'
+        %>
+<%@page import='org.apache.struts.Globals'
+        %>
+
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: toolbar.jspf,v 1.4 2005/04/30 13:04:13 colinmacleod Exp $
+//
+// This is used by index.jsp. (It was used in more pages, but was removed in
+// the change to pop-up windows.)</p>
+//
+// Since: ivata groupware 0.9 (2002-08-12)
+// Author: Jan Boros
+// $Revision: 1.4 $
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: toolbar.jspf,v $
+// Revision 1.4  2005/04/30 13:04:13  colinmacleod
+// Fixes reverting id type from String to Integer.
+//
+// Revision 1.3  2005/04/22 14:33:55  colinmacleod
+// Removed theme include (it is in index).
+//
+// Revision 1.2  2005/04/09 17:19:18  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:47:57  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.7  2004/12/27 14:52:00  colinmacleod
+// Removed unused references to RequestUtils.
+// Updated other references to Struts 1.2.4 class TagUtils.
+//
+// Revision 1.6  2004/11/03 15:49:51  colinmacleod
+// Changed todo comments to TODO: all caps.
+//
+// Revision 1.5  2004/07/14 22:50:22  colinmacleod
+// Replaced bean:define with extended igw:bean.
+//
+// Revision 1.4  2004/07/14 20:59:52  colinmacleod
+// Changed all occurrences of jsp:useBean to igw:bean (better tomcat compatibility).
+//
+// Revision 1.3  2004/07/13 19:42:15  colinmacleod
+// Moved project to POJOs from EJBs.
+// Applied PicoContainer to services layer (replacing session EJBs).
+// Applied Hibernate to persistence layer (replacing entity EJBs).
+//
+// Revision 1.2  2004/03/21 21:16:22  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 21:15:40  colinmacleod
+// Moved core files to core subproject
+//
+// Revision 1.2  2004/02/12 21:46:04  colinmacleod
+// Commented out meeting in toolbar.
+//
+// Revision 1.1.1.1  2004/01/27 20:58:24  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.3  2003/10/28 13:10:23  jano
+// commiting calendar,
+// still fixing compile and building openPortal project
+//
+// Revision 1.2  2003/10/15 13:57:23  colin
+// fixing for XDoclet
+//
+// Revision 1.14  2003/04/01 18:44:58  colin
+// removed tags.jsp - jetty doesnt like it included twice
+//
+// Revision 1.13  2003/04/01 18:08:35  colin
+// changed hasScrollbars to hasScrollBars
+//
+// Revision 1.12  2003/02/25 07:30:03  colin
+// restructured java file paths
+//
+// Revision 1.11  2003/02/18 13:15:04  colin
+// reverted to single quotes for popups
+//
+// Revision 1.10  2003/02/18 10:48:53  colin
+// converted popUp lines to using " instead of '
+        //
+// Revision 1.9  2003/02/13 08:45:25  colin
+// conversion to Struts/popups
+//
+// Revision 1.8  2003/01/27 07:22:54  colin
+// updated copyright notice
+//
+// Revision 1.7  2003/01/23 16:52:36  peter
+// links and forms changed to sslext, checkLogin added
+//
+// Revision 1.6  2002/11/25 08:54:49  peter
+// internationalisation
+//
+// Revision 1.5  2002/09/23 13:22:21  colin
+// Improved tooltip values
+//
+// Revision 1.4  2002/09/19 14:23:21  jano
+// new attribute TITLE is in toolBarButtonTag
+//
+// Revision 1.3  2002/08/27 08:44:09  colin
+// split tags and themes into two separate includes
+//
+// Revision 1.2  2002/08/13 09:16:35  jano
+// change algorimtus of including views and mask
+//
+--%>
+
+<imutil:map id='eventParams'>
+  <imutil:mapEntry name='clear'
+    value='1'/>
+</imutil:map>
+<igw:bean id='eventPopUp'
+        scope='page'
+        type='com.ivata.mask.web.javascript.JavaScriptWindow'/>
+<jsp:setProperty name='eventPopUp'
+        property='windowName'
+        value='eventPopUp'/>
+<jsp:setProperty name='eventPopUp'
+        property='frameName'
+        value='ivataEvent'/>
+<jsp:setProperty name='eventPopUp'
+        property='page'
+        value='/calendar/event.action'/>
+<jsp:setProperty name='eventPopUp'
+        property='paramsName'
+        value='eventParams'/>
+<jsp:setProperty name='eventPopUp'
+        property='pageContext'
+        value='<%=pageContext%>'/>
+<jsp:setProperty name='eventPopUp'
+        property='height'
+        value='520'/>
+<jsp:setProperty name='eventPopUp'
+        property='width'
+        value='550'/>
+<jsp:setProperty name='eventPopUp'
+        property='hasScrollBars'
+        value='no'/>
+
+<imtheme:toolBar>
+    <imutil:mapEntry mapName='eventParams'
+        name='type'
+        value='event'/>
+    <imtheme:toolBarButton
+        javaScript='<%=eventPopUp.toString()%>'
+        image='newevent'
+        bundle='calendar'
+        titleKey='toolbar.newEvent.title'/>
+<%--
+    <imutil:mapEntry mapName='eventParams'
+        name='type'
+        value='publicHoliday'/>
+    <imtheme:toolBarButton javaScript='<%=eventPopUp.toString()%>'
+        image='newpublicholiday'
+        bundle='calendar'
+        titleKey='toolbar.newPublicHoliday.title'/>
+    <imutil:mapEntry mapName='eventParams'
+        name='type'
+        value='meeting'/>
+    <imtheme:toolBarButton javaScript='<%=eventPopUp.toString()%>'
+         image='newmeeting'
+        bundle='calendar'
+        titleKey='toolbar.newMeeting.title'/>
+--%>
+    <imtheme:toolBarSpacer/>
+
+    <imutil:map id='viewParams'>
+      <imutil:mapEntry name='today'
+        value='true'/>
+    </imutil:map>
+    <imutil:mapEntry
+        mapName='viewParams'
+        name='view'
+        value='<%=calendarIndexForm.getView().toString()%>'/>
+    <imtheme:toolBarButton
+        page='/calendar/index.action'
+        paramsName='viewParams'
+        image='today'
+        bundle='calendar'
+        titleKey='toolbar.today.title'/>
+
+    <imutil:mapClear mapName='viewParams'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=calendarIndexForm.getView().toString()%>'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='previous'
+        value='true'/>
+    <imtheme:toolBarButton
+        page='/calendar/index.action'
+        paramsName='viewParams'
+        image='previous'
+        bundle='calendar'
+        titleKey='toolbar.previous.title'/>
+    <imutil:mapClear mapName='viewParams'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=calendarIndexForm.getView().toString()%>'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='next'
+        value='true'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='next'
+        bundle='calendar'
+        titleKey='toolbar.next.title'/>
+    <imtheme:toolBarSpacer/>
+<%-- TODO: implement new list view using list control
+    <imutil:mapClear mapName='viewParams'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=calendarIndexForm.getView().toString()%>'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='list'
+        value='true'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='list'
+        bundle='calendar'
+        titleKey='toolbar.weekList.title'/>
+--%>
+    <imutil:mapClear mapName='viewParams'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=IndexFormConstants.VIEW_DAY.toString()%>'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='day'
+        bundle='calendar'
+        titleKey='toolbar.dayView.title'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=IndexFormConstants.VIEW_WORK_WEEK.toString()%>'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='working_week'
+        bundle='calendar'
+        titleKey='toolbar.workweekView.title'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=IndexFormConstants.VIEW_WEEK.toString()%>'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='week'
+        bundle='calendar'
+        titleKey='toolbar.weekView.title'/>
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=IndexFormConstants.VIEW_MONTH.toString()%>'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='month'
+        bundle='calendar'
+        titleKey='toolbar.monthView.title'/>
+<%-- TODO: implement year view
+    <imutil:mapEntry mapName='viewParams'
+        name='view'
+        value='<%=IndexFormConstants.VIEW_YEAR.toString()%>'/>
+    <imtheme:toolBarButton page='/calendar/index.action'
+        paramsName='viewParams'
+        image='list'
+        bundle='calendar'
+        titleKey='toolbar.yearView.title'/>
+--%>
+</imtheme:toolBar>

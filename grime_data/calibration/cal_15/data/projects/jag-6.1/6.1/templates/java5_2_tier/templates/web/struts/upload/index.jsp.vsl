@@ -1,0 +1,43 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+////File: ${paths.JspOutput}/upload/index.jsp
+<%@ include file="../inc/header.jsp" %>
+#if (${config.templateSettings.serviceTier} == "Spring")
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="org.springframework.web.context.WebApplicationContext"%>
+<%@ page import="org.springframework.orm.hibernate3.HibernateTemplate"%>
+#else
+<%@ page import="${app.RootPackage}.HibernateQueryHelper" %>
+#end
+<%@ page import="${app.RootPackage}.entity.upload.FileUpload" %>
+<%@ page import="org.hibernate.Query" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Iterator"%>
+<div class="exportlinks">&nbsp;<a href="../index.jsp"><strong><bean:message key="entity.index"/></strong></a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;<a href="uploadFile.jsp"><strong>Upload new file</strong></a>
+</div>
+<%
+#if (${config.templateSettings.serviceTier} == "Spring")
+    WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+    HibernateTemplate hibernateTemplate = (HibernateTemplate) context.getBean("hibernateTemplate");
+    List result = hibernateTemplate.find("from FileUpload ");
+#else
+    HibernateQueryHelper helper = new HibernateQueryHelper();
+    Query q = helper.createQuery("from FileUpload ");
+    List result = q.list();
+#end
+    request.setAttribute("test", result); %>
+
+
+<display:table name="test" export="true" sort="list" pagesize="10">
+    <display:column property="filename" group="1" sortable="true" headerClass="sortable" href="DownloadFile.do"
+                    paramId="id" paramProperty="id"/>
+    <display:column property="filetype" group="2" sortable="true" headerClass="sortable" href="DownloadFile.do"
+                    paramId="id" paramProperty="id"/>
+    <display:column property="size" group="3" sortable="true" headerClass="sortable" href="DownloadFile.do" paramId="id"
+                    paramProperty="id"/>
+</display:table>
+
+<%@ include file="../inc/footer.jsp" %>
+#end
+#end

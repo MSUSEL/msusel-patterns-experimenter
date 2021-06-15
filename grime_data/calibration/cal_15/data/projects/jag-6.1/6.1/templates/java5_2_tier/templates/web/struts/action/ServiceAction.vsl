@@ -1,0 +1,84 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/java-web/${app.RootPath}/actions/ServiceAction.java
+
+package ${app.RootPackage}.actions;
+
+import com.finalist.util.genelv.struts.GenericAction;
+import java.text.SimpleDateFormat;
+import com.finalist.Constants;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import com.finalist.util.genelv.struts.GenericForm;
+#foreach($sessionBean in $sessions)
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+#end
+
+/**
+ * Base action that has access to the service methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2006/01/20 13:10:17 $
+ */
+public abstract class ServiceAction extends GenericAction {
+
+   
+   protected static final SimpleDateFormat TIMESTAMP_FORMATTER =
+         new SimpleDateFormat(Constants.TIMESTAMP_DISPLAY_FORMAT);
+
+   protected static final SimpleDateFormat DATE_FORMATTER =
+         new SimpleDateFormat(Constants.DATE_DISPLAY_FORMAT);
+
+#foreach ($session2 in $sessions)
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+    /**
+    * Get the service interface.
+    * @return I${session2.Name} interface
+    */
+    public static I${session2.Name} get${session2.Name}Service() {
+    try {
+        return (I${session2.Name}) ServiceLocator.getService(ServiceLocator.${session2.UpperCaseName}_SERVICE);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+#else
+    private  I${session2.Name.Sentensized}  ${session2.Name.Desentensized}Service;
+
+    /**
+    * Get the service interface.
+    * @return I${session2.Name.Sentensized} interface
+    *
+    * @spring.property ref="${session2.Name.Sentensized}"
+    */
+    public I${session2.Name.Sentensized} get${session2.Name.Sentensized}Service() {
+        return ${session2.Name.Desentensized}Service;
+    }
+   
+    public void set${session2.Name.Sentensized}Service(I${session2.Name.Sentensized} ${session2.Name.Desentensized}Service) {
+        this.${session2.Name.Desentensized}Service =${session2.Name.Desentensized}Service;
+    }
+
+#end
+#end
+}
+
+#end

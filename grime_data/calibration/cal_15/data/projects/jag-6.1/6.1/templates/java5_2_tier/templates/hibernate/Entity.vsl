@@ -1,0 +1,488 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.matchBusinessTier("Hibernate"))
+#foreach ($entity in $entities)
+#if ("false" == $entity.getIsAssociationEntity())
+////File: ./src/java-web/${entity.RootPath}/${entity.Name}.java
+package ${entity.RootPackage};
+
+import java.io.Serializable;
+import com.finalist.util.log.*;
+
+#foreach ($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+import javax.persistence.*;
+import ${app.RootPackage}.*;
+
+/**
+ * The ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.23 $, $Date: 2006/05/19 20:42:48 $
+ *
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="${entity.name}"
+#end
+ */
+@Entity
+#if (${entity.isSequenceEntity()})
+@javax.persistence.SequenceGenerator(name="${entity.TableName}_seq",sequenceName="${entity.TableName}_sequence")
+#end
+@Table(name = "${entity.TableName}")
+public class ${entity.Name} extends ${app.Name.Sentensized}ModelBase implements Serializable {
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}.class);
+
+#foreach($relation in $entity.Relations)
+   private ${relation.RelatedEntity.Name} ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+#end
+
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+   private java.util.Collection<${relation.localEntity.Name}> ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = new java.util.ArrayList<${relation.localEntity.Name}>();
+#else
+   private ${relation.localEntity.Name} ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized};
+#end
+#end
+#end
+#if ($entity.isCompositeKey())
+
+    /**
+     * the composite primary key.
+     */
+   private ${entity.PrimaryKeyType} primaryKey;
+#end
+
+## Display the fields that are not part of relations or a composite primary key..
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+## Do nothing for primary keys...
+#else
+   private ${field.Type} ${field.Name};
+#end
+#end
+
+   /**
+    * Default constructor.
+    */
+   public ${entity.Name}() {
+   }
+
+   /**
+    * Value object constructor.
+    */
+   public ${entity.Name}(${entity.RootPackage}.${entity.Name} value) {
+#foreach ($field in $entity.Fields)
+      if (value != null) {
+         set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+      }
+#end
+   }
+
+#if ($entity.isCompositeKey())
+    /**
+     * Return the composite primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     *
+     */
+   @Id
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+      return primaryKey;
+   }
+#else
+    /**
+     * Return the primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     */
+   @javax.persistence.Transient
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+        return get${entity.PrimaryKeyName.Sentensized}();
+    }
+#end
+#if ($entity.isCompositeKey())
+
+    /**
+     * Set the composite primary key.
+     *
+     * @param primaryKey the primary key
+     */
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+#else
+## There is no composite key, just one field..
+
+    /**
+     * Set the primary key.
+     *
+     * @param primaryKey the primary key
+     */
+   @javax.persistence.Transient
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+       set${entity.PrimaryKeyName.Sentensized}(primaryKey);
+    }
+#end
+#foreach ($field in $entity.NonRelationFields)
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+    */
+#else
+    */
+   @Column(name = "${field.ColumnName}" #if (${field.isRequired()}), nullable = false#end #if (${field.Size}), length=${field.Size} #end)
+#if ($field.isPrimaryKey())
+#if ($field.HasAutoGenPrimaryKey)
+//  For a more generic generator, chose AUTO.
+#if  ($field.isSequenceField())
+   @Id @GeneratedValue(strategy=javax.persistence.GenerationType.SEQUENCE, generator="${entity.TableName}_seq")
+#else
+   @Id @GeneratedValue(strategy=javax.persistence.GenerationType.AUTO)
+#end
+#else
+   @Id
+#end
+#end
+#end
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+   @javax.persistence.Transient
+   public $field.Type get${field.Name.Sentensized}() {
+      if (primaryKey == null) {
+	     return null;
+      }   
+      return primaryKey.get${field.Name.Sentensized}();
+   }
+#else
+   public $field.Type get${field.Name.Sentensized}() {
+      return ${field.Name};
+   }
+#end
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+   @javax.persistence.Transient
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+	   if (primaryKey == null) {
+		   primaryKey = new ${entity.PrimaryKeyType}();
+	   }
+      primaryKey.set${field.Name.Sentensized}($field.Name);
+   }
+#else
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+      this.${field.Name} = ${field.Name};
+   }
+#end
+#end
+#foreach($relation in $entity.Relations)
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    */
+#if ($relation.isTargetMultiple())
+   @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+#else
+   @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+#end
+   @JoinColumn(name = "${relation.LocalColumn}")    
+## We use Relation in the method name because hibernate needs concrete classes, no interfaces.
+   public ${relation.RelatedEntity.Name} getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(){
+      return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+   }
+    
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    */
+   @javax.persistence.Transient
+   public ${relation.RelatedEntity.Name} get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(){
+      return getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   @javax.persistence.Transient
+   public void setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name} ${relation.RelatedEntity.Name.Desentensized}) {
+      this.${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = ${relation.RelatedEntity.Name.Desentensized};
+   }
+   
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   @javax.persistence.Transient
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name} ${relation.RelatedEntity.Name.Desentensized}) {
+      setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(new ${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name.Desentensized}));
+   }
+   
+#end
+
+##
+## Facade for the relations that point to this entity..
+## These are the entities on the "other" side.
+## Here we have to check if the relations are bidirectional.
+##
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+#if ($relation.isTargetMultiple())
+## this is a bidirectional one-to-many relation
+
+   /**
+    * Add the related ${relation.localEntity.Name} to this one-to-many relation.
+    *
+    * @param ${relation.localEntity.Name.Desentensized} object to be added.
+    */
+    
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized}) {
+      ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List.add(${relation.localEntity.Name.Desentensized});
+   }
+
+   /**
+    * Get a list of related ${relation.localEntity.Name} objects of the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @return Collection of ${relation.localEntity.Name} objects.
+    *
+    */
+   @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "relation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}")
+   @JoinColumn(name = "${relation.LocalColumn}")    
+   public java.util.Collection<${relation.localEntity.Name.Sentensized}> get${relation.FieldName.Sentensized}${relation.localEntity.Name}List() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List;
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name} related objects to the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(java.util.Collection<${relation.localEntity.Name.Sentensized}> ${relation.localEntity.Name.Desentensized}List) throws ${app.RootPackage}.exception.GenericBusinessException {
+		this.${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = ${relation.localEntity.Name.Desentensized}List;
+   }
+
+##
+#else
+## This is a bidirectional one-to-one relation
+   /**
+    * Get the related ${relation.localEntity.Name}.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return ${relation.localEntity.Name} object.
+    *
+    */
+   @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "${relation.FieldName}")
+   public ${relation.localEntity.Name} getRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized};
+   }
+   
+   /**
+    * Get the related ${relation.localEntity.Name}.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name} object.
+    */
+   public ${relation.localEntity.Name} get${relation.FieldName.Sentensized}${relation.localEntity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return getRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}();
+   }
+
+   /**
+    * Set a ${relation.localEntity.Name} related objects to the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void setRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+		this.${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized} = ${relation.localEntity.Name.Desentensized};
+   }
+   
+   /**
+    * Set a ${relation.localEntity.Name} related objects to the ${entity.Name} object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name} ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+
+      ${relation.localEntity.Name} data = ${relation.localEntity.Name.Desentensized};
+      setRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}(data);
+   }
+
+#end
+#end
+#end
+##
+##
+##       ManyToMany support (bidirectional).
+##
+##
+#foreach($relation in $entity.getEntitiesAssocationRelations())
+## this is a many-to-many relation
+## This relations is one of the many-to-one relations in the assocation entity.
+## If the current entity is in the first entiy
+#set ($count=1)
+#foreach($rel in $relation.localEntity.getRelations())
+## We'll make the first entity the managing entity.
+#if ($rel.relatedEntity.name != $entity.name)
+
+   private java.util.Collection<${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name}> ${rel.relatedEntity.name.Desentensized}List;
+
+   public void set${rel.relatedEntity.name}List(java.util.Collection<${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name}> ${rel.relatedEntity.name.Desentensized}List) {
+     this.${rel.relatedEntity.name.Desentensized}List = ${rel.relatedEntity.name.Desentensized}List;
+   }
+
+#if ($count == 2)
+#set ($joinColumn = "")
+#set ($inverseJoinColumn = "")
+#foreach($f in $relation.localEntity.Fields)
+#if ($joinColumn == "")
+#set ($joinColumn = $f.ColumnName)
+#else
+#set ($inverseJoinColumn = $f.ColumnName)
+#end
+#end
+## This is the managing entity.
+   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+   @JoinTable(name = "$relation.localEntity.TableName",joinColumns = {@JoinColumn(name = "$joinColumn", nullable = false)},inverseJoinColumns = @JoinColumn(name = "$inverseJoinColumn", nullable = false))
+#else
+##This is the non-managing entity
+   @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy="${entity.name.Sentensized}List",targetEntity=${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name}.class)
+#end
+   public java.util.Collection<${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name}> get${rel.relatedEntity.name}List() {
+      return ${rel.relatedEntity.name.Desentensized}List;
+   }
+
+   /**
+    * Add a relation from this entity to the ${rel.relatedEntity.name}.
+    * @param ${rel.relatedEntity.name.Desentensized} the ${rel.relatedEntity.name} relation to add.
+    */
+   public void add${rel.relatedEntity.name}Relation(${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name} ${rel.relatedEntity.name.Desentensized}) {
+      if (${rel.relatedEntity.name.Desentensized} == null) {
+         return;
+      }
+      get${rel.relatedEntity.name}List().add(${rel.relatedEntity.name.Desentensized});
+      ${rel.relatedEntity.name.Desentensized}.get${entity.name}List().add(this);
+   }
+
+   /**
+    * Delete a relation from this entity to the ${rel.relatedEntity.name}.
+    * @param ${rel.relatedEntity.name.Desentensized} the ${rel.relatedEntity.name} relation to delete
+    */
+   public void delete${rel.relatedEntity.name}Relation(${rel.relatedEntity.rootPackage}.${rel.relatedEntity.name} ${rel.relatedEntity.name.Desentensized}) {
+      if (${rel.relatedEntity.name.Desentensized} == null) {
+         return;
+      }
+      if (get${rel.relatedEntity.name}List().contains(${rel.relatedEntity.name.Desentensized})) {
+         get${rel.relatedEntity.name}List().remove(${rel.relatedEntity.name.Desentensized});
+         if (${rel.relatedEntity.name.Desentensized}.get${entity.name}List().contains(this)) {
+            ${rel.relatedEntity.name.Desentensized}.get${entity.name}List().remove(this);
+         }
+      }
+   }
+
+#end
+#set ($count = $count + 1)
+#end
+#end
+
+#foreach($relation in $entity.Relations)
+#set ($field = ${relation.ForeignPkField})
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    */
+   @javax.persistence.Transient
+   public $field.Type get${relation.FieldName.Sentensized}() {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} != null) {
+         return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.get${field.Name.Sentensized}();
+      } else {
+         return null;
+      }
+   }
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+   @javax.persistence.Transient
+   public void set${relation.FieldName.Sentensized}($field.Type $field.Name) {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} == null) {
+        ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = new ${relation.RelatedEntity.Name}();
+      }
+      ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.set${field.Name.Sentensized}($field.Name);
+   }
+#end
+
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+
+    /**
+     * Used by the display tag library for rendering a checkbox in the list.
+     * @return String with a HTML checkbox.
+     */
+    @Transient
+    public String getCheckbox() {
+        String checkBox = "<input type=\"checkbox\" name=\"checkbox";
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+        checkBox += "_"+ get${field.Name.Sentensized}();
+#end
+#end
+        checkBox += "\"/>";
+        return checkBox;
+    }
+
+#end
+
+}
+#end
+#end
+#end

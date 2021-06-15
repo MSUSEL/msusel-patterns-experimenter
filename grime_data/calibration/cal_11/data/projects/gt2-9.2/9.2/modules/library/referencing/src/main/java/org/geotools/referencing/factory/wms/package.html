@@ -1,0 +1,56 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+  <HEAD>
+    <TITLE>package org.geotools.referencing.factory.wms</TITLE>
+  </HEAD>
+  <BODY>
+  Provides {@linkplain org.opengis.referencing.crs.CoordinateReferenceSystem
+  coordinate reference systems} specified in the <CITE>Web Map Service</CITE>
+  specification (ISO 19128). This include:
+  <P>
+  <UL>
+    <LI>{@code CRS} space</LI>
+    <LI>{@code AUTO2} space: <CITE>automatic projections</CITE> (dynamic projections)
+        based on code and location:
+        <UL>
+          <LI>{@code AUTO2} projection codes are in the range 42000-42499</LI>
+          <LI><var>lon0</var> and <var>lat0</var> are central point of the projection</LI>
+          <LI>The <var>lon0</var>/<var>lat0</var> are provided by the SRS parameter of the map request.</LI>
+        </UL>
+    </LI>
+  </UL>
+  <P>
+  Those CRS are defined in Annex B (<CITE>CRS definitions</CITE>) of
+  ISO 19128 (<CITE>Web Map Service Implementation Specification</CITE>).
+  </P>
+  </BODY>
+</HTML>

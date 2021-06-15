@@ -1,0 +1,19 @@
+#if ($config.check("useJasper"))
+////File: ./src/java-web/${app.RootPath}/reports/BarTableModel.java
+package ${app.RootPackage}.reports;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+/**
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2006/03/17 19:01:11 $
+ */
+public class BarTableModel extends ReportBaseTableModel {
+
+    public BarTableModel() {
+        columnNames = new String[]{""};
+        result = Arrays.asList("");
+    }
+}
+#end

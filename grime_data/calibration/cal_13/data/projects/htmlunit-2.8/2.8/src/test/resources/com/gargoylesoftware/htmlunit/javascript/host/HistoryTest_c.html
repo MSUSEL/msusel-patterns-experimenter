@@ -1,0 +1,47 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html><body>
+<a name='a' href='HistoryTest_a.html'>a</a><br>
+<a name='x' href='#x'>x</a><br>
+<a name='back' href='' onclick='history.back();return false;'>back</a><br>
+<a name='forward' href='' onclick='history.forward();return false;'>forward</a><br>
+<a name='minusTwo' href='' onclick='history.go(-2);return false;'>go(-2)</a><br>
+<a name='minusOne' href='' onclick='history.go(-1);return false;'>go(-1)</a><br>
+<a name='zero' href='' onclick='history.go(0);return false;'>go(0)</a><br>
+<a name='plusOne' href='' onclick='history.go(+1);return false;'>go(+1)</a><br>
+<a name='plusTwo' href='' onclick='history.go(+2);return false;'>go(+2)</a><br>
+<a name='length' href='' onclick='alert(history.length);return false;'>length</a><br>
+<a name='current' href='' onclick='try{alert(history.current);}catch(e){alert("error");}return false;'>current</a><br>
+<a name='next' href='' onclick='try{alert(history.next);}catch(e){alert("error");}return false;'>next</a><br>
+<a name='previous' href='' onclick='try{alert(history.previous);}catch(e){alert("error");}return false;'>previous</a><br>
+<a name='itemZero' href='' onclick='try{if(history.item)alert(history.item(0));}catch(e){alert("error");}return false;'>item zero</a><br>
+<a name='hasNegativeOne' href='' onclick='alert("-1" in history);alert(-1 in history);return false;'>has negative one</a><br>
+<a name='hasZero' href='' onclick='alert("0" in history);alert(0 in history);return false;'>has zero</a><br>
+<a name='hasPositiveOne' href='' onclick='alert("1" in history);alert(1 in history);return false;'>has positive one</a><br>
+</body></html>

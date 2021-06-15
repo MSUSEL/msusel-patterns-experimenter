@@ -1,0 +1,48 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ${paths.JspOutput}/exception/stack_trace_popup.jsp
+<%@ include file="../inc/init.jsp" %>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Application Stack Trace</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="<%= request.getContextPath()%>/css/screen.css" type="text/css" media="screen, print" />
+</head>
+
+<body onload="window.focus()">
+<div id="header">
+	<h1>Stack Trace</h1>
+</div>
+<div id="body">
+<span class="pagebanner">The stack trace of the error.</span>
+	<table>
+	<tr class="odd">
+	   <td colspan="2"><bean:write name="<%=ExceptionConstants.EXCEPTION_STACK_TRACE%>"/></td>
+	</tr>
+	<tr class="even">
+	   <td align="left" >&nbsp;<a href="mailto:error@somedomain.com?subject=stacktrace&body=<bean:write name="<%=ExceptionConstants.EXCEPTION_STACK_TRACE%>"/>">mail error</a>&nbsp;</td>
+	   <td align="right"><hr><a href="javascript:window.print()">print</a>&nbsp;|&nbsp;<a href="javascript:window.close()">close</a></td>
+	</tr>
+    </table>
+<%@ include file="../inc/footer.jsp" %>
+#end

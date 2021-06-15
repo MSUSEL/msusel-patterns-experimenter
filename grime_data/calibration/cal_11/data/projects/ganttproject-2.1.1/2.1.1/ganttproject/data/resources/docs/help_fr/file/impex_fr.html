@@ -1,0 +1,132 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Importation/Exportation</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Importation/Exportation</h3>
+
+<b color="red">ATTENTION</b>&nbsp;: Les fonctionnalit� d'importation et d'exportation sont actuellement
+remani�es. Les informations ci-dessous sont sujettes � changements dans les prochaines versions de
+GanttProject.
+
+<h4>Importation</h4>
+GanttProject vous permet d'importer des projets provenant de&nbsp;:
+<ul>
+	<li>GanttProject&nbsp;;</li>
+	<li>Microsoft&reg; Office Project.</li>
+</ul>
+<p>Vous pouvez �galement importer des listes des t�ches provenant de fichier texte (ASCII).
+</p>
+
+<h5>Importation d'un projet de GanttProject</h5>
+<ul>
+	<li>cliquez sur le menu <b>Fichier</b>, puis <b>Importer</b> ou cliquez sur le bouton <b>Importer</b>
+	<img src="../images/import_16.gif">&nbsp;;</li>
+	<li>choisissez l'importeur GanttProject et validez&nbsp;;</li>
+	<li>s�lectionnez le fichier GanttProject que vous voulez importer&nbsp;;</li>
+	<li>lors de l'importation, vous pouvez choisir d'ajouter les t�ches au projet existant ou de supprimer le
+	projet existant.</li>
+</ul>
+<h5>Importation d'un projet de Microsoft&reg; Office Project</h5>
+<ul>
+	<li>cliquez sur le menu <b>Fichier</b>, puis <b>Importer</b> ou cliquez sur le bouton <b>Importer</b>
+	<img src="../images/import_16.gif">&nbsp;;</li>
+	<li>choisissez l'importeur Microsoft&reg; Office Project et validez&nbsp;;</li>
+	<li>s�lectionnez le fichier Microsoft&reg; Office Project que vous voulez importer (GanttProject
+	sait importer les fichiers MPX (Microsoft Project Exchange), MPP (Microsoft Project) et 
+	MSPDI (Microsoft Project Data Interchange)&nbsp;;</li>
+	<li>lors de l'importation, vous pouvez choisir d'ajouter les t�ches au projet existant ou de supprimer le
+	projet existant.</li>
+</ul>
+<h5>Importation d'une liste de t�ches provenant d'un fichier texte</h5>
+Le formalisme des fichiers textes est extr�mement simple&nbsp;: une ligne correspond au nom d'une t�che. 
+Lors de la lecture du fichier, GanttProject va donc cr�er une t�che par ligne du fichier, le nom de la
+t�che cr��e sera exactement celle de la ligne lue.
+<ul>
+	<li>cliquez sur le menu <b>Fichier</b>, puis <b>Importer</b> ou cliquez sur le bouton <b>Importer</b>
+	<img src="../images/import_16.gif">&nbsp;;</li>
+	<li>choisissez l'importeur de fichiers texte et validez&nbsp;;</li>
+	<li>s�lectionnez le fichier texte contenant les noms des t�ches que vous voulez importer&nbsp;;</li>
+	<li>lors de l'importation, vous pouvez choisir d'ajouter les t�ches au projet existant ou de supprimer le
+	projet existant.</li>
+</ul>
+
+<h4>Exportation</h4>
+GanttProject vous permet d'exporter les projets en diff�rent format&nbsp;:
+<ul>
+	<li>PDF (<em>Portable Document Format</em>)&nbsp;;</li>
+	<li>HTML (<em>HyperText Markup Language</em>)&nbsp;;</li>
+	<li>PNG (<em>Portable Network Graphics</em>);</li>
+	<li>fichiers Microsoft&reg; Office Project.</li> 
+</ul>
+
+<b>N.B.</b>&nbsp;: les exportations sont en train d'�tre pluginis�es, l'acc�s � ces fonctionnalit�s
+n'est pas stable, c'est pourquoi certaines sections suivantes sont vides pour l'instant.
+<h5>Exportation PDF</h5>
+En cours de modification...
+<ul>
+</ul>
+
+<h5>Exportation HTML</h5>
+En cours de modification...
+<ul>
+</ul>
+
+<h5>Exportation PNG</h5>
+En cours de modification...
+<ul>
+</ul>
+
+<h5>Exportation en fichiers Microsoft&reg; Office Project</h5>
+Cette fonctionnalit� n'est disponible que si la version de GanttProject dont
+vous disposez contient le plugin d'exportation et d'importation MS-Project.
+
+<ul>
+	<li>cliquez sur le menu <b>Fichier</b>, puis <b>Exporter</b> ou cliquez sur le bouton <b>Exporter</b>
+	<img src="../images/export_16.gif">&nbsp;;</li>
+	<li>la fen�tre de choix d'exportation s'affiche&nbsp;;</li>
+	<li>choisissez le format d'exportation, <b>MPX</b> ou <b>MSPDI</b> et validez;</li>
+	<li>choisissez l'endroit o� le fichier sera export� et validez.</li>
+</ul>
+<center><img src="../images/exportChooserMS.png" align="middle"></center>
+<b>N.B.</b>
+<ul>
+	<li>le format <b>MPX</b> se lit avec toutes les versions de Microsoft&reg; Project et �crit par toute les versions jusqu'� Microsoft Project 98&nbsp;;</li>
+	<li>le format <b>MSPDI</b> est le format XML de Microsoft&reg; pour stocker des donn�es de projet. Microsoft&reg; Office Project 2002 et Microsoft&reg; Office Project 2003 peuvent lire et �crire des fichiers MSPDI.
+</ul>
+
+
+
+</body>
+</html>

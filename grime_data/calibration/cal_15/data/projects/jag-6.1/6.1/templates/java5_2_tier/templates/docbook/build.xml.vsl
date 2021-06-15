@@ -1,0 +1,73 @@
+////File: doc/build.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="generate.docbook" name="Docbook reports">
+
+    <property name="docbook.dir" value="docbook"/>
+    <property name="docbook.dir.html" value="html"/>
+    <property name="docbook.dir.pdf" value="pdf"/>
+    <property name="docbook.dir.css" value="${docbook.dir}/css"/>
+    <property name="docbook.images" value="${docbook.dir}/images"/>
+    <property name="docbook.xsl.version" value="1.64.1"/>
+    <property name="docbook.xsl.dir" value="docbook-xsl-${docbook.xsl.version}"/>
+    <property name="finalist.ant.version" value="1.3"/>
+
+    <path id="classpath">
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="generate.docbook" depends="checkout.docbook">
+        <mkdir dir="${docbook.dir.html}"/>
+        <mkdir dir="${docbook.dir.pdf}"/>
+        <taskdef name="param" classpathref="classpath" classname="com.finalist.ant.tasks.docbook.XSLTParameterTask"/>
+        <taskdef name="pdf" classpathref="classpath" classname="com.finalist.ant.tasks.docbook.PDFTask"/>
+        <taskdef name="html" classpathref="classpath" classname="com.finalist.ant.tasks.docbook.HTMLTask"/>
+        <echo message="Docbook HTML generation"/>
+        <html xslfile="${docbook.xsl.dir}/html/docbook.xsl" outputdir="${docbook.dir.html}">
+           <fileset dir="${docbook.dir}">
+             <include name="*.xml"/>
+           </fileset>
+            <param name="html.stylesheet" value="html.css"/>
+            <param name="paper.type" value="A4"/>
+            <param name="section.autolabel" value="1"/>
+            <param name="section.label.includes.component.label" value="1"/>
+            <param name="draft.watermark.image" value=''/>
+        </html>
+        <copy file="${docbook.dir.css}/html.css" todir="${docbook.dir.html}"/>        
+        <echo message="Docbook PDF generation of jag"/>
+        <pdf xslfile="../conf/docbook.xsl" outputdir="${docbook.dir.pdf}">
+            <fileset dir=".">
+
+                <include name="${docbook.dir}/**/*.xml"/>
+            </fileset>
+            <param name="paper.type" value="A4"/>
+            <param name="section.autolabel" value="1"/>
+            <param name="section.label.includes.component.label" value="1"/>
+            <param name="draft.watermark.image" value=''/>
+        </pdf>
+
+    </target>
+
+    <target name="checkout.docbook" depends="check.xsl.dir.internal" unless="xsl.checkout.done" description="XSL-checkout for needed XSL files and jars">
+        <antcall target="checkout.docbook.internal"/>
+    </target>
+
+    <target name="checkout.docbook.internal">
+        <mkdir dir="lib" />
+        <get src="http://www.ibiblio.org/maven/fop/jars/fop-0.20.5.jar" dest="lib/fop-0.20.5.jar"/>
+        <get src="http://www.ibiblio.org/maven/batik/jars/batik-1.1.1.jar" dest="lib/batik-1.1.1.jar"/>
+        <get src="http://www.ibiblio.org/maven/avalon-framework/jars/avalon-framework-4.0.jar" dest="lib/avalon-framework-4.0.jar"/>
+        <get src="http://www.ibiblio.com/maven/docbook/zips/docbook-xsl-${docbook.xsl.version}.zip" dest="lib/docbook-xsl-${docbook.xsl.version}.zip"/>
+        <get src="http://jag.sourceforge.net/download/jag/jars/finalist-ant-${finalist.ant.version}.jar" dest="lib/finalist-ant-${finalist.ant.version}.jar"/>
+
+        <unzip src="lib/docbook-xsl-${docbook.xsl.version}.zip" dest="."/>
+        <!-- Now unzip the docbook jars to the xsl directory. -->
+
+    </target>
+
+    <target name="check.xsl.dir.internal">
+        <available file="${docbook.xsl.dir}" property="xsl.checkout.done" type="dir"/>
+    </target>
+
+</project>

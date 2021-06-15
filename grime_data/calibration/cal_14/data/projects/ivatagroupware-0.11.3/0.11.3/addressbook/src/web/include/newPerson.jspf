@@ -1,0 +1,105 @@
+<%@page import='com.ivata.groupware.business.addressbook.person.employee.EmployeeDO' %>
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: newPerson.jspf,v 1.2 2005/04/09 17:19:13 colinmacleod Exp $
+//
+// All the code necessary to make a new person (with groups/employee record,
+// etc.) and store them in the session.
+//
+// Since: ivata groupware 0.9 (2002-09-07)
+// Author: Colin MacLeod <colin.macleod@ivata.com>
+// $Revision: 1.2 $
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: newPerson.jspf,v $
+// Revision 1.2  2005/04/09 17:19:13  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:51:13  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.2  2004/03/21 21:16:20  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 20:25:41  colinmacleod
+// *** empty log message ***
+//
+// Revision 1.1.1.1  2004/01/27 20:58:03  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.2  2003/10/17 12:36:13  jano
+// fixing problems with building
+// converting intranet -> portal
+// Eclipse building
+//
+// Revision 1.1.1.1  2003/10/13 20:50:26  colin
+// Restructured portal into subprojects
+//
+// Revision 1.4  2003/02/25 07:28:54  colin
+// restructured java file paths
+//
+// Revision 1.3  2003/01/30 08:56:35  colin
+// updated for sslext, struts
+//
+// Revision 1.2  2002/09/25 11:42:01  colin
+// removed System.err debug
+// added line to remove last telecom address attribute
+//
+// Revision 1.1  2002/09/19 14:43:24  colin
+// first version for addressBook
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<%
+  session.setAttribute("person", person =
+      new com.ivata.groupware.business.addressbook.person.PersonDO());
+  session.removeAttribute("personTab_activeTab");
+  session.setAttribute("personGroups", new Vector());
+%>
+<%--
+  by default, the person is not an employee. make a new DO for them anyway -
+  we will just remove it later, if the 'isEmployee' field is not true
+--%>
+<%
+  person.setEmployee(new EmployeeDO());
+  session.setAttribute("isEmployee", new Boolean(false));
+  session.setAttribute("employee", person.getEmployee());
+  session.setAttribute("userEnabled", new Boolean(false));
+  session.removeAttribute("userNameSet");
+  session.removeAttribute("vacationMessage");
+  session.removeAttribute("emailAliases");
+  session.removeAttribute("lastTelecomAddress");
+%>
+
+

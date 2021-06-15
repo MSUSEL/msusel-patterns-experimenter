@@ -1,0 +1,140 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+BODY ADDRESS {
+	line-height: 1.3;
+	margin: .6em 0;
+}
+
+BODY BLOCKQUOTE {
+	margin-top: .75em;
+	line-height: 1.5;
+	margin-bottom: .75em;
+}
+
+HTML BODY {
+	margin: 1em 8% 1em 10%;
+	line-height: 1.2;
+}
+
+.LEGALNOTICE {
+	font-size: small;
+	font-variant: small-caps;
+}
+
+BODY DIV {
+	margin: 0;
+}
+
+DL {
+	margin: .8em 0;
+	line-height: 1.2;
+}
+
+BODY FORM {
+	margin: .6em 0;
+}
+
+H1, H2, H3, H4, H5, H6,
+DIV.EXAMPLE P B,
+.QUESTION,
+DIV.TABLE P B,
+DIV.PROCEDURE P B {
+	color: #990000;
+}
+
+BODY H1, BODY H2, BODY H3, BODY H4, BODY H5, BODY H6 {
+	line-height: 1.3;
+	margin-left: 0;
+}
+
+BODY H1, BODY H2 {
+	margin: .8em 0 0 -4%;
+}
+
+BODY H3, BODY H4 {
+	margin: .8em 0 0 -3%;
+}
+
+BODY H5 {
+	margin: .8em 0 0 -2%;
+}
+
+BODY H6 {
+	margin: .8em 0 0 -1%;
+}
+
+BODY HR {
+	margin: .6em;
+}
+
+BODY IMG.NAVHEADER {
+	margin: 0 0 0 -4%;
+}
+
+OL {
+	margin: 0 0 0 5%;
+	line-height: 1.2;
+}
+
+BODY PRE {
+	margin: .75em 0;
+	line-height: 1.0;
+	color: #461b7e;
+}
+
+BODY TD, BODY TH {
+	line-height: 1.2;
+}
+
+UL, BODY DIR, BODY MENU {
+	margin: 0 0 0 5%;
+	line-height: 1.2;
+}
+
+HTML {
+	margin: 0; 
+	padding: 0;
+}
+
+.FILENAME {
+	color: #007a00;
+}
+
+.GUIMENU, .GUIMENUITEM, .GUISUBMENU,
+.GUILABEL, .INTERFACE, .GUIBUTTON,
+.SHORTCUT, .SHORTCUT .KEYCAP {
+	background-color: #F0F0F0;
+}
+
+.ACCEL {
+	background-color: #F0F0F0;
+	text-decoration: underline;
+} 
+
+.PROGRAMLISTING, .SCREEN {
+	margin-left: 3ex;
+}

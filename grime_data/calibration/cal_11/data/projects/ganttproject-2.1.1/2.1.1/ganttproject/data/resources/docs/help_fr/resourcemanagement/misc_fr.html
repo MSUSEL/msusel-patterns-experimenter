@@ -1,0 +1,96 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Divers</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Divers</h3>
+Cette section regroupe diverses fonctionnalit�s relatives � la gestion des ressources.
+
+<h4>Cong�s</h4>
+GanttProject vous permet de d�finir les cong�s pour chacune des ressources.
+<ul>
+	<li>ouvrez la fen�tre de propri�t�s d'une ressource&nbsp;;</li>
+	<li>activez l'onglet <b>Jours de cong�s</b>&nbsp;;</li>
+</ul>
+Vous avez la fen�tre suivante&nbsp;:
+<br \><center><img src="../images/daysOff.png"></center><br \>
+<p> Pour d�finir les p�riodes de cong�s&nbsp;:
+<ul>
+	<li>cliquez sur le bouton <img src="../images/calendar_16.gif">&nbsp; en face de la <b>Date de d�but</b>&nbsp;;</li>
+	<li>choisissez la date de d�but de la p�riode de cong�s&nbsp;;</li>
+	<li>cliquez sur le bouton <img src="../images/calendar_16.gif">&nbsp; en face de la <b>Date de fin</b>&nbsp;;</li>
+	<li>choisissez la date de fin de la p�riode de cong�s&nbsp;;</li>
+	<li>cliquer sur le bouton <b>Ajouter</b>&nbsp;;</li>
+	<li>la p�riode de cong�s a �t� ajout�e, elle est visible dans la zone permettant la suppression des cong�s&nbsp;;</li>
+	<li>cliquez sur le bouton <b>Ok</b>.</li>
+</ul>
+</p>
+<p> Pour supprimer les p�riodes de cong�s&nbsp;:
+<ul>
+	<li>ouvrez la fen�tre de propri�t�s d'une ressource&nbsp;;</li>
+	<li>activez l'onglet <b>Jours de cong�s</b>&nbsp;;</li>
+	<li>dans la zone nomm�e <b>Supprimer</b>, cliquez sur les p�riodes de cong�s que vous souhaitez supprimer
+	(maintenez la touche <b>Ctrl</b> enfonc�e lorsque vous cliquez pour une multi-s�lection)&nbsp;;</li>
+	<li>cliquez sur le bouton <b>Supprimer</b>&nbsp;;</li>
+	<li>cliquez sur le bouton <b>Ok</b>.</li>
+</ul>
+</p>
+<p> Les jours de cong�s sont repr�sent�s par des rectangles jaunes (par d�faut) sur le graphique.
+<br \><center><img src="../images/daysOffChart.png"></center>
+<p><b>N.B.</b>&nbsp;: Sur cet exemple des t�ches sont affect�es alors que la ressource est en cong�s ! C'est un conflit
+que l'utilisateur doit r�soudre.</p>
+
+<h4>Importation de ressources</h4>
+GanttProject vous permet d'importer des ressources provenant d'un autre projet.
+<ul>
+	<li>menu <b>Ressources</b>, <b>Importer des ressources</b>&nbsp;;</li>
+	<li>s�lectionnez le projet (fait avec GanttProject) duquel vous voulez importer les ressources&nbsp;;</li>
+	<li>validez&nbsp;;</li>
+	<li>les ressources sont ajout�s aux ressources d�j� pr�sentes dans le projet.</li>
+</ul>
+<b>N.B.</b>&nbsp;: Il n'y a aucune gestion des doublons, veillez � <i>nettoyer</i> vous m�me les doublons
+apr�s l'importation des ressources.
+
+<h4>Envoi de courriel</h4>
+Avec GanttProject, vous pouvez envoyer des courriels aux ressources d�finies dans 
+vos projets.
+<ul>
+	<li>s�lectionnez la ressource � laquelle vous voulez envoyer un courriel&nbsp;;</li>
+	<li>allez dans le menu <b>Ressources</b>, <b>Envoyer un courriel</b> ou cliquez
+	avec le bouton droit de la souris sur la ressource, puis cliquez sur <b>Envoyer un courriel</b>&nbsp;;</li>
+	<li>le client de courrier par d�faut de votre syst�me d'expoitation s'ouvre alors pour que
+	vous puissiez �crire un courriel � la ressource.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,295 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($entity in $entities)
+////File: ${paths.EjbOutput}/${entity.RootPath}/${entity.Name}Bean.ejb
+package ${entity.RootPackage};
+
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+import weblogic.ejb.GenericEntityBean;
+import javax.ejb.CreateException;
+
+/**
+ * The ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2005/06/29 20:56:25 $
+ *
+ *
+ * @ejbgen:jndi-name local="ejb/local/${entity.RootPath}/${entity.Name}"
+ * @ejbgen:file-generation local-class-name="${entity.Name}Local"
+ *                         local-class="true"
+ *                         remote-home="false"
+ *                         local-home-name="${entity.Name}LocalHome"
+ *                         local-home="true"
+ *                          remote-class="false"
+ * @ejbgen:entity enable-call-by-reference="true"
+ *                abstract-schema-name="${entity.TableName}"
+ *                default-transaction="Required"
+ *                prim-key-class="${entity.PrimaryKeyType}"
+ *                read-timeout-seconds="600"
+ *                table-name="${entity.TableName}"
+ *                delay-database-insert-until="ejbPostCreate"
+ *                concurrency-strategy="Database"
+ *                reentrant="False"
+ *                ejb-name="${entity.Name}"
+ *                trans-timeout-seconds="0"
+ *                data-source-name="${datasource.JndiName}"
+ *                max-beans-in-cache="1000"
+ * @ejbgen:finder ejb-ql="select distinct object (a) from ${entity.TableName} a"
+ *                signature="java.util.Collection findAll()"
+#foreach ($field in $entity.NonRelationFields)
+## Create findBy.. methods for all fields.
+ * @ejbgen:finder signature="java.util.Collection findBy${field.Name.Sentensized}($field.Type $field.Name)"
+ *                ejb-ql="select distinct object (a) from ${entity.TableName} a where a.${field.Name} = ?1 "
+#end
+ * @ejbgen:value-object reference="Value"
+ */
+public abstract class ${entity.Name}Bean extends GenericEntityBean {
+
+   /**
+    * The logger.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}Bean.class);
+
+
+   /*******************************************************************************************************************
+    *                            C O N T A I N E R   C A L L B A C K S   M E T H O D S
+    *******************************************************************************************************************/
+
+   /**
+    * Creates a new entity bean and returns the primary key.
+    * If the primary key of the value object has been set, this key will be used.
+    * If the primary key is set to null, the UniqueId generator will be used to generate a primary key.
+    *
+    * @param value a <code>${entity.Name}Data</code> instance
+    * @return the primary key for this ${entity.Name}
+    * @ejb.create-method
+    * @throws CreateException Thrown if creation fails
+    */
+   public ${entity.PrimaryKeyType} ejbCreate(${entity.RootPackage}.${entity.Name}Data value) throws CreateException {
+#foreach ($field in $entity.NonRelationFields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+#if ($entity.Relations.size() == 0)
+      set${entity.Name}Data(value);
+#end
+#foreach ($pkField in $entity.PkFields)
+#if ($pkField.HasAutoGenPrimaryKey)
+#if ($pkField.Type.equals("java.lang.Integer"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getIntegerId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Long"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getLongId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.String"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getStringId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Short"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getShortId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Byte"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getByteId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#if ($pkField.Type.equals("java.lang.Double"))
+      if (value.get${pkField.Name.Sentensized}() == null) {
+         value.set${pkField.Name.Sentensized}(UniqueIdGenerator.getInstance().getDoubleId("${entity.LocalTableName.ClassNameFormat}"));
+      }
+      set${pkField.Name.Sentensized}(value.get${pkField.Name.Sentensized}());
+#end
+#end
+#end
+      return null;
+   }
+
+   /**
+    * Initializes the entity bean with data.
+    *
+    * @param value <code>${entity.Name}Data</code> object
+    * @throws CreateException Thrown if creation fails.
+    */
+   public void ejbPostCreate(${entity.RootPackage}.${entity.Name}Data value) throws CreateException {
+#if ($entity.Relations.size() > 0)
+      //EJB 2.0 Spec. 10.5.2 states that CMR fields must be set in ejbPostCreate, not ejbCreate.
+      try {
+#foreach ($relation in $entity.Relations)
+         if (value.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}() != null) {
+            $relation.RelatedEntity.PrimaryKeyType ${relation.RelatedEntity.Name.Desentensized}Pk = value.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}().get${relation.RelatedEntity.PrimaryKey.Name.Sentensized}();
+            ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}LocalHome home = ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Util.getLocalHome();
+            ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local relation = home.findByPrimaryKey(${relation.RelatedEntity.Name.Desentensized}Pk);
+            set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(relation);
+         }
+         else {
+            set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(null);
+         }
+#end
+      }
+      catch (Exception e) {
+         throw new CreateException("Failure setting relations in ejbPostCreate: " + e);
+      }
+
+#end
+   }
+
+   /**
+    * Value object. 
+    */
+   ${entity.RootPackage}.${entity.Name}Data the${entity.Name}Data = null;
+
+    /**
+    * Returns the <code>${entity.Name}Data</code> object.
+    *
+    * @return the <code>${entity.Name}Data</code> object
+    *
+    * @ejbgen:local-method
+    */
+   public ${entity.RootPackage}.${entity.Name}Data get${entity.Name}Data()
+   {
+      the${entity.Name}Data = new ${entity.RootPackage}.${entity.Name}Data();
+      try
+         {
+#foreach ($field in $entity.NonRelationFields)
+            the${entity.Name}Data.set${field.Name.Sentensized}(get${field.Name.Sentensized}());
+#end
+         }
+         catch (Exception e)
+         {
+            throw new javax.ejb.EJBException(e);
+         }
+	  return the${entity.Name}Data;
+   }
+
+   /**
+    *
+    * Sets the <code>${entity.Name}Data</code> object.
+    *
+    * @param valueHolder a <code>${entity.Name}Data</code> object
+    *
+    * @ejbgen:local-method
+    */
+   public void set${entity.Name}Data(${entity.RootPackage}.${entity.Name}Data valueHolder )
+   {
+	  try
+	  {
+#foreach ($field in $entity.NonRelationFields)
+		 set${field.Name.Sentensized}(valueHolder.get${field.Name.Sentensized}());
+#end
+	  }
+	  catch (Exception e)
+	  {
+		 throw new javax.ejb.EJBException(e);
+	  }
+   }
+
+
+#foreach ($relation in $entity.Relations)
+   /**
+    * Returns the ${relation.RelatedEntity.Name} related through this entity's ${relation.FieldName} field.
+    *
+    * @return the $relation.FieldName.
+    * @ejb:interface-method
+    * @ejb:relation name="$relation.Name" role-name="$relation.Name"
+    *       target-ejb="$relation.RelatedEntity.Name" target-role-name="$relation.TargetName"
+    *       target-multiple="#if ($relation.isTargetMultiple())yes#else no #end"
+    * @ejb.value-object
+    *       aggregate="${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Data"
+    *       aggregate-name="${relation.FieldName.Sentensized}$relation.RelatedEntity.Name"
+    *       members="${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local"
+    *       members-name="${relation.RelatedEntity.Name}Data"
+    *       relation="external"
+    * @jboss.relation related-pk-field="${relation.ForeignPkFieldName}"
+    *                 fk-column="${relation.ForeignColumn}"
+    * @weblogic.column-map foreign-key-column="${relation.ForeignColumn}"
+    *                      key-column="${relation.ForeignColumn}"
+##  For S1AS 7 it is assumed that the column names of the CMR relations are equal.
+##  Future improvement should be to add in the jag.relation a field with the column name.     
+    * @sunone.relation column="${entity.TableName}.${relation.ForeignColumn}" target="${relation.RelatedEntity.TableName}.${relation.ForeignColumn}"
+    * @jag.relation field="${relation.FieldName}" column="${relation.ForeignColumn}"
+    *       session-facade="#foreach ($facade in $sessions)
+#foreach($containedEntity in $facade.EntitiesAndReferences)
+#if ($containedEntity.TableName.equals($relation.ForeignTable))${facade.RootPackage}.${facade.Name}#end
+#end
+#end"
+    *       field-capitalised="${relation.FieldName.Sentensized}"
+    *       fk-type="#foreach ($fields2 in $relation.RelatedEntity.Fields)
+#if ($fields2.ColumnName.equals($relation.ForeignColumn))${fields2.Type}#end
+#end"
+    */
+   public abstract ${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+
+   /**
+    * Sets the ${relation.RelatedEntity.Name} related through this entity's ${relation.FieldName} field.
+    *
+    * @param ${relation.FieldName} the ${relation.FieldName}.
+    * @ejb:interface-method
+    */
+   public abstract void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Local ${relation.FieldName});
+
+#end
+#foreach ($field in $entity.NonRelationFields)
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    * @return the value of the <code>${field.Name}</code> property
+    * @ejbgen:cmp-field #if ($field.isPrimaryKey()) primkey-field="True" #end column="${field.ColumnName}"
+    */
+   public abstract $field.Type get${field.Name.Sentensized}();
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+   public abstract void set${field.Name.Sentensized}($field.Type $field.Name);
+#end
+
+
+   /**
+    * The name of the database table behind the entity bean accessed by this local interface.
+    */
+   public static final String TABLE_NAME = "${entity.TableName}";
+
+   /**
+    * A mapping of container-managed persitent field --> corresponding database column name.
+    */
+   public static final java.util.Map COLUMNS_MAP = new java.util.HashMap();
+   static {
+#foreach ($field in $entity.NonRelationFields)
+      COLUMNS_MAP.put("${field.Name}", "${field.ColumnName}");
+#end
+   }
+}
+#end
+#end
+#end

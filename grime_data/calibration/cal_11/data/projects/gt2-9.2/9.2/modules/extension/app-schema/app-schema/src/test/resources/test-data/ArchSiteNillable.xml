@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<as:AppSchemaDataAccess xmlns:as="http://www.geotools.org/app-schema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geotools.org/app-schema AppSchemaDataAccess.xsd">
+    <namespaces>
+        <Namespace>
+            <prefix>gml</prefix>
+            <uri>http://www.opengis.net/gml</uri>
+        </Namespace>
+        <Namespace>
+            <prefix>aeras</prefix>
+            <uri>urn:www.aecoreco.com:schemas:archsites</uri>
+        </Namespace>
+    </namespaces>
+    <sourceDataStores>
+        <DataStore>
+            <id>datastore_shp</id>
+            <parameters>
+                <Parameter>
+                    <name>url</name>
+                    <value>file:..\..\..\..\..\..\library\sample-data\src\main\resources\org\geotools\test-data\shapes\archsites.shp</value>
+                </Parameter>
+                <Parameter>
+                    <name>memory mapped buffer</name>
+                    <value>false</value>
+                </Parameter>
+                <Parameter>
+                    <name>create spatial index</name>
+                    <value>true</value>
+                </Parameter>
+                <Parameter>
+                    <name>charset</name>
+                    <value>ISO-8859-1</value>
+                </Parameter>
+            </parameters>
+        </DataStore>
+    </sourceDataStores>
+    <targetTypes>
+        <FeatureType>
+            <schemaUri>ArchSite.xsd</schemaUri>
+        </FeatureType>
+    </targetTypes>
+    <typeMappings>
+        <FeatureTypeMapping>
+            <sourceDataStore>datastore_shp</sourceDataStore>
+            <sourceType>archsites</sourceType>
+            <targetElement>aeras:ArchSiteNillable</targetElement>
+            <attributeMappings>
+                <AttributeMapping>
+                    <targetAttribute>gml:Point</targetAttribute>
+                    <sourceExpression>
+                        <OCQL>the_geom</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                <AttributeMapping>
+                    <targetAttribute>aeras:ID</targetAttribute>
+                    <sourceExpression>
+                        <OCQL>ID</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                <AttributeMapping>
+                    <targetAttribute>aeras:CAT_ID</targetAttribute>
+                    <sourceExpression>
+                        <OCQL>CAT_ID</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+                <AttributeMapping>
+                    <targetAttribute>aeras:CAT_DESC</targetAttribute>
+                    <sourceExpression>
+                        <OCQL>if_then_else(equalTo(CAT_DESC, 'No Name'), Expression.Nil , CAT_DESC)</OCQL>
+                    </sourceExpression>
+                </AttributeMapping>
+            </attributeMappings>
+        </FeatureTypeMapping>
+    </typeMappings>
+</as:AppSchemaDataAccess>

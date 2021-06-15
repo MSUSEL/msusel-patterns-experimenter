@@ -1,0 +1,52 @@
+#if ($config.matchBusinessTier("Hibernate"))
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+////File: ${paths.HibernateOutput}/${app.RootPath}/HibernateDatabaseSession.java
+package ${app.RootPackage};
+
+import com.finalist.util.log.*;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import ${app.RootPackage}.servicelocator.*;
+
+/**
+ * The <code>DatabaseSessionImpl </code> is used to allow closing of a database session by the client.
+ * This way it is possible too keep database sessions open for lazy loading support.
+
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2005/06/29 20:56:26 $
+ *
+ *
+ */
+public class HibernateDatabaseSession implements DatabaseSessionService, LocatableService  {
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(HibernateDatabaseSession.class);
+
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void init() {
+    }
+
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void destroy() {
+    }
+
+   /**
+    * Close a database session if it is still open.
+    *
+    */
+   public void close() throws GenericBusinessException {
+       try {
+       ${app.RootPackage}.HibernateSessionHelper.close();
+       } catch (Exception e) {
+           log.error("Error whil closing the database connection");
+           throw new GenericBusinessException(e);
+       }
+   }
+}
+#end
+#end

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<xsd:schema targetNamespace="http://www.opengis.net/ogc"
+   xmlns:ogc="http://www.opengis.net/ogc"
+   xmlns:gml="http://www.opengis.net/gml"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+   elementFormDefault="qualified"
+   version="1.1.0">
+   <xsd:element name="Add" type="ogc:BinaryOperatorType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="Sub" type="ogc:BinaryOperatorType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="Mul" type="ogc:BinaryOperatorType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="Div" type="ogc:BinaryOperatorType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="PropertyName" type="ogc:PropertyNameType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="Function" type="ogc:FunctionType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="Literal" type="ogc:LiteralType"
+      substitutionGroup="ogc:expression"/>
+   <xsd:element name="expression" type="ogc:ExpressionType" abstract="true"/>
+   <!-- <xsd:complexType name="ExpressionType" abstract="true" mixed="true"/>
+     -->
+   <xsd:complexType name="ExpressionType" abstract="true"/>
+   <xsd:complexType name="BinaryOperatorType">
+      <xsd:complexContent>
+         <xsd:extension base="ogc:ExpressionType">
+            <xsd:sequence>
+               <xsd:element ref="ogc:expression" minOccurs="2" maxOccurs="2"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="FunctionType">
+      <xsd:complexContent>
+         <xsd:extension base="ogc:ExpressionType">
+            <xsd:sequence>
+               <xsd:element ref="ogc:expression" minOccurs="0"
+                  maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="LiteralType">
+      <xsd:complexContent mixed="true">
+         <xsd:extension base="ogc:ExpressionType">
+            <xsd:sequence>
+               <xsd:any minOccurs="0"/>
+            </xsd:sequence>
+         </xsd:extension>
+      </xsd:complexContent>
+   </xsd:complexType>
+   <xsd:complexType name="PropertyNameType">
+      <xsd:complexContent mixed="true">
+         <xsd:extension base="ogc:ExpressionType"/>
+      </xsd:complexContent>
+   </xsd:complexType>
+</xsd:schema>

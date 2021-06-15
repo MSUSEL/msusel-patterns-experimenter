@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE hibernate-mapping
+        SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.hibernate.test.filter">
+
+    <class name="Category" table="CATEGORY">
+        <id name="id" column="CAT_ID">
+            <generator class="native"/>
+        </id>
+
+        <property name="name" type="string"/>
+        <property name="effectiveStartDate" column="eff_start_dt" type="java.util.Date"/>
+        <property name="effectiveEndDate" column="eff_end_dt" type="java.util.Date"/>
+
+        <set cascade="none" inverse="true" name="products" table="PROD_CAT">
+            <key column="CAT_ID"/>
+            <many-to-many column="PROD_ID" class="Product"/>
+        </set>
+
+        <filter name="effectiveDate" condition=":asOfDate BETWEEN eff_start_dt and eff_end_dt"/>
+        <filter name="unioned">
+            'abc' in ( select d.reg from DEPARTMENT d where (d.dept_id=123) union select p.name from SALES_PERSON p )
+        </filter>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <attr name="Menu\Window\Report designer\FormattingToolsAction.shadow\position" intvalue="300"/>
+    <attr name="Menu\Window\Report designer\IRConsoleAction.shadow\position" intvalue="100"/>
+    <attr name="Menu\Window\Report designer\OutlineAction.shadow\position" intvalue="200"/>
+    <folder name="Actions">
+        <folder name="JasperServer">
+            <file name="com-jaspersoft-ireport-jasperserver-ui-actions-RunReportUnitButton.instance"/>
+        </folder>
+        <folder name="Window">
+            <file name="com-jaspersoft-ireport-jasperserver-ui-JRViewerAction.instance"/>
+            <file name="com-jaspersoft-ireport-jasperserver-ui-RepositoryAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+        </folder>
+        <folder name="Window">
+            <folder name="Report designer">
+                <file name="JRViewerAction.shadow" url="JRViewerAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-jaspersoft-ireport-jasperserver-ui-JRViewerAction.instance"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+                <file name="RepositoryAction.shadow" url="RepositoryAction.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Window/com-jaspersoft-ireport-jasperserver-ui-RepositoryAction.instance"/>
+                    <attr name="position" intvalue="350"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="iReport">
+            <file name="com-jaspersoft-ireport-jasperserver-options-JasperServerRepositoryAdvancedOption.instance"/>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="JRViewerTopComponent.settings" url="JRViewerTopComponentSettings.xml"/>
+            <file name="RepositoryTopComponent.settings" url="RepositoryTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="JRViewerTopComponent.wstcref" url="JRViewerTopComponentWstcref.xml"/>
+            </folder>
+            <folder name="explorer">
+                <file name="RepositoryTopComponent.wstcref" url="RepositoryTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="ireport">
+        <folder name="SubreportOpenerProviders">
+            <file name="com-jaspersoft-ireport-jasperserver-JSSubreportOpenerProvider.instance"/>
+        </folder>
+    </folder>
+</filesystem>

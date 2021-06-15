@@ -1,0 +1,6 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/web/WEB-INF/global-forwards.xml
+    <global-forwards>
+      <forward name="exception_page" path="/exception/initException.do"/>
+    </global-forwards>
+#end

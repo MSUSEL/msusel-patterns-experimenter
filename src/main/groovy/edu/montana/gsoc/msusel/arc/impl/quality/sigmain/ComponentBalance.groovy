@@ -27,7 +27,6 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 
-import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
@@ -122,14 +121,18 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
             totals << 0.0
         }
         sizes.each {
-            totals[currentPartition] += it
-            subIndex++
-            if (subIndex == partitionSize) {
-                currentPartition++
-                subIndex = 0
-            }
-            if (currentPartition == fullPartitions) {
-                partitionSize -= 1
+            if (it != null) {
+                if (totals[currentPartition] == null)
+                    totals[currentPartition] = 0.0d
+                totals[currentPartition] = totals[currentPartition] + it
+                subIndex++
+                if (subIndex == partitionSize) {
+                    currentPartition++
+                    subIndex = 0
+                }
+                if (currentPartition == fullPartitions) {
+                    partitionSize -= 1
+                }
             }
         }
         totals

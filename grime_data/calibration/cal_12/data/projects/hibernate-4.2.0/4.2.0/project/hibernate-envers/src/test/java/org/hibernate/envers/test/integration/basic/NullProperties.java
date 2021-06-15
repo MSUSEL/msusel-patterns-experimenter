@@ -1,0 +1,106 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package org.hibernate.envers.test.integration.basic;
+
+import java.util.Arrays;
+import javax.persistence.EntityManager;
+
+import org.junit.Test;
+
+import org.hibernate.ejb.Ejb3Configuration;
+import org.hibernate.envers.test.BaseEnversJPAFunctionalTestCase;
+import org.hibernate.envers.test.Priority;
+
+/**
+ * @author Adam Warski (adam at warski dot org)
+ */
+public class NullProperties extends BaseEnversJPAFunctionalTestCase {
+    private Integer id1;
+    private Integer id2;
+
+    public void configure(Ejb3Configuration cfg) {
+        cfg.addAnnotatedClass(BasicTestEntity1.class);
+    }
+
+    private Integer addNewEntity(String str, long lng) {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        BasicTestEntity1 bte1 = new BasicTestEntity1(str, lng);
+        em.persist(bte1);
+        em.getTransaction().commit();
+
+        return bte1.getId();
+    }
+
+    private void modifyEntity(Integer id, String str, long lng) {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        BasicTestEntity1 bte1 = em.find(BasicTestEntity1.class, id);
+        bte1.setLong1(lng);
+        bte1.setStr1(str);
+        em.getTransaction().commit();
+    }
+
+    @Test
+    @Priority(10)
+    public void initData() {
+        id1 = addNewEntity("x", 1); // rev 1
+        id2 = addNewEntity(null, 20); // rev 2
+
+        modifyEntity(id1, null, 1); // rev 3
+        modifyEntity(id2, "y2", 20); // rev 4
+    }
+
+    @Test
+    public void testRevisionsCounts() {
+        assert Arrays.asList(1, 3).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id1));
+
+        assert Arrays.asList(2, 4).equals(getAuditReader().getRevisions(BasicTestEntity1.class, id2));
+    }
+
+    @Test
+    public void testHistoryOfId1() {
+        BasicTestEntity1 ver1 = new BasicTestEntity1(id1, "x", 1);
+        BasicTestEntity1 ver2 = new BasicTestEntity1(id1, null, 1);
+
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 1).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 2).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 3).equals(ver2);
+        assert getAuditReader().find(BasicTestEntity1.class, id1, 4).equals(ver2);
+    }
+
+    @Test
+    public void testHistoryOfId2() {
+        BasicTestEntity1 ver1 = new BasicTestEntity1(id2, null, 20);
+        BasicTestEntity1 ver2 = new BasicTestEntity1(id2, "y2", 20);
+
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 1) == null;
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 2).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 3).equals(ver1);
+        assert getAuditReader().find(BasicTestEntity1.class, id2, 4).equals(ver2);
+    }
+}

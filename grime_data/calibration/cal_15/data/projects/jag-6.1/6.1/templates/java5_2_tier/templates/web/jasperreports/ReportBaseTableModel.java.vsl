@@ -1,0 +1,74 @@
+#if ($config.check("useJasper"))
+////File: ./src/java-web/${app.RootPath}/reports/ReportBaseTableModel.java
+package ${app.RootPackage}.reports;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+
+/**
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2006/03/17 19:01:11 $
+ */
+public class ReportBaseTableModel extends AbstractTableModel {
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+   // Used for keeping the spring application context.
+   public static ThreadLocal sessionLocal = new ThreadLocal();
+#end
+    public List getResult() {
+        return result;
+    }
+
+    public void setResult(List result) {
+        this.result = result;
+    }
+
+    protected List result;
+
+    /**
+     *
+     */
+    protected String[] columnNames = null;
+
+    /**
+     *
+     */
+    public ReportBaseTableModel() {
+    }
+
+
+    /**
+     *
+     */
+    public int getColumnCount() {
+        return this.columnNames.length;
+    }
+
+
+    /**
+     *
+     */
+    public String getColumnName(int columnIndex) {
+        return this.columnNames[columnIndex];
+    }
+
+
+    /**
+     *
+     */
+    public int getRowCount() {
+        return result.size();
+    }
+
+
+    /**
+     *
+     */
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Object row = result.get(rowIndex);
+        return ((Object[]) row).clone()[columnIndex];
+    }
+
+}
+#end

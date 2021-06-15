@@ -1,0 +1,40 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 3.0")
+#if (${config.templateSettings.appserver} == "JBoss 4.x")
+////File: ${paths.ConfigOutput}/META-INF/hibernate.properties
+hibernate.transaction.manager_lookup_class=org.hibernate.transaction.JBossTransactionManagerLookup
+hibernate.hbm2ddl.auto=update
+hibernate.cache.provider_class=org.hibernate.cache.HashtableCacheProvider
+hibernate.connection.datasource=java:${datasource.JndiName}
+#if (${datasource.TypeMapping.Lower} == "oracle7" || ${datasource.TypeMapping.Lower} == "oracle8")
+hibernate.dialect=org.hibernate.dialect.OracleDialect
+#end
+#if (${datasource.TypeMapping.Lower} == "oracle9")
+hibernate.dialect=org.hibernate.dialect.Oracle9Dialect
+#end
+#if (${datasource.TypeMapping.Lower} == "mysql")
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+#end
+#if (${datasource.TypeMapping.Lower} == "postgresql")
+hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#end
+#if (${datasource.TypeMapping.Lower} == "hypersonic sql")
+hibernate.dialect=org.hibernate.dialect.HSQLDialect
+#end
+#end
+#end

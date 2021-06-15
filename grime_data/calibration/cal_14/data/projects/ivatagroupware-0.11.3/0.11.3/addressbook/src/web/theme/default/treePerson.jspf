@@ -1,0 +1,148 @@
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: treePerson.jspf,v 1.3 2005/04/11 11:04:24 colinmacleod Exp $
+//
+// Default tree theme tags for groups/person.
+//
+// Since: ivata groupware 0.9 (2002-08-19)
+// Author: Jan Boros
+// $Revision: 1.3 $
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: treePerson.jspf,v $
+// Revision 1.3  2005/04/11 11:04:24  colinmacleod
+// Renamed default theme to classic.
+//
+// Revision 1.2  2005/04/09 17:19:14  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:51:13  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.2  2004/03/21 21:16:20  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 20:26:04  colinmacleod
+// *** empty log message ***
+//
+// Revision 1.1.1.1  2004/01/27 20:58:04  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.1.1.1  2003/10/13 20:50:27  colin
+// Restructured portal into subprojects
+//
+// Revision 1.12  2003/07/05 22:02:34  colin
+// changed attendee to person
+//
+// Revision 1.11  2003/06/11 07:35:02  jano
+// fixing visual bugs
+//
+// Revision 1.10  2003/06/10 05:15:15  jano
+// fixing images size
+//
+// Revision 1.9  2003/06/06 10:02:54  peter
+// peopleX, not attendeesX for checkbox ids
+//
+// Revision 1.8  2003/02/13 10:57:39  colin
+// changed checkbox handling for Struts/popups
+//
+// Revision 1.7  2002/09/16 16:00:47  colin
+// added hidden fields for email and fileAs
+//
+// Revision 1.6  2002/09/16 15:55:10  jano
+// changed opening and closing folder and images
+//
+// Revision 1.5  2002/09/13 14:58:13  jano
+// images was change
+//
+// Revision 1.4  2002/09/04 08:08:08  jano
+// fixing vertical line
+//
+// Revision 1.3  2002/08/29 15:48:46  jano
+// form tags were take away
+//
+// Revision 1.2  2002/08/28 12:57:45  jano
+// path to images changed
+//
+// Revision 1.1  2002/08/27 15:24:40  jano
+// *** empty log message ***
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<imthemedef:section name='initializePersonTree'>
+  <input type='hidden' name='closeFolder' value=''/>
+  <input type='hidden' name='openFolder' value=''/>
+</imthemedef:section>
+<imthemedef:section name='treeOpen'>
+  <table border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+      <td valign='middle' width='25'><a ATTRIBUTE(folderURL:href)><img border='0' src='PROPERTY(pathContext)/addressBook/images/groupTree/minus1.gif' width='25' height='25'></a></td>
+      <td valign='middle' width='25'><a ATTRIBUTE(folderURL:href)><img border='0' src='PROPERTY(pathContext)/addressBook/images/groupTree/minus2.gif' width='25' height='25'></a></td>
+      <td class='treeGroup' width='100%'>&nbsp;PROPERTY(caption)</td>
+    </tr>
+    <%-- the end of the form must come before the tree_children --%>
+    <tr>
+      <td valign='middle' width='25' background='PROPERTY(pathContext)/addressBook/images/groupTree/linePROPERTY(last).gif'>&nbsp;</td>
+      <td colspan='2'>PROPERTY(treeChildren)</td>
+    </tr>
+  </table>
+</imthemedef:section>
+<imthemedef:section name='treeClosed'>
+  <table border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+      <td valign='middle' width='25'><a ATTRIBUTE(folderURL:href)><img border='0'  src='PROPERTY(pathContext)/addressBook/images/groupTree/plus1.gif' width='25' height='25'></a></td>
+      <td valign='middle' width='25'><a ATTRIBUTE(folderURL:href)><img border='0' src='PROPERTY(pathContext)/addressBook/images/groupTree/plus2.gif' width='25' height='25'></a></td>
+      <td class='treeGroup'>&nbsp;PROPERTY(caption)</td>
+    </tr>
+  </table>
+</imthemedef:section>
+<imthemedef:section name='treeNoChildren'>
+  <table border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+      <td valign='middle' width='25'><img src='PROPERTY(pathContext)/addressBook/images/groupTree/junctionPROPERTY(last).gif' width='25' height='25'/></td>
+      <td valign='middle' width='24'><img src='PROPERTY(pathContext)/addressBook/images/groupTree/group.gif' width='24' height='24'/></td>
+      <td class='treeGroup'>&nbsp;PROPERTY(caption)</td>
+    </tr>
+  </table>
+</imthemedef:section>
+<imthemedef:section name='treeLeaf'>
+  <table border='0' cellspacing='0' cellpadding='0'>
+    <tr>
+      <td valign='middle' width='25'><img src='PROPERTY(pathContext)/addressBook/images/groupTree/junctionPROPERTY(last).gif' width='25' height='25'></td>
+      <td valign='middle' width='12'><img border='0' src='PROPERTY(pathContext)/addressBook/images/groupTree/person.gif' width='12' height='24'></td>
+      <td class='treeGroup'><input type='checkbox' id='peoplePROPERTY(value)' onchange='onCheckBox("peoplePROPERTY(value)")' name='person' ATTRIBUTE(value) ATTRIBUTE(checked)/>PROPERTY(caption)          <input type='hidden' name='email' ATTRIBUTE(email:value)/><input type='hidden' name='fileAs' ATTRIBUTE(fileAs:value)/></td>
+    </tr>
+  </table>
+</imthemedef:section>

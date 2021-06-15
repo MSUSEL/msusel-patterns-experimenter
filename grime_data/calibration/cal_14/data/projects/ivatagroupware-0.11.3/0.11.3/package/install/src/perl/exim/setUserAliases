@@ -1,0 +1,294 @@
+#!/usr/bin/perl -Uw
+################################################################################
+# $Id: setUserAliases,v 1.2 2005/04/09 17:19:52 colinmacleod Exp $
+#
+# Set up user aliases.
+#
+# To allow the user which runs this and the other system scripts, the script
+# must be run in root user mode. This is achieved by running the sudo program
+# which must be installed on the system.
+#
+# Since: ivata groupware 0.9 (2002-07-21)
+# Author: Colin MacLeod <colin.macleod@ivata.com>
+# $Revision: 1.2 $
+#
+################################################################################
+# Copyright (c) 2001 - 2005 ivata limited.
+# All rights reserved.
+# ---------------------------------------------------------
+# ivata groupware may be redistributed under the GNU General Public
+# License as published by the Free Software Foundation;
+# version 2 of the License.
+#
+# These programs are free software; you can redistribute them and/or
+# modify them under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2 of the License.
+#
+# These programs are distributed in the hope that they will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# See the GNU General Public License in the file LICENSE.txt for more
+# details.
+#
+# If you would like a copy of the GNU General Public License write to
+#
+# Free Software Foundation, Inc.
+# 59 Temple Place - Suite 330
+# Boston, MA 02111-1307, USA.
+#
+#
+# To arrange commercial support and licensing, contact ivata at
+#                  http://www.ivata.com/contact.jsp
+################################################################################
+#
+# $Log: setUserAliases,v $
+# Revision 1.2  2005/04/09 17:19:52  colinmacleod
+# Changed copyright text to GPL v2 explicitly.
+#
+# Revision 1.1.1.1  2005/03/10 17:49:14  colinmacleod
+# Restructured ivata op around Hibernate/PicoContainer.
+# Renamed ivata groupware.
+#
+# Revision 1.2  2004/03/21 21:16:33  colinmacleod
+# Shortened name to ivata op.
+#
+# Revision 1.1  2004/02/05 21:54:07  colinmacleod
+# Moved from webmail subproject.
+#
+# Revision 1.1.1.1  2004/01/27 20:59:58  colinmacleod
+# Moved ivata op to sourceforge.
+#
+# Revision 1.2  2003/10/15 14:11:33  colin
+# fixing for XDoclet
+#
+# Revision 1.1  2003/02/24 19:09:24  colin
+# moved to business
+#
+# Revision 1.5  2002/10/31 15:12:30  ivatashop
+# added virtusertable functionality for user aliases
+#
+# Revision 1.4  2002/10/25 07:30:34  jano
+# in name of user can be character '_'
+#
+# Revision 1.3  2002/10/24 11:51:26  colin
+# Testing in London Red Hat/Sub Cobalt server
+#
+# Revision 1.2  2002/09/24 09:35:02  colin
+# removed checking that the user exists
+#
+# Revision 1.1  2002/08/11 11:44:28  colin
+# first version
+# scripts written for and tested on Debian exim server
+#
+################################################################################
+
+################################################################################
+# includes
+use strict;
+use Exim;
+use Site;
+################################################################################
+
+################################################################################
+# variable declarations
+# this will be used to store all the email aliases for this user
+my @ALIASES = ();
+# the system user name
+my $USER_NAME;
+# a valid character in a user name part in a regular expression
+my $USER_NAME_REGEX = "[-._A-Za-z0-9]";
+
+# the lockfile to use - either aliases or virtusertable
+my $LOCKFILE;
+
+if ($ALIASES_VIRTUSERTABLE) {
+  $LOCKFILE = $LOCKFILE_VIRTUSERTABLE;
+} else {
+  $LOCKFILE = $LOCKFILE_ALIASES;
+}
+
+################################################################################
+
+################################################################################
+# function prototypes
+sub describeCommandLine();
+sub parseCommandLine();
+sub setEtcAliases();
+sub setEtcVirtusertable();
+sub setUserAliases();
+################################################################################
+
+################################################################################
+# main routine
+# if the command line parsing fails or the user specifies he wants help, then
+# bring up the help screen
+if(!parseCommandLine()) {
+  describeCommandLine();
+  dieInvalidArguments();
+# otherwise rock & roll
+} else {
+  lockFile($LOCKFILE);
+  setUserAliases();
+  unlockFile($LOCKFILE);
+}
+################################################################################
+
+################################################################################
+# describeCommandLine: print out command line options.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub describeCommandLine() {
+  print "\n";
+  print "                             --- setUserAliases ---\n";
+  print "       ivata's tool to add or change an email alias list in exim systems.\n";
+  print "\n";
+  print "       You need perl installed on your system to use this tool.\n";
+  print "\n";
+  print " Usage: \n";
+  print "       setUserAliases {username} {alias1} {alias2} {alias3}...\n";
+  print "\n";
+  print " Key:\n";
+  print "  username      name of the user for whom to set the email aliases.\n";
+  print "  alias         alternative email address for this user. This parameter should\n";
+  print "                be repeated for every alternative address the user has. If\n";
+  print "                this parameter is missing, the user has no alias addresses.\n";
+  print "\n";
+}
+
+################################################################################
+# parseCommandLine: this converts all of the command line options to the
+#     variables.
+# params:
+#        NONE
+# returns:
+#        a boolean telling you whether to continue or not. non-zero = continue
+sub parseCommandLine() {
+  my $total = @ARGV;
+  if($total < 1) {
+    return 0;
+  }
+  $USER_NAME = convertCommandLine(shift @ARGV);
+
+  my $alias;
+  while($alias = shift @ARGV) {
+    $alias = convertCommandLine($alias);
+    unless($alias =~ /^$USER_NAME_REGEX+$/) {
+      die "Alias '$alias' contains invalid characters. You may only use alpha-numeric characters, dots and hyphens (-). Please correct this and try again.\n";
+    }
+    push(@ALIASES, $alias = convertCommandLine($alias));
+
+  }
+  return -1;
+}
+
+################################################################################
+# setUserAliases: set the user aliases for a user.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub setUserAliases() {
+  # this routine just decides which config file actually holds the aliases and
+  # passes the program flow to the correct one
+  if ($ALIASES_VIRTUSERTABLE) {
+    setEtcVirtusertable();
+  } else {
+    setEtcAliases();
+  }
+}
+
+################################################################################
+# setEtcAliases: set the user aliases for a user using the /etc/aliases file.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub setEtcAliases() {
+  # check this is a real user - commented out because we store aliases for
+  # users no longer active
+  #my $checkUserExists = checkUserExists($USER_NAME);
+  #unlockAndDie($LOCKFILE_ALIASES, $checkUserExists) if($checkUserExists);
+
+  open(ALIASES, "<${ALIASES_FILE}") || die "Cannot open '${ALIASES_FILE}': $!";
+  open(ALIASESTMP, ">${ALIASES_FILE}.tmp") || die "Cannot open '${ALIASES_FILE}.tmp': $!";
+
+  # go thro' the entire file ignoring any previous aliases for this user
+  my $line;
+ READ_ALIASES:
+  while($line = <ALIASES>) {
+    unless(($line =~ /:\s*($USER_NAME_REGEX+)\s*$/) &&
+           ($1 eq $USER_NAME)){
+      print ALIASESTMP $line;
+    }
+  }
+
+  # now add all of the aliases for this user
+  my $alias;
+  foreach $alias (@ALIASES) {
+    print ALIASESTMP "$alias: $USER_NAME\n";
+  }
+
+  close(ALIASES) ;
+  close(ALIASESTMP) ;
+
+  rename($ALIASES_FILE, "${ALIASES_FILE}.ivata") ||
+    unlockAndDie($LOCKFILE_ALIASES,
+                 "cannot rename $ALIASES_FILE to ${ALIASES_FILE}.ivata: $!\n");
+  rename("${ALIASES_FILE}.tmp", $ALIASES_FILE) ||
+    unlockAndDie($LOCKFILE_ALIASES,
+                 "cannot rename ${ALIASES_FILE}.tmp to $ALIASES_FILE: $!\n");
+  system($NEWALIASES) &&
+    unlockAndDie($LOCKFILE_ALIASES,
+      "cannot run newaliases program '$NEWALIASES': $!\n");
+}
+
+################################################################################
+# setEtcVirtusertable: set the user aliases for a user using the
+#    /etc/virtusertable file.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub setEtcVirtusertable() {
+  # check this is a real user - commented out because we store aliases for
+  # users no longer active
+  #my $checkUserExists = checkUserExists($USER_NAME);
+  #unlockAndDie($LOCKFILE_ALIASES, $checkUserExists) if($checkUserExists);
+
+  open(VIRTUSERTABLE, "<${ALIASES_VIRTUSERTABLE_FILE}") || die "Cannot open '${ALIASES_VIRTUSERTABLE_FILE}': $!";
+  open(VIRTUSERTABLETMP, ">${ALIASES_VIRTUSERTABLE_FILE}.tmp") || die "Cannot open '${ALIASES_VIRTUSERTABLE_FILE}.tmp': $!";
+
+  # go thro' the entire file ignoring any previous aliases for this user
+  my $line;
+ READ_VIRTUSERTABLE:
+  while($line = <VIRTUSERTABLE>) {
+    unless(($line =~ /($USER_NAME_REGEX+)@(?:$USER_NAME_REGEX+)\s+($USER_NAME_REGEX+)\s*$/) &&
+           ($2 eq $USER_NAME)){
+      print VIRTUSERTABLETMP $line;
+    }
+  }
+
+  # now add all of the aliases for this user
+  my $alias;
+  foreach $alias (@ALIASES) {
+    print VIRTUSERTABLETMP "$alias@".$ENV{"SITE_ID"}.".ivata.com\t$USER_NAME\n";
+  }
+  print VIRTUSERTABLETMP "\n";
+
+  close(VIRTUSERTABLE) ;
+  close(VIRTUSERTABLETMP) ;
+
+  rename($ALIASES_VIRTUSERTABLE_FILE, "${ALIASES_VIRTUSERTABLE_FILE}.ivata") ||
+    unlockAndDie($LOCKFILE,
+                 "cannot rename $ALIASES_VIRTUSERTABLE_FILE to ${ALIASES_VIRTUSERTABLE_FILE}.ivata: $!\n");
+  rename("${ALIASES_VIRTUSERTABLE_FILE}.tmp", $ALIASES_VIRTUSERTABLE_FILE) ||
+    unlockAndDie($LOCKFILE,
+                 "cannot rename ${ALIASES_FILE}.tmp to $ALIASES_FILE: $!\n");
+  system($NEWALIASES) &&
+    unlockAndDie($LOCKFILE,
+      "cannot run newaliases program '$NEWALIASES': $!\n");
+}
+################################################################################

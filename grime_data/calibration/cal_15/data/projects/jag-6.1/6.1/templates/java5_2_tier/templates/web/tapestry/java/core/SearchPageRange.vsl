@@ -1,0 +1,173 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp.
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/core/SearchPageRange.java
+/*
+ *
+ */
+package ${app.RootPackage}.core;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+
+/**
+ * Helper class to generate a list of page ranges.
+ * @author Rudie Ekkelenkamp, Finalist IT Group
+ * @version $Revision: 1.1 $, $Date: 2006/02/06 20:12:41 $
+ */
+public class SearchPageRange {
+
+   private static final Logger LOG = LogService.getLogger(SearchPageRange.class);
+
+   /**
+    * The dots that will be used to render the list
+    */
+   public final static String DOTS = "...";
+
+
+   /**
+    * Return a list of page ranges based on the current page.
+    * @param selectedPage the currently selected page
+    * @param maxPages the maximum number of pages available
+    * @param size the size of the list to render.
+    * @return list of page ranges.
+    */
+   public static List<PageRange> getPageRange(int selectedPage, int maxPages, int size) {
+      // ‹‹ 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ... 22 ››
+      // ‹‹ 1 ... 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 ››
+      // ‹‹ 1 ... 7 8 9 10 11 12 13 14 15 16 17 18 19 ... 22 ››
+
+      // The list size will be size*2 + 1, including the dots.
+      int listSize = 2 * size + 1;
+      ArrayList<PageRange> range = new ArrayList<PageRange>();
+
+      boolean paging = false;
+      boolean allLeft = false;
+      boolean allRight = false;
+
+      // First check if paging is needed. This is the case if maxPages > listSize.
+
+      if (maxPages > listSize) {
+         paging = true;
+      }
+
+      if (!paging) {
+         // In this case, we can build the list immediately.
+         for (int i = 1; i <= maxPages; i++) {
+            range.add(addPageRange("" + i, i == selectedPage, i != selectedPage));
+         }
+      }
+      else {
+         // First check if all page numbers should be displayed on the left side.
+         // This will depend on the size.
+         // If current page - size > 1, then we need the dots: ....
+
+         if ((selectedPage - size) <= 1) {
+            // No paging on the left side of the selecte page.
+            allLeft = true;
+         }
+
+         if ((selectedPage + size) >= maxPages) {
+            // No paging on the right side of the selected page.
+            allRight = true;
+         }
+
+         if (allLeft) {
+            // Fill all pages on the left side, including the selected page.
+            for (int i = 1; i <= size + 1; i++) {
+               range.add(addPageRange("" + i, i == selectedPage, i != selectedPage));
+            }
+         }
+         else {
+            String index = "";
+            int addedPages = 0;
+            if (allRight) {
+               // In this case, there can be some pages left that can be rendered before the selected page.
+               addedPages = (size - (maxPages - selectedPage));
+            }
+            for (int i = 1; i <= (size + 2 + addedPages); i++) {
+               if (i == 1) {
+                  index = "1";
+               }
+               if (i == 2) {
+                  index = DOTS;
+               }
+               if (i > 2) {
+                  index = "" + (selectedPage - size - 2 + i - addedPages);
+               }
+               range.add(addPageRange(index, i == (size + 2 + addedPages), i != 2 && i != (size + 2 + addedPages)));
+            }
+         }
+
+         // The left size has been done, including the selected page.
+         // Now do the right side.
+         if (allRight) {
+            // selectedPage + 1; i <= maxPages
+            for (int i = selectedPage + 1; i <= maxPages; i++) {
+               range.add(addPageRange("" + i, false, true));
+            }
+         }
+         else {
+            String index = "";
+            int startIndex;
+            if (allLeft) {
+               startIndex = size + 2;
+            }
+            else {
+               startIndex = selectedPage + 1;
+            }
+            for (int i = startIndex; i <= startIndex + size; i++) {
+               if (i == (startIndex + size - 1)) {
+                  index = DOTS;
+               }
+               else if (i == (startIndex + size)) {
+                  index = "" + maxPages;
+               }
+               else {
+                  index = "" + i;
+               }
+               range.add(addPageRange(index, false, i != (startIndex + size - 1)));
+            }
+         }
+      }
+      return range;
+   }
+
+
+   /**
+    * Create a new PageRange object.
+    * @param page The page number.
+    * @param selected true if the page was selected.
+    * @param link true if te page can be clicked.
+    * @return PageRange object.
+    */
+   public static PageRange addPageRange(String page, boolean selected, boolean link) {
+      PageRange pr = new PageRange();
+      pr.setPageNumber(page);
+      pr.setSelected(selected);
+      pr.setLink(link);
+      return pr;
+   }
+
+}
+
+#end

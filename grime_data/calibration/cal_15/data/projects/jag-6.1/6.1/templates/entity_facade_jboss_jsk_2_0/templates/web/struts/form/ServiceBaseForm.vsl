@@ -1,0 +1,72 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ${paths.WebOutput}/${app.RootPath}/forms/ServiceBaseForm.java
+package ${app.RootPackage}.forms;
+
+import java.util.Collection;
+import java.util.ArrayList;
+import javax.servlet.http.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import com.finalist.util.genelv.struts.GenericForm;
+#foreach($sessionBean in $sessions)
+import ${sessionBean.RootPackage}.${sessionBean.Name}Service;
+#end
+/**
+ * Base form that has access to the service methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2005/07/20 18:43:21 $
+ */
+public abstract class ServiceBaseForm extends GenericForm {
+#foreach ($session2 in $sessions)
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+
+    /**
+    * Get the service interface.
+    * @return ${session2.Name}Service interface
+    */
+    public static ${session2.Name}Service get${session2.Name}Service() {
+    try {
+        return (${session2.Name}Service) ServiceLocator.getService(ServiceLocator.${session2.UpperCaseName}_SERVICE);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+#else
+    private  ${session2.Name.Sentensized}Service  ${session2.Name.Desentensized}Service;
+
+    /**
+    * Get the service interface.
+    * @return ${session2.Name.Sentensized}Service interface
+    *
+    * @spring.property ref="${session2.Name.Sentensized}Facade" 
+    */
+    public ${session2.Name.Sentensized}Service get${session2.Name.Sentensized}Service() {
+        return ${session2.Name.Desentensized}Service;
+    }
+   
+    public void set${session2.Name.Sentensized}Service(${session2.Name.Sentensized}Service ${session2.Name.Desentensized}Service) {
+        this.${session2.Name.Desentensized}Service =${session2.Name.Desentensized}Service;
+    }
+
+#end
+#end
+}
+#end

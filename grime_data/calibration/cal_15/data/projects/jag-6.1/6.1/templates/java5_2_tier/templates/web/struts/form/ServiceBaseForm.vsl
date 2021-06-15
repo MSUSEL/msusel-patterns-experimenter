@@ -1,0 +1,130 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/java-web/${app.RootPath}/forms/ServiceBaseForm.java
+package ${app.RootPackage}.forms;
+
+import java.util.Collection;
+import java.util.ArrayList;
+import javax.servlet.http.*;
+import com.finalist.util.LabeledIdentifier;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import com.finalist.util.genelv.struts.GenericForm;
+#foreach($sessionBean in $sessions)
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+#end
+/**
+ * Base form that has access to the service methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2006/02/01 07:45:47 $
+ */
+public abstract class ServiceBaseForm extends GenericForm {
+
+   /**
+    * Specifiy the default page list size.
+    */
+   public final static int DEFAULT_PAGE_LIST_SIZE = 10;
+
+   private String pageListSize = "" + DEFAULT_PAGE_LIST_SIZE;
+
+   /**
+    * Get the current list size.
+    * @return size
+    */
+   public String getPageListSize() {
+      return pageListSize;
+   }
+
+   /**
+    * Set the current list size.
+    * @param pageListSize
+    */
+   public void setPageListSize(String pageListSize) {
+      this.pageListSize = pageListSize;
+   }
+
+   /**
+    * Dropdown list for the list size on a page.
+    * @return list with sizes.
+    */
+   public Collection<LabeledIdentifier> getPageListSizes() {
+      java.util.ArrayList<LabeledIdentifier> list = new java.util.ArrayList<LabeledIdentifier>();
+      LabeledIdentifier ls;
+      ls = new LabeledIdentifier();
+      ls.setId("5");
+      ls.setName("5");
+      list.add(ls);
+      ls = new LabeledIdentifier();
+      ls.setId("10");
+      ls.setName("10");
+      list.add(ls);
+      ls = new LabeledIdentifier();
+      ls.setId("20");
+      ls.setName("20");
+      list.add(ls);
+      ls = new LabeledIdentifier();
+      ls.setId("50");
+      ls.setName("50");
+      list.add(ls);
+      ls = new LabeledIdentifier();
+      ls.setId("100");
+      ls.setName("100");
+      list.add(ls);
+
+      return list;
+   }
+
+#foreach ($session2 in $sessions)
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+
+    /**
+    * Get the service interface.
+    * @return I${session2.Name} interface
+    */
+    public static I${session2.Name} get${session2.Name}Service() {
+    try {
+        return (I${session2.Name}) ServiceLocator.getService(ServiceLocator.${session2.UpperCaseName}_SERVICE);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+#else
+    private  I${session2.Name.Sentensized} ${session2.Name.Desentensized}Service;
+
+    /**
+    * Get the service interface.
+    * @return I${session2.Name.Sentensized} interface
+    *
+    * @spring.property ref="${session2.Name.Sentensized}"
+    */
+    public I${session2.Name.Sentensized} get${session2.Name.Sentensized}Service() {
+        return ${session2.Name.Desentensized}Service;
+    }
+   
+    public void set${session2.Name.Sentensized}Service(I${session2.Name.Sentensized} ${session2.Name.Desentensized}Service) {
+        this.${session2.Name.Desentensized}Service =${session2.Name.Desentensized}Service;
+    }
+
+#end
+#end
+}
+#end

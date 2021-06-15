@@ -1,0 +1,247 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.serviceTier} == "Spring")
+////File: ./conf/spring-beans.xml
+#else
+## Acegi security is always dependent on Spring, so generate it.
+////File: ./src/web/WEB-INF/applicationContext.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC
+    "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans
+  default-autowire="no"
+  default-lazy-init="false"
+  default-dependency-check="none"
+>
+#end
+ <!--standard beans to be configured and added to the applicationContext.xml-->
+
+#if ($config.useSecurity())
+<bean id="memoryAuthenticationDao" class="org.acegisecurity.userdetails.memory.InMemoryDaoImpl">
+    <property name="userMap">
+        <value>
+            jag=jag,ROLE_USER,ROLE_SUPERVISOR
+            alice=secret1,ROLE_USER
+            jasper=secret2,ROLE_USER
+            rudie=secret3,ROLE_USER
+            ingrid=secret4,ROLE_USER
+        </value>
+    </property>
+</bean>
+
+<bean id="daoAuthenticationProvider" class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+     <property name="userDetailsService">
+         <ref local="memoryAuthenticationDao"/>
+     </property>
+</bean>
+
+<bean id="authenticationManager" class="org.acegisecurity.providers.ProviderManager">
+    <property name="providers">
+        <list>
+            <ref bean="daoAuthenticationProvider"/>
+        </list>
+    </property>
+</bean>
+
+<bean id="authenticationProcessingFilter" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter">
+    <property name="authenticationManager">
+        <ref bean="authenticationManager"/>
+    </property>
+    <property name="authenticationFailureUrl">
+        <value>/login/login.jsp?error=1</value>
+    </property>
+    <property  name="defaultTargetUrl">
+        <value>/</value>
+    </property>
+    <property name="filterProcessesUrl">
+        <value>/j_acegi_security_check</value>
+    </property>
+</bean>
+
+<bean id="roleVoter" class="org.acegisecurity.vote.RoleVoter"/>
+
+<bean id="accessDecisionManager" class="org.acegisecurity.vote.UnanimousBased">
+    <property name="allowIfAllAbstainDecisions">
+        <value>false</value>
+    </property>
+    <property name="decisionVoters">
+        <list>
+           <ref local="roleVoter"/>
+        </list>
+    </property>
+</bean>
+
+<bean id="securityEnforcementFilter" class="org.acegisecurity.ui.ExceptionTranslationFilter">
+    <property name="authenticationEntryPoint">
+        <ref bean="authenticationEntryPoint"/>
+    </property>
+</bean>
+
+<bean id="httpSessionIntegrationFilter" class="org.acegisecurity.context.HttpSessionContextIntegrationFilter">
+    <property name="context">
+        <!---
+        <value>org.acegisecurity.context.security.SecureContextImpl</value>
+        -->
+        <value>org.acegisecurity.context.SecurityContextImpl</value>
+    </property>
+</bean>
+
+<bean id="authenticationEntryPoint" class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+    <property name="loginFormUrl">
+        <value>/login/login.jsp</value>
+    </property>
+</bean>
+
+<bean id="filterInvocationInterceptor" class="org.acegisecurity.intercept.web.FilterSecurityInterceptor">
+    <property name="authenticationManager">
+        <ref bean="authenticationManager"/></property>
+    <property name="accessDecisionManager">
+        <ref bean="accessDecisionManager"/></property>
+    <property name="objectDefinitionSource">
+    <value>
+        CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+       PATTERN_TYPE_APACHE_ANT
+        /secure/super/**=ROLE_SUPERVISOR
+        /secure/**=ROLE_USER,ROLE_SUPERVISOR
+        /*=ROLE_USER
+    </value>
+    </property>
+</bean>
+#end
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+#if ($config.useSecurity())
+
+   <!--
+      To use method level security on Spring beans, the following should be done:
+      1. Create a BeanNameAutoProxyCreator that will use the security interceptor.
+      2. Create a securityInterceptor where the secured interface methods with their roles are defined.
+   -->
+   <!--
+      This bean defines a proxy for the protected bean.
+      Add this bean to do security interception on the specified beans in the beanNames list.
+   -->
+   <!--bean id='autoProxyCreator' class='org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator'>
+     <property name='interceptorNames'>
+        <list>
+           <value>securityInterceptor</value>
+        </list>
+     </property>
+
+     <property name='beanNames'>
+        <list>
+           <value>UserManagerService</value>
+        </list>
+     </property>
+
+  </bean -->
+
+   <bean id="attributes" class="org.acegisecurity.annotation.SecurityAnnotationAttributes"/>
+   <bean id="objectDefinitionSource" class="org.acegisecurity.intercept.method.MethodDefinitionAttributes">
+     <property name="attributes"><ref local="attributes"/></property>
+   </bean>
+
+   <!--
+      The securityInterceptor specifies a list of interface methods that should be secured
+      by the specified roles.
+   -->
+   <!--bean id="securityInterceptor" class="org.acegisecurity.intercept.method.aopalliance.MethodSecurityInterceptor">
+      <property name="authenticationManager">
+         <ref bean="authenticationManager"/>
+      </property>
+      <property name="accessDecisionManager">
+         <ref bean="accessDecisionManager"/>
+      </property>
+      <property name="objectDefinitionSource">
+      <ref bean="objectDefinitionSource"/>
+      </property>
+   </bean-->
+      <!-- The security constraints can be declared using the following list,
+           Or by adding java5 annotaitons on the interfaces: @Secured({"ROLE_SUPERVISER"})
+         <value>
+            com.finalist.session.IUserManagerService.getTAdressList=ROLE_USER
+            com.finalist.session.IUserManagerService.getTUserList=ROLE_SUPERVISOR
+         </value>
+      -->
+#end
+
+   <!-- Hibernate session factory -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="configLocation">
+            <value>classpath:hibernate.cfg.xml</value>
+        </property>
+
+        <property name="configurationClass">
+            <value>org.hibernate.cfg.AnnotationConfiguration</value>
+        </property>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory">
+             <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
+	<!--
+		This bean is a post-processor that will automatically apply relevant advisors
+		to any bean in child factories.
+	-->
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+	<!--
+		AOP advisor that will provide declarative transaction management based on
+		attributes. It's possible to add arbitrary custom Advisor implementations
+		as well, and they will also be evaluated and applied automatically.
+	-->
+	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor"><ref bean="transactionInterceptor"/></property>
+	</bean>
+
+	<!--
+		Transaction interceptor to use for auto-proxy creation.
+		Transaction attributes will be read in from JDK 1.5+ annotations.
+	-->
+	<bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager"><ref bean="transactionManager"/></property>
+		<property name="transactionAttributeSource">
+			<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>
+		</property>
+	</bean>
+
+
+    <!-- Bean definition is needed to rollback transactions after a test. -->
+     <bean id="dataSource"
+   class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+   destroy-method="close">
+      <property name="driverClassName" value="${datasource.Database.DriverClass}" />
+      <property name="url" value="${datasource.JdbcUrl}" />
+      <property name="username" value="${datasource.UserName}" />
+      <property name="password" value="${datasource.Password}" />
+    </bean>
+
+#else
+</beans>
+#end

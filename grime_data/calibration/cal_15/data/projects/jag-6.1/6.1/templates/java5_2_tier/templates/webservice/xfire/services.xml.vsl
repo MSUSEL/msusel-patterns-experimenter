@@ -1,0 +1,18 @@
+#if ($config.useWebService())
+#if (${config.templateSettings.serviceTier} == "Spring")
+## Don't use for spring, we handle this in the xfire-servlet.xml
+#else
+////File: ./src/web/WEB-INF/classes/META-INF/xfire/services.xml
+<beans xmlns="http://xfire.codehaus.org/config/1.0">
+#foreach ($session in $sessions)
+<!-- Service can be accessed using: /xservices/${session.Name}WebService?wsdl -->
+ <service>
+   <name>${session.Name}WebService</name>
+   <namespace>http://${session.RootPackage}/${session.Name}WebService</namespace>
+   <serviceClass>${session.Name}WebService</serviceClass>
+   <serviceFactory>jsr181</serviceFactory>
+ </service>
+#end
+</beans>
+#end
+#end

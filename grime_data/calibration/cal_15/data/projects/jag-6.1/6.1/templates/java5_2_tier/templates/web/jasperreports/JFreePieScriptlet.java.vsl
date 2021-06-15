@@ -1,0 +1,100 @@
+#if ($config.check("useJasper"))
+////File: ./src/java-web/${app.RootPath}/reports/JFreePieScriptlet.java
+package ${app.RootPackage}.reports;
+
+import net.sf.jasperreports.engine.JRDefaultScriptlet;
+import net.sf.jasperreports.engine.JRScriptletException;
+import net.sf.jasperreports.renderers.JCommonDrawableRenderer;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Rotation;
+
+import java.util.List;
+
+
+/**
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.9 $, $Date: 2006/03/18 15:16:16 $
+ */
+public class JFreePieScriptlet extends JRDefaultScriptlet
+{
+
+
+    /**
+     *
+     */
+    public void afterReportInit() throws JRScriptletException
+    {
+        try {
+        DefaultPieDataset dataset = new DefaultPieDataset();
+#if (${config.templateSettings.serviceTier} == "Spring")
+        org.springframework.context.ApplicationContext context = (org.springframework.context.ApplicationContext) ReportBaseTableModel.sessionLocal.get();
+#end
+
+        double size = 0.0;
+        double part = 0.0;
+
+#foreach ($session in $sessions)
+#if (${config.templateSettings.serviceTier} == "Spring")
+        ${app.RootPackage}.session.I${session.Name} ${session.Name}Service = (${app.RootPackage}.session.I${session.Name}) context.getBean("${session.Name}");
+#end        
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+        size += ${app.RootPackage}.core.${app.Name.Sentensized}Page.get${session.Name}Service().get${entity.Name}ListSize();
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+        size +=  ${app.RootPackage}.forms.ServiceBaseForm.get${session.Name}Service().get${entity.Name}ListSize();
+#end
+#else
+        size += ${session.Name}Service.get${entity.Name}ListSize();
+#end
+
+#end
+#end
+
+#foreach ($session in $sessions)
+#foreach ($entity in $session.Entities)
+#if ("false" == $entity.getIsAssociationEntity())
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+        part = (${app.RootPackage}.core.${app.Name.Sentensized}Page.get${session.Name}Service().get${entity.Name}ListSize() / size) * 100;
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+        part = (${app.RootPackage}.forms.ServiceBaseForm.get${session.Name}Service().get${entity.Name}ListSize() / size) * 100;
+#end
+#else
+        part = (${session.Name}Service.get${entity.Name}ListSize() / size) * 100;
+#end
+        dataset.setValue("${entity.Name}", new Double(part));
+#end
+#end
+#end
+#end
+        JFreeChart chart =
+            ChartFactory.createPieChart3D(
+                "JAG Entities Pie Chart",
+                dataset,
+                true,
+                true,
+                false
+                );
+
+        PiePlot3D plot = (PiePlot3D) chart.getPlot();
+        plot.setStartAngle(290);
+
+        plot.setForegroundAlpha(0.5f);
+        plot.setNoDataMessage("No data to display");
+
+        /*   */
+        this.setVariableValue("Chart", new JCommonDrawableRenderer(chart));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+#end

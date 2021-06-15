@@ -1,0 +1,14 @@
+#if (!$config.matchServiceTier("Spring"))
+////File: ./src/web/WEB-INF/classes/service.properties
+## Implementation class for database session management.
+#if ($config.matchBusinessTier("Hibernate"))
+DATABASE_SESSION_SERVICE=${app.RootPackage}.HibernateDatabaseSession
+#end
+#if ($config.check("useRss"))
+RSS_FEED_SERVICE=${app.RootPackage}.rss.RssFeedService
+#end
+#foreach ($session in $sessions)
+#The ${session.Name}Service service for ${config.templateSettings.businessTier}.
+${session.UpperCaseName}_SERVICE=${session.RootPackage}.${session.Name}
+#end
+#end

@@ -1,0 +1,22 @@
+#if (!$config.matchServiceTier("Spring"))
+////File: ${paths.ServiceOutput}/conf/service.properties
+## Implementation class for database session management.
+#if ($config.matchBusinessTier("Hibernate"))
+DATABASE_SESSION_SERVICE=${app.RootPackage}.HibernateDatabaseSession
+#end
+#foreach ($session in $sessions)
+#if ($config.useMock() == "true")
+#The ${session.Name}Service mock service.
+${session.UpperCaseName}_SERVICE=${session.RootPackage}.${session.Name}MockFacade
+#end
+#if ((${config.templateSettings.businessTier} == "EJB 2.0") || (${config.templateSettings.businessTier} == "EJB 3.0"))
+
+#The ${session.Name}Service service for ${config.templateSettings.businessTier}.
+#if ($config.useMock() == "true");#end${session.UpperCaseName}_SERVICE=${session.RootPackage}.${session.Name}DynamicBusinessDelegate
+#elseif ($config.matchBusinessTier("Hibernate"))
+
+#The ${session.Name}Service service for ${config.templateSettings.businessTier}.
+#if ($config.useMock() == "true");#end${session.UpperCaseName}_SERVICE=${session.RootPackage}.${session.Name}Facade
+#end
+#end
+#end

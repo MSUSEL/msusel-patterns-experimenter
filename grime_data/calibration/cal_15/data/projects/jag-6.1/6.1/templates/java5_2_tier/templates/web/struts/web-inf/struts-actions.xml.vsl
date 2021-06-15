@@ -1,0 +1,27 @@
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+////File: ./src/web/WEB-INF/struts-actions.xml
+<!-- START EXCEPTION HANDLING MECHANISM -->
+      <!-- Process init exception (redirects to generic exception page) -->
+      <action  path="/exception/initException"
+               type="com.finalist.util.genelv.struts.forms.InitExceptionAction"
+               scope="request">
+         <forward name="success" path="/exception/generic_exception_page.jsp"/>
+      </action>
+
+      <!-- Process show stacktrace (redirects to stack_trace_popup.jsp) -->
+      <action  path="/exception/initStackTrace"
+               type="com.finalist.util.genelv.struts.forms.InitStackTraceAction"
+               scope="request">
+         <forward name="success" path="/exception/stack_trace_popup.jsp"/>
+      </action>
+<!-- END EXCEPTION HANDLING MECHANISM -->
+
+#if ($config.check("useUpload"))
+<!-- Start upload and download file handling -->
+    <action path="/upload/UploadFile" type="${app.RootPackage}.actions.UploadFileAction" name="uploadFileForm">
+        <forward name="success" path="/upload/index.jsp"/>
+        <forward name="error" path="/exception/generic_exception_page.jsp"/>
+    </action>
+    <action path="/upload/DownloadFile" type="${app.RootPackage}.actions.DownloadFileAction" />
+#end
+#end

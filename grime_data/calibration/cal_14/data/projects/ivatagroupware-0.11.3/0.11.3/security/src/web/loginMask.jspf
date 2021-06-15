@@ -1,0 +1,165 @@
+<%@page import="com.ivata.mask.util.StringHandling"%>
+<%@page import="java.util.*"%>
+<%@page import="javax.servlet.http.*"%>
+
+<%@page import='org.apache.struts.Globals' %>
+
+<%--
+////////////////////////////////////////////////////////////////////////////////
+// $Id: loginMask.jspf,v 1.4 2005/04/28 18:47:05 colinmacleod Exp $
+//
+// Contains input fields used for the login pages. Split up so that the error
+// handling login page and the standard login page can share the same fields.
+//
+// Since: ivata groupware 0.9 (2003-01-18)
+// Author: Colin MacLeod <colin.macleod@ivata.com>
+// $Revision: 1.4 $
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: loginMask.jspf,v $
+// Revision 1.4  2005/04/28 18:47:05  colinmacleod
+// Fixed XHMTL, styles and resin compatibility.
+// Added support for URL rewriting.
+//
+// Revision 1.3  2005/04/09 17:19:59  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.2  2005/03/16 21:17:14  colinmacleod
+// Defaulted username/password for demo version.
+//
+// Revision 1.1.1.1  2005/03/10 17:51:45  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.5  2004/12/27 14:52:02  colinmacleod
+// Removed unused references to RequestUtils.
+// Updated other references to Struts 1.2.4 class TagUtils.
+//
+// Revision 1.4  2004/07/20 23:48:17  colinmacleod
+// Replace invalid SettingsRemote calls.
+//
+// Revision 1.3  2004/07/14 22:50:26  colinmacleod
+// Replaced bean:define with extended igw:bean.
+//
+// Revision 1.2  2004/03/21 21:16:34  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1.1.1  2004/01/27 20:59:20  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.2  2003/10/17 14:14:21  jano
+// changed names intranet -> portal
+//
+// Revision 1.1.1.1  2003/10/13 20:47:25  colin
+// Restructured portal into subprojects
+//
+// Revision 1.9  2003/06/09 12:11:22  peter
+// img and html:img replaced with size-aware imhtml:img
+//
+// Revision 1.8  2003/06/06 13:35:25  jano
+// fixing image size
+//
+// Revision 1.7  2003/04/01 18:14:20  colin
+// removed contentType tag - jetty doesnt like it
+//
+// Revision 1.6  2003/03/04 14:40:59  colin
+// changed radio button order & made click on image work again
+//
+// Revision 1.5  2003/03/03 16:57:12  colin
+// converted localization to automatic paths
+// added labels
+// added mandatory fieldName attribute
+//
+// Revision 1.4  2003/02/25 07:32:10  colin
+// restructured java file paths
+//
+// Revision 1.3  2003/01/28 13:40:04  colin
+// fixed addressBookIndex forward
+//
+// Revision 1.2  2003/01/27 07:18:39  colin
+// major bug fixes
+//
+// Revision 1.1  2003/01/18 20:05:47  colin
+// converted login to struts, added javascript checking, help button
+//
+////////////////////////////////////////////////////////////////////////////////
+--%>
+<igw:bean id='calendarTitle'><bean:message key="login.startupOption.title.calendar" /></igw:bean>
+<igw:bean id='contactsTitle'><bean:message key="login.startupOption.title.contacts" /></igw:bean>
+<igw:bean id='noticeboardTitle'><bean:message key="login.startupOption.title.noticeboard"/></igw:bean>
+<igw:bean id='webmailTitle'><bean:message key="login.startupOption.title.webmail" /></igw:bean>
+<igw:getSetting id='demoVersion' setting='demoVersion' type='java.lang.Boolean'/>
+
+<div class='loginMask'>
+  <div class='loginStartupOptions'>
+    <div class='loginStartupOption' title='<%=calendarTitle%>'>
+      <imhtml:radio fieldName='forward' value='calendarIndex'/>
+      <imhtml:img onclick='document.loginForm.forward[0].checked=true' page='/images/menu/item/calendar/index.gif' altKey='login.label.calendarImage'/>
+    </div>
+    <div class='loginStartupOption' title='<%=contactsTitle%>'>
+      <imhtml:radio fieldName='forward' value='addressBookIndex'/>
+      <imhtml:img onclick='document.loginForm.forward[1].checked=true' page='/images/menu/item/addressBook/index.gif' altKey='login.label.addressBookImage'/>
+    </div>
+    <div class='loginStartupOption' title='<%=noticeboardTitle%>'>
+      <imhtml:radio fieldName='forward' value='libraryIndex'/>
+      <imhtml:img onclick='document.loginForm.forward[2].checked=true' page='/images/menu/item/library/index.gif' altKey='login.label.libraryImage'/>
+    </div>
+    <div class='loginStartupOption' title='<%=webmailTitle%>'>
+      <imhtml:radio fieldName='forward' value='mailIndex'/>
+      <imhtml:img onclick='document.loginForm.forward[3].checked=true' page='/images/menu/item/mail/index.gif' altKey='login.label.mailImage'/>
+    </div>
+  </div>
+  <div class='loginText hilight'>
+    <imhtml:img styleClass='loginImage' page='/images/login.gif' altKey='login.label.image'/>
+    <igw:getSetting setting='siteWelcomeText'/>
+  </div>
+  <div class='loginFields'>
+    <input type='hidden' name='ok'/>
+    <table class='loginFields'>
+      <tr>
+        <td class='fieldCaption'><imhtml:label fieldName='userName'/></td>
+        <td width='100%'><c:choose>
+          <c:when test='<%=demoVersion.booleanValue()%>'><imhtml:text fieldName='userName' mandatory='true' value='demo'/></c:when>
+          <c:otherwise><imhtml:text fieldName='userName' mandatory='true'/></c:otherwise>
+        </c:choose></td>
+      </tr>
+      <tr>
+        <td class='fieldCaption'><imhtml:label fieldName='password'/></td>
+        <td width='100%'><c:choose>
+          <c:when test='<%=demoVersion.booleanValue()%>'><imhtml:password fieldName='password' mandatory='true' value='demo'/></c:when>
+          <c:otherwise><imhtml:password fieldName='password' mandatory='true'/></c:otherwise>
+        </c:choose></td>
+      </tr>
+    </table>
+  </div>
+</div>

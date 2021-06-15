@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<project
+    xmlns:ant="jelly:ant"
+    xmlns:j="jelly:core"
+    default="multiproject:install">
+  <preGoal name="xdoc:jelly-transform">
+    <!-- generate a faq from XML -->
+    <attainGoal name="faq"/>
+  </preGoal>
+  <!--
+    after building eclipse unpack the build resources and use the stylesheeet
+    to transform the classpath XML file.
+  -->
+  <postGoal name="eclipse">
+    <!-- don't do this for the build resources themselves! -->
+    <j:if test="${pom.id != 'ivatagroupware:ivatagroupware-build'}">
+      <attainGoal name="unpack-build-resources"/>
+      <!-- hack to make xalan work "as is"-->
+      ${systemScope.setProperty('javax.xml.transform.TransformerFactory',
+        'org.apache.xalan.processor.TransformerFactoryImpl')}
+      <!-- apply the ivata masks conversions, then the ivata groupware ones -->
+      <ant:style
+          in="${basedir}/.classpath"
+          out="${basedir}/.classpath2"
+          style="${maven.build.dir}/im-build/eclipseProjects.xsl" processor="trax">
+        <ant:param name="currentVersion" expression="${ivatamasks-version}"/>
+      </ant:style>
+      <ant:move file="${basedir}/.classpath2" tofile="${basedir}/.classpath"/>
+      <ant:style
+          in="${basedir}/.classpath"
+          out="${basedir}/.classpath2"
+          style="${maven.build.dir}/igw-build/eclipseProjects.xsl" processor="trax">
+        <ant:param name="currentVersion" expression="${pom.currentVersion}"/>
+      </ant:style>
+      <ant:move file="${basedir}/.classpath2" tofile="${basedir}/.classpath"/>
+    </j:if>
+  </postGoal>
+  <!-- extract shared build resources such as XSLT -->
+  <goal name="unpack-build-resources">
+    <ant:mkdir
+        dir="${maven.build.dir}/build"/>
+    <!-- these are ivata masks build resources -->
+    <ant:unjar
+        src="${maven.repo.local}/ivatamasks/jars/ivatamasks-build-${ivatamasks.version}.jar"
+        dest="${maven.build.dir}/im-build"/>
+    <!-- these are ivata groupware build resources -->
+    <ant:unjar
+        src="${maven.repo.local}/ivatagroupware/jars/ivatagroupware-build-${pom.currentVersion}.jar"
+        dest="${maven.build.dir}/igw-build"/>
+  </goal>
+</project>
+

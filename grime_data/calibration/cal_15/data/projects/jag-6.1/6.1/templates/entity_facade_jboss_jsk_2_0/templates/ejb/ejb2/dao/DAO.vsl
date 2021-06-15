@@ -1,0 +1,248 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#foreach ($entity in $entities)
+////File: ${paths.EjbOutput}/${app.RootPath}/dao/${entity.Name}DAO.java
+
+package ${app.RootPackage}.dao;
+
+import ${app.RootPackage}.QueryHelper;
+import ${entity.RootPackage}.${entity.Name}Bean;
+import ${entity.RootPackage}.${entity.Name}Data;
+import com.finalist.util.CountBean;
+import com.finalist.util.log.LogService;
+import com.finalist.util.log.Logger;
+
+import java.util.Iterator;
+import java.util.List;
+
+
+/**
+ * Read-only Data Access Object for retrieving ${entity.Name}Data value objects directly using JDBC.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2005/06/29 20:56:25 $
+ */
+public class ${entity.Name}DAO {
+   /**
+    * The Logger.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}DAO.class);
+   /**
+    * The ${entity.Name} list query.
+    */
+   private static String select${entity.Name}ListQuery;
+   /**
+    * The ${entity.Name} select query.
+    */
+   private static String select${entity.Name}Query;
+   /**
+    * The ${entity.Name} count query.
+    */
+   private static String count${entity.Name}Query;
+   /**
+    * The ${entity.Name} DAO.
+    */
+   private static ${entity.Name}DAO instance;
+
+   /**
+    * Maximum result size of a list query.
+    */
+   public static int MAX_RESULTS = 1000;
+
+   //instantiate the DAO when the class is loaded.
+   static {
+         instance = new ${entity.Name}DAO();
+         select${entity.Name}ListQuery = createSql();
+         StringBuffer temp = new StringBuffer(select${entity.Name}ListQuery);
+#if (${entity.isCompositeKey()})
+         temp.append(" WHERE (");
+#foreach ($pkField in $entity.PkFields)
+         temp.append("${pkField.ColumnName} = :PK${velocityCount}");
+#if ($velocityCount != $entity.PkFields.size())
+         temp.append(" AND ");
+#else
+         temp.append(")");
+#end
+#end
+#else
+         temp.append(" WHERE ${entity.PrimaryKey.ColumnName} = :ID");
+#end
+
+         select${entity.Name}Query = temp.toString();
+         count${entity.Name}Query = "SELECT COUNT(*) AS value FROM " + ${entity.Name}Bean.TABLE_NAME;
+   }
+
+   /**
+    * Private constructor of the DAO.
+    */
+   private ${entity.Name}DAO() { }
+
+
+   /**
+    * Obtains the singleton instance of the ${entity.Name}DAO.
+    * @return the DAO.
+    */
+   public static synchronized ${entity.Name}DAO getInstance() {
+      return instance;
+   }
+
+   /**
+    * Gets an individual ${entity.Name.Desentensized}, given its primary key.
+    *
+    * @param id the Id
+    * @return ${entity.Name}Data value object
+    */
+   public ${entity.Name}Data get${entity.Name}(${entity.PrimaryKeyType} id) {
+      if (id == null) {
+         return null;
+      }
+      ${entity.Name}Data ${entity.Name.Desentensized};
+      QueryHelper q = new QueryHelper();
+      try {
+         q.prepareStatement(select${entity.Name}Query);
+#if (${entity.isCompositeKey()})
+#foreach ($pkField in $entity.PkFields)
+#if (${config.templateSettings.appserver} == "BEA WebLogic 8.1 (Workshop EJBGen)")
+## EJBGen doesn't generate getters and setters for primary keys
+         q.setBindVar("PK${velocityCount}", id.${pkField.Name});
+#else
+         q.setBindVar("PK${velocityCount}", id.get${pkField.Name.Sentensized}());
+#end
+#end
+#else
+         q.setBindVar("ID", id);
+#end
+
+         ${entity.Name.Desentensized} = (${entity.Name}Data) q.executeQueryIntoBean(${entity.Name}Data.class).get(0);
+#if ($entity.HasRelations)
+
+         //Fetch any related objects..
+#foreach ($relation in $entity.Relations)
+         ${entity.Name.Desentensized}.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}DAO.getInstance().get${relation.RelatedEntity.Name}(${entity.Name.Desentensized}.get${relation.FieldName.Sentensized}()));
+#end
+#end
+
+         return ${entity.Name.Desentensized};
+
+      }
+      finally {
+         q.close();
+      }
+   }
+
+   /**
+    * Gets a list containing <i>a subset of</i> all ${entity.Name} objects.
+    *
+    * @param startIndex the start index in the result set - 1 is the first result.
+    * @param endIndex the end index in the result set.
+    * @return List with value objects.
+    */
+   public List get${entity.Name}List(int startIndex, int endIndex) {
+      return getList(startIndex, endIndex);
+   }
+
+   /**
+    * Creates a list of beans containing ${entity.Name.Desentensized} information,
+    * one for every ${entity.Name.Desentensized}.
+    *
+    * @return the ${entity.Name.Desentensized} list.
+    */
+   public List get${entity.Name}List() {
+      return getList(-1, -1);
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name} objects in the database.
+    *
+    * @return an integer value.
+    */
+   public static int get${entity.Name}ListSize() {
+      QueryHelper q = new QueryHelper();
+      try {
+         q.prepareStatement(count${entity.Name}Query);
+         return ((CountBean) q.executeQueryIntoBean(CountBean.class).get(0)).getValue();
+      }
+      finally {
+         q.close();
+      }
+   }
+
+   /**
+    * Gets a list containing <i>a subset of</i> all ${entity.Name} objects.
+    *
+    * @param startIndex the start index in the result set - 1 is the first result.
+    * @param endIndex the end index in the result set.
+    * @return List with value objects.
+    */
+   private List getList(int startIndex, int endIndex) {
+      List result;
+      QueryHelper q = new QueryHelper();
+      try {
+         q.prepareStatement(select${entity.Name}ListQuery);
+
+         //todo : This code should be removed once "View List Handler" pattern implemented!
+         if (get${entity.Name}ListSize() > MAX_RESULTS) {
+         log.warn("---RESTRICTING RESULT SET SIZE TO " + MAX_RESULTS + "---");
+            startIndex = 0;
+            endIndex = MAX_RESULTS;
+         }
+
+         result = (startIndex == -1) 
+               ? q.executeQueryIntoBean(${entity.Name}Data.class) 
+               : q.executeQueryIntoBean(${entity.Name}Data.class, startIndex, endIndex).getPartialResult();
+#if ($entity.HasRelations)
+
+         //Fetch any related objects..
+         Iterator i = result.iterator();
+         while (i.hasNext()) {
+            ${entity.Name}Data ${entity.Name.Desentensized} = (${entity.Name}Data) i.next();
+#foreach ($relation in $entity.Relations)
+            ${entity.Name.Desentensized}.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}DAO.getInstance().get${relation.RelatedEntity.Name}(${entity.Name.Desentensized}.get${relation.FieldName.Sentensized}()));
+#end
+         }
+#end
+         return result;
+      }
+      finally {
+         q.close();
+      }
+   }
+   /**
+    * Create SQL dynamically form the entity ejb fields.
+    *
+    * @return String with sql command.
+    */
+   private static String createSql() {
+      StringBuffer temp = new StringBuffer("SELECT ");
+      Iterator fields = ${entity.Name}Bean.COLUMNS_MAP.keySet().iterator();
+      while (fields.hasNext()) {
+         String field = (String) fields.next();
+         temp.append(${entity.Name}Bean.COLUMNS_MAP.get(field));
+         temp.append(" AS \"");
+         temp.append(field);
+         temp.append("\",");
+      }
+      temp.deleteCharAt(temp.lastIndexOf(","));
+      temp.append(" FROM ");
+      temp.append(${entity.Name}Bean.TABLE_NAME);
+      log.info("Created SQL: " + temp.toString());
+      return temp.toString();
+   }
+}
+#end
+#end

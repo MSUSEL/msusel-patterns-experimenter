@@ -1,0 +1,108 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.useWebService())
+#foreach ($session in $sessions)
+////File: ${paths.WebOutput}/${session.Name}WebService.java
+
+import ${session.RootPackage}.*;
+import java.util.*;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.LocatableService;
+import ${app.RootPackage}.servicelocator.ServiceLocator;
+#end
+import ${session.RootPackage}.${session.Name}Service;
+import com.finalist.util.log.*;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import org.apache.commons.beanutils.BeanUtils;
+import com.finalist.util.log.*;
+
+import org.apache.axis.AxisFault;
+
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.8 $, $Date: 2005/11/25 12:24:10 $
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="${session.Name}WebService"
+ *
+#end
+ */
+public class ${session.Name}WebService {
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${session.Name}WebService.class);
+
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+    /**
+    * Get the service interface.
+    * @return ${session.Name}Service interface
+    */
+    private ${session.Name}Service get${session.Name}Service() {
+    try {
+        return (${session.Name}Service) ServiceLocator.getService(ServiceLocator.${session.UpperCaseName}_SERVICE);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+#else
+    private  ${session.Name.Sentensized}Service  ${session.Name.Desentensized}Service;
+
+    /**
+    * Get the service interface.
+    * @return ${session.Name.Sentensized}Service interface
+    *
+    * @spring.property ref="${session.Name.Sentensized}Facade"
+    */
+    public ${session.Name.Sentensized}Service get${session.Name.Sentensized}Service() {
+        return ${session.Name.Desentensized}Service;
+    }
+
+    public void set${session.Name.Sentensized}Service(${session.Name.Sentensized}Service ${session.Name.Desentensized}Service) {
+        this.${session.Name.Desentensized}Service =${session.Name.Desentensized}Service;
+    }
+#end
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#set ($count = 0)
+   public $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) throws Exception {
+#set ($count = 0)
+#if ($businessMethod.returnType != "void")      return#end get${session.Name}Service().${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.name} #set ($count = $count + 1)#end);
+    }
+#end
+
+}
+#end
+#end

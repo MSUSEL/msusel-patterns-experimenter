@@ -1,0 +1,118 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/core/${app.Name.Sentensized}Page.java
+package ${app.RootPackage}.core;
+
+import java.util.Date;
+
+import javax.servlet.ServletContext;
+
+#foreach($sessionBean in $sessions)
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+#end
+import ${app.RootPackage}.exception.GenericBusinessException;
+import com.finalist.Constants;
+import org.apache.tapestry.annotations.InjectObject;
+import org.apache.tapestry.html.BasePage;
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.ServiceLocator;
+#else
+import org.springframework.web.context.WebApplicationContext;
+#end
+
+/**
+ * Base page that every page in this application will extend, so you can easily alter the behaviour of all
+ * pages in your application in one go. You could easily add a security-check to all pages for example,
+ * making sure none of the pages will render if the user is not properly logged in.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2006/04/29 12:53:51 $
+ */
+public abstract class ${app.Name.Sentensized}Page extends BasePage {
+   /** The name of the ErrorPage to forward to if something goes wrong. */
+   protected final static String PAGE_ERROR = "Error";
+
+   /**
+    * Retrieves the ServletContext.
+    *
+    * @return The ServletContext.
+    */
+   @InjectObject("service:tapestry.globals.ServletContext")
+   public abstract ServletContext getServletContext();
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+   protected WebApplicationContext getApplicationContext() {
+       ServletContext context = getServletContext();
+       if (context != null) {
+           return (WebApplicationContext) context.getAttribute(
+                   WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE
+          );
+       }
+       return null;
+   }
+#end   
+
+#foreach ($session2 in $sessions)
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+
+    /**
+    * Get the service interface.
+    * @return I${session2.Name} interface
+    */
+    public static I${session2.Name} get${session2.Name}Service() {
+    try {
+        return (I${session2.Name}) ServiceLocator.getService(ServiceLocator.${session2.UpperCaseName}_SERVICE);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+#else
+
+    private  I${session2.Name.Sentensized} ${session2.Name.Desentensized}Service;
+
+    /**
+    * Get the service interface.
+    * @return I${session2.Name.Sentensized} interface
+    *
+    */
+    public I${session2.Name.Sentensized} get${session2.Name.Sentensized}Service() {
+        WebApplicationContext appContext = getApplicationContext();
+         if(appContext != null) {
+            I${session2.Name.Sentensized} service = (I${session2.Name.Sentensized}) appContext.getBean("${session2.Name.Sentensized}");
+            return service;
+         } else {
+            return null;
+         }
+
+    }
+#end
+#end
+
+   /**
+    * Convenience method for formatting a Date.
+    *
+    * @param date The date to format.
+    * @return The date properly formatted as a String.
+    */
+   public String format(Date date) {
+      return date == null ? "" : Constants.DATE_FORMATTER.format(date);
+   }
+}
+#end

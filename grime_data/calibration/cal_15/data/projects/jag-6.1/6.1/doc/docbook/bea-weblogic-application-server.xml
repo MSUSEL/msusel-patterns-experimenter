@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<article id="bea">
+  <articleinfo>
+    <title>Bea WebLogic Application Server Support with JAG</title>
+
+    <author>
+      <firstname>Rudie</firstname>
+
+      <surname>Ekkelenkamp</surname>
+
+      <affiliation>
+        <orgname>Finalist IT Group</orgname>
+
+        <address>
+               <street>Stationsplein 45</street>,
+               <postcode>3013 AK </postcode>
+               <city>Rotterdam</city>,
+               <country>The Netherlands</country>,
+               Phone:
+               <phone>+31 10 217 08 00</phone>,
+               Fax:
+               <fax>+31 10 280 96 20</fax>,
+               Email:
+               <email>rudie@finalist.com</email>
+            </address>
+      </affiliation>
+    </author>
+
+    <date>May 25, 2004</date>
+
+    <revhistory>
+      <revision>
+        <revnumber>v0.1</revnumber>
+
+        <date>May 25, 2004</date>
+
+        <authorinitials>Rudie Ekkelenkamp</authorinitials>
+
+        <revdescription>
+          <para>Initial version on how to use BEA with JAG.</para>
+        </revdescription>
+      </revision>
+    </revhistory>
+  </articleinfo>
+
+  <section>
+    <title>The Bea WebLogic Application Server</title>
+
+    <section>
+      <title>Introduction</title>
+
+      <para>Initial support has been implemented for BEA.</para>
+    </section>
+
+    <section>
+      <title>WebLogic 8.1</title>
+
+      <para>This is the xdoclet version partly supported by JAG.
+      Alle features of JAG can be used excluding Container Managed Relations.</para>
+    </section>
+    <section>
+      <title>WebLogic 8.1 EJBGen support</title>
+      <para>WebLogic Workshop has default support for EJBGen, which is similar to xdoclet.
+      With JAG it is now possible to generate a EJB module for WebLogic Workshop in EJBGen format.
+      The generated source Can NOT be built with the ANT script. WebLogic Workshop is needed for that.      
+      </para>
+    </section>
+
+  </section>
+</article>

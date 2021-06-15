@@ -1,0 +1,57 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.useWebService())
+////File: ${paths.TestOutput}/../cs-test/DotNetWebServiceTest.cs
+using System;
+
+public class DotNetWebServiceTest {
+
+  public static void Main(String[] args) {
+      Console.WriteLine("Start of test: DotNetWebServiceTest.");
+#set ($sessionCount = 0)
+#foreach ($session in $sessions)
+#set ($sessionCount = $sessionCount + 1)
+      ${session.Name}WebServiceService  s${sessionCount} = new ${session.Name}WebServiceService();
+
+      // Implement tests for the business methods here...
+
+##    #set ($methodCount = 0)
+##    #foreach ($businessMethod in $session.businessMethods)
+##    #set ($methodCount = $methodCount + 1)
+##    #set ($count = 0)
+##          #if ($businessMethod.returnType != "void")$  businessMethod.returnType result${methodCount} = #end s${sessionCount}.${businessMethod.methodName}(
+##             #foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end
+##    #if ( ($businessArgument.type == "char") || ($businessArgument.type == "byte") || ($businessArgument.type == "short") || ($businessArgument.type == "int") || ($businessArgument.type == "long") || ($businessArgument.type == "float") || ($businessArgument.type == "double") )
+##    0
+##    #elseif ($businessArgument.type == "boolean")
+##    false
+##    #elseif (($businessArgument.type != "java.lang.String") && ($businessArgument.type != "java.lang.Char"))
+##    0
+##    #else
+##    ""
+##    #end
+##    #set ($count = $count + 1)
+##    #end);
+##    #end
+
+#end
+      Console.WriteLine("End of test: DotNetWebServiceTest.");
+  }
+}
+#end

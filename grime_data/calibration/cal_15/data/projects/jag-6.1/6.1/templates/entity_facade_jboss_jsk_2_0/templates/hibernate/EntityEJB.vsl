@@ -1,0 +1,506 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.matchBusinessTier("Hibernate"))
+#foreach ($entity in $entities)
+////File: ${paths.HibernateOutput}/${entity.RootPath}/${entity.Name}Bean.java
+package ${entity.RootPackage};
+
+import java.io.Serializable;
+import com.finalist.util.log.*;
+
+#foreach ($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+## Support for hibernate 3 annotations...
+import javax.persistence.*;
+#end
+
+/**
+ * The ${entity.Name} entity bean.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.7 $, $Date: 2006/03/06 20:01:54 $
+ *
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+## no defines here..
+#else
+ * @hibernate.class
+ *         table="${entity.TableName}"
+#end 
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="${entity.name}Bean"
+#end
+ */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+## Support for hibernate 3 annotations...
+@Entity
+@Table(name = "${entity.TableName}")
+##@org.hibernate.annotations.Proxy(lazy = false)
+#end
+public class ${entity.Name}Bean implements Serializable, ${entity.RootPackage}.${entity.Name}If {
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${entity.Name}Bean.class);
+
+#foreach($relation in $entity.Relations)
+   private ${relation.RelatedEntity.Name}Bean ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+#end
+
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+#if (${config.useJava5()})
+   private java.util.Collection<${relation.localEntity.Name}Bean> ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = new java.util.ArrayList<${relation.localEntity.Name}Bean>();
+#else
+   private java.util.Collection ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = new java.util.ArrayList();
+#end
+#else
+   private ${relation.localEntity.Name}Bean ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized};
+#end
+#end
+#end
+#if ($entity.isCompositeKey())
+
+    /**
+     * the composite primary key.
+     */
+   private ${entity.PrimaryKeyType} primaryKey;
+#end
+
+## Display the fields that are not part of relations or a composite primary key..
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+## Do nothing for primary keys...
+#else
+   private ${field.Type} ${field.Name};
+#end
+#end
+
+   /**
+    * Default constructor.
+    */
+   public ${entity.Name}Bean() {
+   }
+
+   /**
+    * Value object constructor.
+    */
+   public ${entity.Name}Bean(${entity.RootPackage}.${entity.Name}If value) {
+#foreach ($field in $entity.Fields)
+      if (value != null) {
+         set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+      }
+#end
+   }
+
+   /**
+    * Creates a new bean and returns the primary key.
+    * If the primary key of the value object has been set, this key will be used.
+    * If the primary key is set to null, Hibernate's increment id generator is used for integers and longs
+    * and the uuid.hex generator for strings.
+    *
+    * @param value a <code>${entity.Name}If</code>
+    * @return the primary key for this ${entity.Name}
+    */
+   public ${entity.PrimaryKeyType} create(${entity.RootPackage}.${entity.Name}If value) {
+#foreach ($field in $entity.NonRelationFields)
+      if (value != null) {
+        set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+      }
+#end
+## Make sure we set the CMR fields, in case they are not primary key fields.
+#foreach ($field in $entity.FkFields)
+      if (value != null) {
+         set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+      }
+#end
+      return value.getPrimaryKey();
+   }
+
+#if ($entity.isCompositeKey())
+    /**
+     * Return the composite primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     *
+     */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @Id
+#end   
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+      return primaryKey;
+   }
+#else
+    /**
+     * Return the primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end   
+   public ${entity.PrimaryKeyType} getPrimaryKey() {
+        return get${entity.PrimaryKeyName.Sentensized}();
+    }
+#end
+#if ($entity.isCompositeKey())
+
+    /**
+     * Set the composite primary key.
+     *
+     * @param primaryKey the primary key
+     */
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+#else
+## There is no composite key, just one field..
+
+    /**
+     * Set the primary key.
+     *
+     * @param primaryKey the primary key
+     */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end   
+   public void setPrimaryKey(${entity.PrimaryKeyType} primaryKey) {
+       set${entity.PrimaryKeyName.Sentensized}(primaryKey);
+    }
+#end
+#foreach ($field in $entity.NonRelationFields)
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+    */
+#else
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+## Use java5 annotations
+    */
+   @Column(name = "${field.ColumnName}" #if (${field.isRequired()}), nullable = false#end #if (${field.Size}), length=${field.Size} #end)
+#if ($field.isPrimaryKey())
+#if ($field.HasAutoGenPrimaryKey)
+   @Id @GeneratedValue(strategy=javax.persistence.GenerationType.AUTO)
+#else
+   @Id
+#end
+#end
+#else
+## Use xdoclet
+#if ($field.isPrimaryKey())
+    * @hibernate.id
+#if ($field.HasAutoGenPrimaryKey)
+#if ($field.Type.equals("java.lang.String"))
+    * generator-class="uuid.hex"
+#else
+    * generator-class="increment"
+#end
+#else
+    * generator-class="assigned"
+#end
+#else
+    * @hibernate.property
+#if (${field.isRequired()})
+    * not-null="true"
+#end
+#end
+#if (${field.Size})    * length="${field.Size}"
+#end
+    * column="${field.ColumnName}"
+    */    
+#end
+#end
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient  
+#end
+   public $field.Type get${field.Name.Sentensized}() {
+      if (primaryKey == null) {
+	     return null;
+      }   
+      return primaryKey.get${field.Name.Sentensized}();
+   }
+#else
+   public $field.Type get${field.Name.Sentensized}() {
+      return ${field.Name};
+   }
+#end
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+#if ($field.isPrimaryKey() && ($entity.isCompositeKey()))
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+	   if (primaryKey == null) {
+		   primaryKey = new ${entity.PrimaryKeyType}();
+	   }
+      primaryKey.set${field.Name.Sentensized}($field.Name);
+   }
+#else
+   public void set${field.Name.Sentensized}($field.Type $field.Name) {
+      this.${field.Name} = ${field.Name};
+   }
+#end
+#end
+#foreach($relation in $entity.Relations)
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+## Use java5 annotations
+    */
+#if ($relation.isTargetMultiple())
+   @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+#else
+   @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+#end
+   @JoinColumn(name = "${relation.LocalColumn}")    
+#else    
+#if ($relation.isTargetMultiple())
+    * @hibernate.many-to-one
+    *            column="${relation.LocalColumn}"
+#else
+    * @hibernate.one-to-one
+    *            class="${relation.RelatedEntity.RootPackage}.${relation.RelatedEntity.Name}Bean"
+#end
+    *      cascade="none"
+    */
+#end    
+## We use Relation in the method name because hibernate needs concrete classes, no interfaces.
+   public ${relation.RelatedEntity.Name}Bean getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(){
+      return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized};
+   }
+    
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public ${relation.RelatedEntity.Name}If get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(){
+      return getRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public void setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}Bean ${relation.RelatedEntity.Name.Desentensized}) {
+      this.${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = ${relation.RelatedEntity.Name.Desentensized};
+   }
+   
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}If ${relation.RelatedEntity.Name.Desentensized}) {
+      setRelation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(new ${relation.RelatedEntity.Name}Bean(${relation.RelatedEntity.Name.Desentensized}));
+   }
+   
+#end
+
+##
+## Facade for the relations that point to this entity..
+## These are the entities on the "other" side.
+## Here we have to check if the relations are bidirectional.
+##
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+#if ($relation.isTargetMultiple())
+## this is a bidirectional one-to-many relation
+
+   /**
+    * Add the related ${relation.localEntity.Name} to this one-to-many relation.
+    *
+    * @param ${relation.localEntity.Name.Desentensized} object to be added.
+    */
+    
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name}Bean ${relation.localEntity.Name.Desentensized}) {
+      ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List.add(${relation.localEntity.Name.Desentensized});
+   }
+
+   /**
+    * Get a list of related ${relation.localEntity.Name}If objects of the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return Collection of ${relation.localEntity.Name}If objects.
+    *
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))    
+## Use Java 5 annotations.
+    */
+   @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "relation${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}")
+   @JoinColumn(name = "${relation.LocalColumn}")    
+#else
+## Without the readonly=true tag, not null fields will result in foreign key constraint violations.
+    * @hibernate.bag role="${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List" lazy="false" cascade="none" inverse="true" readonly="true"
+    * @hibernate.collection-key column="${relation.LocalColumn}"
+    * @hibernate.collection-one-to-many  class="${relation.localEntity.RootPackage}.${relation.localEntity.Name}Bean"
+    */
+#end    
+   public java.util.Collection#if (${config.useJava5()})<${relation.localEntity.Name.Sentensized}Bean>#end get${relation.FieldName.Sentensized}${relation.localEntity.Name}List() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List;
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(java.util.Collection#if (${config.useJava5()})<${relation.localEntity.Name.Sentensized}Bean>#end ${relation.localEntity.Name.Desentensized}List) throws ${app.RootPackage}.exception.GenericBusinessException {
+		this.${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized}List = ${relation.localEntity.Name.Desentensized}List;
+   }
+
+##
+#else
+## This is a bidirectional one-to-one relation
+   /**
+    * Get the related ${relation.localEntity.Name}Bean.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return ${relation.localEntity.Name}Bean object.
+    *
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))    
+## Use Java 5 annotations.
+    */
+   @OneToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY, mappedBy = "${relation.FieldName}")
+#else   
+## Without the readonly=true tag, not null fields will result in foreign key constraint violations.
+	* @hibernate.one-to-one
+    *            class="${relation.localEntity.RootPackage}.${relation.localEntity.Name}Bean"
+    */
+#end    
+   public ${relation.localEntity.Name}Bean getRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return ${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized};
+   }
+   
+   /**
+    * Get the related ${relation.localEntity.Name}If.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name}If object.
+    */
+   public ${relation.localEntity.Name}If get${relation.FieldName.Sentensized}${relation.localEntity.Name}() throws ${app.RootPackage}.exception.GenericBusinessException {
+   		return getRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}();
+   }
+
+   /**
+    * Set a ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void setRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name}Bean ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+		this.${relation.FieldName.Desentensized}${relation.localEntity.Name.Sentensized} = ${relation.localEntity.Name.Desentensized};
+   }
+   
+   /**
+    * Set a ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-many relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+
+      ${relation.localEntity.Name}Bean data = null;
+      if (${relation.localEntity.Name.Desentensized} instanceof ${relation.localEntity.Name}Data) {
+         data = (${relation.localEntity.Name}Bean) ${relation.localEntity.Name.Desentensized};
+      }
+      else {
+         data = new ${relation.localEntity.Name}Bean(${relation.localEntity.Name.Desentensized});
+      }
+      setRelation${relation.FieldName.Sentensized}${relation.localEntity.Name}(data);
+   }
+
+#end
+#end
+#end
+
+#foreach($relation in $entity.Relations)
+#set ($field = ${relation.ForeignPkField})
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public $field.Type get${relation.FieldName.Sentensized}() {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} != null) {
+         return ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.get${field.Name.Sentensized}();
+      } else {
+         return null;
+      }
+   }
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   @javax.persistence.Transient
+#end
+   public void set${relation.FieldName.Sentensized}($field.Type $field.Name) {
+      if (${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} == null) {
+        ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized} = new ${relation.RelatedEntity.Name}Bean();
+      }
+      ${relation.FieldName.Desentensized}${relation.RelatedEntity.Name.Sentensized}.set${field.Name.Sentensized}($field.Name);
+   }
+#end
+}
+#end
+#end

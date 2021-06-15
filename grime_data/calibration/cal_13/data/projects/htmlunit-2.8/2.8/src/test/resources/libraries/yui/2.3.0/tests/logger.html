@@ -1,0 +1,166 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+<title>YUI Logger Tests</title>
+<link type="text/css" rel="stylesheet" href="../build/logger/assets/logger.css" />
+<link type="text/css" rel="stylesheet" href="../build/yuitest/assets/testlogger.css" />
+
+<script type="text/javascript" src="../build/yahoo/yahoo-min.js"></script>
+<script type="text/javascript" src="../build/dom/dom-min.js"></script>
+<script type="text/javascript" src="../build/event/event-min.js"></script>
+<script type="text/javascript" src="../build/logger/logger-min.js"></script>
+<script type="text/javascript" src="../build/yuitest/yuitest-beta.js"></script>
+</head>
+<body>
+<h1>Logger Tests</h1>
+<p><input type="button" value="Run Tests" id="btnRun" disabled="true" /></p>
+
+<script type="text/javascript">
+
+(function() {
+
+    var    Dom=YAHOO.util.Dom,
+        Assert=YAHOO.util.Assert,
+        ObjectAssert=YAHOO.util.ObjectAssert,
+        ArrayAssert=YAHOO.util.ArrayAssert,
+        DateAssert=YAHOO.util.DateAssert,
+        UserAction=YAHOO.util.UserAction,
+        TestCase = YAHOO.tool.TestCase,
+        TestLogger = YAHOO.tool.TestLogger,
+        TestRunner = YAHOO.tool.TestRunner,
+        TestSuite = YAHOO.tool.TestSuite,
+        
+        Logger = YAHOO.widget.Logger,
+        LogReader = YAHOO.widget.LogReader,
+        LogWriter = YAHOO.widget.LogWriter;
+        
+    function LoggerTestCase(template) {
+        LoggerTestCase.superclass.constructor.call(this, template);
+    };
+    YAHOO.lang.extend(LoggerTestCase, TestCase);
+
+    var loggerTemplate = {
+        testCreateNewCategory: function() {
+            Logger._createNewCategory("testcategory");
+            Assert.areSame(Logger.categories[Logger.categories.length-1], "testcategory", "Could not find new category");
+        }
+    };
+    var loggerTest = new LoggerTestCase(loggerTemplate);
+    loggerTest.name = "Logger Test Case";
+
+    function LogReaderTestCase(template) {
+        LogReaderTestCase.superclass.constructor.call(this, template);
+        this.container = null;
+    };
+    YAHOO.lang.extend(LogReaderTestCase, TestCase);
+
+    LogReaderTestCase.prototype.setUp = function() {
+        this.container = document.createElement("div");
+        this.container.id = "testLogReaderContainer";
+        document.body.appendChild(this.container);
+    };
+
+    LogReaderTestCase.prototype.tearDown = function() {
+        if (this.container != null) {
+            YAHOO.util.Event.purgeElement(this.container, true);
+            document.body.removeChild(this.container);
+        }
+    };
+        
+    LogReaderTestCase.prototype.createInstance = function(oConfig) {
+        var lr = new LogReader(this.container, oConfig);
+        return lr;
+    };
+    
+    var logreaderTemplate = {
+        testConstruction: function() {
+            var lr = this.createInstance();
+            Assert.isObject(lr, "Failed to create basic instance");
+            Assert.isInstanceOf(LogReader, lr, "Failed to create basic instance");
+            lr = null;
+        }
+    };
+    var logreaderTest = new LogReaderTestCase(logreaderTemplate);
+    logreaderTest.name = "LogReader Test Case";
+    
+    function LogWriterTestCase(template) {
+        LogWriterTestCase.superclass.constructor.call(this, template);
+    };
+    YAHOO.lang.extend(LogWriterTestCase, TestCase);
+
+    LogWriterTestCase.prototype.setUp = function() {
+    };
+
+    LogWriterTestCase.prototype.tearDown = function() {
+    };
+
+    LogWriterTestCase.prototype.createInstance = function(oConfig) {
+        var lw = new LogWriter("testlogwriter", oConfig);
+        return lw;
+    };
+
+    var logwriterTemplate = {
+        testConstruction: function() {
+            var lw = this.createInstance();
+            Assert.isObject(lw, "Failed to create basic instance");
+            Assert.isInstanceOf(LogWriter, lw, "Failed to create basic instance");
+            lr = null;
+        }
+    };
+    var logwriterTest = new LogWriterTestCase(logwriterTemplate);
+    logwriterTest.name = "LogWriter Test Case";
+
+    function runTests(){
+        TestRunner.run();
+    }
+
+    YAHOO.util.Event.addListener(window, "load", function() {
+        var logger = new TestLogger();
+        YAHOO.util.Event.addListener("btnRun", "click", runTests);    
+        YAHOO.util.Dom.get("btnRun").disabled = false;
+
+        var loggersuite = new TestSuite("Logger Test Suite");
+        loggersuite.add(loggerTest);
+        loggersuite.add(logreaderTest);
+        loggersuite.add(logwriterTest);
+        TestRunner.add(loggersuite);
+
+        if (parent && parent != window) {
+            YAHOO.tool.TestManager.load();
+        } else {
+            YAHOO.tool.TestRunner.run();
+        }
+        
+    });
+})();
+
+</script>
+</body>
+</html>

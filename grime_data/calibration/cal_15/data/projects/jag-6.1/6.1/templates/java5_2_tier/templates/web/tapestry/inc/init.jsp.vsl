@@ -1,0 +1,42 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ${paths.JspOutput}/inc/init.jsp
+<!-- Core JSTL Taglib -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- Core Runtime JSTL Taglib -->
+<%@ taglib prefix="c_rt" uri="http://java.sun.com/jstl/core_rt" %>
+<!-- Control JSTL Taglib -->
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+<!-- i18n JSTL Taglib -->
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- SQL JSTL Taglib -->
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<!-- Functions JSTL Taglib -->
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+#if ($config.useSecurity())
+<!-- Acegi security taglib-->
+<%@ taglib prefix="authz" uri="http://acegisecurity.org/authz" %>
+#end
+<%@ page import=" java.util.*,
+                 com.finalist.Constants
+                 #if ($config.useSecurity()),org.acegisecurity.ui.webapp.AuthenticationProcessingFilter#end "%>
+<%@ page language='java' errorPage ="Error.html"%>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+#end

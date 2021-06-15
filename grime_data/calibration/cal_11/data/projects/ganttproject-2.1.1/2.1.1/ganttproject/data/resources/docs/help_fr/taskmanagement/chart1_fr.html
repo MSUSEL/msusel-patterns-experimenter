@@ -1,0 +1,109 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head>
+	<meta name="author" content="THOMAS Alexandre">
+	<title>Int�raction sur les t�ches</title>
+	<link rel=stylesheet type="text/css" href="../style.css">
+</head>
+<body>
+
+<h3>Int�ractions sur les t�ches</h3>
+
+<h4>D�placer une ou plusieurs t�ches</h4>
+Vous pouvez directement d�placer les t�ches sur le graphique � l'aide de
+la souris.
+<ul>
+	<li>s�lectionnez une ou plusieurs t�ches (pour s�lectionner plusieurs t�ches,
+	maintenez la touche <b>CRTL</b> enfonc�e tout en cliquant sur les t�ches
+	que vous voulez s�lectionner)&nbsp;;</li>
+	<li>rel�chez la touche <b>CRTL</b> si vous l'aviez enfonc�e&nbsp;;</li>
+	<li>cliquez avec le bouton du milieu de la souris sur une des t�ches
+	s�lectionn�es et maintenez le enfonc�&nbsp;;</li>
+	<li>d�placez votre souris (vers la droite ou la gauche) pour d�placer les
+	t�ches s�lectionn�es&nbsp;;</li>
+	<li>rel�chez le bouton du milieu de la souris � l'endroit o� vous voulez
+	<i>d�poser</i> les t�ches.</li>
+</ul>
+<b color ="red">ATTENTION&nbsp;: </b> Une fois le bouton rel�ch�, GanttProject 
+recalcule les d�pendances entre les t�ches, il se peut que certaines t�ches soient
+alors d�plac�es pour satisfaire les d�pendances qui les concernent.
+
+<h4>Modifier la dur�e d'une t�che</h4>
+Vous pouvez modifier la dur�e d'une t�che directement sur le diagramme de Gantt
+� l'aide de votre souris.
+<ul>
+	<li>d�placer le curseur de votre souris � l'une des extr�mit�s du rectangle
+	repr�sentant la t�che dont vous voulez modifier la dur�e&nbsp;;</li>
+	<li>un curseur particulier pour le redimensionnement appara�t&nbsp;;</li>
+	<li>cliquez sur le bouton gauche de votre souris et maintenez le enfonc�&nbsp;;</li>
+	<li>d�placer votre souris et rel�chez le bouton pour modifier la dur�e de la t�che.</li>
+</ul>
+
+<h4>Modifier l'avanc�e d'une t�che</h4>
+Vous pouvez modifier l'avanc�e d'une t�che directement sur le diagramme de Gantt
+� l'aide de votre souris. L'avanc�e d'une t�che se mat�rialise par une barre noire
+horizontale dans le rectangle repr�sentant une t�che.<br \>
+<center><img src="../images/progress.png"></center>
+Pour modifier l'avanc�e d'une t�che&nbsp;: 
+<ul>
+	<li>d�placez le curseur de votre souris sur la barre d'avanc�e (si l'avanc�e
+	est �gale � 0 %, la barre est invisible, il faut d�placer votre souris � 
+	l'extr�mit� gauche de la t�che)&nbsp;;</li>
+	<li>d�s que le curseur <img src="../images/cursorpercent.png">&nbsp; appara�t maintenez
+	le bouton gauche de la souris enfonc�&nbsp;;</li>
+	<li>d�placez votre souris pour modifier l'avanc�e de la t�che.</li>
+</ul>
+
+<h4>Cr�er des relations entre t�ches</h4>
+Vous pouvez cr�er des relations entre t�ches directement sur le diagramme de Gantt.
+Cependant, les relations cr�er ainsi ne seront que du type Fin-D�but initiallement.
+<ul>
+	<li>cliquez et maintenez le boutons gauche de la souris sur une t�che 
+	(cette t�che pr�c�dera celle que vous indiquerez plus tard)&nbsp;;</li>
+	<li>d�placez votre souris sur la t�che qui doit d�pendre de la premi�re&nbsp;;</li>
+	<li>une fl�che se dessine (img 1.);</li>
+	<li>rel�chez le bouton de la souris, la relation Fin-D�but est cr��e (img 2.).</li>
+</ul>
+<table align="center">
+<tralign="center" >
+<td><img align="middle" src="../images/rel1.png"></td>
+<td>&nbsp;</td>
+<td><img align="middle" src="../images/rel2.png"></td>
+</tr>
+<tr align="center">
+<td>img 1.</td>
+<td></td>
+<td>img 2.</td>
+</tr>
+</table>
+
+
+</body>
+</html>

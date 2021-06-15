@@ -79,7 +79,7 @@ class JavaPathsDetector {
         Set<String> paths = Sets.newHashSet()
         rootNS.each { ns ->
             names.each { name ->
-                if (!ns.isBlank() && name.contains(ns)) {
+                if (!ns.isBlank() && name.contains(ns) && name.indexOf(ns) > 0) {
                     paths << name.substring(0, name.indexOf(ns) - 1)
                 }
             }

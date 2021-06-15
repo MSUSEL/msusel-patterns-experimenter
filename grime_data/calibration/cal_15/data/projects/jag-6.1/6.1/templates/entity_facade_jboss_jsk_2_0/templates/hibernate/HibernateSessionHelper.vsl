@@ -1,0 +1,123 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (!$config.matchServiceTier("Spring"))
+#if ($config.matchBusinessTier("Hibernate"))
+////File: ${paths.HibernateOutput}/${app.RootPath}/HibernateSessionHelper.java
+package ${app.RootPackage};
+
+import com.finalist.util.log.*;
+#if ($config.matchBusinessTier("Hibernate 2"))
+import net.sf.hibernate.Session;
+import net.sf.hibernate.SessionFactory;
+import net.sf.hibernate.Transaction;
+import net.sf.hibernate.cfg.Configuration;
+import net.sf.hibernate.Query;
+#end
+#if ($config.matchBusinessTier("Hibernate 3"))
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.Query;
+#if (${config.useJava5()})
+import org.hibernate.cfg.AnnotationConfiguration;
+#end
+#end
+
+#foreach ($entity in $entities)
+import ${entity.RootPackage}.*;
+#end
+
+
+/**
+ * This class is a Helper for the Hibernate Sessions.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.10 $, $Date: 2005/06/29 20:56:26 $
+ */
+public class HibernateSessionHelper {
+
+    /**
+     * The logger
+     */
+    private static Logger log = LogService.getLogger(HibernateSessionHelper.class);
+
+    private static int count = 0;
+
+   /**
+    * The Hibernate configuration.
+    */
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+   private static AnnotationConfiguration cfg;
+#else
+   private static Configuration cfg;
+#end
+
+   /**
+    * The Hibernate session factory.
+    */
+   private static SessionFactory sf;
+
+   /**
+    * Use a thread local session, to allow JNDI lookup from tomcat.
+    */
+   public static final ThreadLocal sessionLocal = new ThreadLocal();
+
+    static {
+       try {
+#if (${config.useJava5()} && $config.matchBusinessTier("Hibernate 3"))
+        cfg = new AnnotationConfiguration();
+        cfg.configure();
+#else
+        cfg = new Configuration().configure();
+#end
+        sf = cfg.buildSessionFactory();
+       } catch (Exception e) {
+          log.fatal("Error while configuring the hibernate beans", e);
+       }
+    }
+
+   /**
+    * Get a hibernate session and put it in the local thread.
+    */
+   public static Session getHibernateSession() throws Exception {
+      Session session = (Session) sessionLocal.get();
+      if (session == null) {
+         count++;
+         log.debug("Opened the session: " + count);
+         session = sf.openSession();
+         sessionLocal.set(session);
+      }
+      return session;
+   }
+
+   /**
+    * Close a hibernate session in the local thread.
+    */
+   public static void close() throws Exception {
+      Session session = (Session) sessionLocal.get();
+      sessionLocal.set(null);
+      if (session != null) {
+         count--;
+         log.debug("Closed the session: " + count);
+         session.close();
+      }
+   }
+
+}
+#end
+#end

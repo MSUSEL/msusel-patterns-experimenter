@@ -1,0 +1,304 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+
+#if ($app.LogFramework.equals("jdklogging"))
+////File: ./src/java-web/com/finalist/util/log/JDKLogger.java
+package com.finalist.util.log;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.FileHandler;
+import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Hashtable;
+
+/**
+ * This class is wil log messages to the log file using the jdk logging framework.
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.1 $, $Date: 2005/10/13 21:17:51 $
+ */
+public final class JDKLogger implements Logger {
+   
+   /**
+    * number of bytes for a kilobyte.
+    */
+   private static final int KILO_BYTE = 1024;
+   
+   /**
+    * number of bytes for a megabyte.
+    */
+   private static final int MEGA_BYTE = 1024 * KILO_BYTE;
+   
+   /**
+    * the name of the file with the log settings.
+    */
+   private static final String LOGGING_XML_FILENAME = "jdklogfinalist-${app.Name}.xml";
+   
+   /**
+    * the log dir property.
+    */
+   private static final String LOG_DIR_PROPERTY = "com.finalist.logDir";
+   
+   /**
+    * hashtable with all filehandlers for logging.
+    */
+   private static Hashtable fileHandlers = new Hashtable();
+   
+   /**
+    * hashmap with all log configurations from the log setting file.
+    */
+   private static HashMap logConfigs = null;
+   
+   /**
+    * holds all instantiated loggers.
+    */
+   private static Hashtable loggers = new Hashtable();
+   
+   /**
+    * the log object to log to.
+    */
+   private java.util.logging.Logger logger = null;
+
+   
+   /**
+    * Constructor for creating a logger object using jdk 1.4 or higher logging.
+    *
+    * @param cls the class which wants to log
+    */
+   public JDKLogger(Class cls) {
+      logger = (java.util.logging.Logger) loggers.get(cls.getName());
+      
+      if (logger == null) {
+         setLogConfigs();
+         logger = java.util.logging.Logger.getLogger(cls.getName());
+      
+         Iterator keysIterator = logConfigs.keySet().iterator();
+         
+         while (keysIterator.hasNext()) {
+            String appenderName = (String) keysIterator.next();
+            LogConfig logConfig = (LogConfig) logConfigs.get(appenderName);
+         
+            FileHandler fileHandler = getFileHandler(appenderName, logConfig);
+            logger.addHandler(fileHandler);
+            logger.setLevel(Level.ALL);
+         }
+         loggers.put(cls.getName(), logger);
+      }
+   }
+
+   /**
+    * Method for retrieving log settings from a configuration file. Once this is set
+    * it won't read the file again.
+    */
+   private static void setLogConfigs() {
+      if ((logConfigs == null) || (logConfigs.size() <= 0)) {
+         logConfigs = XMLLogPropertyReader.getLogConfigs(LOGGING_XML_FILENAME);
+      }
+   }
+
+   /**
+    * This method will setup a filehandler with the settings from a LogConfig.
+    * @param appenderName the name of the appender, also the filter to log for
+    * @param logConfig configuration for a appender
+    * @return FileHandler a filehandler which will be logged
+    */
+   private static FileHandler getFileHandler(String appenderName, LogConfig logConfig) {
+      FileHandler fileHandler = (FileHandler) fileHandlers.get(appenderName);
+      
+      if (fileHandler == null) {
+         try {
+            String logDir = System.getProperty(LOG_DIR_PROPERTY);
+            if (logDir == null) {
+               System.out.println("Warning. No logdir set. Please set the com.finalist.logDir property.");
+               System.out.println("Logging to the working directory.");
+               logDir = ".";
+               System.setProperty(LOG_DIR_PROPERTY, logDir);
+            }
+            else {
+               System.out.println("---Logging to directory---: " + logDir);
+            }
+            fileHandler = new FileHandler(logDir + File.separator + logConfig.getLogFile(), 
+                  logConfig.getMaxFileSize() * MEGA_BYTE,
+                  logConfig.getMaxBackupIndex(), 
+                  logConfig.isAppendable());
+
+            fileHandler.setFormatter(new LogFormatter(logConfig.getShowNumberOfLastPackages(),
+                  logConfig.getDatePattern(),
+                  logConfig.getMessageSeparator()));
+            
+            if (logConfig.getLogLevel().equals("DEBUG")) {
+               fileHandler.setLevel(CustomLevel.DEBUG);
+            }
+            else if (logConfig.getLogLevel().equals("ERROR")) {
+               fileHandler.setLevel(CustomLevel.ERROR);
+            }
+            else if (logConfig.getLogLevel().equals("FATAL")) {
+               fileHandler.setLevel(CustomLevel.FATAL);
+            }
+            else {
+               fileHandler.setLevel(Level.parse(logConfig.getLogLevel()));
+            }
+
+            fileHandler.setFilter(new LogFilter(appenderName));
+            fileHandlers.put(appenderName, fileHandler);
+         }
+         catch (Exception e) {
+            System.err.println("Cannot create filehandler for: " + appenderName + ": " + e);
+         }
+      }
+      return fileHandler;
+   }
+
+   /**
+    * Logging a finest message.
+    * @param message the message to log
+    */
+   public void finest(String message) {
+      logger.finest(message);
+   }
+
+   /**
+    * Logging a finer message.
+    * @param message the message to log
+    */
+   public void finer(String message) {
+      logger.finer(message);
+   }
+
+   /**
+    * Logging a fine message.
+    * @param message the message to log
+    */
+   public void fine(String message) {
+      logger.fine(message);
+   }
+
+   /**
+    * Logging a config message.
+    * @param message the message to log
+    */
+   public void config(String message) {
+      logger.config(message);
+   }
+
+   /**
+    * Logging an info message.
+    * @param message the message to log
+    */
+   public void info(String message) {
+      logger.info(message);
+   }
+
+   /**
+    * Logging a warning message.
+    * @param message the message to log
+    */
+   public void warning(String message) {
+      logger.warning(message);
+   }
+
+   /**
+    * Logging a severe message.
+    * @param message the message to log
+    */
+   public void severe(String message) {
+      logger.severe(message);
+   }
+
+   //****************************************************
+   //*  The methods from log4j also implemented below   *
+   //****************************************************
+
+   /**
+    * Logging a debug message.
+    * @param message the message to log
+    */
+   public void debug(String message) {
+      logger.log(CustomLevel.DEBUG, message);
+   }
+
+   /**
+    * Logging a debug message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void debug(String message, Throwable t) {
+      logger.log(CustomLevel.DEBUG, message, t);
+   }
+
+   /**
+    * Logging an info message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void info(String message, Throwable t) {
+      logger.log(Level.INFO, message, t);
+   }
+
+   /**
+    * Logging a warning message.
+    * @param message the message to log
+    */
+   public void warn(String message) {
+      logger.log(Level.WARNING, message);
+   }
+
+   /**
+    * Logging a warning message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void warn(String message, Throwable t) {
+      logger.log(Level.WARNING, message, t);
+   }
+
+   /**
+    * Logging an error message.
+    * @param message the message to log
+    */
+   public void error(String message) {
+      logger.log(CustomLevel.ERROR, message);
+   }
+
+   /**
+    * Logging an error message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void error(String message, Throwable t) {
+      logger.log(CustomLevel.ERROR, message, t);
+   }
+
+   /**
+    * Logging a fatal message.
+    * @param message the message to log
+    */
+   public void fatal(String message) {
+      logger.log(CustomLevel.FATAL, message);
+   }
+
+   /**
+    * Logging a fatal message with the throwable message.
+    * @param message the message to log
+    * @param t the exception
+    */
+   public void fatal(String message, Throwable t) {
+      logger.log(CustomLevel.FATAL, message, t);
+   }
+
+}
+#end

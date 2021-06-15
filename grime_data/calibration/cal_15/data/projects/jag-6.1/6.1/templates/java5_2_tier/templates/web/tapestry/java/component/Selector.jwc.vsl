@@ -1,0 +1,39 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/web/WEB-INF/Selector.jwc
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component-specification PUBLIC "-//Apache Software Foundation//Tapestry Specification 4.0//EN" "http://jakarta.apache.org/tapestry/dtd/Tapestry_4_0.dtd">
+<component-specification allow-body="no" allow-informal-parameters="yes" class="${app.RootPackage}.component.Selector">
+   <description>
+      Creates either a Dropdown box or a TextField, depending on the amount of items in the PropertySelectionModel.
+   </description>
+
+   <parameter name="value" required="yes"/>
+   <parameter name="selectorList" required="yes"/>
+   <parameter name="switchSize" required="no" default-value="5" />
+   <parameter name="disabled"/>
+   <parameter name="displayName"/>
+   <parameter name="id" property="idParameter" default-value="id"/>
+
+   <reserved-parameter name="name"/>
+   <reserved-parameter name="type"/>
+   <reserved-parameter name="value"/>
+</component-specification>
+#end

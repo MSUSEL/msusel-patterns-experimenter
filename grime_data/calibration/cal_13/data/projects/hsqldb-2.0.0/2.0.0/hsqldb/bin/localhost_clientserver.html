@@ -1,0 +1,61 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head><title>HSQL Database Engine</title></head>
+<body bgcolor=#FFFFFF>
+<h2>HSQL Database Engine Client/Server Demo</h2>
+<applet code="org.hsqldb.util.QueryTool" archive="hsqldb.jar" width="460" height="400" codebase="../lib/">
+<param name="database" value="http://localhost">
+</applet>
+
+<h3>Client/server version</h3>
+Currently, the applet is configured to connect to 'http://localhost',
+but this can be changed in the source code of this HTML page:
+The applet parameter 'database' is the path where the applet connects to.
+Close the database and stop the WebServer using the 'SHUTDOWN' command.
+<p>
+<h2>If it does not work</h2>
+On some browsers (Netscape 4.6?), the version compiled for
+JDK 1.2 does not work. In the Java Console (Communicator
+/ Extras / Java Console) you will get something like:
+<p>
+# Verifier error org/hsqldb/jdbcConnection.getTypeMap()Ljava/util/Map
+<p>
+This means the class java.util.Map was not found. In JDK 1.1,
+this class does not exist. When compiled for 1.2, there is
+a reference this class required to conform the JDBC 2.0 interface.
+This class itself is never used, but the reference is required anyway.
+It looks like most verifiers have no problem with this, but some
+have.
+<p>
+The (only) solution for this problem is to recompile (at least the
+client part) for JDK 1.1. You will need to install JDK 1.1 before
+you can do this, then see:
+<p><a href="doc/hsqlBuild.html">Build / How to switch to JDK 1.1</a>
+</body></html>

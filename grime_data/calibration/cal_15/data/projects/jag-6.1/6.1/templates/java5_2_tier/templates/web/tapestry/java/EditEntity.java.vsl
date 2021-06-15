@@ -1,0 +1,418 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ./src/java-web/${app.RootPath}/page/Edit${entityBean.Name}.java
+package ${app.RootPackage}.page;
+import ${app.RootPackage}.core.*;
+import ${app.RootPackage}.component.Selector;
+import ${app.RootPackage}.component.SelectorList;
+import org.apache.tapestry.valid.ValidatorException;
+
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+import ${app.RootPackage}.servicelocator.*;
+#end
+#foreach($relation in $entityBean.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+import ${sessionBean.RootPackage}.I${sessionBean.Name};
+import com.finalist.util.log.*;
+import com.finalist.util.*;
+import ${sessionBean.RootPackage}.*;
+import ${entityBean.RootPackage}.*;
+import java.util.Collection;
+import java.io.Serializable;
+import ${app.RootPackage}.exception.*;
+import org.apache.tapestry.event.PageEvent;
+import java.io.Serializable;
+import java.util.Date;
+import org.apache.tapestry.form.PropertySelection;
+import com.finalist.Constants;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.annotations.Component;
+import org.apache.tapestry.form.DatePicker;
+import org.apache.tapestry.form.TextField;
+import org.apache.tapestry.valid.FieldLabel;
+
+/**
+ * Page class for the application's Edit${entityBean.Name} page.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.30 $, $Date: 2006/04/27 07:09:30 $
+ */
+public abstract class Edit${entityBean.Name} extends ${app.Name.Sentensized}ItemPage<${entityBean.Name}> {
+   private static final Logger LOG = LogService.getLogger(Edit${entityBean.Name}.class);
+
+#foreach($relation in $entityBean.Relations)
+   private SelectorList<${relation.RelatedEntity.Name}> ${relation.FieldName}SelectionModel = null;
+#end
+
+   /** {@inheritDoc} */
+   public ${entityBean.Name} fetchItem(Serializable key) throws GenericBusinessException {
+      LOG.debug("fetching ${entityBean.Name} with key " + key + "...");
+      if (key == null) {
+         return null;
+      }
+#if ($entityBean.isCompositeKey())
+      ${entityBean.PrimaryKeyType} keyValue = (${entityBean.PrimaryKeyType}) key;
+#else
+      ${entityBean.PrimaryKeyType} keyValue = ${entityBean.PrimaryKeyType}.valueOf(key.toString());
+#end
+      return get${sessionBean.Name}Service().get${entityBean.Name}(keyValue);
+   }
+
+   /** {@inheritDoc} */
+   public void populateProperties(${entityBean.Name} item) {
+      LOG.debug("populating properties...");
+      try {
+#foreach($relation in $entityBean.Relations)
+         set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(item.get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}());
+#end
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing.
+#else
+         set${field.Name.Sentensized}(item.get${field.Name.Sentensized}());
+#end
+#end
+      } catch (Exception e) {
+         LOG.error("Error while copying properties.");
+      }
+   }
+
+   /** {@inheritDoc} */
+   public ${entityBean.PrimaryKeyType} updateItem(IRequestCycle cycle, ${entityBean.Name} item) throws GenericBusinessException {
+      LOG.debug("updating item in the database...");
+      try {
+#foreach($relation in $entityBean.Relations)
+      item.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}());
+#end
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing.
+#else
+         item.set${field.Name.Sentensized}(#if($field.Type=="java.sql.Date")toSqlDate(get${field.Name.Sentensized}())#else get${field.Name.Sentensized}()#end);
+#end
+#end
+         get${sessionBean.Name}Service().save${entityBean.Name}(item);
+         return item.getPrimaryKey();
+      } catch (Exception e) {
+         LOG.error("Error while copying properties.");
+         return null;
+      }
+   }
+
+   /** {@inheritDoc} */
+   public Serializable addItem(IRequestCycle cycle, Serializable key) throws GenericBusinessException {
+      LOG.debug("adding new item to the database...");
+      ${entityBean.PrimaryKeyType} keyValue = null;
+      if (key != null) {
+#if ($entityBean.isCompositeKey())
+         keyValue = (${entityBean.PrimaryKeyType}) key;
+#else
+         keyValue = ${entityBean.PrimaryKeyType}.valueOf(key.toString());
+#end
+      }
+      ${entityBean.Name} item = new ${entityBean.Name}();
+#foreach($relation in $entityBean.Relations)
+      item.set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}());
+#end
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing.
+#else
+      item.set${field.Name.Sentensized}(#if($field.Type=="java.sql.Date")toSqlDate(get${field.Name.Sentensized}())#else get${field.Name.Sentensized}()#end);
+#end
+#end
+      item.setPrimaryKey(keyValue);
+      return get${sessionBean.Name}Service().add${entityBean.Name}(item).getPrimaryKey();
+   }
+
+   /** {@inheritDoc} */
+   public void deleteItem(IRequestCycle cycle, ${entityBean.Name} item) throws GenericBusinessException {
+      LOG.debug("Deleting item from the database...");
+      get${sessionBean.Name}Service().delete${entityBean.Name}(item.getPrimaryKey());
+   }
+
+   /** {@inheritDoc} */
+   public void pageDetached(PageEvent event) {
+      super.pageDetached(event);
+      if(!event.getRequestCycle().isRewinding()) {
+         // Only reset the item after the render-phase. After the rewind-phase it may stay, since
+         // rendering will be done with the same page-instance and retrieving it from the database
+         // again after it was already retrieved in the rewind-phase seems like overkill.
+#foreach($relation in $entityBean.Relations)
+         set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}SelectionModel(null);
+#end
+      }
+   }
+
+#foreach($relation in $entityBean.Relations)
+   /**
+    * Getter for property '${relation.FieldName}SelectionModel'.
+    *
+    * @return The value for property '${relation.FieldName}SelectionModel'.
+    */
+   public SelectorList<${relation.RelatedEntity.Name}> get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}SelectionModel() {
+      if(${relation.FieldName}SelectionModel == null) {
+         try {
+            int maxModelSize = get${relation.FieldName.Sentensized}Field().getSwitchSize() + 1;         
+            ${relation.FieldName}SelectionModel = new SelectorList<${relation.RelatedEntity.Name}>(get${relation.RelatedEntity.firstSession.Name}Service().get${relation.RelatedEntity.Name}List(1, maxModelSize)) {
+               public String getKeyForItem(${relation.RelatedEntity.Name} item) {
+                  return "" + item.getPrimaryKey();
+               }
+               public String getLabelForItem(${relation.RelatedEntity.Name} item) {
+                  return "" + item.get${relation.RelatedEntity.DisplayName.Sentensized}();
+               }
+
+               public ${relation.RelatedEntity.Name} getItemByKey(String key) throws ValidatorException {
+                  try {
+                     ${relation.RelatedEntity.PrimaryKeyType} keyValue = ${relation.RelatedEntity.PrimaryKeyType}.valueOf(key);
+                     // I choose to retrieve the item from the database to get the latest, but you may just as well
+                     // retrieve it from the list by iterating over all items.... do keep in mind that usually the list
+                     // are big when this method is called (textfield instead of dropdown).
+                     return get${relation.RelatedEntity.firstSession.Name}Service().get${relation.RelatedEntity.Name}(keyValue);
+                  } catch(NumberFormatException nfe) {
+                     throw new ValidatorException("'" + key + "' is not a valid number");
+                  } catch (GenericBusinessException e) {
+                     LOG.fatal("Could not obtain item from database (" + key + ")", e);
+                     throw new ValidatorException("Could not obtain item from database (" + key + ")");
+                  }
+               }
+
+            };
+         } catch (GenericBusinessException e) {
+            LOG.error("Problem while retrieving List of ${relation.RelatedEntity.Name}", e);
+         }
+      }
+      return ${relation.FieldName}SelectionModel;
+   }
+
+   /**
+    * Setter for property '${relation.FieldName}SelectionModel'.
+    *
+    * @param ${relation.FieldName}SelectionModel Value to set for property '${relation.FieldName}SelectionModel'.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}SelectionModel(SelectorList<${relation.RelatedEntity.Name}> ${relation.FieldName}SelectionModel) {
+      this.${relation.FieldName}SelectionModel = ${relation.FieldName}SelectionModel;
+   }
+#end
+
+   // ---[ PAGE PROPERTIES ]--------------------------------------------------------------------------------------------
+
+#foreach($relation in $entityBean.Relations)
+   /**
+    * Getter for page property '${relation.FieldName}'.
+    *
+    * @return The value for page property '${relation.FieldName}'.
+    */
+   public abstract ${relation.RelatedEntity.Name} get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+
+   /**
+    * Setter for page property '${relation.FieldName}'.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} Value to set for page property '${relation.FieldName}'.
+    */
+   public abstract void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name} ${relation.RelatedEntity.Name.Desentensized});
+#end
+
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing.
+#else
+   /**
+    * Getter for page property '${field.Name}'.
+    *
+    * @return The value for page property '${field.Name}'.
+    */
+   public abstract #if (${field.Type}=="java.sql.Date")java.util.Date #else${field.Type}#end get${field.Name.Sentensized}();
+
+   /**
+    * Setter for page property '${field.Name}'.
+    *
+    * @param ${field.Name} Value to set for page property '${field.Name}'.
+    */
+   public abstract void set${field.Name.Sentensized}(#if (${field.Type}=="java.sql.Date")java.util.Date #else${field.Type}#end ${field.Name});
+#end
+#end
+
+   // ---[ TAPESTRY COMPONENTS ]----------------------------------------------------------------------------------------
+
+#foreach($relation in $entityBean.Relations)
+   /**
+    * Tapestry component for rendering the userField. This PropertySelection is bound to the page property '${relation.FieldName}${relation.RelatedEntity.Name}'
+    * and uses the Selector '${relation.FieldName}${relation.RelatedEntity.Name}SelectionModel'.
+    *
+    * @return The PropertySelection component to use for setting/editing the relation.
+    */
+   @Component(type = "Selector",
+    bindings = {
+    "value=${relation.FieldName}${relation.RelatedEntity.Name}",
+    "switchSize=100", // List with sizes > 100 will switch to a text field component.    
+    "selectorList=${relation.FieldName}${relation.RelatedEntity.Name}SelectionModel",
+    "validators=validators:required",
+    "displayName=literal:${relation.FieldName.Sentensized}"})
+   public abstract Selector get${relation.FieldName.Sentensized}Field();
+
+   /**
+    * Tapestry component for defining the label that will be displayed before the relation field.
+    *
+    * @return The FieldLabel component to use for the relation.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:${relation.FieldName}Field"})
+   public abstract FieldLabel get${relation.FieldName.Sentensized}Label();
+#end
+
+#set ($count = 0)
+#foreach ($field in $entityBean.NonRelationFields)
+
+## Determine the validators for the field.
+#set ($validator = "")
+#if (${field.Required})
+#if (${field.Numeric})
+#set ($validator = "required,pattern=\\d+")
+#else
+#set ($validator = "required")
+#end
+#else
+## Not required, maybe numeric?
+#if (${field.Numeric})
+#set ($validator = "pattern=\\d+")
+#end
+#end
+#if ($field.isPrimaryKey())
+#set ($count = $count + 1)
+#if ($entityBean.isCompositeKey())
+
+   /**
+    * Tapestry helper method for getting the composite key: primaryKey${field.Name.Sentensized}.
+    *
+    * @return The value of the composite primary key.
+    * @see #getPrimaryKey()
+    * @see #setPrimaryKey(Serializable)
+    */
+   public $field.Type getPrimaryKey${field.Name.Sentensized}() {
+      if (getPrimaryKey() == null) {
+         return null;
+      } else {
+         return ((${entityBean.PrimaryKeyType}) getPrimaryKey()).get${field.Name.Sentensized}();
+      }
+   }
+
+   /**
+    * Tapestry helper method for setting the composite primaryKey${field.Name.Sentensized}.
+    *
+    * @param ${field.Name} The value of the primary key to set.
+    * @see #getPrimaryKey()
+    * @see #setPrimaryKey(Serializable)
+    */
+   public void setPrimaryKey${field.Name.Sentensized}($field.Type ${field.Name}) {
+      if (getPrimaryKey() == null) {
+         setPrimaryKey(new ${entityBean.PrimaryKeyType}());
+      }
+      ((${entityBean.PrimaryKeyType}) getPrimaryKey()).set${field.Name.Sentensized}(${field.Name});
+   }
+
+#if ($count > 1)
+  /**
+    * Tapestry component for defining the label for the primaryKeyField${count}.
+    *
+    * @return The FieldLabel component to use for the primaryKeyField${count}.
+    */
+   @Component(type = "FieldLabel", bindings = {"field=component:primaryKeyField${count}"})
+   public abstract FieldLabel getPrimaryKeyLabel${count}();
+#end
+
+   /**
+    * Tapestry component for rendering the composite primaryKeyField#if ($count > 1)${count}#end. This field is bound to the page property '${field.Name}'.
+    *
+    * @return The TextField component to use for setting/editing the ${field.Name}.
+    */
+   @Component(type = "TextField",bindings = {"validators=validators:${validator}","value=primaryKey${field.Name.Sentensized}","disabled=#if ($field.HasAutoGenPrimaryKey) true #else !adding#end","displayName=literal:${field.Name}"})
+   public abstract TextField getPrimaryKeyField#if ($count > 1)$count#end();
+#else
+   /**
+    * Tapestry component for rendering the primaryKeyField. This field is bound to the page property '${field.Name}'.
+    *
+    * @return The TextField component to use for setting/editing the ${field.Name}.
+    */
+   @Component(type = "TextField",bindings = {"validators=validators:${validator}","value=primaryKey","disabled=#if ($field.HasAutoGenPrimaryKey) true #else !adding#end","displayName=literal:${field.Name}"})
+   public abstract TextField getPrimaryKeyField();
+#end
+
+#else
+
+#if (${field.Type} == "java.sql.Timestamp")
+   /**
+    * Helper method to get page property ${field.Name} as a Date which is needed by the DatePicker.
+    *
+    * @return The value for page property '${field.Name}' as a Date.
+    */
+   public java.util.Date get${field.Name.Sentensized}Date() {
+           return get${field.Name.Sentensized}();
+   }
+
+   /**
+    * Helper method to set page property ${field.Name} as a Date which is needed by the DatePicker.
+    *
+    * @param date tot set the page property '${field.Name}' as a Date.
+    */
+   public void set${field.Name.Sentensized}Date(java.util.Date date) {
+       set${field.Name.Sentensized}(new java.sql.Timestamp(date.getTime()));
+   }
+
+#end
+#if (${field.Type} == "java.sql.Date" || ${field.Type} == "java.util.Date" || ${field.Type} == "java.sql.Timestamp")
+    /**
+     * Tapestry component for rendering the Date. This date field is bound to the page property '${field.Name}'.
+     *
+     * @return The TextField component to use for setting/editing the ${field.Name}.
+     */
+#if (${field.Type} == "java.sql.Timestamp")
+    @Component(type = "DatePicker",bindings = {"validators=validators:${validator}","value=${field.Name}Date","includeWeek=true","translator=translator:date,pattern=" + Constants.TIMESTAMP_DISPLAY_FORMAT,"displayName=literal:${field.Name.Sentensized}"})
+#else
+    @Component(type = "DatePicker",bindings = {"validators=validators:${validator}","value=${field.Name}","includeWeek=true","translator=translator:date,pattern=" + Constants.DATE_DISPLAY_FORMAT,"displayName=literal:${field.Name.Sentensized}"})
+#end
+    public abstract DatePicker get${field.Name.Sentensized}Field();
+#else
+
+   /**
+    * Tapestry component for rendering the ${field.Name}Field. This textfield is bound to the page property '${field.Name}'.
+    *
+    * @return The TextField component to use for setting/editing the ${field.Name}.
+    */
+   @Component(type = "TextField", bindings = {"validators=validators:${validator}","value=${field.Name}","displayName=literal:${field.Name.Sentensized}"}   )
+   public abstract TextField get${field.Name.Sentensized}Field();
+#end
+   /**
+    * Tapestry component for defining the label that will be displayed before the Field.
+    *
+    * @return The FieldLabel component to use for the ${field.Name}Field.
+    */
+   @Component(type = "FieldLabel",bindings = {"field=component:${field.Name}Field"})
+   public abstract FieldLabel get${field.Name.Sentensized}Label();
+#end
+#end
+}
+#end
+#end
+#end
+#end

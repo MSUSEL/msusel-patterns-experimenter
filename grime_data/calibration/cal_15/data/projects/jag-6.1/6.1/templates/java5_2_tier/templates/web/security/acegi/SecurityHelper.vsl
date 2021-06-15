@@ -1,0 +1,107 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.useSecurity())
+////File: ./src/java-web/${app.RootPath}/SecurityHelper.java
+
+package ${app.RootPackage};
+
+import org.acegisecurity.Authentication;
+import org.acegisecurity.GrantedAuthority;
+import org.acegisecurity.userdetails.UserDetails;
+import org.acegisecurity.context.SecurityContextHolder;
+
+import java.util.*;
+
+/**
+ * Helper method for accessing Acegi's security context.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.5 $, $Date: 2006/02/26 13:08:48 $
+ */
+public class SecurityHelper {
+
+    /**
+     * Get the user name of a logged in user.
+     *
+     * @return string with the logged in user name, null if no user is logged in.
+     */
+    public static String getLoggedInUserName() {
+        if (SecurityContextHolder.getContext() == null) {
+            return null;
+        }
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (auth == null || auth.getPrincipal() == null) {
+            return null;
+        } else {
+
+            if (auth.getPrincipal() instanceof UserDetails) {
+                UserDetails detail = (UserDetails) auth.getPrincipal();
+                return detail.getUsername();
+            } else {
+                return auth.getPrincipal().toString();
+            }
+        }
+    }
+
+    /**
+     * Get a set of roles that are assigned to the logged in user.
+     *
+     * @return set of strings with the roles.
+     */
+    public static Set<String> getUserRoles() {
+        return authoritiesToRoles(getPrincipalAuthorities());
+    }
+
+    private static Collection<GrantedAuthority> getPrincipalAuthorities() {
+        Authentication currentUser = SecurityContextHolder.getContext()
+                .getAuthentication();
+
+        if (null == currentUser) {
+            return Collections.EMPTY_LIST;
+        }
+
+        if ((null == currentUser.getAuthorities())
+                || (currentUser.getAuthorities().length < 1)) {
+            return Collections.EMPTY_LIST;
+        }
+        Collection<GrantedAuthority> granted = Arrays.asList(currentUser.getAuthorities());
+
+        return granted;
+    }
+
+    private static Set<String> authoritiesToRoles(Collection c) {
+        Set<String> target = new HashSet<String>();
+
+        for (Iterator iterator = c.iterator(); iterator.hasNext();) {
+            GrantedAuthority authority = (GrantedAuthority) iterator.next();
+
+            if (null == authority.getAuthority()) {
+                throw new IllegalArgumentException(
+                        "Cannot process GrantedAuthority objects which return null from getAuthority() - attempting to process "
+                                + authority.toString());
+            }
+
+            target.add(authority.getAuthority());
+        }
+        return target;
+    }
+
+}
+#end

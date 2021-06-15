@@ -1,0 +1,548 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if ($config.useMock() == "true")
+#foreach ($session in $sessions)
+////File: ${paths.MockOutput}/${session.RootPath}/${session.Name}MockFacade.java
+package ${session.RootPackage};
+
+import java.util.*;
+import ${app.RootPackage}.servicelocator.LocatableService;
+import com.finalist.util.log.*;
+import ${app.RootPackage}.exception.GenericBusinessException;
+import org.apache.commons.beanutils.BeanUtils;
+
+import com.finalist.util.log.*;
+#foreach ($entity in $session.EntitiesAndReferences)
+import ${entity.RootPackage}.*;
+#end
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.6 $, $Date: 2005/08/21 13:04:12 $
+ *
+ */
+public class ${session.Name}MockFacade implements ${session.Name}Service, LocatableService  {
+   /**
+    * The logger object.
+    */
+    private static Logger log = LogService.getLogger(${session.Name}MockFacade.class);
+#foreach ($entity in $session.Entities)
+    private static java.util.ArrayList ${entity.Name}List = new java.util.ArrayList();
+#end
+#foreach ($entity in $session.Entities)
+    private int ${entity.Name}count = 0;
+#foreach ($field in $entity.Fields)
+#if($field.isPrimaryKey() && ${field.getHasAutoGenPrimaryKey()})   
+#if ($field.Type == "java.lang.Integer")
+    private java.lang.Integer ${entity.Name}pkInteger = new Integer(0);
+#end
+#if ($field.Type == "java.lang.Short")
+    private java.lang.Short ${entity.Name}pkShort = new Short(0);
+#end
+#if ($field.Type == "java.lang.Double")
+    private java.lang.Double ${entity.Name}pkDouble = new Double(0);
+#end
+#if ($field.Type == "java.lang.Long")
+    private java.lang.Long ${entity.Name}pkLong = new Long(0);
+#end
+#if ($field.Type == "java.lang.Byte")
+    private java.lang.Byte ${entity.Name}pkByte = new Byte(0);
+#end
+#if ($field.Type == "java.lang.String")
+    private java.lang.String ${entity.Name}pkString = new String(0);
+#end
+#end
+#end
+#end
+    private int current_place;
+
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void init() {
+    }
+
+   /**
+    * Default implementation for the Locatable Service interface.
+    */
+    public void destroy() {
+    }
+
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#set ($count = 0)
+   public $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) {
+#if ( ($businessMethod.returnType == "char") || ($businessMethod.returnType == "byte") || ($businessMethod.returnType == "short") || ($businessMethod.returnType == "int") || ($businessMethod.returnType == "long") || ($businessMethod.returnType == "float") || ($businessMethod.returnType == "double") )
+        return 0;
+#elseif ($businessMethod.returnType == "boolean")
+        return false;
+#elseif ($businessMethod.returnType != "void")
+        return null;
+#end
+   }
+#end
+
+   /*******************************************************************************************************************
+    *                                  P E R S I S T E N C E    M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $session.Entities)
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the database.
+    *
+    * @param model a data object
+    * @return ${entity.Name}If a data object with the primary key
+    */
+   public ${entity.RootPackage}.${entity.Name}If add${entity.Name}(${entity.RootPackage}.${entity.Name}If model) throws GenericBusinessException {
+      ${entity.Name}Data value = new ${entity.Name}Data();
+      try {
+#foreach ($field in $entity.Fields)
+         value.set${field.Name.Sentensized}(model.get${field.Name.Sentensized}());
+#if($field.isPrimaryKey() && ${field.getHasAutoGenPrimaryKey()})
+#if($field.Type == "java.lang.Integer")
+         value.setPrimaryKey(${entity.Name}pkInteger);
+         ${entity.Name}pkInteger = new Integer(${entity.Name}pkInteger.intValue()+1);
+#end
+#if($field.Type == "java.lang.Short")
+         value.setPrimaryKey(${entity.Name}pkShort);
+         ${entity.Name}pkShort = new Short(${entity.Name}pkShort.intValue()+1);
+#end
+#if($field.Type == "java.lang.Long")
+        value.setPrimaryKey(${entity.Name}pkLong);
+         ${entity.Name}pkLong = new InLong(${entity.Name}pkLong.intValue()+1);
+#end
+#if($field.Type == "java.lang.Byte")
+        value.setPrimaryKey(${entity.Name}pkByte);
+         ${entity.Name}pkByte = new Byte(${entity.Name}pkByte.intValue()+1);
+#end
+#if($field.Type == "java.lang.Double")
+        value.setPrimaryKey(${entity.Name}pkDouble);
+         ${entity.Name}pkDouble = new Double(${entity.Name}pkDouble.intValue()+1);
+#end
+#if($field.Type == "java.lang.String")
+        value.setPrimaryKey(${entity.Name}pkString);
+         ${entity.Name}pkString = new String(${entity.Name}pkString.hashCode()+ 1);
+#end
+#end
+#end
+#foreach($relation in $entity.Relations)
+#if ($relation.isTargetMultiple())
+         ${relation.RelatedEntity.Name}Data bean = new ${relation.RelatedEntity.Name}Data();
+         bean = (${relation.RelatedEntity.Name}Data) get${relation.RelatedEntity.Name}(value.get${relation.FieldName.Sentensized}());
+         add${relation.localEntity.Name}(bean, value);
+#end    
+#end
+         ${entity.Name}List.add(${entity.Name}count, value);
+         ${entity.Name}count += 1;
+         return get${entity.Name}(value.getPrimaryKey());
+      } catch (Exception e) {
+         String message = "Error adding the ${entity.Name}Data data.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      }
+   }
+
+   /**
+    * Stores the <code>${entity.Name}If</code> in the database.
+    *
+    * @param model the data model to store
+    */
+   public void save${entity.Name}(${entity.RootPackage}.${entity.Name}If model) throws GenericBusinessException {
+      // We have to create an ejb object:
+      ${entity.Name}Data data = new ${entity.Name}Data();
+#foreach ($field in $entity.Fields)
+      data.set${field.Name.Sentensized}(model.get${field.Name.Sentensized}());
+#end
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+#if ($relation.isTargetMultiple())
+      data.set${relation.localEntity.Name}List(get${relation.localEntity.Name}List(model));
+#end
+#end
+#end
+      try {
+         for(int i =0; i < ${entity.Name}List.size();i++){
+            ${entity.Name}Data bean = new ${entity.Name}Data();
+            bean = (${entity.Name}Data)${entity.Name}List.get(i);
+            if(bean.getPrimaryKey().equals(data.getPrimaryKey()))
+                current_place = i;
+         }
+            ${entity.Name}List.set(current_place,data);
+#foreach($relation in $entity.getRelations())
+         for(int i =0; i < ${relation.RelatedEntity.Name}List.size();i++){
+             ${relation.RelatedEntity.Name}Data bean = new ${relation.RelatedEntity.Name}Data();
+             ${entity.Name}Data aBean = new ${entity.Name}Data();
+             ArrayList an${entity.Name}List = new ArrayList();
+             bean = (${relation.RelatedEntity.Name}Data)${relation.RelatedEntity.Name}List.get(i);
+             an${entity.Name}List = (ArrayList) bean.get${entity.Name}List();
+             for(int j =0; j < an${entity.Name}List.size();j++){
+                 aBean =(${entity.Name}Data)an${entity.Name}List.get(j);
+                 if(aBean.getPrimaryKey().equals(data.getPrimaryKey())){
+                     if(data.get${relation.getFieldName().getSentensized()}().equals(bean.get${entity.getPrimaryKeyName().getSentensized()}())){
+                         an${entity.Name}List.set(j, data);
+                         bean.set${entity.Name}List(an${entity.Name}List);
+                         ${relation.RelatedEntity.Name}List.set(i,bean);
+                         continue;
+                     }
+                     else{
+                         an${entity.Name}List.remove(j);    
+                         bean.setTAdressList(an${entity.Name}List);
+                         ${relation.RelatedEntity.Name}List.set(i,bean);
+                    }
+                }
+                if((j == an${entity.Name}List.size()-1) && data.get${relation.getFieldName().getSentensized()}().equals(bean.get${entity.getPrimaryKeyName().getSentensized()}())&& !(aBean.getPrimaryKey().equals(data.getPrimaryKey()))){
+                    an${entity.Name}List.add(data);
+                    bean.set${entity.Name}List(an${entity.Name}List);
+                    ${relation.RelatedEntity.Name}List.set(i,bean);
+                }
+             }
+             if(an${entity.Name}List.size() == 0 && data.getUserId().equals(bean.getId())){
+                an${entity.Name}List.add(data);
+                bean.set${entity.Name}List(an${entity.Name}List);
+                ${relation.relatedEntity.Name}List.set(i,bean);
+             }
+         }
+#end
+      } catch (Exception e) {
+         String message = "Error while saving the ${entity.Name}If data.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      } 
+   }
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    */
+   public void delete${entity.Name}(${entity.PrimaryKeyType} id) throws GenericBusinessException {
+      try {
+         ${entity.Name}Data bean = new ${entity.Name}Data();
+         for(int i =0; i < ${entity.Name}List.size();i++){
+            bean = (${entity.Name}Data)${entity.Name}List.get(i);
+            if(bean.getPrimaryKey().equals(id))
+                current_place = i;
+         }
+         bean = (${entity.Name}Data)${entity.Name}List.get(current_place);
+         ${entity.Name}List.remove(current_place);
+#foreach($relation in $entity.getRelations())
+         for(int i =0; i < ${relation.RelatedEntity.Name}List.size();i++){
+             ${relation.RelatedEntity.Name}Data bean2 = new ${relation.RelatedEntity.Name}Data();
+             ${entity.Name}Data aBean = new ${entity.Name}Data();
+             ArrayList an${entity.Name}List = new ArrayList();
+             bean2 = (${relation.RelatedEntity.Name}Data)${relation.RelatedEntity.Name}List.get(i);
+             an${entity.Name}List = (ArrayList) bean2.get${entity.Name}List();
+             for(int j =0; j < an${entity.Name}List.size();j++){
+                 aBean =(${entity.Name}Data)an${entity.Name}List.get(j);
+                 if(aBean.getPrimaryKey().equals(bean.getPrimaryKey())){
+                    an${entity.Name}List.remove(j);    
+                    bean2.setTAdressList(an${entity.Name}List);
+                    ${relation.RelatedEntity.Name}List.set(i,bean2);
+                 }
+             }
+          }
+#end          
+          if(${entity.Name}List.size() == 0){
+              ${entity.Name}count --;
+              return;
+          }
+          ${entity.Name}List.add(current_place, ${entity.Name}List.get(${entity.Name}List.size()-1));
+          ${entity.Name}List.remove(${entity.Name}List.size()-1);
+          ${entity.Name}count --;
+      } catch (Exception e) {
+          String message = "Error while deleting the ${entity.Name}If data.";
+          log.error(message, e);
+          GenericBusinessException gbe = new GenericBusinessException(message, e);
+          throw gbe;
+      } 
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * Retrieves a data object from the database by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name}If the data object
+    */
+    public ${entity.RootPackage}.${entity.Name}If get${entity.Name}(${entity.PrimaryKeyType} id) throws GenericBusinessException {
+       int size =0;
+       ${entity.Name}Data bean = new ${entity.Name}Data();
+       try {
+           size = ${entity.Name}List.size();
+           for(int i =0; i < ${entity.Name}List.size();i++){
+              bean = (${entity.Name}Data)${entity.Name}List.get(i);
+              if(bean.getPrimaryKey().equals(id))
+                  return bean;
+           }
+       }catch (Exception e) {
+          String message = "Error while "+ size +"getting the ${entity.Name}If data.";
+          log.error(message, e);
+          GenericBusinessException gbe = new GenericBusinessException(message, e);
+          throw gbe;
+      }     
+      return new ${entity.Name}Data();
+   }
+
+   /**
+    * Returns a collection of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a collection of ${entity.Name}If objects.
+    */
+   public Collection get${entity.Name}List() throws GenericBusinessException {
+      try{
+        return ${entity.Name}List;
+      } catch (Exception e) {
+         String message = "Error while getting the ${entity.Name} list data.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      } 
+      
+   }
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * -1 is a special value that will cause this method to ignore start and end values,
+    * any zero/negative values (other than -1) are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a collection of ${entity.Name}If objects, of size <code>(endIndex - startIndex)</code>.
+    */
+   public Collection get${entity.Name}List(int startIndex, int endIndex) throws GenericBusinessException {
+      if (startIndex < 1) {
+         startIndex = 1;
+      }
+      ArrayList list = new ArrayList();
+      if ( (endIndex - startIndex) < 0) {
+         // Just return an empty list.
+         return list;
+      }
+      try {
+         int j = 0;
+         for(int i = startIndex; i < endIndex; i++){
+             list.add(j, (${entity.Name}Data)${entity.Name}List.get(i));
+             j++;
+         }
+      } catch (Exception e) {
+         String message = "Error while getting the ${entity.Name}If list data.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      } 
+     return list;
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the database.
+    *
+    * @return an integer value.
+    */
+   public int get${entity.Name}ListSize() throws GenericBusinessException {
+    int size = 0; 
+    try{
+        size =  ${entity.Name}List.size();
+      } catch (Exception e) {
+         String message = "Error while getting the ${entity.Name} list size.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      } 
+      return size;
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey() )
+## Do nothing in case it is a primary key.
+## Currently it is not clear how to do a query on a field of a composite primary key.
+#else
+
+    /**
+     *
+     * Retrieves a list of data object for the specified $field.Name field.
+     *
+     * @param $field.Name the field
+     * @return Collection of ${entity.Name}If data objects, empty list in case no results were found.
+     */
+    public java.util.Collection find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name) throws GenericBusinessException {
+       ArrayList list = new ArrayList();  
+       try {
+          for(int i =0; i < ${entity.Name}List.size(); i++){
+              if(((${entity.Name}Data)${entity.Name}List.get(i)).get${field.Name.Sentensized}().equals($field.Name))
+              list.add(${entity.Name}List.get(i));
+          }          
+       } catch (Exception e) {
+          String message = "Error while getting the ${entity.Name} data by ${field.Name.Sentensized} list.";
+          log.error(message, e);
+          GenericBusinessException gbe = new GenericBusinessException(message, e);
+          throw gbe;
+       } 
+       return list;
+    }
+#end
+#end
+#foreach ($relation in $entity.Relations)
+
+    /**
+     * Retrieves#if (${relation.TargetMultiple}) a list of ${entity.Name}If data objects#else the single corresponding ${entity.Name}If data object#end for the specified subject field.
+     *
+     * @param ${relation.ForeignPkFieldName} the field
+     * @return#if (${relation.TargetMultiple}) Collection of ${entity.Name}If data objects, empty list#else the single corresponding ${entity.Name}If data object, or <code>null</code>#end if no results were found.
+     */
+    public #if (${relation.TargetMultiple})java.util.Collection#else${entity.Name}If#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName}) {
+      log.fatal("Not implemented yet for Hibernate 2.");
+      return null;
+    }
+#end
+#end
+
+##
+## Facade for the relations that point to this entity..
+##
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+
+   /**
+    * Add ${relation.localEntity.Name}If to ${entity.Name}If .
+    *
+    * @param ${entity.Name.Desentensized} the object
+    * @param ${relation.localEntity.Name.Desentensized} the object to be added.
+    */
+
+   public void add${relation.localEntity.Name}(${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws GenericBusinessException {
+     try {
+         ${entity.Name}Data data;
+         if (${entity.Name.Desentensized} instanceof ${entity.Name}Data) {
+            data = (${entity.Name}Data) ${entity.Name.Desentensized};
+         } else {
+            data = new ${entity.Name}Data(${entity.Name.Desentensized});
+         }
+         ${relation.localEntity.Name}Data relation;
+         if (${relation.localEntity.Name.Desentensized} instanceof ${relation.localEntity.Name}Data) {
+            relation = (${relation.localEntity.Name}Data) ${relation.localEntity.Name.Desentensized};
+         } else {
+            relation = new ${relation.localEntity.Name}Data(${relation.localEntity.Name.Desentensized});
+         }
+         for(int i = 0; i < ${entity.Name}List.size(); i++){    
+             ${entity.Name}Data bean = new ${entity.Name}Data();
+             bean = (${entity.Name}Data)${entity.Name}List.get(i);
+             if(bean.getPrimaryKey().equals(data.getPrimaryKey())){
+                 current_place = i;
+                 data.add${relation.localEntity.Name}(relation);
+                 ${entity.Name}List.set(current_place, data);      
+             }
+         }
+          
+      } catch (Exception e) {
+          String message = "Error while adding the ${relation.localEntity.Name}If data.";
+          log.error(message, e);
+          GenericBusinessException gbe = new GenericBusinessException(message, e);
+          throw gbe;
+      } 
+   }
+
+   /**
+    * Get a list of related ${relation.localEntity.Name}If objects of the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return Collection of ${relation.localEntity.Name}If objects.
+    */
+   public java.util.Collection get${relation.localEntity.Name}List(${entity.Name}If ${entity.Name.Desentensized}) throws GenericBusinessException
+   {
+      ${entity.Name}Data data;
+      if (${entity.Name.Desentensized} instanceof ${entity.Name}Data) {
+          // This is the actual bean. Just cast it.
+          data = (${entity.Name}Data) ${entity.Name.Desentensized};
+      } else {
+          // We have to lookup the bean.
+          data = (${entity.Name}Data) get${entity.Name}(${entity.Name.Desentensized}.getPrimaryKey());
+      }
+      return data.get${relation.localEntity.Name}List();
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    */
+   public void set${relation.localEntity.Name}List(${entity.Name}If ${entity.Name.Desentensized}, java.util.Collection ${relation.localEntity.Name.Desentensized}List) throws GenericBusinessException
+   {
+      try {
+         ${entity.Name}Data data;
+         if (${entity.Name.Desentensized} instanceof ${entity.Name}Data) {
+            data = (${entity.Name}Data) ${entity.Name.Desentensized};
+         } else {
+            data = new ${entity.Name}Data(${entity.Name.Desentensized});
+         }
+         java.util.ArrayList result = new java.util.ArrayList();
+         if (${relation.localEntity.Name.Desentensized}List == null) {
+            return;
+         }
+         for (Iterator iterator = ${relation.localEntity.Name.Desentensized}List.iterator(); iterator.hasNext();) {
+            ${relation.localEntity.Name}If o =  (${relation.localEntity.Name}If) iterator.next();
+            ${relation.localEntity.Name}Data rel = null;
+            if (o instanceof ${relation.localEntity.Name}Data) {
+               rel = (${relation.localEntity.Name}Data) o;
+            }
+         }
+      } catch (Exception e) {
+         String message = "Error while setting the list with ${relation.localEntity.Name}If data objects.";
+         log.error(message, e);
+         GenericBusinessException gbe = new GenericBusinessException(message, e);
+         throw gbe;
+      } 
+   }
+
+#end   
+#end
+#end
+#end
+
+
+}
+#end
+#end

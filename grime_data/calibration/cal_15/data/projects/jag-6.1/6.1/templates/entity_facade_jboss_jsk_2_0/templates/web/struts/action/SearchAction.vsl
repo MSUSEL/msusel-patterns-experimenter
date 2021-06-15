@@ -1,0 +1,75 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+
+////File: ${paths.WebOutput}/${app.RootPath}/actions/${entityBean.Name}SearchAction.java
+package ${app.RootPackage}.actions;
+
+import javax.servlet.http.*;
+
+import org.apache.struts.action.*;
+
+import com.finalist.util.log.*;
+import ${app.RootPackage}.forms.${entityBean.Name}SearchForm;
+
+/**
+ * The submit action for the ${entityBean.Name.Desentensized} search screen.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.7 $, $Date: 2005/06/29 20:56:27 $
+ * @struts.action path="/${entityBean.Name}Search"
+#if (${config.templateSettings.serviceTier} == "Spring")
+ *                type="org.springframework.web.struts.DelegatingActionProxy"
+#else
+ *                type="${app.RootPackage}.actions.${entityBean.Name}SearchAction"
+#end
+ *                name="${entityBean.Name.Desentensized}SearchForm"
+ *                scope="request"
+ *                input="/${entityBean.Name.Lower}List.jsp"
+ * @struts.action-forward name="success" path="/init${entityBean.Name}.do"
+ *
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="/${entityBean.Name}Search"
+#end
+ */
+public class ${entityBean.Name}SearchAction extends ServiceAction {
+
+   private static Logger log = LogService.getLogger(${entityBean.Name}SearchAction.class);
+
+   /**
+    * Performs an action.
+    *
+    * @param mapping The ActionMapping used to select this instance
+    * @param form The optional ActionForm bean for this request (if any)
+    * @param request The optional ActionForm bean for this request (if any)
+    * @param response The HTTP response we are creating
+    * @return describes where and how control should be forwarded, or <code>null</code> if the response has already
+    *         been completed
+    * @throws Exception in case of an error
+    */
+   public ActionForward doPerform(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
+
+      return mapping.findForward("success");
+   }
+}
+
+#end
+#end
+#end

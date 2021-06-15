@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<xsd:schema xmlns:gubs="http://www.fgdc.gov/fgdc/gubs" 
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+            xmlns:gml="http://www.opengis.net/gml" 
+            targetNamespace="http://www.fgdc.gov/fgdc/gubs" 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            xmlns:fw="http://www.fgdc.gov/framework/073004" 
+            elementFormDefault="qualified" version="1.0">
+    <xsd:import namespace="http://www.opengis.net/gml" schemaLocation="http://nbii-nin.ciesin.columbia.edu/mapserver/wfs/fgdcgubscensustract/REQUEST/get/DATA/LPR/fgdc_sfgml.xsd"/>
+    <xsd:import namespace="http://www.fgdc.gov/framework/073004" schemaLocation="http://nbii-nin.ciesin.columbia.edu/mapserver/wfs/fgdcgubscensustract/REQUEST/get/DATA/LPR/fgdc_frameworkgml30.xsd"/>
+    <xsd:element name="StatisticalUnit" substitutionGroup="gml:_Feature" type="gubs:StatisticalUnitType">
+    </xsd:element>
+    <xsd:complexType name="StatisticalUnitType">
+      <xsd:complexContent>
+        <xsd:extension base="gml:AbstractFeatureType">
+          <xsd:sequence>
+            <xsd:element name="unitId" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="typeAbbreviation" minOccurs="0" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="instanceName" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="instanceAlternameName" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="officialDescription" minOccurs="0" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="codingSystemReference" minOccurs="0" maxOccurs="unbounded" type="xsd:string">
+            </xsd:element>
+            <xsd:element name="effectiveDate" minOccurs="0" maxOccurs="2" type="xsd:date">
+            </xsd:element>
+            <xsd:element name="geometry" maxOccurs="unbounded" type="gml:SurfacePropertyType">
+            </xsd:element>
+            <xsd:element name="boundedBy" minOccurs="0" maxOccurs="unbounded" type="gml:ReferenceType">
+              <xsd:annotation>
+                <xsd:appinfo source="urn:x-gml:targetElement">gubs:Boundary/@gml:id</xsd:appinfo>
+
+</xsd:annotation>
+            </xsd:element>
+            <xsd:element name="statisticalUnitType">
+              <xsd:annotation>
+                <xsd:appinfo source="../Dictionaries/StatisticalUnitTypeDictionary.xml"/>
+
+</xsd:annotation>
+              <xsd:complexType>
+                <xsd:simpleContent>
+                  <xsd:restriction base="gml:CodeType">
+                    <xsd:attribute name="codeSpace" use="required" type="xsd:anyURI">
+                    </xsd:attribute>
+                  </xsd:restriction>
+                </xsd:simpleContent>
+              </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="typeDefinition" minOccurs="0" type="xsd:string">
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:extension>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:schema>

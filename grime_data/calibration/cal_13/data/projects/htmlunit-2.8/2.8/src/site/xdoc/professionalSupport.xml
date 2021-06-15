@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<document>
+
+    <properties>
+        <title>Professional support</title>
+        <author email="mguillemot@yahoo.fr">Marc Guillemot</author>
+        <revision>$Revision: 5442 $</revision>
+    </properties>
+
+    <body>
+        <section name="Looking for HtmlUnit Support?">
+            <p>
+                Some HtmlUnit committers provide professional support beyond the free support provided on a 
+                volunteer basis by users and project members on HtmlUnit's mailing lists.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Marc Guillemot</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Committer since</td>
+                        <td>2004</td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td><a href="http://mguillem.wordpress.com">http://mguillem.wordpress.com</a></td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>Bornheim, Germany</td>
+                    </tr>
+                    <tr>
+                        <td>Involvement in related projects</td>
+                        <td>committer to NekoHTML, contributor to Rhino</td>
+                    </tr>
+                    <tr>
+                        <td>Involvement in other Open Source projects</td>
+                        <td>committer to Groovy and Canoo WebTest</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Daniel Gredler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Committer since</td>
+                        <td>2006</td>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td>sdanig at users.sourceforge.net</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>Atlanta, USA</td>
+                    </tr>
+                    <tr>
+                        <td>Involvement in related projects</td>
+                        <td>committer to CSSParser, contributor to Rhino</td>
+                    </tr>
+                    <tr>
+                        <td>Involvement in other Open Source projects</td>
+                        <td>committer to Tapestry</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </body>
+</document>
+

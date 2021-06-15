@@ -1,0 +1,527 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#if (${config.templateSettings.businessTier} == "EJB 2.0")
+#if (${config.templateSettings.appserver} != "BEA WebLogic 8.1 (Workshop EJBGen)")
+#foreach ($session in $sessions)
+////File: ${paths.EjbOutput}/${session.RootPath}/${session.Name}EJB.java
+package ${session.RootPackage};
+
+import java.util.*;
+import java.rmi.*;
+import javax.ejb.*;
+
+import com.finalist.util.log.*;
+#foreach ($entity in $session.EntitiesAndReferences)
+import ${entity.RootPackage}.*;
+import ${app.RootPackage}.dao.${entity.Name}DAO;
+#end
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+import ${relation.localEntity.RootPackage}.*;
+#end
+#end
+
+
+/**
+ * The <code>${session.Name}</code> session bean, which acts as a facade to the
+ * underlying entity beans and read-only DAO classes.
+ * <p>
+ * This class uses the <a href="http://java.sun.com/blueprints/patterns/FastLaneReader.html">Fast Lane Reader</a>
+ * J2EE design pattern.  If enabled, collections of read-only data are accessed directly from the datastore
+ * using JDBC, thus avoiding the EJB layer and unnecessarily expensive calls to entity bean finder methods.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.23 $, $Date: 2005/08/21 13:04:12 $
+ * @ejb.bean name="${session.Name}"
+ *           view-type="remote"
+ *           local-jndi-name="ejb/${session.RootPath}/${session.Name}"
+ *           jndi-name="ejb/${session.RootPath}/${session.Name}"
+ *           type="Stateless"
+ *
+ * @ejb.transaction-type type="Container"
+#foreach ($entity in $session.EntitiesAndReferences)
+ * @ejb.util generate="physical"
+ * @ejb.ejb-ref ejb-name="${entity.Name}"
+ *              view-type="local"
+ *              ref-name="ejb/${entity.Name}"
+ *
+#end
+ */
+public class ${session.Name}EJB implements SessionBean, ${session.Name}Service  {
+   /**
+    * Configures whether or not the getXXXList methods use the Fast Lane Reader pattern.
+    */
+   private boolean useFastLane = true;
+
+   /**
+    * The logger object.
+    */
+   private static Logger log = LogService.getLogger(${session.Name}EJB.class);
+
+   /**
+    * The bean context.
+    */
+   private SessionContext context = null;
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * The ${entity.Name.Desentensized}Home property.
+    */
+   private ${entity.Name}LocalHome ${entity.Name.Desentensized}Home = null;
+
+#end
+
+
+   /*******************************************************************************************************************
+    *                                  B U S I N E S S   M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($businessMethod in $session.businessMethods)
+
+   /**
+    * ${businessMethod.description}.
+    *
+#foreach($businessArgument in $businessMethod.argumentList)
+    * @param $businessArgument.name ${businessArgument.type} parameter
+#end
+    * @return $businessMethod.returnType
+    */
+#set ($count = 0)
+   public $businessMethod.returnType ${businessMethod.methodName}(#foreach($businessArgument in $businessMethod.argumentList)#if ($count > 0), #end${businessArgument.type} ${businessArgument.name} #set ($count = $count + 1)#end) {
+#if ( ($businessMethod.returnType == "char") || ($businessMethod.returnType == "byte") || ($businessMethod.returnType == "short") || ($businessMethod.returnType == "int") || ($businessMethod.returnType == "long") || ($businessMethod.returnType == "float") || ($businessMethod.returnType == "double") )
+        return 0;
+#elseif ($businessMethod.returnType == "boolean")
+        return false;
+#elseif ($businessMethod.returnType != "void")
+        return null;
+#end
+   }
+#end
+
+   /*******************************************************************************************************************
+    *                                  P E R S I S T E N C E    M E T H O D S
+    *******************************************************************************************************************/
+
+#foreach ($entity in $session.Entities)
+
+   /**
+    * Adds a new ${entity.Name.Desentensized} to the database.
+    *
+    * @param model a data object
+    * @return ${entity.Name}If a data object with the primary key
+    * @ejb.transaction type="Required"
+    * @ejb.interface-method
+    */
+   public ${entity.RootPackage}.${entity.Name}If add${entity.Name}(${entity.RootPackage}.${entity.Name}If model) {
+      try {
+         getReferences();
+         return ${entity.Name.Desentensized}Home.create((${entity.RootPackage}.${entity.Name}Data)model).get${entity.Name}Data();
+      }
+      catch (CreateException exc) {
+         log.error("Create exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Stores the <code>${entity.Name}If</code> in the database.
+    *
+    * @param model the data model to store
+    * @ejb.transaction type="Required"
+    * @ejb.interface-method
+    */
+   public void save${entity.Name}(${entity.RootPackage}.${entity.Name}If model) {
+      try {
+         log.debug("Saving data: " + (${entity.RootPackage}.${entity.Name}Data) model);      
+         getReferences();
+#if (!$entity.isCompositeKey())
+         ${entity.PrimaryKey.Type} id = model.get${entity.PrimaryKey.Name.Sentensized}();
+#else
+         ${entity.PrimaryKeyType} id = model.getPrimaryKey();
+#end
+         ${entity.RootPackage}.${entity.Name}Local ${entity.Name.Desentensized}Ref = ${entity.Name.Desentensized}Home.findByPrimaryKey(id);
+         ${entity.Name.Desentensized}Ref.set${entity.Name}Data((${entity.RootPackage}.${entity.Name}Data) model);
+      }
+      catch (FinderException exc) {
+         log.error("Finder Exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+    }
+
+   /**
+    * Removes a ${entity.Name.Desentensized}.
+    *
+    * @param id the unique reference for the ${entity.Name.Desentensized}
+    * @ejb.interface-method
+    * @ejb.transaction type="Required"
+    */
+   public void delete${entity.Name}(${entity.PrimaryKeyType} id) {
+      try {
+         getReferences();
+         ${entity.Name.Desentensized}Home.remove(id);
+      }
+      catch (RemoveException exc) {
+         log.error("RemoveException", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+   /**
+    * Retrieves a data object from the database by its primary key.
+    *
+    * @param id the unique reference
+    * @return ${entity.Name}If the data object
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public ${entity.RootPackage}.${entity.Name}If get${entity.Name}(${entity.PrimaryKeyType} id) {
+##
+##  RE: We shouldn't mix reading using a DAO and writing with an Entity EJB.
+##  So let's remove this one...
+##      if (useFastLane) {
+##         return ${entity.Name}DAO.getInstance().get${entity.Name}(id);
+##      }
+##
+      try {
+         getReferences();
+         return ${entity.Name.Desentensized}Home.findByPrimaryKey(id).get${entity.Name}Data();
+      }
+      catch (FinderException exc) {
+         log.error("Finder Exception", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Returns a collection of all ${entity.Name.Desentensized} instances.
+    *
+    * @return a collection of ${entity.Name}If objects.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public Collection get${entity.Name}List() {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}List();
+      }
+
+      try {
+         getReferences();
+         Collection collection = ${entity.Name.Desentensized}Home.findAll();
+         Iterator   iterator   = collection.iterator();
+         ArrayList  resultList = new ArrayList(collection.size());
+         while (iterator.hasNext()) {
+            ${entity.RootPackage}.${entity.Name}Local ${entity.Name.Desentensized}Ref =
+                  (${entity.RootPackage}.${entity.Name}Local) iterator.next();
+            resultList.add(${entity.Name.Desentensized}Ref.get${entity.Name}Data());
+         }
+         return resultList;
+      }
+      catch (FinderException exc) {
+         log.error("FinderException", exc);
+         throw new EJBException(exc.getMessage());
+      }
+   }
+
+   /**
+    * Returns a subset of all ${entity.Name.Desentensized} instances.
+    *
+    * @param startIndex the start index within the result set (1 = first record);
+    * any zero/negative values are regarded as 1, and any values greater than or equal to
+    * the total number of ${entity.Name.Desentensized} instances will simply return an empty set.
+    * @param endIndex the end index within the result set (<code>get${entity.Name}ListSize()</code> = last record),
+    * any values greater than or equal to the total number of ${entity.Name.Desentensized} instances will cause
+    * the full set to be returned.
+    * @return a collection of ${entity.Name}If objects, of size <code>(endIndex - startIndex)</code>.
+    * throws EJBException if the chosen underlying data-retrieval mechanism does not support returning partial result sets.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public Collection get${entity.Name}List(int startIndex, int endIndex) {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}List(startIndex, endIndex);
+      }
+      else {
+         throw new EJBException("Entity bean finder methods do not support partial result sets (yet).");
+      }
+   }
+
+   /**
+    * Obtains the total number of ${entity.Name.Desentensized} objects in the database.
+    * <b>NOTE:</b>If this session façade is configured <b>not</b> to use the FastLaneReader,
+    * this call will be very computationally wasteful as it will first have to retrieve all entities from
+    * the entity bean's <code>findAll</code> method.
+    *
+    * @return an integer value.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public int get${entity.Name}ListSize() {
+      if (useFastLane) {
+         return ${entity.Name}DAO.getInstance().get${entity.Name}ListSize();
+      }
+      else {
+         return get${entity.Name}List().size();
+      }
+   }
+#end
+
+#foreach ($entity in $session.EntitiesAndReferences)
+#foreach ($field in $entity.NonRelationFields)
+#if ($field.isPrimaryKey())
+## Do nothing for primary key fields. They should be looked up with there get method.
+#else
+
+    /**
+     * Retrieves a list of data object for the specified $field.Name field.
+     *
+     * @param $field.Name the field
+     * @return Collection of ${entity.Name}If data objects, empty list in case no results were found.
+     * @ejb.transaction type="Supports"
+     * @ejb.interface-method
+     */
+    public java.util.Collection find${entity.Name}By${field.Name.Sentensized}($field.Type $field.Name) {
+       try {
+          getReferences();
+          java.util.Collection list = ${entity.Name.Desentensized}Home.findBy${field.Name.Sentensized}($field.Name);
+          ArrayList result = new ArrayList();
+          for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+              ${entity.Name}Local el = (${entity.Name}Local) iterator.next();
+              result.add(el.get${entity.Name}Data());
+          }
+          return result;
+       }
+       catch (FinderException exc) {
+          log.error("Finder Exception", exc);
+          throw new EJBException(exc.getMessage());
+       }
+    }
+#end
+#end
+#foreach ($relation in $entity.Relations)
+
+    /**
+     * Retrieves#if (${relation.TargetMultiple}) a list of ${entity.Name}If data objects#else the single corresponding ${entity.Name}If data object#end for the specified subject field.
+     *
+     * @param ${relation.ForeignPkFieldName} the field
+     * @return#if (${relation.TargetMultiple}) Collection of ${entity.Name}If data objects, empty list#else the single corresponding ${entity.Name}If data object, or <code>null</code>#end if no results were found.
+     * @ejb.transaction type="Supports"
+     * @ejb.interface-method
+     */
+    public #if (${relation.TargetMultiple})java.util.Collection#else${entity.Name}If#end find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FkField.Type} ${relation.FieldName}) {
+       try {
+          getReferences();
+#if (${relation.TargetMultiple})
+          java.util.Collection list = ${entity.Name.Desentensized}Home.find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FieldName});
+          ArrayList result = new ArrayList();
+          for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+              ${entity.Name}Local el = (${entity.Name}Local) iterator.next();
+              result.add(el.get${entity.Name}Data());
+          }
+#else
+          ${entity.RootPackage}.${entity.Name}If result = ${entity.Name.Desentensized}Home.find${entity.Name.Sentensized}By${relation.FieldName.Sentensized}(${relation.FieldName}).get${entity.Name}Data();
+#end
+          return result;
+       }
+       catch (FinderException exc) {
+          log.error("Finder Exception", exc);
+          throw new EJBException(exc.getMessage());
+       }
+    }
+#end
+#end
+
+##
+##
+#foreach ($entity in $session.Entities)
+#foreach($relation in $entity.getEntitiesRelations())
+#if ($relation.isBidirectional())
+## Only if the relation is bidirectional, we put a method here to support it.
+## Currently only one to many is supported..
+#if ($relation.isTargetMultiple())
+## this is a one-to-many relation
+
+   /**
+    * Get a list of related ${relation.localEntity.Name}If objects of the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related objects should be returned.
+    * @return Collection of ${relation.localEntity.Name}If objects.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public java.util.Collection get${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}) {
+      log.fatal("Not implemented!");
+      throw new EJBException("Not implemented");
+   }
+
+   /**
+    * Set a list of ${relation.localEntity.Name}If related objects to the ${entity.Name}If object.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized}List the list of related objects.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}List(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, java.util.Collection ${relation.localEntity.Name.Desentensized}List) {
+      log.fatal("Not implemented!");
+      throw new EJBException("Not implemented");
+   }
+
+   /**
+    * Add ${relation.localEntity.Name}If to ${entity.Name}If .
+    *
+    * @param ${entity.Name.Desentensized} the object
+    * @param ${relation.localEntity.Name.Desentensized} the object to be added.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public void add${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) {
+      log.fatal("Not implemented!");
+      throw new EJBException("Not implemented");
+   }
+#else
+## This is a bidirectional one-to-one relation
+
+   /**
+    * Get a ${relation.localEntity.Name}If object of the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object for which the related object should be returned.
+    * @return ${relation.localEntity.Name}If object.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+    public ${relation.localEntity.Name}If get${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+      log.fatal("Not implemented!");
+      throw new EJBException("Not implemented");
+    }
+
+   /**
+    * Set a ${relation.localEntity.Name}If object to the ${entity.Name}If object.
+    * These objects are in a bidirectional one-to-one relation by the ${relation.FieldName.Sentensized} member.
+    *
+    * @param ${entity.Name.Desentensized} object
+    * @param ${relation.localEntity.Name.Desentensized} the related object.
+    * @ejb.transaction type="Supports"
+    * @ejb.interface-method
+    */
+   public void set${relation.FieldName.Sentensized}${relation.localEntity.Name}(${entity.RootPackage}.${entity.Name}If ${entity.Name.Desentensized}, ${relation.localEntity.Name}If ${relation.localEntity.Name.Desentensized}) throws ${app.RootPackage}.exception.GenericBusinessException {
+      log.fatal("Not implemented!");
+      throw new EJBException("Not implemented");
+   }
+#end
+#end
+#end
+#end
+
+   /**
+    * Retrieves an instance of the home interface.
+    */
+   private void getReferences() {
+#foreach ($entity in $session.EntitiesAndReferences)
+      try {
+         if (${entity.Name.Desentensized}Home == null) {
+            ${entity.Name.Desentensized}Home = ${entity.Name}Util.getLocalHome();
+
+         }
+      }
+      catch (javax.naming.NamingException ne) {
+         log.error("NamingException", ne);
+      }
+
+#end
+   }
+
+   /*******************************************************************************************************************
+    *                            C O N T A I N E R   C A L L B A C K S   M E T H O D S
+    *******************************************************************************************************************/
+
+   /**
+    * Method that allows for the container to create a bean instance.
+    *
+    * @throws CreateException when the bean could not be created.
+    */
+   public void ejbCreate() throws CreateException {
+   }
+
+   /**
+    * A container invokes this method before it ends the life of the session object. This happens as a result of a
+    * client's invoking a remove operation, or when a container decides to terminate the session object after a timeout.
+    * <P>This method is called with no transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    * @throws RemoteException This exception is defined in the method signature to provide backward compatibility for
+    *                         enterprise beans written for the EJB 1.0 specification. Enterprise beans written for the
+    *                         EJB 1.1 specification should throw the javax.ejb.EJBException instead of this exception.
+    *                         Enterprise beans written for the EJB2.0 and higher specifications must throw the
+    *                         <code>javax.ejb.EJBException</code> instead of this exception.
+    */
+   public void ejbRemove() throws EJBException, RemoteException {
+   }
+
+   /**
+    * The activate method is called when the instance is activated from its "passive" state. The instance should
+    * acquire any resource that it has released earlier in the ejbPassivate() method.<p>This method is called with no
+    * transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    * @throws RemoteException This exception is defined in the method signature to provide backward compatibility for
+    *                         enterprise beans written for the EJB 1.0 specification. Enterprise beans written for the
+    *                         EJB 1.1 specification should throw the javax.ejb.EJBException instead of this exception.
+    *                         Enterprise beans written for the EJB2.0 and higher specifications must throw the
+    *                         <code>javax.ejb.EJBException</code> instead of this exception.
+    */
+   public void ejbActivate() throws EJBException, RemoteException {
+   }
+
+   /**
+    * The passivate method is called before the instance enters the "passive" state. The instance should release
+    * any resources that it can re-acquire later in the ejbActivate() method.<p>After the passivate method completes,
+    * the instance must be in a state that allows the container to use the Java Serialization protocol to externalize
+    * and store away the instance's state.<p>This method is called with no transaction context.
+    *
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    * @throws RemoteException This exception is defined in the method signature to provide backward compatibility for
+    *                         enterprise beans written for the EJB 1.0 specification. Enterprise beans written for the
+    *                         EJB 1.1 specification should throw the javax.ejb.EJBException instead of this exception.
+    *                         Enterprise beans written for the EJB2.0 and higher specifications must throw the
+    *                         <code>javax.ejb.EJBException</code> instead of this exception.
+    */
+   public void ejbPassivate() throws EJBException, RemoteException {
+   }
+
+   /**
+    * Set the associated session context. The container calls this method after the instance creation.<p>The
+    * enterprise Bean instance should store the reference to the context object in an instance variable.<p> This
+    * method is called with no transaction context.
+    *
+    * @param context A <code>SessionContext</code> interface for the instance.
+    * @throws EJBException Thrown by the method to indicate a failure caused by a system-level error.
+    * @throws RemoteException This exception is defined in the method signature to provide backward compatibility for
+    *                         enterprise beans written for the EJB 1.0 specification. Enterprise beans written for the
+    *                         EJB 1.1 specification should throw the javax.ejb.EJBException instead of this exception.
+    *                         Enterprise beans written for the EJB2.0 and higher specifications must throw the
+    *                         <code>javax.ejb.EJBException</code> instead of this exception.
+    */
+   public void setSessionContext(SessionContext context) throws EJBException, RemoteException {
+      this.context = context;
+   }
+}
+#end
+#end
+#end

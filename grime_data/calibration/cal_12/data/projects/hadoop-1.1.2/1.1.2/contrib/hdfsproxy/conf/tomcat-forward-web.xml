@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE web-app 
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+
+    <!-- General description of your web application -->
+
+    <display-name>HDFS Proxy Forward</display-name>
+    <description>
+      get data from grid forward war
+    </description>
+
+    <context-param>
+      <param-name>webmaster</param-name>
+      <param-value>zhiyong1@yahoo-inc.com</param-value>
+      <description>
+        The EMAIL address of the administrator to whom questions
+        and comments about this application should be addressed.
+      </description>
+    </context-param>
+
+
+    <filter>
+	   	<filter-name>ldapIpDirFilter</filter-name>
+	   	<filter-class>org.apache.hadoop.hdfsproxy.LdapIpDirFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+        <filter-name>ldapIpDirFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <servlet>
+    	<servlet-name>proxyForward</servlet-name>
+      <description>forward data access to specifc servlets</description>
+      <servlet-class>org.apache.hadoop.hdfsproxy.ProxyForwardServlet</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>proxyForward</servlet-name>
+        <url-pattern>/listPaths/*</url-pattern>
+    </servlet-mapping>
+	  <servlet-mapping>
+        <servlet-name>proxyForward</servlet-name>
+        <url-pattern>/data/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>proxyForward</servlet-name>
+        <url-pattern>/streamFile/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+    	<servlet-name>fileForward</servlet-name>
+      <description>forward file data access to streamFile</description>
+      <servlet-class>org.apache.hadoop.hdfsproxy.ProxyFileForward</servlet-class>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>fileForward</servlet-name>
+        <url-pattern>/file/*</url-pattern>
+    </servlet-mapping>
+    
+    
+
+		<welcome-file-list>
+		  <welcome-file>index.html</welcome-file>
+		</welcome-file-list>
+
+    <!-- Define the default session timeout for your application,
+         in minutes.  From a servlet or JSP page, you can modify
+         the timeout for a particular session dynamically by using
+         HttpSession.getMaxInactiveInterval(). -->
+
+    <session-config>
+      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
+    </session-config>    
+
+
+</web-app>
+
+
+
+
+
+
+
+

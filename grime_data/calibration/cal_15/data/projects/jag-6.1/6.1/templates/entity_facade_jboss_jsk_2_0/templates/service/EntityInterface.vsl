@@ -1,0 +1,122 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#foreach ($entity in $entities)
+////File: ${paths.ServiceOutput}/${entity.RootPath}/${entity.Name}If.java
+package ${entity.RootPackage};
+
+#foreach($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+
+/**
+ * The ${entity.Name}If interfaces exposes the persistence data.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2005/06/29 20:56:26 $
+ */
+public interface ${entity.Name}If {
+
+#if ($entity.isCompositeKey())
+    /**
+     * Return the composite primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key. 
+     */
+    ${entity.PrimaryKeyType} getPrimaryKey();
+
+#else
+    /**
+     * Return the primary key.
+     *
+     * @return ${entity.PrimaryKey.Type} he primary key.
+     */
+    ${entity.PrimaryKey.Type} getPrimaryKey();
+
+#end
+#if ($entity.isCompositeKey())
+    /**
+     * Set the composite primary key.
+     *
+     * @param pk ${entity.PrimaryKeyType} with the composite primary key.
+     */
+    void setPrimaryKey(${entity.PrimaryKeyType} pk);
+#else
+    /**
+     * Set the primary key.
+     *
+     * @param pk return ${entity.PrimaryKey.Type} with the primary key.
+     */
+    void setPrimaryKey(${entity.PrimaryKey.Type} pk);
+#end
+
+#foreach ($relation in $entity.Relations)
+#set ($fkType = "")
+#foreach ($fields2 in $relation.RelatedEntity.Fields)
+#if ($fields2.ColumnName.equals($relation.ForeignColumn))#set ($fkType=${fields2.Type})
+#end
+#end
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}</code> (foreign key) property.
+    *
+    * @return the value of the <code>${relation.FieldName}</code> property.
+    */
+   ${fkType} get${relation.FieldName.Sentensized}();
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}</code> (foreign key) property.
+    *
+    * @param ${relation.FieldName} a value for <code>${relation.FieldName}</code>.
+    */
+   void set${relation.FieldName.Sentensized}(${fkType} ${relation.FieldName});
+#end
+
+#foreach ($field in $entity.NonRelationFields)
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    * @return the value of the <code>${field.Name}</code> property
+    */
+   $field.Type get${field.Name.Sentensized}();
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} the value for the <code>${field.Name}</code> property
+    */
+   void set${field.Name.Sentensized}($field.Type $field.Name);
+
+#end
+
+#foreach($relation in $entity.Relations)
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    */
+   ${relation.RelatedEntity.Name}If get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}();
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}If ${relation.RelatedEntity.Name.Desentensized});
+
+#end
+}
+#end

@@ -1,0 +1,1076 @@
+#*  Copyright (C) 2003 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+
+////File: build.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all.appserver" name="${app.Name}">
+
+<!-- =========================================================================================================== -->
+<!--                                   P R O P E R T Y    D E F I N I T I O N S                                  -->
+<!-- =========================================================================================================== -->
+
+<!-- Global settings -->
+
+   <property file="../.ant-global.properties"/>
+   <property environment="env"/>
+
+<!-- Directory-specifications -->
+
+   <property name="project.name" value="${app.Name}" />
+   <property name="src.dir" value="src" />
+   <property name="src.web.dir" value="${src.dir}/java-web"/>
+   <property name="src.test.dir" value="${src.dir}/java-test"/>
+   <property name="web.dir" value="${src.dir}/web"/>
+   <property name="lib.dir" value="lib"/>
+   <property name="build.dir" value="build"/>
+   <property name="build.web.dir" value="${build.dir}/build-web"/>
+   <property name="build.test.dir" value="${build.dir}/build-test"/>
+   <property name="build.todo.dir" value="${build.dir}/build-todo"/>
+   <property name="build.junit.dir" value="${build.dir}/build-junit"/>
+   <property name="build.coverage.dir" value="${build.dir}/build-coverage"/>
+   <property name="build.instrumented.dir" value="${build.dir}/instrumented"/>
+   <property name="build.checkstyle.dir" value="${build.dir}/build-checkstyle"/>
+   <property name="dist.dir" value="dist"/>
+   <property name="conf.dir" value="conf"/>
+   <property name="temp.dir" value="temp"/>
+   <property name="metainf.dir" value="${conf.dir}/META-INF"/>
+   <property name="webinf.dir" value="${web.dir}/WEB-INF"/>
+   <property name="javadoc.dir" value="doc/api"/>
+
+   <property name="jar.test.name" value="test.jar"/>
+   <property name="ear.name" value="${project.name}.ear"/>
+   <property name="war.name" value="${dist.dir}/${project.name}.war"/>
+   <property name="compile.debug" value="true"/>
+   <property name="MailLogger.failure.to" value="${app.Name}@finalist.com" />
+
+   <!-- Specify the default webserver port -->
+   <property name="webserver.port" value="8080" />
+
+<!-- JUnit output directory definitions -->
+
+   <property name="build.reports.base.dir" value="${build.junit.dir}"/>
+   <property name="build.reports.xml.dir" value="${build.reports.base.dir}/xml"/>
+   <property name="build.reports.html.dir" value="${build.reports.base.dir}/html"/>
+   <property name="coverage.html.dir" value="${build.coverage.dir}/html"/>
+
+
+<!-- =========================================================================================================== -->
+<!--                                        P A T H    D E F E N I T I O N S                                     -->
+<!-- =========================================================================================================== -->
+
+   <path id="base.classpath">
+      <fileset dir="${lib.dir}">
+         <include name="*.jar"/>
+         <include name="*.zip"/>
+      </fileset>
+      <pathelement path="${build.web.dir}"/>
+   </path>
+
+   <path id="coverage.classpath">
+      <pathelement location="${build.web.dir}"/>
+   </path>
+
+#if ($config.matchAppserver("JBoss"))
+   <path id="jboss.classpath">
+      <!-- JBoss classes needed for testing Session EJBs from a JUnit client -->
+      <!-- JBoss3: -->
+      <fileset dir="${appserver.deploy.dir}/../../../client">
+         <include name="*.jar"/>
+      </fileset>
+   </path>
+#end
+<!-- =========================================================================================================== -->
+<!--                                     C H E C K                                                               -->
+<!-- =========================================================================================================== -->
+
+<!-- Checks wether the library for the lib anttasks exists or not. If not it will be checked out -->
+
+   <target name="init.ant">
+      <mkdir dir="${lib.dir}"/>
+      <available property="finalist-ant.present" file="${lib.dir}/finalist-ant-1.3.jar"/>
+      <available property="lib-dtd.present" file="${conf.dir}/lib.dtd"/>
+      <antcall target="checkout.finalist.ant"/>
+   </target>
+
+<!-- Checks whether the '.ant-global.properties' file is available in the base directory -->
+<!-- of your project. If not available warning messages will be written to the console.  -->
+
+   <target name="check.ant-global" description="fails if we cannot find .ant-global.properties">
+      <available file="../.ant-global.properties" property="global.properties.present"/>
+   </target>
+   <target name="check.ant-global.present" depends="check.ant-global" unless="global.properties.present">
+      <echo>
+         ============================ MISSING PROPERTY FILE ============================
+         It is recommended that you create a properties file named '.ant-global.properties' in the
+         directory 'above' (./..) where this build.xml file is.
+         This file needs to contain the following properties, adapted for your machine:
+
+         appserver.deploy.dir - the directory where the application 'ear' file will be deployed
+         appserver.home.dir - the root directory of the application server.
+         proxy.host - the IP address of your HTTP proxy (leave this property out if there is no proxy)
+         proxy.port - the access port number of your HTTP proxy (leave this property out if there is no proxy)
+
+         e.g.
+
+         appserver.deploy.dir =C:/jboss-3.2.3/server/default/deploy
+         appserver.home.dir   =C:/jboss-3.2.3
+         proxy.host           =192.168.1.10
+         proxy.port           =3128
+         ===============================================================================
+      </echo>
+   </target>
+
+   <target name="checkout.finalist.ant" depends="check.libs, get.libs"/>
+   <target name="check.libs">
+      <available file="${lib.dir}/finalist-ant-1.3.jar" property="finalist-ant.present"/>
+      <available file="${conf.dir}/lib.dtd" property="lib-dtd.present"/>
+      <condition property="nothing.to.download">
+         <and>
+            <isset property="finalist-ant.present"/>
+            <isset property="lib-dtd.present"/>
+         </and>
+      </condition>
+   </target>
+   <target name="get.libs">
+      <condition property="proxy.needs.setting">
+         <and>
+            <not>
+               <isfalse value="nothing.to.download"/>
+            </not>
+            <not>
+               <equals arg1="" arg2="${proxy.host}" trim="true"/>
+            </not>
+         </and>
+      </condition>
+      <antcall target="set.proxy"/>
+      <antcall target="get.finalist-ant"/>
+      <antcall target="get.lib-dtd"/>
+   </target>
+   <target name="set.proxy" depends="check.proxy.host, check.proxy.port" if="proxy.needs.setting">
+      <echo message="Using HTTP proxy at ${proxy.host}:${proxy.port}..."/>
+      <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}"/>
+   </target>
+   <target name="get.finalist-ant" unless="finalist-ant.present">
+      <get src="http://jag.sourceforge.net/download/jag/jars/finalist-ant-1.3.jar" dest="${lib.dir}/finalist-ant-1.3.jar"/>
+   </target>
+   <target name="get.lib-dtd" unless="lib-dtd.present">
+      <get src="http://jag.sourceforge.net/download/lib.dtd" dest="${conf.dir}/lib.dtd"/>
+   </target>
+
+<!-- Checks whether the 'appserver.deploy.dir' property is defined in the '.ant-global.properties' -->
+<!-- file. If not defined warning messages are written to the console.                          -->
+
+   <target name="check.appserver.deploy.dir" unless="appserver.deploy.dir">
+      <echo message="Application server deploy directory does not exist!"/>
+      <fail message="Please add appserver.deploy.dir to &apos;../.ant-global.properties&apos;"/>
+   </target>
+
+   <target name="check.appserver.home.dir" unless="appserver.home.dir">
+      <echo message="Application server home directory does not exist!"/>
+      <fail message="Please add appserver.home.dir to &apos;../.ant-global.properties&apos;"/>
+   </target>
+
+<!-- Checks whether the proxy setting are defined in the '.ant-global.properties'               -->
+<!-- file. If not defined warning messages are written to the console.                          -->
+
+   <target name="check.proxy.host" unless="proxy.host">
+      <echo message="Proxy host is not set!"/>
+      <echo message="Please add proxy.host to &apos;../.ant-global.properties&apos; in case you're using a proxy server for internet access."/>
+   </target>
+
+   <target name="check.proxy.port" unless="proxy.port">
+      <echo message="Proxy port is not set!"/>
+      <echo message="Please add proxy.port to &apos;../.ant-global.properties&apos; in case you're using a proxy server for internet access."/>
+   </target>
+
+
+<!-- =========================================================================================================== -->
+<!--                                     T A R G E T    D E F I N I T I O N S                                    -->
+<!-- =========================================================================================================== -->
+
+<!-- Creates a basic set of directories. -->
+
+   <target name="init" depends="check.ant-global.present, checkout.lib">
+      <mkdir dir="${build.dir}"/>
+      <mkdir dir="${build.web.dir}"/>
+      <mkdir dir="${build.test.dir}"/>
+      <mkdir dir="${build.checkstyle.dir}"/>
+      <mkdir dir="${dist.dir}"/>
+   </target>
+
+<!-- Compiles all sources that reside in the 'src.web.dir' to the 'build.web.dir' directory. -->
+
+   <target name="build.web" depends="init" description="Compile everything in the web-layer (src/java-web)">
+      <javac debug="${compile.debug}" deprecation="true" destdir="${build.web.dir}" srcdir="${src.web.dir}">
+         <classpath>
+            <path refid="base.classpath"/>
+         </classpath>
+      </javac>
+   </target>
+
+<!-- Compiles all sources that reside in the 'src.test.dir' to the 'build.test.dir' directory. -->
+
+   <target name="build.test" description="Compile test classes" depends="build.web">
+      <javac debug="${compile.debug}" deprecation="true" destdir="${build.test.dir}" srcdir="${src.test.dir}">
+         <classpath>
+            <path refid="base.classpath"/>
+         </classpath>
+      </javac>
+   </target>
+
+<!-- Jars all Junit test files from the 'build.test.dir'. -->
+
+   <target name="jar.test" description="jars source files for JUnit test" depends="build.test">
+      <jar basedir="${build.test.dir}" jarfile="${jar.test.name}"/>
+   </target>
+
+
+<!-- Display some messages for the autobuild log file. Writes messages to the console. -->
+
+   <target name="messages.autobuild"
+           description="Show some messages that will be shown at the start of the autobuild log file.">
+      <!-- Used to display some messages.. -->
+      <echo message="The results of the autobuild:"/>
+   </target>
+
+<!-- Initialize for the autobuild. Not needed here. -->
+
+   <target name="init.autobuild"
+   description="Will be called by the autobuild before calling run.autobuild. Initialization can be done here.">
+      <!-- No initialization needed -->
+   </target>
+
+<!-- Runs all targets needed to perform an autobuild. -->
+
+   <target name="run.autobuild" depends="messages.autobuild,all.appserver,deploy,javadoc,todo,auto.checkstyle,test"
+   description="Runs the autobuild. Add in the depend list all steps that should be taken by the autobuild." />
+
+
+<!-- Finishes the autbobuild. Writes messages to the console. -->
+
+   <target name="finish.autobuild" description="Will be called by the autobuild after the run.autobuild has been completed. Here all targets should be called to complete the autobuild like mailing/copying results, clean up deploy directories etc..">
+      <antcall target="copy.autobuild.results"/>
+      <antcall target="undeploy.ear.appserver"/>
+      <echo message="" />
+      <echo message="The autobuild has finished."/>
+   </target>
+
+<!-- Copies the results of the autobuild to the webserver environment. -->
+
+   <target name="copy.autobuild.results">
+      <mkdir dir="${apache.dir}/${project.name}"/>
+      <mkdir dir="${apache.dir}/${project.name}/javadoc"/>
+      <mkdir dir="${apache.dir}/${project.name}/junit"/>
+      <mkdir dir="${apache.dir}/${project.name}/buildlog"/>
+      <mkdir dir="${apache.dir}/${project.name}/todo"/>
+      <copy file="build.log" tofile="${apache.dir}/${project.name}/buildlog/build.txt"/>
+      <copy todir="${apache.dir}/${project.name}/javadoc">
+         <fileset dir="${javadoc.dir}"/>
+      </copy>
+      <copy todir="${apache.dir}/${project.name}/todo">
+         <fileset dir="${build.todo.dir}"/>
+      </copy>
+      <copy todir="${apache.dir}/${project.name}/junit">
+         <fileset dir="${build.reports.html.dir}"/>
+      </copy>
+   </target>
+
+
+<!-- Create javadoc from the sources in the 'src.web.dir' directory. -->
+
+   <target name="javadoc" description="Generates javadoc.">
+      <mkdir dir="${javadoc.dir}"/>
+      <javadoc destdir="${javadoc.dir}" packagenames="com.*" >
+         <classpath>
+            <pathelement path="${build.web.dir}"/>
+            <fileset dir="${lib.dir}">
+               <include name="*.jar"/>
+            </fileset>
+         </classpath>
+         <sourcepath>
+            <pathelement path="${src.web.dir}"/>
+         </sourcepath>
+         <group title="Finalist" packages="com.*"/>
+         <link offline="true" href="http://java.sun.com/j2se/1.5/docs/api/"
+               packagelistLoc="doc/javadoc_packages/jdk13_packagelist"/>
+         <link offline="true" href="http://java.sun.com/j2ee/1.4/docs/api/"
+               packagelistLoc="doc/javadoc_packages/j2ee_packagelist"/>
+         <tag name="struts.form" scope="all" description=" "/>
+         <tag name="struts.action" scope="all" description=" "/>
+         <tag name="struts.action-forward" scope="all" description=" "/>
+         <tag name="ejb.bean" scope="all" description=" "/>
+         <tag name="ejb.pk" scope="all" description=" "/>
+         <tag name="ejb.finder" scope="all" description=" "/>
+         <tag name="ejb.transaction" scope="all" description=" "/>
+         <tag name="ejb.util" scope="all" description=" "/>
+         <tag name="ejb.persistence" scope="all" description=" "/>
+         <tag name="ejb.create-method" scope="all" description=" "/>
+         <tag name="ejb.relation" scope="all" description=" "/>
+         <tag name="ejb.value-object" scope="all" description=" "/>
+         <tag name="jboss.relation" scope="all" description=" "/>
+         <tag name="jboss.persistence" scope="all" description=" "/>
+         <tag name="weblogic.column-map" scope="all" description=" "/>
+         <tag name="jag.relation" scope="all" description=" "/>
+      </javadoc>
+   </target>
+
+<!-- Generate todo-list from @todo tags. -->
+   <target name="todo" depends="init">
+      <delete dir="${build.todo.dir}"/>
+      <taskdef classname="xdoclet.modules.doc.DocumentDocletTask" classpathref="base.classpath" name="document"/>
+      <document destdir="${build.todo.dir}" >
+         <fileset dir="${src.web.dir}">
+            <include name="**/*.java"/>
+         </fileset>
+         <fileset dir="${src.test.dir}">
+            <include name="**/*.java"/>
+         </fileset>
+         <info header="Todo list" projectname="${ant.project.name}" tag="todo"/>
+      </document>
+   </target>
+
+<!-- test target is called in the autobuild -->
+
+   <target name="test" depends="junit.report,coverage.report">
+   </target>
+
+<!-- Runs JUnit tests. -->
+   <target name="junit" description="Runs All JUnit tests" depends="jar.test,_coverage">
+      <echo message="Make sure the junit.jar and optional.jar file are in your ant\lib directory"/>
+      <delete dir="${build.reports.xml.dir}"/>
+      <mkdir dir="${build.reports.xml.dir}"/>
+
+      <echo message="Running unit tests..."/>
+      <junit fork="yes" haltonfailure="no" showOutput="yes" printSummary="on">
+         <jvmarg value="-Demma.coverage.out.file=${build.instrumented.dir}/coverage.emma" />
+         <jvmarg value="-Demma.coverage.out.merge=true" />
+         <classpath>
+            <pathelement location="${build.instrumented.dir}"/>
+            <path refid="base.classpath"/>
+            <pathelement path="${jar.test.name}"/>
+            <pathelement path="${web.dir}"/>
+            <pathelement path="${webinf.dir}/classes"/>
+            <pathelement path="${build.test.dir}"/>
+            <pathelement path="${build.web.dir}"/>
+            <fileset dir="." includes="${jar.test.name}"/>
+         </classpath>
+         <batchtest todir="${build.reports.xml.dir}">
+            <fileset dir="${build.test.dir}">
+               <include name="**/*TestCase.class"/>
+               <include name="**/*Test.class"/>
+            </fileset>
+            <formatter type="xml"/>
+         </batchtest>
+      </junit>
+      <delete>
+         <fileset dir="${build.test.dir}" includes="**/*Test.class"/>
+         <fileset dir="${build.test.dir}" includes="**/*TestCase.class"/>
+      </delete>
+      <delete file="${jar.test.name}"/>
+   </target>
+
+
+<!-- Generates test reports. -->
+
+   <target name="junit.report" description="Generates JUnit test reports" depends="junit">
+      <taskdef classpathref="base.classpath" name="junitreport"
+               classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator"/>
+      <mkdir dir="${build.reports.html.dir}"/>
+      <junitreport todir="${build.reports.html.dir}">
+         <fileset dir="${build.reports.xml.dir}">
+            <include name="TEST-*.xml"/>
+         </fileset>
+         <report format="frames" todir="${build.reports.html.dir}"/>
+      </junitreport>
+   </target>
+
+   <target name="coverage.report">
+      <taskdef resource="emma_ant.properties" classpathref="base.classpath" />
+      <!-- if enabled, generate coverage report(s): -->
+      <emma enabled="true" >
+        <report
+                sort="+block,+name,+method,+class"
+                metrics="method:70,block:80,line:80,class:100"
+        >
+        <sourcepath>
+            <pathelement location="${src.web.dir}"/>
+          </sourcepath>
+          <fileset dir="." >
+            <include name="${build.instrumented.dir}/*.emma" />
+          </fileset>
+          <html outfile="${coverage.html.dir}/index.html"
+               depth="method"
+               columns="name,class,method,block,line"
+          />
+        </report>
+      </emma>
+
+   </target>
+
+   <target name="_coverage">
+      <taskdef resource="emma_ant.properties" classpathref="base.classpath" />
+      <mkdir dir="${build.instrumented.dir}"/>
+      <emma enabled="true" >
+        <instr instrpathref="coverage.classpath"
+               destdir="${build.instrumented.dir}"
+               metadatafile="${build.instrumented.dir}/metadata.emma"
+               merge="false"
+        >
+        </instr>
+      </emma>
+   </target>
+
+
+
+
+#if ($config.matchBusinessTier("Hibernate 3"))
+
+   <!--
+      Generate the database schema DDL using the SchemaExportTask.
+   -->
+   <target name="hibernate.schemaexport" depends="build.web" description="Generate the database schema DDL using the SchemaExportTask." >
+      <taskdef
+         name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask"
+         classpathref="base.classpath"/>
+      <hibernatetool destdir="${conf.dir}">
+         <annotationconfiguration
+            configurationfile="${webinf.dir}/classes/hibernate.cfg.xml"/>
+         <!-- Use export = true to create the schema. -->
+         <hbm2ddl console="true" export="false" outputfilename="hibernate-schema-export.sql"/>
+      </hibernatetool>
+   </target>
+#end
+
+#if ($config.useWebService())
+
+## Generate a client using XFire...
+## It should be something like this:
+##   <target name="xfire.client">
+##      <mkdir dir="temp"/>
+##      <taskdef name="wsgen"
+##              classname="org.codehaus.xfire.gen.WsGenTask"
+##              classpathref="base.classpath"/>
+##		<get dest="temp/UserManagerWebService.wsdl" src="http://localhost/xservices/UserManagerWebService?wsdl"/>
+##      <wsgen binding="xmlbeans"
+##              package="ws"
+##              outputDirectory="${src.web.dir}"
+##              wsdl="temp/UserManagerWebService.wsdl"
+##              />
+##   </target>
+##
+##
+
+  <target name="axis.java2wsdl" depends="all.appserver">
+  <taskdef resource="axis-tasks.properties" classpathref="base.classpath"/>
+#foreach ($session in $sessions)
+#if ($session.hasBusinessMethods())
+## Some util targets for webservices.
+    <axis-java2wsdl output="${conf.dir}/${session.Name}WebService.wsdl"
+            namespace="http://${app.RootPackage}.${project.name}.services"
+            style="RPC"
+            use="literal"
+            classname="${session.Name}WebService"
+            location="http://localhost:${webserver.port}/${project.name}/services/${session.Name}WebService">
+        <classpath refid="base.classpath"/>
+    </axis-java2wsdl>
+#end
+#end
+  </target>
+
+  <target name="axis.wsdl2java" depends="axis.java2wsdl">
+  <taskdef resource="axis-tasks.properties" classpathref="base.classpath"/>
+#foreach ($session in $sessions)
+#if ($session.hasBusinessMethods())
+<!-- Generate both client and server stubs. -->
+	  <!-- In case the WSDL is on a remote server, the following url might be used:
+          url="http://localhost:${webserver.port}/${project.name}/services/${session.Name}WebService?wsdl"
+          -->
+
+	 <axis-wsdl2java
+	  output="${src.web.dir}"
+	  deployScope="Application"
+	  verbose="true"
+	  serverSide="true"
+	  testcase="false"
+          url="file:${conf.dir}/${session.Name}WebService.wsdl"
+
+      >
+
+      <!-- This mapping will make sure that the generate stubs will be in the soapclient package. -->
+        <mapping
+		      namespace="http://${app.RootPackage}.${project.name}.services"
+		      package="soapserver" />
+	 </axis-wsdl2java>
+	 <axis-wsdl2java
+	  output="${src.test.dir}"
+	  deployScope="Application"
+	  verbose="true"
+	  serverSide="false"
+	  testcase="true"
+          url="file:${conf.dir}/${session.Name}WebService.wsdl"
+      >
+
+      <!-- This mapping will make sure that the generate stubs will be in the soapclient package. -->
+        <mapping
+		      namespace="http://${app.RootPackage}.${project.name}.services"
+		      package="soapclient" />
+        </axis-wsdl2java>
+#end
+#end
+</target>
+
+  <target name="axis.admin">
+  <taskdef resource="axis-tasks.properties" classpathref="base.classpath"/>
+  <!--
+  This will deploy the webservice that is described in the deployment descriptor in deploy.wsdd
+  The WSDL can be accessed at: /services/UserManagerWebService?wsdl
+  -->
+   <axis-admin
+       port="${webserver.port}"
+       hostname="localhost"
+       failonerror="true"
+       servletpath="${project.name}/services/AdminService"
+       debug="true"
+       xmlfile="${src.web.dir}/soapserver/deploy.wsdd"
+       />
+</target>
+
+
+<target name="probe.for.dotnet.apps" >
+<!--
+
+To use the .net code, make sure the .NET Framework is available on your system.
+See: http://msdn.microsoft.com/netframework/downloads/updates/default.aspx
+
+Both the csc.exe and the wsdl.exe should be on your system path.
+For example, this can be achieved by adding the following directory to your PATH:
+
+C:\Program Files\Microsoft.NET\FrameworkSDK\Bin
+
+-->
+
+  <property name="cs.test.dir" value="src/cs-test" />
+  <property name="out.app" location="dotnetclient.exe"/>
+
+  <condition property="wsdl.found">
+    <or>
+      <available file="wsdl" filepath="${env.PATH}" />
+      <available file="wsdl.exe" filepath="${env.PATH}" />
+      <available file="wsdl.exe" filepath="${env.Path}" />
+    </or>
+  </condition>
+  <echo> wsdl.found=${wsdl.found}</echo>
+  <condition property="csc.found">
+    <or>
+
+      <available file="csc" filepath="${env.PATH}" />
+      <available file="csc.exe" filepath="${env.PATH}" />
+      <available file="csc.exe" filepath="${env.Path}" />
+    </or>
+    </condition>
+    <echo> csc.found=${csc.found}</echo>
+    <condition property="dotnetapps.found">
+      <and>
+        <isset property="csc.found"/>
+        <isset property="wsdl.found"/>
+      </and>
+    </condition>
+  <echo> dotnetapps.found=${dotnetapps.found}</echo>
+</target>
+
+<target name="import.dotnet" depends="probe.for.dotnet.apps,axis.java2wsdl"
+  if="dotnetapps.found">
+#foreach ($session in $sessions)
+#if ($session.hasBusinessMethods())
+  <wsdltodotnet destFile="${cs.test.dir}/${session.Name}WebService.cs"
+    srcFile="${conf.dir}/${session.Name}WebService.wsdl"
+    />
+#end    
+#end
+</target>
+
+<target name="build.dotnet" depends="import.dotnet"
+  if="dotnetapps.found">
+  <csc
+    srcDir="${cs.test.dir}"
+    destFile="${out.app}"
+    targetType="exe"
+    >
+  </csc>
+</target>
+
+<target name="dotnet" depends="build.dotnet" if="dotnetapps.found">
+  <exec
+    executable="${out.app}"
+    failonerror="true"
+    >
+    <arg value="deployment"/>
+  </exec>
+</target>
+
+
+
+#end
+
+<!-- Creates the war file but first build the web layer, delete existing wars. -->
+
+   <target name="war" description="Creates the WAR-file." depends="build.web,delete.war,webdoclet">
+      <antcall target="build.war"/>
+   </target>
+
+   <target name="build.war">
+      <taskdef name="warAutoLib" classpathref="base.classpath"
+               classname="com.finalist.tools.ant.taskdefs.WarAutoLib"/>
+      <warAutoLib warfile="${war.name}" webxml="${webinf.dir}/web.xml" libXmlFile="${conf.dir}/lib.xml"
+                  libDir="${lib.dir}">
+         <webinf dir="${webinf.dir}">
+            <include name="classes/*.tld"/>
+            <include name="classes/*.properties"/>
+            <include name="classes/*.xml"/>
+         </webinf>
+         <classes dir="${build.web.dir}"/>
+         <fileset dir="${web.dir}" excludes="**/WEB-INF/**/*.nbattrs"/>
+      </warAutoLib>
+   </target>
+
+<!-- Deletes the war file. -->
+
+   <target name="delete.war">
+      <delete file="${war.name}"/>
+   </target>
+
+<!-- Removes all directories and files created by the build.xml file except for the lib directory. -->
+
+   <target name="clean" description="Cleans the project (removes DIST and BUILD-directories).">
+      <delete dir="${build.dir}"/>
+      <delete dir="${build.web.dir}" failonerror="false" />
+      <delete dir="${build.test.dir}" failonerror="false" />
+      <delete dir="${build.todo.dir}" failonerror="false" />
+      <delete dir="${build.junit.dir}" failonerror="false" />
+      <delete dir="${coverage.html.dir}" failonerror="false" />
+      <delete dir="${build.checkstyle.dir}"  failonerror="false" />
+      <delete dir="${dist.dir}"/>
+      <delete>
+         <fileset defaultexcludes="false" dir=".">
+            <patternset>
+               <include name="**/*.class"/>
+               <include name="**/*~"/>
+            </patternset>
+         </fileset>
+      </delete>
+   </target>
+
+<!-- Creates everything needed by the application server. -->
+
+   <target name="all.appserver" description="Creates the EAR-file for jboss." depends="war,ear.appserver">
+   </target>
+
+   <!-- Creates a appserver specific ear file. -->
+
+   <target name="ear.appserver" depends="check.proxy.host, check.proxy.port"
+           description="Creates the EAR-file.">
+      <delete file="${ear.name}"/>
+#if (!$config.matchBusinessTier("Hibernate"))
+      <taskdef name="earAutoLib" classpathref="base.classpath"
+               classname="com.finalist.tools.ant.taskdefs.EarAutoLib"/>
+#end
+#if ($config.matchBusinessTier("Hibernate"))
+## Create an ear file with:
+      <ear appxml="${metainf.dir}/application.xml"
+            destfile="${ear.name}" >
+#if ($config.matchAppserver("JBoss 3.2") || $config.matchAppserver("JBoss 4"))
+		   <fileset dir="${conf.dir}" includes="META-INF/jboss-app.xml"/>
+#end
+## include the war file.
+      <fileset dir="${dist.dir}" includes="*.war"/>
+      </ear>
+#end
+   </target>
+
+#if ($config.matchAppserver("Tomcat"))
+   <!--
+   To use the tomcat deploy manager, make sure you add the username/password:
+   system/manager with the manager role to the tomcat-users.xml file in de conf directory
+   of your tomcat installation.
+   -->
+   <property name="url.manager" value="http://localhost:${webserver.port}/manager/"/>
+   <property name="tomcat.manager.user" value="system" />
+   <property name="tomcat.manager.password" value="manager" />
+
+   <target name="undeploy.manager">
+     <!-- use the manager app to undeploy -->
+     <get src="${url.manager}/remove?path=/${project.name}"
+          dest="TomcatUndeployOutput.txt"
+          username="${tomcat.manager.user}"
+          password="${tomcat.manager.password}"
+          verbose="true"/>
+
+     <!-- the manager app does not delete the directory for us -->
+     <delete dir="${appserver.home.dir}/webapps/${project.name}"/>
+
+     <!-- echo the results to the console -->
+     <!-- NOTE: This reports an error when you first run it,
+          because the app is not initially deployed -->
+   </target>
+
+   <target name="deploy.manager" depends="war,undeploy.manager">
+     <!--
+       Convert the project-relative path, such as "dist/example.war",
+       into a fully-qualitifed path like "C:/temp/example/dist/example.war"
+       -->
+     <pathconvert dirsep="/" property="fullWarDir">
+       <path>
+         <pathelement location="${dist.dir}/${project.name}.war"/>
+       </path>
+     </pathconvert>
+
+     <!-- Use the manager app to deploy -->
+     <get src="${url.manager}/install?path=/${project.name}&amp;war=jar:file:${fullWarDir}!/"
+          dest="TomcatDeployOutput.txt"
+          username="${tomcat.manager.user}"
+          password="${tomcat.manager.password}"
+          verbose="true"/>
+     <!-- echo the results to the console -->
+     <concat>
+       <filelist dir="." files="deployOutput.txt" />
+     </concat>
+   </target>
+
+   <target name="deploy" description="Deploys the generated application" depends="deploy.war.appserver">
+   </target>
+
+   <target name="deploy.war.appserver" description="Deploys the Tomcat WAR" depends="check.appserver.home.dir">
+      <!-- Make sure the JDBC Driver for the datasource is available! -->
+#if (${datasource.Database.Filename} == "../lib/postgresql-8.0-312.jdbc3.jar"  || ${datasource.Database.Filename} == "../lib/mysql-connector-java-3.1.12-bin.jar" || ${datasource.Database.Filename} == "../lib/hsqldb-1.7.3.3.jar"  )
+      <copy file="lib/${datasource.Database.Filename}" todir="${appserver.home.dir}/shared/lib"/>
+#else
+      <copy file="${datasource.Database.Filename}" todir="${appserver.home.dir}/shared/lib"/>
+#end
+      <!-- Deploy the jta and jdbc20_exts... -->
+      <copy file="${lib.dir}/jta1.0.1.jar" todir="${appserver.home.dir}/shared/lib" />
+      <copy file="${lib.dir}/jdbc2_0-stdext.jar" todir="${appserver.home.dir}/shared/lib" />
+      <copy overwrite="true" file="${war.name}" todir="${appserver.home.dir}/webapps"/>
+      <!-- And finally deploy the war. -->
+   </target>
+#end
+
+#if ($config.matchAppserver("JBoss") || $config.matchAppserver("BEA") || $config.matchAppserver("Sun") || $config.matchAppserver("IBM") || $config.matchAppserver("Oracle"))
+
+   <target name="deploy" description="Deploys the generated application" depends="deploy.ear.appserver">
+   </target>
+
+#end
+
+
+#if ($config.matchAppserver("JBoss"))
+<!-- Copies the ear file and datasource definition to the JBoss deployment environment. -->
+
+   <target name="deploy.ear.appserver" description="Deploys the JBoss EAR" depends="check.appserver.deploy.dir">
+      <!-- Make sure the JDBC Driver for the datasource is available! -->
+#if (${datasource.Database.Filename} == "../lib/postgresql-8.0-312.jdbc3.jar"  || ${datasource.Database.Filename} == "../lib/mysql-connector-java-3.1.12-bin.jar" )
+      <copy file="lib/${datasource.Database.Filename}" todir="${appserver.deploy.dir}"/>
+#else
+      <copy file="${datasource.Database.Filename}" todir="${appserver.deploy.dir}"/>
+#end
+#if ($config.matchAppserver("JBoss 3.0"))
+      <copy file="${conf.dir}/${app.Name}-${datasource.TypeMapping.Lower}-service.xml" todir="${appserver.deploy.dir}"/>
+#end
+#if ($config.matchAppserver("JBoss 3.2") || $config.matchAppserver("JBoss 4"))
+      <copy file="${conf.dir}/${app.Name}-${datasource.TypeMapping.Lower}-ds.xml" todir="${appserver.deploy.dir}"/>
+#end
+      <!-- And finally deploy the ear. -->
+      <copy file="${ear.name}" todir="${appserver.deploy.dir}"/>
+   </target>
+
+   <target name="deploy.war.appserver" description="Deploys the JBoss WAR" depends="check.appserver.deploy.dir">
+      <!-- Make sure the JDBC Driver for the datasource is available! -->
+#if (${datasource.Database.Filename} == "../lib/postgresql-8.0-312.jdbc3.jar"  || ${datasource.Database.Filename} == "../lib/mysql-connector-java-3.1.12-bin.jar" )
+      <copy file="lib/${datasource.Database.Filename}" todir="${appserver.deploy.dir}"/>
+#else
+      <copy file="${datasource.Database.Filename}" todir="${appserver.deploy.dir}"/>
+#end
+#if ($config.matchAppserver("JBoss 3.0"))
+      <copy file="${conf.dir}/${app.Name}-${datasource.TypeMapping.Lower}-service.xml" todir="${appserver.deploy.dir}"/>
+#end
+#if ($config.matchAppserver("JBoss 3.2") || $config.matchAppserver("JBoss 4") )
+      <copy file="${conf.dir}/${app.Name}-${datasource.TypeMapping.Lower}-ds.xml" todir="${appserver.deploy.dir}"/>
+#end
+      <copy file="${war.name}" todir="${appserver.deploy.dir}"/>
+      <!-- And finally deploy the war. -->
+   </target>
+
+<!-- Removes the ear file and datasource definition from the deployment environment. -->
+
+   <target name="undeploy.ear.appserver" description="Undeploys the JBoss EAR" depends="check.appserver.deploy.dir">
+      <delete file="${appserver.deploy.dir}/${ear.name}"/>
+#if ($config.matchAppserver("JBoss 3.0"))
+      <delete file="${appserver.deploy.dir}/${app.Name}-${datasource.TypeMapping.Lower}-service.xml"/>
+#end
+#if ($config.matchAppserver("JBoss 3.2") || $config.matchAppserver("JBoss 4") )
+      <delete file="${appserver.deploy.dir}/${app.Name}-${datasource.TypeMapping.Lower}-ds.xml"/>
+#end
+   </target>
+
+#end
+
+#if ($config.matchAppserver("Sun ONE Application Server 7"))
+   <target name="deploy.ear.appserver" description="Deploys the Sun ONE EAR" depends="check.appserver.deploy.dir">
+   <echo>
+   There are currently no deployment scripts for the Sun ONE Application Server.
+   Please use the Admin Console to deploy the sequence-generator as an EJB module and
+   the ear file as a J2EE Application.
+   Also make sure that the JDBC Resource, JDBC Connection Pool and the Persistence Manager
+   have been configured correctly.
+
+   Please read the developers documentation on http://jag.sourceforge.net
+   </echo>
+   </target>
+
+   <target name="undeploy.ear.appserver" description="Undeploys the Sun ONE EAR" depends="check.appserver.deploy.dir">
+   <echo>
+    Undeploy of Sun ONE EAR is currently not supported.
+   </echo>
+   </target>
+
+#end
+
+#if ($config.matchAppserver("BEA WebLogic 8.1"))
+   <target name="deploy.ear.appserver" description="Deploys the BEA EAR" depends="check.appserver.deploy.dir">
+   <echo>
+   There are currently no deployment scripts for the BEA WebLogic Application Server.
+   Please use the Admin Console to deploy the ear file as a J2EE Application.
+   Also make sure that the JDBC Data Source and JDBC Connection Pool
+   have been configured correctly.
+
+   Please read the developers documentation on http://jag.sourceforge.net
+   </echo>
+   </target>
+
+   <target name="undeploy.ear.appserver" description="Undeploys the BEA WebLogic EAR" depends="check.appserver.deploy.dir">
+   <echo>
+    Undeploy of the BEA WebLogic EAR is currently not supported.
+   </echo>
+   </target>
+
+#end
+#if ($config.matchAppserver("IBM WebSphere"))
+   <target name="deploy.ear.appserver" description="Deploys the IBM WebSphere EAR" depends="check.appserver.deploy.dir">
+   <echo>
+   There are currently no deployment scripts for the IBM WebSphere Server.
+
+   Please read the developers documentation on http://jag.sourceforge.net
+   </echo>
+   </target>
+
+   <target name="undeploy.ear.appserver" description="Undeploys the IBM WebSphere" depends="check.appserver.deploy.dir">
+   <echo>
+    Undeploy of the IBM WebSphere is currently not supported.
+   </echo>
+   </target>
+#end
+
+#if ($config.matchAppserver("Oracle Application Server"))
+   <target name="deploy.ear.appserver" description="Deploys the Oracle Application Server EAR" depends="check.appserver.deploy.dir">
+   <echo>
+   There are currently no deployment scripts for the Oracle Application Server.
+   Please use the Admin Console to deploy the ear file as a J2EE Application.
+   Also make sure that the JDBC Data Source and JDBC Connection Pool
+   have been configured correctly.
+
+   Please read the developers documentation on http://jag.sourceforge.net
+   </echo>
+   </target>
+
+   <target name="undeploy.ear.appserver" description="Undeploys the Oracle Application Server WebLogic EAR" depends="check.appserver.deploy.dir">
+   <echo>
+    Undeploy of the Oracle Application Server WebLogic EAR is currently not supported.
+   </echo>
+   </target>
+#end
+
+<!-- Removes the lib directory. -->
+
+   <target name="delete.lib">
+      <delete dir="${lib.dir}"/>
+   </target>
+
+<!-- Creates the lib directory and checks out all jars needed by the project. -->
+
+   <target name="checkout.lib" description="CVS-checkout for needed JARs." depends="init.ant">
+      <taskdef name="checkout" classpathref="base.classpath"
+               classname="com.finalist.tools.ant.taskdefs.CheckoutLibTask"/>
+      <checkout libXmlFile="${conf.dir}/lib.xml" libDir="${lib.dir}" tmpDir="${temp.dir}" />
+   </target>
+
+
+<!-- Generates the 'struts-config.xml' file using webdoclet. Analyses all source files in the web directory -->
+<!-- for the availability of specific webdoclet tags and creates the config file.                           -->
+
+  <target name="webdoclet" description="Re-Generate struts-config.xml using XDoclet" depends="init">
+#if (${config.templateSettings.serviceTier} == "ServiceLocator" && ${config.templateSettings.webTier} == "Tapestry 4" )
+## No xdoclet needed for ServiceLocator and Tapestry 4.
+#else
+      <taskdef classname="xdoclet.modules.web.WebDocletTask" classpathref="base.classpath" name="webdoclet"/>
+#if (${config.templateSettings.serviceTier} == "Spring")
+      <taskdef classname="xdoclet.modules.spring.SpringDocletTask" classpathref="base.classpath" name="springdoclet"/>
+      <delete file="${webinf.dir}/action-servlet.xml"/>
+      <delete file="${webinf.dir}/applicationContext.xml"/>
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+      <delete file="${webinf.dir}/struts-config.xml"/>
+      <webdoclet destdir="${webinf.dir}">
+         <fileset dir="${src.web.dir}">
+            <include name="**/*Action.java"/>
+            <include name="**/*Form.java"/>
+         </fileset>
+         <strutsconfigxml mergedir="${webinf.dir}" version="1.2" validateXML="true"/>
+      </webdoclet>
+#end
+#if (${config.templateSettings.serviceTier} == "Spring")
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+<!--generates the action-servlet.xml and the applicationContext.xml-->
+      <springdoclet destDir="${webinf.dir}" verbose="true">
+         <fileset dir="${src.web.dir}">
+            <include name="**/*Action.java"/>
+            <include name="**/*Form.java"/>
+         </fileset>
+        <springxml destinationFile="action-servlet.xml"/>
+      </springdoclet>
+#end
+      <springdoclet destDir="${webinf.dir}" verbose="true">
+           <fileset dir="${src.web.dir}">
+              <include name="**/*.java" />
+           </fileset>
+        <springxml mergedir ="${conf.dir}" destinationFile="applicationContext.xml"/>
+     </springdoclet>
+#end
+#end
+   </target>
+
+  <!-- run this target as part of automated build -->
+  <target name="auto.checkstyle" depends="checkstyle" if="checkstyle.failure" description="Sends email if checkstyle detected code conventions violations.">
+      <mail from="autobuild@mydomain.com"
+            tolist="${MailLogger.failure.to}"
+            mailhost="localhost"
+            subject="Coding style violation(s) in project ${project.name}"
+            message="Finalist Coding Style violations found by Checkstyle!"
+            files="${build.checkstyle.dir}/checkstyle-noframes.html"
+            encoding="plain"
+            messagemimetype="text/html"/>
+  </target>
+
+<!-- Automatically checks the style of the sources in the 'src.ejb.dir' and the 'src.web.dir'. -->
+<!-- Output is written to a set of html files.                                                 -->
+
+  <target name="checkstyle" description="Generates a report of Finalist code style convention violations.">
+      <taskdef resource="checkstyletask.properties" classpathref="base.classpath"/>
+      <mkdir dir="${build.checkstyle.dir}"/>
+      <checkstyle config="${lib.dir}/finalist_checks.xml"
+                  failureProperty="checkstyle.failure"
+                  failOnViolation="false">
+         <formatter type="xml" tofile="${build.checkstyle.dir}/checkstyle_report.xml"/>
+         <fileset dir="${src.web.dir}" includes="**/*.java"/>
+      </checkstyle>
+      <style in="${build.checkstyle.dir}/checkstyle_report.xml"
+	         out="${build.checkstyle.dir}/checkstyle-noframes.html"
+			 style="${lib.dir}/checkstyle-noframes.xsl"/>
+  </target>
+
+
+   <!-- ===================================================================== -->
+   <!--Jmeter targets                                                         -->
+   <!-- ===================================================================== -->
+
+   <target name="auto.jmeter" depends="run.jmeter" description="Sends email with Jmeter results.">
+      <mail from="jmeter@mydomain.com"
+         tolist="${MailLogger.failure.to}"
+         mailhost="smarthost.kennisnet.nl" encoding="plain" messagemimetype="text/html"
+         subject="Jmeter results in project ${project.name}"
+         message="Kennisnet Jmeter Results"
+         files="${build.dir}/jmeter/spider.html"
+         />
+   </target>
+
+   <target name="prepare.jmeter">
+      <taskdef name="jmeter" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" classpathref="base.classpath"/>
+      <delete file="${build.dir}/jmeter/spider.jtl"/>
+   </target>
+
+   <!--
+   To run the jmeter ant task, make sure the jmeter.home property has been
+   set in the .ant-global.properties file.
+   -->
+   <target name="run.jmeter" depends="prepare.jmeter" description="Runs the jmeter task.">
+      <delete file="${build.dir}/generated/jmeter/spider.jtl"/>
+      <copy file="${conf.dir}/jmeter/collapse.jpg" todir="${build.dir}/jmeter"/>
+      <copy file="${conf.dir}/jmeter/expand.jpg" todir="${build.dir}/jmeter"/>
+      <taskdef
+         name="jmeter"
+         classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"
+         classpathref="base.classpath"
+         />
+
+      <jmeter jmeterhome="${jmeter.home}"
+         testplan="${conf.dir}/jmeter/${project.name}.jmx"
+         resultlog="${build.dir}/jmeter/spider.jtl">
+         <jvmarg value="-Xmx128m"/>
+      </jmeter>
+      <xslt in="${build.dir}/jmeter/spider.jtl"
+         out="${build.dir}/jmeter/spider.html"
+         style="${conf.dir}/jmeter/jmeter-results-detail-report.xsl"/>
+   </target>
+
+   <!--
+   Start the hsql db admin tool
+   -->
+   <target name="db.gui" description="Start the hsqldb admin tool">
+      <property name="database.urlparams" value="?user=${datasource.UserName}&amp;password=${datasource.Password}"/>
+      <java
+         classname="org.hsqldb.util.DatabaseManager"
+         fork="yes"
+         classpathref="base.classpath"
+         failonerror="true"
+      >
+         <arg value="-url"/>
+         <arg value="${datasource.JdbcUrl}"/>
+         <arg value="-driver"/>
+         <arg value="${datasource.Database.DriverClass}"/>
+      </java>
+   </target>
+
+   <target name="fill.database" description="Fill the database using an import SQL script">
+      <sql driver="org.postgresql.Driver"
+           url="${datasource.JdbcUrl}"
+           userid="${datasource.UserName}"
+           password="${datasource.Password}"
+           src="${conf.dir}/import.sql">
+         <classpath>
+            <path refid="base.classpath"></path>
+         </classpath>
+      </sql>
+   </target>
+
+   <target name="copy.jsp" description="Copy jsp's to exploded directory." >
+      <copy todir="exploded" overwrite="true">
+         <fileset dir="${web.dir}">
+            <include name="**/*.jsp"/>
+            <include name="**/*.html"/>
+         </fileset>
+      </copy>
+   </target>
+
+</project>

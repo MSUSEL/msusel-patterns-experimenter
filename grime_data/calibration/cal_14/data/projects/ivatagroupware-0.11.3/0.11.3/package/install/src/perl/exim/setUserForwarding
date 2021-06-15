@@ -1,0 +1,175 @@
+#!/usr/bin/perl -Uw
+################################################################################
+# $Id: setUserForwarding,v 1.2 2005/04/09 17:19:52 colinmacleod Exp $
+#
+# Set up a forward file to forward all of a user's messages to an alternate
+# address.
+#
+# To allow the user which runs this and the other system scripts, the script
+# must be run in root user mode. This is achieved by running the sudo program
+# which must be installed on the system.
+#
+# Since: ivata groupware 0.9 (2002-07-21)
+# Author: Colin MacLeod <colin.macleod@ivata.com>
+# $Revision: 1.2 $
+#
+################################################################################
+# Copyright (c) 2001 - 2005 ivata limited.
+# All rights reserved.
+# ---------------------------------------------------------
+# ivata groupware may be redistributed under the GNU General Public
+# License as published by the Free Software Foundation;
+# version 2 of the License.
+#
+# These programs are free software; you can redistribute them and/or
+# modify them under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2 of the License.
+#
+# These programs are distributed in the hope that they will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# See the GNU General Public License in the file LICENSE.txt for more
+# details.
+#
+# If you would like a copy of the GNU General Public License write to
+#
+# Free Software Foundation, Inc.
+# 59 Temple Place - Suite 330
+# Boston, MA 02111-1307, USA.
+#
+#
+# To arrange commercial support and licensing, contact ivata at
+#                  http://www.ivata.com/contact.jsp
+################################################################################
+#
+# $Log: setUserForwarding,v $
+# Revision 1.2  2005/04/09 17:19:52  colinmacleod
+# Changed copyright text to GPL v2 explicitly.
+#
+# Revision 1.1.1.1  2005/03/10 17:49:17  colinmacleod
+# Restructured ivata op around Hibernate/PicoContainer.
+# Renamed ivata groupware.
+#
+# Revision 1.2  2004/03/21 21:16:33  colinmacleod
+# Shortened name to ivata op.
+#
+# Revision 1.1  2004/02/05 21:54:07  colinmacleod
+# Moved from webmail subproject.
+#
+# Revision 1.1.1.1  2004/01/27 20:59:58  colinmacleod
+# Moved ivata op to sourceforge.
+#
+# Revision 1.2  2003/10/15 14:11:33  colin
+# fixing for XDoclet
+#
+# Revision 1.1  2003/02/24 19:09:24  colin
+# moved to business
+#
+# Revision 1.3  2002/10/25 07:31:06  jano
+# using new method for converitng arguments from command line
+#
+# Revision 1.2  2002/10/24 11:51:26  colin
+# Testing in London Red Hat/Sub Cobalt server
+#
+# Revision 1.1  2002/08/11 11:44:28  colin
+# first version
+# scripts written for and tested on Debian exim server
+#
+################################################################################
+
+################################################################################
+# includes
+use strict;
+use Site;
+################################################################################
+
+################################################################################
+# variable declarations
+# forwarding address for the user
+my $ADDRESS;
+# system user name
+my $USER_NAME;
+################################################################################
+
+################################################################################
+# function prototypes
+sub describeCommandLine();
+sub parseCommandLine();
+sub setUserForwarding();
+################################################################################
+
+################################################################################
+# main routine
+# if the command line parsing fails or the user specifies he wants help, then
+# bring up the help screen
+if(!parseCommandLine()) {
+  describeCommandLine();
+  die "\n";
+# otherwise rock & roll
+} else {
+  setPassword();
+}
+################################################################################
+
+
+################################################################################
+# describeCommandLine: print out command line options.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub describeCommandLine() {
+  print "\n";
+  print "                            --- setUserForwarding ---\n";
+  print "       ivata's tool to change a user's forwarding address in exim systems.\n";
+  print "\n";
+  print "       You need perl installed on your system to use this tool.\n";
+  print "\n";
+  print " Usage: \n";
+  print "       setUserForwarding {username} [{addresses}]\n";
+  print "\n";
+  print " Key:\n";
+  print "  username      name of the user for whom to change the forwarding address.\n";
+  print "  addresses     user's new forwarding adddress. This is optional - if this\n";
+  print "                parameter is left out then any previous forwarding addresses\n";
+  print "                are removed. You may use multiple addresses, separated by\n";
+  print "                commas.\n";
+  print "\n";
+}
+
+
+################################################################################
+# parseCommandLine: this converts all of the command line options to the
+#     variables.
+# params:
+#        NONE
+# returns:
+#        a boolean telling you whether to continue or not. non-zero = continue
+sub parseCommandLine() {
+  $USER_NAME = convertCommandLine($ARGV[0]);
+  $ADDRESS = convertCommandLine($ARGV[1]);
+  return (($#ARGV >= 0) && ($#ARGV <=1));
+}
+
+################################################################################
+# setUserForwarding: does the funky stuff to change the user's forwarding
+# address.
+# params:
+#        NONE
+# returns:
+#        NONE
+sub setUserForwarding() {
+  my $newFile = "${HOME}${USER_NAME}${DIR}${DOT_FORWARD}";
+  my $oldFile = "${HOME}${USER_NAME}${DIR}${DOT_FORWARD_OLD}";
+  # first back up the existing file
+  rename($newFile, $oldFile);
+
+  # if there is an address, make a new file
+  if($ADDRESS) {
+    open(DOT_FORWARD, ">$newFile") || die "Cannot open '$newFile': $!";
+    print DOT_FORWARD $ADDRESS;
+    close(DOT_FORWARD);
+  }
+}
+################################################################################

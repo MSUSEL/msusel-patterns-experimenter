@@ -1,0 +1,66 @@
+#if ($config.check("useJasper"))
+#foreach($sessionBean in $sessions)
+#foreach($entityBean in $sessionBean.Entities)
+#if ("false" == $entityBean.getIsAssociationEntity())
+////File: ./src/java-web/${app.RootPath}/reports/${entityBean.Name}ReportTableModel.java
+
+package ${app.RootPackage}.reports;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.List;
+
+
+/**
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2006/03/17 19:01:11 $
+ */
+public class ${entityBean.Name}ReportTableModel extends ReportBaseTableModel {
+
+    /**
+     *
+     */
+    public ${entityBean.Name}ReportTableModel() {
+        // Initilize the column names.
+        try {
+
+        columnNames = new String[] {
+#set ($seperator = "")
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($seperator == ",")
+                       ,
+#else
+#set ($seperator = ",")
+#end
+                        "${field.Name}"
+#end
+                       };
+#if (${config.templateSettings.serviceTier} == "ServiceLocator")
+        result = new ${app.RootPackage}.HibernateQueryHelper().
+#else
+      org.springframework.context.ApplicationContext context = (org.springframework.context.ApplicationContext) ReportBaseTableModel.sessionLocal.get();
+      org.springframework.orm.hibernate3.HibernateTemplate template = (org.springframework.orm.hibernate3.HibernateTemplate) context.getBean("hibernateTemplate");
+      result = template.getSessionFactory().getCurrentSession().
+#end
+        createQuery("select " +
+#set ($seperator = "")
+#foreach ($field in $entityBean.NonRelationFields)
+#if ($seperator == ",")
+                       "," +
+#else
+#set ($seperator = ",")
+#end
+                        "${field.Name}" +
+#end
+        " from ${entityBean.Name} ").list();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+#end
+#end
+#end
+#end

@@ -1,0 +1,131 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.check("useRss"))
+////File: ./src/java-web/${app.RootPath}/rss/RssFeedServlet.java
+package ${app.RootPackage}.rss;
+
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedOutput;
+#if (${config.templateSettings.serviceTier} == "Spring")
+import org.springframework.web.context.support.XmlWebApplicationContext;
+#else
+import ${app.RootPackage}.servicelocator.*;
+#end
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import com.finalist.util.log.*;
+
+/**
+ * Servlet that serves a feed created with ROME. <p> The feed type is determined by the 'type' request parameter, if the
+ * parameter is missing it defaults to the 'default.feed.type' servlet init parameter, if the init parameter is missing
+ * it defaults to 'rss_2.0' <p> The id specifies which feed should be sent.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2006/01/29 21:26:04 $
+ */
+public class RssFeedServlet extends HttpServlet {
+    /**
+     * The logger object.
+     */
+    private static Logger log = LogService.getLogger(RssFeedServlet.class);
+
+    private static final String DEFAULT_FEED_TYPE = "default.feed.type";
+    private static final String FEED_LIST_SIZE = "feed.list.size";
+    private static final String FEED_TYPE = "type";
+    private static final String FEED_ID = "id";
+    private static final String MIME_TYPE = "application/xml; charset=UTF-8";
+    private static final String COULD_NOT_GENERATE_FEED_ERROR = "RSS Feed niet available";
+
+    private String _defaultFeedType;
+    private int feedListSize;
+
+
+    /**
+     * Initialize the RSS Feed Set the feed type, webmaker module and the size of the feed list.
+     */
+    public void init() {
+        _defaultFeedType = getServletConfig().getInitParameter(DEFAULT_FEED_TYPE);
+        _defaultFeedType = (_defaultFeedType != null) ? _defaultFeedType : "rss_2.0";
+        feedListSize = new Integer(getServletConfig().getInitParameter(FEED_LIST_SIZE));
+    }
+
+
+    /**
+     * Use HTTP get to retrieve the feed.
+     *
+     * @param req the request
+     * @param res the response
+     * @throws IOException
+     */
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        try {
+            SyndFeed feed = getFeed(req);
+            String feedType = req.getParameter(FEED_TYPE);
+            feedType = (feedType != null) ? feedType : _defaultFeedType;
+            feed.setFeedType(feedType);
+            res.setContentType(MIME_TYPE);
+            SyndFeedOutput output = new SyndFeedOutput();
+            output.output(feed, res.getWriter());
+        }
+        catch (FeedException ex) {
+            String msg = COULD_NOT_GENERATE_FEED_ERROR;
+            log(msg, ex);
+            res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, msg);
+        }
+    }
+
+
+    protected SyndFeed getFeed(HttpServletRequest req) throws IOException, FeedException {
+        IRssFeedService service = null;
+#if (${config.templateSettings.serviceTier} == "Spring")
+        service = getRssFeedService(req.getSession().getServletContext());
+#else
+        try {
+            service = (IRssFeedService) ServiceLocator.getService(ServiceLocator.RSS_FEED_SERVICE);
+        } catch (Exception e) {
+            String msg = "Couldn't find feed service";
+            log.error(msg, e);
+            throw new FeedException(msg, e);
+        }
+#end
+        String feedId = req.getParameter(FEED_ID);
+        return service.getFeed(feedId, feedListSize);
+    }
+
+#if (${config.templateSettings.serviceTier} == "Spring")
+    /**
+     * Get the service from the application context from the servlet context.
+     *
+     * @return rss feed service.
+     */
+    private IRssFeedService getRssFeedService(ServletContext servletContext) {
+        XmlWebApplicationContext context;
+        context = new XmlWebApplicationContext();
+        context.setServletContext(servletContext);
+        context.refresh();
+        return (IRssFeedService) context.getBean("RssFeedService");
+    }
+#end
+}
+#end

@@ -1,0 +1,12 @@
+#if ($config.useWebService())
+////File: ${paths.ConfigOutput}/deploy.wsdd
+<deployment xmlns="http://xml.apache.org/axis/wsdd/"
+            xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+#foreach ($session in $sessions)
+ <service name="${session.Name}WebService" provider="java:RPC" style="document" >
+  <parameter name="className" value="${session.Name}WebService"/>
+  <parameter name="allowedMethods" value="*"/>
+ </service>
+#end
+</deployment>
+#end

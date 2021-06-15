@@ -1,0 +1,68 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.matchBusinessTier("Hibernate 3"))
+////File: ./src/web/WEB-INF/classes/hibernate.cfg.xml
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+#if (${datasource.TypeMapping.Lower} == "oracle7" || ${datasource.TypeMapping.Lower} == "oracle8")
+    <property name="dialect">org.hibernate.dialect.OracleDialect</property>
+#end
+#if (${datasource.TypeMapping.Lower} == "oracle9")
+    <property name="dialect">org.hibernate.dialect.Oracle9Dialect</property>
+#end
+#if (${datasource.TypeMapping.Lower} == "mysql")
+    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+#end
+#if (${datasource.TypeMapping.Lower} == "postgresql")
+    <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+#end
+#if (${datasource.TypeMapping.Lower} == "hypersonic sql")
+    <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+#end
+    <property name="connection.username">${datasource.UserName}</property>
+    <property name="connection.password">${datasource.Password}</property>
+    <property name="connection.url">${datasource.JdbcUrl}</property>
+    <property name="connection.driver_class">${datasource.Database.DriverClass}</property>
+    <property name="show_sql">false</property>
+    <property name="generate_statistics">false</property>
+    <property name="c3p0.acquire_increment">1</property>
+    <property name="c3p0.acquire_increment">100</property>
+    <property name="c3p0.idle_test_period">100</property>
+    <property name="c3p0.max_size">10</property>
+    <property name="c3p0.max_statements">0</property>
+    <property name="c3p0.min_size">1</property>
+    <property name="c3p0.timeout">100</property>
+
+#foreach ($entity in $entities)
+#if ("false" == $entity.getIsAssociationEntity())
+    <mapping class="${entity.RootPackage}.${entity.Name}" />
+#end
+#end
+#if (${config.templateSettings.webTier} == "Struts 1.2")
+#if ($config.check("useUpload"))
+    <mapping class="${app.RootPackage}.entity.upload.FileUpload" />
+#end
+#end
+  </session-factory>
+</hibernate-configuration>
+#end

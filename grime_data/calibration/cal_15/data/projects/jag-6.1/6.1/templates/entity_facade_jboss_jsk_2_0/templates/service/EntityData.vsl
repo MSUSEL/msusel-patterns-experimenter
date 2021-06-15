@@ -1,0 +1,178 @@
+#*  Copyright (C) 2004 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*#
+#foreach ($entity in $entities)
+////File: ${paths.ServiceOutput}/${entity.RootPath}/${entity.Name}Data.java
+package ${entity.RootPackage};
+
+import java.io.Serializable;
+
+#foreach($relation in $entity.Relations)
+import ${relation.RelatedEntity.RootPackage}.*;
+#end
+
+/**
+ * The ${entity.Name}Data objects extends the generated Value object.
+ * Put here your presentation specific code.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.8 $, $Date: 2005/07/08 17:09:50 $
+ */
+public class ${entity.Name}Data implements ${entity.Name}If, Serializable    {
+
+   /**
+    * Default constructor.
+    */
+   public ${entity.Name}Data() {
+   }
+
+   /**
+    * Value object constructor.
+    */
+   public ${entity.Name}Data(${entity.RootPackage}.${entity.Name}If value) {
+#foreach ($field in $entity.Fields)
+      set${field.Name.Sentensized}(value.get${field.Name.Sentensized}());
+#end
+   }
+
+#foreach ($field in $entity.Fields)
+
+   private ${field.Type} ${field.Name};
+
+   /**
+    * Returns the value of the <code>${field.Name}</code> property.
+    *
+    * @return the value of the <code>${field.Name}</code> property.
+    */
+   public ${field.Type} get${field.Name.Sentensized}() {
+      return ${field.Name};
+   }
+
+   /**
+    * Sets the value of the <code>${field.Name}</code> property.
+    *
+    * @param ${field.Name} a value for <code>${field.Name}</code>.
+    */
+   public void set${field.Name.Sentensized}(${field.Type} ${field.Name}) {
+      this.${field.Name} = ${field.Name};
+   }
+#end
+
+#if ($entity.isCompositeKey())
+    /**
+     * Return the composite primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key. 
+     */
+    public ${entity.PrimaryKeyType} getPrimaryKey() {
+#if (${config.templateSettings.appserver} != "BEA WebLogic 8.1 (Workshop EJBGen)")
+        ${entity.PrimaryKeyType} pk = 
+            new ${entity.PrimaryKeyType}(
+#set ($seperator = "")
+#foreach ($pkField in $entity.PkFields)
+                ${seperator}this.get${pkField.Name.Sentensized}()
+#set ($seperator = ",")	
+#end
+            );
+        return pk;        
+#else
+	return toPK();
+#end        
+    }
+
+    /**
+     * Set the composite primary key.
+     *
+     * @param pk the primary key
+     */
+    public void setPrimaryKey(${entity.PrimaryKeyType} pk) {
+#foreach ($pkField in $entity.PkFields)
+        set${pkField.Name.Sentensized}(pk.get${pkField.Name.Sentensized}());
+#end
+    }
+#else
+## There is no composite key, just one field..
+
+    /**
+     * Return the primary key.
+     *
+     * @return ${entity.PrimaryKeyType} with the primary key.
+     */
+    public ${entity.PrimaryKeyType} getPrimaryKey() {
+        return get${entity.PrimaryKeyName.Sentensized}();
+    }
+
+    /**
+     * Set the primary key.
+     *
+     * @param pk the primary key
+     */
+    public void setPrimaryKey(${entity.PrimaryKeyType} pk) {
+       set${entity.PrimaryKeyName.Sentensized}(pk);
+    }
+
+#end
+
+   public String getPrimaryKeyParameters() {
+      String parameters = "";
+#foreach ($field in $entity.Fields)
+#if ($field.isPrimaryKey())
+      parameters += "&${field.Name}=" + get${field.Name.Sentensized}();
+#end
+#end
+      return parameters;
+   }
+
+
+#foreach($relation in $entity.Relations)
+
+   /**
+    * property.
+    */
+   private ${relation.RelatedEntity.Name}If ${relation.FieldName}${relation.RelatedEntity.Name.Sentensized};
+
+   /**
+    * Returns the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @return the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    */
+   public ${relation.RelatedEntity.Name}If get${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}() {
+      return ${relation.FieldName}${relation.RelatedEntity.Name.Sentensized};
+   }
+
+   /**
+    * Sets the value of the <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code> relation property.
+    *
+    * @param ${relation.RelatedEntity.Name.Desentensized} a value for <code>${relation.FieldName}${relation.RelatedEntity.Name.Sentensized}</code>.
+    */
+   public void set${relation.FieldName.Sentensized}${relation.RelatedEntity.Name}(${relation.RelatedEntity.Name}If ${relation.RelatedEntity.Name.Desentensized}) {
+      this.${relation.FieldName}${relation.RelatedEntity.Name.Sentensized} = ${relation.RelatedEntity.Name.Desentensized};
+   }
+
+#end
+
+
+
+   public String toString() {
+	  StringBuffer str = new StringBuffer("{");
+#foreach ($field in $entity.Fields)
+	  str.append("${field.Name}=" + get${field.Name.Sentensized}()  + " ");
+#end
+	  str.append('}');
+	  return(str.toString());
+   }
+}
+#end

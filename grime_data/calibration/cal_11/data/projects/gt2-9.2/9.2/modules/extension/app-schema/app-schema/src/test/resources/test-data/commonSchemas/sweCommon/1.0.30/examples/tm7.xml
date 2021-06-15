@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<swe:RecordDefinition gml:id="tm7" recordLength="7" 
+xmlns:xst="http://www.seegrid.csiro.au/xml/st" 
+xmlns:swe="http://www.opengis.net/swe" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns:xlink="http://www.w3.org/1999/xlink"                      
+xmlns:gml="http://www.opengis.net/gml" 
+xsi:schemaLocation="http://www.opengis.net/swe ../recordSchema.xsd">
+	<gml:name>Thematic mapper raw counts</gml:name>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM1">
+			<gml:name>Thematic Mapper band 1</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand1"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM2">
+			<gml:name>Thematic Mapper band 2</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand2"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM3">
+			<gml:name>Thematic Mapper band 3</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand3"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM4">
+			<gml:name>Thematic Mapper band 4</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand4"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM5">
+			<gml:name>Thematic Mapper band 5</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand5"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM6">
+			<gml:name>Thematic Mapper band 6</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand6"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+	<swe:component>
+		<swe:ItemDefinition gml:id="TM7">
+			<gml:name>Thematic Mapper band 7</gml:name>
+			<swe:property xlink:href="urn:x-ogc:def:phenomenon:OGC:TMBand7"/>
+			<swe:representation>
+				<swe:General>
+					<xst:restriction base="xst:integer">
+						<xst:minInclusive value="0"/>
+						<xst:maxInclusive value="255"/>
+					</xst:restriction>
+					<gml:unitOfMeasure uom="urn:x-ogc:def:uom:OGC:count"/>
+				</swe:General>
+			</swe:representation>
+		</swe:ItemDefinition>
+	</swe:component>
+</swe:RecordDefinition>

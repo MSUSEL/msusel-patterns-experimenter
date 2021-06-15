@@ -1,0 +1,106 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.check("useRss"))
+////File: ./src/java-web/${app.RootPath}/rss/RssFeedService.java
+package ${app.RootPackage}.rss;
+#if (${config.templateSettings.serviceTier} != "Spring")
+import ${app.RootPackage}.servicelocator.*;
+#end
+import com.finalist.util.log.*;
+import com.sun.syndication.feed.synd.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * RSS Feed service.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.4 $, $Date: 2006/01/29 21:26:04 $
+#if (${config.templateSettings.serviceTier} == "Spring")
+ * @spring.bean name="RssFeedService"
+#end
+ */
+public class RssFeedService implements IRssFeedService#if (${config.templateSettings.serviceTier} != "Spring"),LocatableService #end {
+    /**
+     * The logger object.
+     */
+    private static Logger log = LogService.getLogger(RssFeedService.class);
+
+    public final static String LIST_ENTITIES = "LIST_ENTITIES";
+
+    public RssFeedService() {
+    }
+#if (${config.templateSettings.serviceTier} != "Spring")
+
+    /**
+     * Default implementation for the Locatable Service interface.
+     */
+     public void init() {
+     }
+
+    /**
+     * Default implementation for the Locatable Service interface.
+     */
+     public void destroy() {
+     }
+
+#end
+    /**
+     * Return a feed in in the specified format for the specified type
+     *
+     * @param id the type of the feed.
+     * @return Feed in RSS format.
+     */
+    public SyndFeed getFeed(String id, int size) {
+        SyndFeed feed = new SyndFeedImpl();
+        feed.setTitle("JAG RSS Feed");
+        feed.setLink("");
+        feed.setDescription("Java Application Generator RSS Feed");
+        if (!LIST_ENTITIES.equals(id)) {
+            feed.setDescription("Unknown feed id set.");
+            return feed;
+        }
+        try {
+            List<SyndEntry> entries = new ArrayList<SyndEntry>();
+            SyndEntry entry;
+            SyndContent description;
+            String desc;
+#foreach ($entity in $entities)
+            entry = new SyndEntryImpl();
+            entry.setTitle("Entity: ${entity.Name}");
+            entry.setLink("http://jag.sf.net");
+            entry.setPublishedDate(new java.util.Date());
+            description = new SyndContentImpl();
+            description.setType("text/plain");
+            desc = "Entity ${entity.Name} is mapped by table: ${entity.TableName}";
+            description.setValue(desc);
+            entry.setDescription(description);
+            entries.add(entry);
+#end
+            feed.setEntries(entries);
+            return feed;
+        }
+        catch (Exception e) {
+            log.error("Error while creating RSS Feed", e);
+            return feed;
+        }
+    }
+}
+#end

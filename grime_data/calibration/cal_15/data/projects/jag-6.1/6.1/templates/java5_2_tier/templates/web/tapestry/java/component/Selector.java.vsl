@@ -1,0 +1,127 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Onno Scheffers, Piraya (http://www.piraya.nl)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ./src/java-web/${app.RootPath}/component/Selector.java
+package ${app.RootPackage}.component;
+
+import org.apache.tapestry.form.*;
+import org.apache.tapestry.IMarkupWriter;
+import org.apache.tapestry.IRequestCycle;
+import org.apache.tapestry.valid.ValidatorException;
+import com.finalist.util.log.Logger;
+import com.finalist.util.log.LogService;
+
+public abstract class Selector extends AbstractFormComponent {
+   private static final Logger LOG = LogService.getLogger(Selector.class);
+
+   public abstract SelectorList getSelectorList();
+   public abstract Object getValue();
+   public abstract void setValue(Object value);
+   public abstract int getSwitchSize();
+
+   public boolean isSmallList() {
+      SelectorList selectorList = getSelectorList();
+      return selectorList != null && selectorList.size() < getSwitchSize();
+   }
+
+   /** {@inheritDoc} */
+   protected void renderFormComponent(IMarkupWriter writer, IRequestCycle cycle) {
+      renderDelegatePrefix(writer, cycle);
+      boolean smallList = isSmallList();
+      SelectorList options = getSelectorList();
+      if(options != null) {
+         Object value = getValue();
+
+         if(smallList) {
+            // Open dropdown
+            writer.begin("select");
+         } else {
+            // open textfield
+            writer.beginEmpty("input");
+            writer.attribute("type", "text");
+            if(value != null) {
+               writer.attribute("value", options.getKeyForItem(value));
+            }
+         }
+         writer.attribute("name", getName());
+         renderIdAttribute(writer, cycle);
+         renderDelegateAttributes(writer, cycle);
+         renderInformalParameters(writer, cycle);
+
+         if(smallList) {
+            writer.println();
+            // render options
+            boolean foundSelected = value == null;
+            if(options != null && options.size() > 0) {
+               for(Object option : options) {
+                  writer.begin("option");
+                  String key = options.getKeyForItem(option);
+                  writer.attribute("value", key);
+                  if(!foundSelected) {
+                     String selKey = options.getKeyForItem(value);
+                     if(key.equals(selKey)) {
+                        writer.attribute("selected", "selected");
+                        foundSelected = true;
+                     }
+                  }
+                  writer.print(options.getLabelForItem(option));
+                  writer.end();
+                  writer.println();
+               }
+            }
+            writer.end();
+         } else {
+            writer.closeTag();
+         }
+         renderDelegateSuffix(writer, cycle);
+      } else {
+         LOG.fatal("SelectorList is null, which is not allowed!");
+      }
+   }
+
+   /** {@inheritDoc} */
+   protected void rewindFormComponent(IMarkupWriter writer, IRequestCycle cycle) {
+      SelectorList options = getSelectorList();
+      if(options != null) {
+         String displayName = getDisplayName();
+         if(displayName == null) {
+            displayName = getId();
+         }
+
+         String key = cycle.getParameter(getName());
+         if(key == null || key.trim().length() == 0) {
+            LOG.debug("No value was entered by the user for this Selector component");
+            getForm().getDelegate().record(new ValidatorException("You must enter a value for " + displayName + "."));
+         } else {
+            try {
+               Object item = options.getItemByKey(key);
+               if(item == null) {
+                  getForm().getDelegate().record(new ValidatorException("'" + key + "' does not exist"));
+               }
+               setValue(item);
+            } catch (ValidatorException e) {
+               getForm().getDelegate().record(e);
+            }
+         }
+      } else {
+         LOG.fatal("SelectorList is null, which is not allowed!");
+      }
+   }
+}
+#end

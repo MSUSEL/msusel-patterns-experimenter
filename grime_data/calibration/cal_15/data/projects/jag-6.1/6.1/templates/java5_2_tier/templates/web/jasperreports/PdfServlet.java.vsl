@@ -1,0 +1,110 @@
+#if ($config.check("useJasper"))
+////File: ./src/java-web/${app.RootPath}/reports/PdfServlet.java
+package ${app.RootPackage}.reports;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.table.AbstractTableModel;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
+
+
+/**
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.2 $, $Date: 2006/03/17 19:01:11 $
+ */
+public class PdfServlet extends HttpServlet {
+
+   /**
+    *
+    */
+   public void service(
+      HttpServletRequest request,
+      HttpServletResponse response
+   ) throws IOException, ServletException {
+      byte[] bytes;
+      try {
+#if (${config.templateSettings.serviceTier} == "Spring")
+         // Put the spring application context on the thread local, so it's available to the Report Models.
+         org.springframework.context.ApplicationContext context = (org.springframework.context.ApplicationContext) ReportBaseTableModel.sessionLocal.get();
+         if (context == null) {
+            context = org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext(request.getSession().getServletContext());
+            ReportBaseTableModel.sessionLocal.set(context);
+         }
+#end
+         String reportName = request.getParameter("reportName");
+         JasperReport report = null;
+         InputStream is =
+            Thread.currentThread().getContextClassLoader().getResourceAsStream("reports/" + reportName + ".jrxml");
+         report = JasperCompileManager.compileReport(is);
+         Map parameters = new HashMap();
+         parameters.put("ReportTitle", "" + reportName + " Report");
+         bytes =
+            JasperRunManager.runReportToPdf(
+               report,
+               parameters,
+                    new JRTableModelDataSource((AbstractTableModel)
+                    Class.forName("${app.RootPackage}.reports." + reportName + "TableModel").newInstance()));
+         is.close();
+      }
+      catch (Exception e) {
+         response.setContentType("text/html");
+         PrintWriter out = response.getWriter();
+         out.println("<html>");
+         out.println("<head>");
+         out.println("<title>JasperReports - Web Application Sample</title>");
+         out.println("</head>");
+
+         out.println("<body bgcolor=\"white\">");
+
+         out.println("<span class=\"bnew\">JasperReports encountered this error :</span>");
+         out.println("<pre>");
+
+         e.printStackTrace(out);
+
+         out.println("</pre>");
+
+         out.println("</body>");
+         out.println("</html>");
+
+         return;
+      }
+
+      if (bytes != null && bytes.length > 0) {
+         response.setContentType("application/pdf");
+         response.setContentLength(bytes.length);
+         ServletOutputStream ouputStream = response.getOutputStream();
+         ouputStream.write(bytes, 0, bytes.length);
+         ouputStream.flush();
+         ouputStream.close();
+      }
+      else {
+         response.setContentType("text/html");
+         PrintWriter out = response.getWriter();
+         out.println("<html>");
+         out.println("<head>");
+         out.println("<title>JasperReports - Web Application Sample</title>");
+         out.println("</head>");
+
+         out.println("<body bgcolor=\"white\">");
+
+         out.println("<span class=\"bold\">Empty response.</span>");
+
+         out.println("</body>");
+         out.println("</html>");
+      }
+   }
+}
+#end

@@ -1,0 +1,74 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Demo of MochiKit.LoggingPane</title>
+        <link href="logging_pane.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="../../lib/MochiKit/MochiKit.js"></script>
+        <script type="text/javascript" src="logging_pane.js"></script>
+    </head>
+    <body>
+        <h1>MochiKit.LoggingPane</h1>
+        <div>
+            <p>
+                Demonstrates <a href="http://mochikit.com/">MochiKit</a>'s
+                <a href="../../doc/html/lib/MochiKit/Logging.html">MochiKit.Logging</a>
+                and <a href="../../doc/html/lib/MochiKit/LoggingPane.html">MochiKit.LoggingPane</a>.
+            </p>
+            <p>
+                Click one of the Logging Panes to pop up a view, and then
+                start clicking on Logging Actions to see it in action!
+            </p>
+        </div>
+        <div>
+            Logging Panes:
+            <ul>
+                <li><a href="javascript:logger.debuggingBookmarklet();">Debugging Bookmarklet</a> - Pop-up with LoggingPane</li>
+                <li><a href="javascript:void(createLoggingPane(true));">Inline LoggingPane</a></li>
+            </ul>
+        </div>
+        <div>
+            Logging Actions:
+            <ul>
+                <li><a href="javascript:logDebug('a DEBUG level message');">logDebug(...)</a></li>
+                <li><a href="javascript:log('an INFO level message');">log(...)</a></li>
+                <li><a href="javascript:logWarning('a WARNING level message');">logWarning(...)</a></li>
+                <li><a href="javascript:logError('an ERROR level message');">logError(...)</a></li>
+                <li><a href="javascript:logFatal('a FATAL level message');">logFatal(...)</a></li>
+            </ul>
+        <div>
+            View Source:
+            <ul>
+                <li><a href="logging_pane.js" class="view-source">logging_pane.js</a></li>
+                <li><a href="index.html" class="view-source">index.html</a></li>
+            </ul>
+        </div>
+    </body>
+</html>

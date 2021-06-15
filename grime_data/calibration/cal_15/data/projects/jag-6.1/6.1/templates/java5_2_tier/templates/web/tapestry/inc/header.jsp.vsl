@@ -1,0 +1,74 @@
+#*  Copyright (C) 2005 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if (${config.templateSettings.webTier} == "Tapestry 4")
+////File: ${paths.JspOutput}/inc/header.jsp
+#if ($config.useSecurity())
+<%@ page import="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter"%>
+#end
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<%@ include file="init.jsp" %>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>The JAG Test Console</title>
+	<meta http-equiv="Expires" content="-1" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/css/screen.css" type="text/css" media="screen, print" />
+</head>
+<body>
+
+<div id="header">
+	<h1>The JAG Test Console</h1>
+   <b>
+   <script language="JavaScript">
+   var version="$Name: JAG_v6_1 $"
+   version=version.slice(7,version.length-1);
+   if (version.length > 0) {
+   document.write("Version: ");
+   document.write(version);
+   }
+   </script>
+   </b>
+   <br/>
+#if ($config.useSecurity())
+   <b>
+      <authz:authorize ifAnyGranted="ROLE_SUPERVISOR,ROLE_USER">
+          User <%= ${app.RootPackage}.SecurityHelper.getLoggedInUserName() %> is authorized as:&nbsp;
+          <authz:authorize ifAllGranted="ROLE_SUPERVISOR">ROLE_SUPERVISOR</authz:authorize>
+          <authz:authorize ifAllGranted="ROLE_USER">ROLE_USER</authz:authorize>
+      </authz:authorize>
+   </b>
+#end
+   <br/>
+   
+   <ul>
+		<li><a href="http://jag.sourceforge.net">JAG Documentation</a></li>
+		<li><a href="http://www.finalist.com">Finalist IT Group</a></li>
+#if ($config.useSecurity())		
+      <li><a href='<%= request.getContextPath() + "/login/logout.jsp" %> '>Logout</a></li>
+#end
+#if ($config.check("useRss"))
+      <li><a href='<%= request.getContextPath() + "/feed/?id=LIST_ENTITIES" %>'><img alt='rss feed' src='<%= request.getContextPath() + "/images/rss_icon.gif" %>'/></a></li>
+#end
+    </ul>
+	
+</div>
+<div id="body">
+#end

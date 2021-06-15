@@ -1,0 +1,103 @@
+<%--
+///////////////////////////////////////////////////////////////////////
+// $Id: frame.jspf,v 1.3 2005/04/22 10:12:23 colinmacleod Exp $
+//
+// note frame theme tags
+//
+// Since: ivata groupware 0.9 (2002-06-05)
+// Author: Laco Kacani
+//
+////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2001 - 2005 ivata limited.
+// All rights reserved.
+// =========================================================
+// ivata groupware may be redistributed under the GNU General Public
+// License as published by the Free Software Foundation;
+// version 2 of the License.
+//
+// These programs are free software; you can redistribute them and/or
+// modify them under the terms of the GNU General Public License
+// as published by the Free Software Foundation; version 2 of the License.
+//
+// These programs are distributed in the hope that they will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+//
+// See the GNU General Public License in the file LICENSE.txt for more
+// details.
+//
+// If you would like a copy of the GNU General Public License write to
+//
+// Free Software Foundation, Inc.
+// 59 Temple Place - Suite 330
+// Boston, MA 02111-1307, USA.
+//
+//
+// To arrange commercial support and licensing, contact ivata at
+//                  http://www.ivata.com/contact.jsp
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+// $Log: frame.jspf,v $
+// Revision 1.3  2005/04/22 10:12:23  colinmacleod
+// Cleaned up theme to use more CSS
+// instead of embedded styles.
+//
+// Revision 1.2  2005/04/09 17:19:49  colinmacleod
+// Changed copyright text to GPL v2 explicitly.
+//
+// Revision 1.1.1.1  2005/03/10 17:52:35  colinmacleod
+// Restructured ivata op around Hibernate/PicoContainer.
+// Renamed ivata groupware.
+//
+// Revision 1.2  2004/03/21 21:16:31  colinmacleod
+// Shortened name to ivata op.
+//
+// Revision 1.1  2004/03/03 22:09:59  colinmacleod
+// Updated webapp structure. Moved core files to core subproject.
+//
+// Revision 1.1.1.1  2004/01/27 20:59:04  colinmacleod
+// Moved ivata op to sourceforge.
+//
+// Revision 1.2  2003/10/15 14:16:54  colin
+// fixing for XDoclet
+//
+// Revision 1.3  2003/05/19 12:01:00  jano
+// fixing bug with bad graphics
+//
+// Revision 1.2  2003/02/28 07:31:52  colin
+// implemented editing/displaying of faqs & notes
+//
+// Revision 1.1  2003/02/26 15:24:43  colin
+// added to project
+//
+// Revision 1.1  2002/06/19 14:48:04  laco
+// added new themes
+//
+///////////////////////////////////////////////////////////////////////
+--%>
+<imthemedef:section name='frameStart'>
+  <div class='noteThemeFrame PROPERTY(class)' ATTRIBUTE(id) ATTRIBUTE(style)>
+</imthemedef:section>
+<imthemedef:section name='framePaneStart'>
+    <div class='noteThemeFramePane PROPERTY(class)' ATTRIBUTE(id) ATTRIBUTE(style)>
+</imthemedef:section>
+<imthemedef:section name='frameBreak'>
+    </div>
+    <div class='noteThemeFramePane PROPERTY(class)' ATTRIBUTE(id) ATTRIBUTE(style)>
+</imthemedef:section>
+<imthemedef:section name='framePaneEnd'>
+    </div>
+</imthemedef:section>
+<imthemedef:section name='frameEnd' >
+  </div>
+</imthemedef:section>
+<imthemedef:section name='buttonFrameStart'>
+  <div ATTRIBUTE(id,buttonFrame) class='noteThemeButtonFrame PROPERTY(class)' ATTRIBUTE(style)>
+</imthemedef:section>
+<imthemedef:section name='buttonSpacer'>
+  <div ATTRIBUTE(id) class='noteThemeButtonSpacer PROPERTY(class)' ATTRIBUTE(style)>&nbsp;</div>
+</imthemedef:section>
+<imthemedef:section name='buttonFrameEnd'>
+  </div>
+</imthemedef:section>

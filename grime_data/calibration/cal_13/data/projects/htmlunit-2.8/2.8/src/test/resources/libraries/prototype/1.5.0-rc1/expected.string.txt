@@ -1,0 +1,48 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
+19 tests, 76 assertions, 0 failures, 0 errors
+Status	Test	Message
+passed	testGsubWithReplacementFunction	2 assertions, 0 failures, 0 errors
+passed	testGsubWithReplacementString	2 assertions, 0 failures, 0 errors
+passed	testGsubWithReplacementTemplateString	4 assertions, 0 failures, 0 errors
+passed	testSubWithReplacementFunction	4 assertions, 0 failures, 0 errors
+passed	testSubWithReplacementString	4 assertions, 0 failures, 0 errors
+passed	testScan	2 assertions, 0 failures, 0 errors
+passed	testToArray	4 assertions, 0 failures, 0 errors
+passed	testCamelize	8 assertions, 0 failures, 0 errors
+passed	testTruncate	4 assertions, 0 failures, 0 errors
+passed	testStrip	4 assertions, 0 failures, 0 errors
+passed	testStripTags	4 assertions, 0 failures, 0 errors
+passed	testStripScripts	3 assertions, 0 failures, 0 errors
+passed	testExtractScripts	4 assertions, 0 failures, 0 errors
+passed	testEvalScripts	3 assertions, 0 failures, 0 errors
+passed	testEscapeHTML	4 assertions, 0 failures, 0 errors
+passed	testUnescapeHTML	4 assertions, 0 failures, 0 errors
+passed	testTemplateEvaluation	2 assertions, 0 failures, 0 errors
+passed	testToQueryParams	11 assertions, 0 failures, 0 errors
+passed	testInspect	3 assertions, 0 failures, 0 errors

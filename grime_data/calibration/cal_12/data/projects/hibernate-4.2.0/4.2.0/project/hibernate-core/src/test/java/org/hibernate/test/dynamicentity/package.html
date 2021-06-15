@@ -1,0 +1,57 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<html>
+<head></head>
+
+<body>
+<p>
+	Demonstration of different ways to use Hibernate to represent your domain
+	model as a series of JDK dynamic proxies.  We map the interfaces and then
+	use one of two approaches to get Hibernate to recognize these proxies as
+	domain entities.  Really this is demonstrating various "entity representation"
+	capabilities built in to Hibernate3.
+</p>
+<p>
+	First we use an interceptor-based approach where we use a custom Interceptor
+	implementation for interpret incoming proxies (and resolve them to the correct
+	mappings) and to help Hibernate instantiate these proxy instances.  This is the
+	quick-and-dirty approach.  It is fully expected that this approach will
+	encounter certain limitations.
+</p>
+<p>
+	Next we explore the notion of a Tuplizer and plug in custom Tuplizers to
+	help achieve the same results.  Currently, Tuplizers do not have a chance
+	to influence the resolution of entity-name given a potential entity, so we
+	also use an Interceptor here and supply its getEntityName() impl.  This is
+	simply so we do not need to supply the entity name explicitly to the
+	Hibernate Session calls.
+</p>
+</body>
+
+</html>

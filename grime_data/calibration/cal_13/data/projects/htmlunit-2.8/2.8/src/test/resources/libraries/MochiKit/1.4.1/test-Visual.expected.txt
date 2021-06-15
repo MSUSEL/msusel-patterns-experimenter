@@ -1,0 +1,65 @@
+====
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+====
+
+Passed: 36
+Failed: 0
+ok - pulsate ok
+ok - pulsate with numbered pulses ok
+ok - shake ok
+ok - fade ok
+ok - appear ok
+ok - toggle size ok
+ok - toggle size reverse ok
+ok - Morph OK
+ok - Morph multiple (font) OK
+ok - Morph multiple (margin) OK
+ok - Morph generic property OK
+ok - switchOff ok
+ok - grow ok
+ok - shrink ok
+ok - dropOut ok
+ok - puff ok
+ok - fold ok
+ok - squish ok
+ok - slideUp ok
+ok - slideDown ok
+ok - blindDown ok
+ok - blindUp ok
+ok - multiple ok
+ok - multiple ok
+ok - toggle with css ok
+ok - toggle with css ok
+ok - MochiKit.Visual.roundElement doesn't need 'new' keyword
+ok - MochiKit.Visual.roundClass doesn't need 'new' keyword
+ok - MochiKit.Visual.tagifyText doesn't need 'new' keyword
+ok - MochiKit.Visual.Opacity doesn't need 'new' keyword
+ok - MochiKit.Visual.Move doesn't need 'new' keyword
+ok - MochiKit.Visual.Highlight doesn't need 'new' keyword
+ok - MochiKit.Visual.ScrollTo doesn't need 'new' keyword
+ok - MochiKit.Visual.Morph doesn't need 'new' keyword
+ok - Scale doesn't need 'new' keyword
+ok - visual suite finished

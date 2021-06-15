@@ -1,0 +1,79 @@
+/**
+ * The MIT License (MIT)
+ *
+ * MSUSEL Arc Framework
+ * Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+ * Software Engineering Laboratory and Idaho State University, Informatics and
+ * Computer Science, Empirical Software Engineering Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+#grid-example .x-grid-col-1 {
+	text-align: right;
+}
+#grid-example .x-grid-col-2{
+	text-align: right;
+}
+#grid-example .x-grid-col-3 {
+	text-align: right;
+}
+#grid-example .x-grid-col-4 {
+	text-align: right;
+}
+#grid-example.x-grid-mso{
+	border: 1px solid #6593cf;
+}
+#grid-example.x-grid-vista{
+	border: 1px solid #b3bcc0;
+}
+#xml-grid-example{
+	border: 1px solid #cbc7b8;
+	left: 0;
+	position: relative;
+	top: 0;
+}
+#editor-grid .x-grid-col-2{
+    text-align:right;
+}
+.x-grid3-td-topic b {
+    font-family:tahoma, verdana;
+    display:block;
+}
+.x-grid3-td-topic b i {
+    font-weight:normal;
+    font-style: normal;
+    color:#000;
+}
+.x-grid3-td-topic .x-grid3-cell-inner {
+    white-space:normal;
+}
+.x-grid3-td-topic a {
+    color: #385F95;
+    text-decoration:none;
+}
+.x-grid3-td-topic a:hover {
+    text-decoration:underline;
+}
+.details .x-btn-text {
+    background-image: url(details.gif);
+}
+.x-resizable-pinned .x-resizable-handle-south{
+    background:url(../../resources/images/default/sizer/s-handle-dark.gif);
+    background-position: top;
+}

@@ -1,0 +1,134 @@
+<!--
+
+    The MIT License (MIT)
+
+    MSUSEL Arc Framework
+    Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
+    Software Engineering Laboratory and Idaho State University, Informatics and
+    Computer Science, Empirical Software Engineering Laboratory
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+-->
+<pre>  /**
+   * The constants used in this Content Widget.
+   */
+  public static interface CwConstants extends Constants,
+      ContentWidget.CwConstants {
+    String cwConstantsWithLookupExampleDescription();
+
+    String cwConstantsWithLookupExampleLinkText();
+
+    String cwConstantsWithLookupExampleMethodName();
+
+    String cwConstantsWithLookupExampleName();
+
+    String cwConstantsWithLookupExampleNoInput();
+
+    String cwConstantsWithLookupExampleNoMatches();
+
+    String cwConstantsWithLookupExampleResults();
+  }
+
+  /**
+   * A {@link TextBox} where the user can select a color to lookup.
+   */
+  private TextBox colorBox = null;
+
+  /**
+   * A {@link TextBox} where the results of the lookup are displayed.
+   */
+  private TextBox colorResultsBox = null;
+
+  /**
+   * An instance of the constants.
+   */
+  private CwConstants constants;
+
+  /**
+   * Initialize this example.
+   */
+  @Override
+  public Widget onInitialize() {
+    // Create the internationalized constants
+    colorConstants = GWT.create(ColorConstants.class);
+
+    // Use a FlexTable to layout the content
+    FlexTable layout = new FlexTable();
+    FlexCellFormatter formatter = layout.getFlexCellFormatter();
+    layout.setCellSpacing(5);
+
+    // Add a link to the source code of the Interface
+    HTML link = new HTML(" &lt;a href=\"javascript:void(0);\"&gt;ColorConstants&lt;/a&gt;");
+    link.addClickHandler(new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        selectTab(2);
+      }
+    });
+    HorizontalPanel linkPanel = new HorizontalPanel();
+    linkPanel.setSpacing(3);
+    linkPanel.add(new HTML(constants.cwConstantsWithLookupExampleLinkText()));
+    linkPanel.add(link);
+    layout.setWidget(0, 0, linkPanel);
+    formatter.setColSpan(0, 0, 2);
+
+    // Add a field so the user can type a color
+    colorBox = new TextBox();
+    colorBox.setText("red");
+    colorBox.setWidth("17em");
+    layout.setHTML(1, 0, constants.cwConstantsWithLookupExampleMethodName());
+    layout.setWidget(1, 1, colorBox);
+
+    // Show the last name
+    colorResultsBox = new TextBox();
+    colorResultsBox.setEnabled(false);
+    colorResultsBox.setWidth("17em");
+    layout.setHTML(2, 0, constants.cwConstantsWithLookupExampleResults());
+    layout.setWidget(2, 1, colorResultsBox);
+
+    // Add a handler to update the color as the user types a lookup value
+    colorBox.addKeyUpHandler(new KeyUpHandler() {
+      public void onKeyUp(KeyUpEvent event) {
+        updateColor();
+      }
+    });
+
+    // Return the layout Widget
+    updateColor();
+    return layout;
+  }
+
+  /**
+   * Lookup the color based on the value the user entered.
+   */
+  private void updateColor() {
+    String key = colorBox.getText().trim();
+    if (key.equals("")) {
+      colorResultsBox.setText(constants.cwConstantsWithLookupExampleNoInput());
+    } else {
+      try {
+        String color = colorConstants.getString(key);
+        colorResultsBox.setText(color);
+      } catch (MissingResourceException e) {
+        colorResultsBox.setText(constants.cwConstantsWithLookupExampleNoMatches());
+      }
+    }
+  }
+
+</pre>

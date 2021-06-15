@@ -1,0 +1,34 @@
+#*  Copyright (C) 2006 Finalist IT Group
+
+    This file is part of JAG - the Java J2EE Application Generator
+
+    JAG is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    JAG is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with JAG; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    Author: Rudie Ekkelenkamp, Finalist IT Group (http://www.finalist.com)
+*#
+#if ($config.check("useRss"))
+////File: ./src/java-web/${app.RootPath}/rss/IRssFeedService.java
+package ${app.RootPackage}.rss;
+
+import com.sun.syndication.feed.synd.SyndFeed;
+
+/**
+ * service interface for RSS Feed.
+ *
+ * @author  $config.authorText  $config.companyText
+ * @version $Revision: 1.3 $, $Date: 2006/01/29 21:26:04 $
+  */
+public interface IRssFeedService {
+   SyndFeed getFeed(String id, int size);
+}
+#end
