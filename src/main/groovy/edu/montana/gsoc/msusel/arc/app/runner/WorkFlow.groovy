@@ -65,11 +65,12 @@ abstract class WorkFlow {
     abstract void executeStudy()
 
     String normalizePath(String path) {
-        if (path.contains("/"))
-            path = path.replaceAll(/\//, "[sep]")
-        if (path.contains("\\"))
-            path = path.replaceAll(/(\\)/, "[sep]")
-        path = path.replaceAll(/\[sep]/, File.separator)
+        while (path.contains("/"))
+            path = path.replace("/", "[sep]")
+        while (path.contains("\\"))
+            path = path.replace("\\", "[sep]")
+        while (path.contains("[sep]"))
+            path = path.replace("[sep]", File.separator)
         path
     }
 }
