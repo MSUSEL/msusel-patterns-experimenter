@@ -62,7 +62,7 @@ class SigCalibrationPhaseOne extends WorkFlow {
             System sys = System.builder()
                     .name(sysName)
                     .key(sysName)
-                    .basePath(map[SigCalibrateConstants.LOCATION])
+                    .basePath(normalizePath(map[SigCalibrateConstants.LOCATION]))
                     .create()
             Project proj = Project.builder()
                     .name(projName)
