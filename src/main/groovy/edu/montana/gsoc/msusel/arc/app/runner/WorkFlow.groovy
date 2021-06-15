@@ -63,4 +63,13 @@ abstract class WorkFlow {
     abstract void initWorkflow(ConfigObject runnerConfig, int num)
 
     abstract void executeStudy()
+
+    String normalizePath(String path) {
+        if (path.contains("/"))
+            path = path.replaceAll("/", "[sep]")
+        if (path.contains("\\"))
+            path = path.replaceAll(/(\\)/, "[sep]")
+        path = path.replaceAll(/\[sep]/, File.separator)
+        path
+    }
 }
