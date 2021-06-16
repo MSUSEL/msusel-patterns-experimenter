@@ -87,8 +87,8 @@ abstract class EmpiricalStudy {
         readStatus()
         if (status > 0)
             readResults()
-        if (status <= 0)
-            resetDatabase()
+//        if (status <= 0)
+//            resetDatabase()
         loadTools()
     }
 
