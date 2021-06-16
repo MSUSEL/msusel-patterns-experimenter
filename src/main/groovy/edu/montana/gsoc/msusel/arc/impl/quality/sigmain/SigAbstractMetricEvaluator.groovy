@@ -41,7 +41,7 @@ abstract class SigAbstractMetricEvaluator extends MetricEvaluator {
         String metricDescription = mdef.description()
 
         levels.each {
-            Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.${it}")
+            Metric metric = Metric.findFirst("metricKey = ?", (String) "${repository.getRepoKey()}:${primaryHandle}.${it}")
             if (!metric) {
                 createMetric(repository, primaryHandle, metricName, metricDescription, it)
             }

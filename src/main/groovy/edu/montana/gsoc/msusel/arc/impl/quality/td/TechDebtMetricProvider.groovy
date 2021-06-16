@@ -48,7 +48,7 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
     @Override
     void updateDatabase() {
         context.open()
-        Metric metric = Metric.findFirst("metricKey = ?", "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.CAST_MEASURE_NAME}")
+        Metric metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.CAST_MEASURE_NAME}")
         if (!metric) {
             metric = Metric.builder()
                     .name(TechDebtConstants.CAST_MEASURE_NAME)
@@ -58,7 +58,7 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
             repository.addMetric(metric)
         }
 
-        metric = Metric.findFirst("metricKey = ?", "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_MEASURE_NAME}")
+        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_MEASURE_NAME}")
         if (!metric) {
             metric = Metric.builder()
                     .name(TechDebtConstants.NUGROHO_MEASURE_NAME)

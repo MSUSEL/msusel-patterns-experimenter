@@ -114,7 +114,7 @@ class Pattern4PatternProvider extends AbstractPatternProvider {
             boolean mand = Boolean.parseBoolean((String) it.@mandatory)
 
             context.open()
-            Role role = Role.findFirst("roleKey = ?", "${pattern.getPatternKey()}:$rbmlName")
+            Role role = Role.findFirst("roleKey = ?", (String) "${pattern.getPatternKey()}:$rbmlName")
             if (!role) {
                 role = Role.builder()
                         .name(rbmlName)

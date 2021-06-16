@@ -63,8 +63,8 @@ abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implement
         String metricName = mdef.name()
         String metricDescription = mdef.description()
 
-        Metric metricRaw = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.RAW")
-        Metric metricRating = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${primaryHandle}.RATING")
+        Metric metricRaw = Metric.findFirst("metricKey = ?", (String) "${repository.getRepoKey()}:${primaryHandle}.RAW")
+        Metric metricRating = Metric.findFirst("metricKey = ?", (String) "${repository.getRepoKey()}:${primaryHandle}.RATING")
         if (!metricRaw) {
             createMetric(repository, primaryHandle, metricName, metricDescription, "RAW")
         }

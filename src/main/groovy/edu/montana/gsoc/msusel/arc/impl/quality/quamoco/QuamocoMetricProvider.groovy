@@ -64,7 +64,7 @@ class QuamocoMetricProvider extends AbstractMetricProvider {
 
         config.metrics.each { Map<String, String> map ->
             context.open()
-            Metric metric = Metric.findFirst("metricKey = ?", "${repository.getRepoKey()}:${map.name}")
+            Metric metric = Metric.findFirst("metricKey = ?", (String) "${repository.getRepoKey()}:${map.name}")
             if (!metric) {
                 metric = Metric.builder()
                         .key("${repository.getRepoKey()}:$map.name")

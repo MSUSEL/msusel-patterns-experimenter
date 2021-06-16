@@ -66,7 +66,7 @@ class PMDRuleProvider extends AbstractRuleProvider {
             String tag = rule.tag
 
             context.open()
-            if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
+            if (!Rule.findFirst("ruleKey = ?", (String) "${repo.repoKey}:${ruleKey}")) {
                 if (rule.status != "DEPRECATED" || ruleExists(repo, ruleKey)) {
                     Rule r = Rule.builder()
                             .name(ruleName)

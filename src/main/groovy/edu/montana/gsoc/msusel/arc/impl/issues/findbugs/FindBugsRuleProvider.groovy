@@ -79,7 +79,7 @@ class FindBugsRuleProvider extends AbstractRuleProvider {
             List<Tag> tags = []
 
             context.open()
-            if (!Rule.findFirst("ruleKey = ?", "${repo.repoKey}:${ruleKey}")) {
+            if (!Rule.findFirst("ruleKey = ?", (String) "${repo.repoKey}:${ruleKey}")) {
                 rule.@tag?.each { String tag ->
                     tags << Tag.of(tag)
                 }
