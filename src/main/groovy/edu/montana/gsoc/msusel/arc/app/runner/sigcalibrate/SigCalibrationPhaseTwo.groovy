@@ -59,18 +59,15 @@ class SigCalibrationPhaseTwo  extends WorkFlow {
 
     void executeStudy() {
         context.open()
-        List<System> systems = Lists.newArrayList(System.findAll())
+        List<Project> projects = []
+        results.rowKeySet().each { row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, SigCalibrateConstants.KEY)))
+        }
         context.close()
 
-        systems.each { sys ->
-            context.open()
-            List<Project> projects = Lists.newArrayList((sys as System).getProjects())
-            context.close()
-
-            projects.each {
-                context.project = it
-                runTools()
-            }
+        projects.each {
+            context.project = it
+            runTools()
         }
     }
 
