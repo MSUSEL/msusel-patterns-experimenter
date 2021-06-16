@@ -77,20 +77,26 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         int numPartitions
         int partitionSize
         (numPartitions, partitionSize) = createPartitions(sizes)
-        double total = sizes.sum()
+        Double total
+        if (!sizes)
+            total = 0
+        else
+            total = sizes.sum() as Double
         List<Double> totals = calculatePartitionTotals(numPartitions, sizes, partitionSize)
 
         List<Double> frequencies = []
-        List<Double> cummulative = []
-        buildFrequencyLists(totals, frequencies, total, cummulative)
+        List<Double> cumulative = []
+        buildFrequencyLists(totals, frequencies, total, cumulative)
 
-        calculateGiniCoef(cummulative, frequencies)
+        calculateGiniCoef(cumulative, frequencies)
     }
 
     List<Double> createSizesList(Project proj) {
         List<Double> sizes = []
         proj.getNamespaces().each {
-            sizes << it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
+            def value = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
+            if (value)
+                sizes << it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
         }
 //        sizes.removeIf { it == null }
         sizes
@@ -103,7 +109,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
             partitionSize = 1
         } else {
             numPartitions = 5
-            partitionSize = Math.ceil((double) sizes.size() / 5.0)
+            partitionSize = (int) Math.ceil((double) sizes.size() / 5.0)
         }
         [numPartitions, partitionSize]
     }
