@@ -55,7 +55,7 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
 
         context.close();
 
-        JavaDirector director = new JavaDirector(context.getProject(), context.getDBCreds(), true, true);
+        JavaDirector director = new JavaDirector(context.getProject(), context.getDBCreds(), true, true, false);
         director.build(path);
         log.info("Java Artifact Identification Complete");
     }

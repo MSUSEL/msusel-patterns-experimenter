@@ -78,7 +78,7 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
         registrar.registerPrimary(new NumberOfStatements()) // Needed for Quamoco
         registrar.registerPrimary(new NumberOfTypes()) // Needed for Quamoco
         registrar.registerPrimary(new LinesOfCode())
-        registrar.registerPrimary(new LogicalLinesOfCode())
+//        registrar.registerPrimary(new LogicalLinesOfCode())
         registrar.registerPrimary(new SourceLinesOfCode()) // Needed for Quamoco and Sig Maintainability
         registrar.registerPrimary(new NumberOfPrivateAttributes()) // Needed for Quamoco
         registrar.registerPrimary(new NumberOfProtectedAttributes()) // Needed for Quamoco
