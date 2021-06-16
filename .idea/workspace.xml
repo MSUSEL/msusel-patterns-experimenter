@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/EmpiricalStudy.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/EmpiricalStudy.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/database.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/database.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +102,18 @@
       <recent name="edu.montana.gsoc.msusel.arc.app" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ComponentBalanceTest">
+  <component name="RunManager" selected="JUnit.java in msusel-arc-framework">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ComponentBalanceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="msusel-arc-framework" />
       <extension name="coverage">
@@ -166,18 +177,10 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ComponentBalanceTest.BuildFrequencyLists" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="java in msusel-arc-framework" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="msusel-arc-framework" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="edu.montana.gsoc.msusel.arc.impl.quality.sigmain.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="edu.montana.gsoc.msusel.arc.impl.quality.sigmain" />
-      <option name="MAIN_CLASS_NAME" value="edu.montana.gsoc.msusel.arc.impl.quality.sigmain.ComponentBalanceTest" />
-      <option name="METHOD_NAME" value="BuildFrequencyLists" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -231,11 +234,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in msusel-arc-framework" />
         <item itemvalue="JUnit.ComponentBalanceTest" />
         <item itemvalue="JUnit.ComponentBalanceTest.BuildFrequencyLists (3)" />
         <item itemvalue="JUnit.ComponentBalanceTest.BuildFrequencyLists (2)" />
         <item itemvalue="JUnit.ComponentBalanceTest.BuildFrequencyLists (1)" />
-        <item itemvalue="JUnit.ComponentBalanceTest.BuildFrequencyLists" />
       </list>
     </recent_temporary>
   </component>
@@ -332,7 +335,7 @@
       <workItem from="1623147436857" duration="1197000" />
       <workItem from="1623180820024" duration="19468000" />
       <workItem from="1623357056664" duration="55255000" />
-      <workItem from="1623849107522" duration="643000" />
+      <workItem from="1623849107522" duration="2177000" />
     </task>
     <servers />
   </component>
