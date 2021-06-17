@@ -61,6 +61,9 @@ public class ArcMetricsTool {
 
     public void exec() {
         Project proj = context.getProject();
+        log.info("Resetting Evaluator State");
+        evaluatorList.forEach(MetricEvaluator::resetState);
+        secondaryList.forEach(MetricEvaluator::resetState);
         log.info("Measuring Primary Metrics");
         context.open();
         streamAndMeasureProject(proj, evaluatorList);
