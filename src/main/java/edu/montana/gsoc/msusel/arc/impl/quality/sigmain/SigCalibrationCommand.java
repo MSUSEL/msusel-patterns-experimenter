@@ -52,79 +52,12 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     public void execute(ArcContext context) {
         log.info("Starting Sig Maintainability Calibration Analysis");
 
-        context.open();
-//        streamAndMeasureProject(context.getProject(), provider.getRegistrar().getPrimaryEvaluators());
-
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
             log.info("Measuring project with: " + mdef.primaryHandle());
             metricEvaluator.measure(context.getProject());
         });
-        context.close();
 
         log.info("Finished Sig Maintainability Calibration Analysis");
-    }
-
-    private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
-        type.getMethods().forEach(method -> {
-            evaluatorList.forEach(metricEvaluator -> {
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Method using " + mdef.primaryHandle());
-                metricEvaluator.measure(method);
-            });
-        });
-    }
-
-    private void streamAndMeasureTypes(Namespace ns, List<MetricEvaluator> evaluatorList) {
-        ns.getAllTypes().forEach(type -> {
-            streamAndMeasureMethods(type, evaluatorList);
-            evaluatorList.forEach(metricEvaluator -> {
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Types using " + mdef.primaryHandle());
-                metricEvaluator.measure(type);
-            });
-        });
-    }
-
-    private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
-        proj.getFilesByType(FileType.SOURCE).forEach(file -> {
-            evaluatorList.forEach(metricEvaluator -> {
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Files using " + mdef.primaryHandle());
-                metricEvaluator.measure(file);
-            });
-        });
-    }
-
-    private void streamAndMeasureNamespaces(Project proj, List<MetricEvaluator> evaluatorList) {
-        proj.getNamespaces().forEach(ns -> {
-            streamAndMeasureTypes(ns, evaluatorList);
-            evaluatorList.forEach(metricEvaluator -> {
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Namespaces using " + mdef.primaryHandle());
-                metricEvaluator.measure(ns);
-            });
-        });
-    }
-
-    private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
-        project.getModules().forEach(mod -> {
-            evaluatorList.forEach(metricEvaluator -> {
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-                log.info("Measuring Modules using " + mdef.primaryHandle());
-                metricEvaluator.measure(mod);
-            });
-        });
-    }
-
-    private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList) {
-        streamAndMeasureNamespaces(proj, evaluatorList);
-        streamAndMeasureFiles(proj, evaluatorList);
-        streamAndMeasureModules(proj, evaluatorList);
-        evaluatorList.forEach(metricEvaluator -> {
-            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
-            log.info("Measuring Projects using " + mdef.primaryHandle());
-            metricEvaluator.measure(proj);
-        });
     }
 }

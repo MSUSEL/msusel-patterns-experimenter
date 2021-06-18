@@ -79,7 +79,7 @@ class SigMainMetricProvider extends AbstractMetricProvider {
         registrar.registerPrimary(new UnitComplexity(context))
         registrar.registerPrimary(new UnitSize(context))
         registrar.registerPrimary(new UnitInterfacing(context))
-        registrar.registerPrimary(new ModuleCoupling())
+        registrar.registerPrimary(new ModuleCoupling(context))
         registrar.registerPrimary(new ComponentBalance())
         registrar.registerPrimary(new ComponentIndependence())
         registrar.registerPrimary(new ComponentEntanglement())

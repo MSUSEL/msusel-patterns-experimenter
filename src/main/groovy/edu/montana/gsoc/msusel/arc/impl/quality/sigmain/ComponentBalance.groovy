@@ -28,6 +28,7 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 
 import edu.isu.isuese.datamodel.Project
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
@@ -51,7 +52,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 )
 class ComponentBalance extends SigMainComponentMetricEvaluator {
 
-    ComponentBalance() {}
+    ComponentBalance(ArcContext context) {
+        super(context)
+    }
 
     @Override
     protected double evaluate(Project proj) {

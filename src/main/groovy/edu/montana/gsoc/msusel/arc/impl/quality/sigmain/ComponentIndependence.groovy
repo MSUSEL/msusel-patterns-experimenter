@@ -30,6 +30,7 @@ import com.google.common.collect.Sets
 import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.Type
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
@@ -53,7 +54,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 )
 class ComponentIndependence extends SigMainComponentMetricEvaluator {
 
-    ComponentIndependence() {}
+    ComponentIndependence(ArcContext context) {
+        super(context)
+    }
 
     @Override
     protected double evaluate(Project proj) {

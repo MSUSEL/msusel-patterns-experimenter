@@ -37,6 +37,7 @@ import edu.isu.isuese.detstrat.impl.GraphElementFactory
 import edu.isu.isuese.detstrat.impl.NamespaceRelation
 import edu.isu.isuese.detstrat.impl.Node
 import edu.isu.isuese.detstrat.impl.Relationship
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
 /**
@@ -61,7 +62,9 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
     MutableNetwork<Node, Relationship> graph
 
-    ComponentEntanglement() {}
+    ComponentEntanglement(ArcContext context) {
+        super(context)
+    }
 
     @Override
     protected double evaluate(Project proj) {
