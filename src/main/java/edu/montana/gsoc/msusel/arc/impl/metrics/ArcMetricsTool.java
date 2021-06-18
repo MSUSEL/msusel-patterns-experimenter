@@ -26,6 +26,7 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics;
 
+import com.google.common.collect.Lists;
 import edu.isu.isuese.datamodel.*;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator;
@@ -54,7 +55,9 @@ public class ArcMetricsTool {
     }
 
     public void init() {
-        evaluatorList = registrar.getPrimaryEvaluators();
+        evaluatorList = Lists.newArrayList();
+        evaluatorList.addAll(registrar.getCategoryEvaluators("all"));
+        evaluatorList.addAll(registrar.getCategoryEvaluators("not-methods"));
         secondaryList = registrar.getSecondaryEvaluators();
         Collections.sort(evaluatorList);
     }
@@ -66,9 +69,9 @@ public class ArcMetricsTool {
         secondaryList.forEach(MetricEvaluator::resetState);
         log.info("Measuring Primary Metrics");
         context.open();
-        streamAndMeasureProject(proj, evaluatorList);
+        streamAndMeasureProject(proj, evaluatorList, true);
         log.info("Measuring Secondary Metrics");
-        streamAndMeasureProject(proj, secondaryList);
+        streamAndMeasureProject(proj, secondaryList, false);
         context.close();
     }
 
@@ -82,9 +85,14 @@ public class ArcMetricsTool {
         });
     }
 
-    private void streamAndMeasureTypes(Namespace ns, List<MetricEvaluator> evaluatorList) {
+    private void streamAndMeasureTypes(Namespace ns, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
         ns.getAllTypes().forEach(type -> {
-            streamAndMeasureMethods(type, evaluatorList);
+            if (measureMethods) {
+                List<MetricEvaluator> methodEvals = Lists.newArrayList();
+                methodEvals.addAll(registrar.getCategoryEvaluators("all"));
+                methodEvals.addAll(registrar.getCategoryEvaluators("methods-only"));
+                streamAndMeasureMethods(type, methodEvals);
+            }
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
                 log.info("Measuring Types using " + mdef.primaryHandle());
@@ -103,9 +111,9 @@ public class ArcMetricsTool {
         });
     }
 
-    private void streamAndMeasureNamespaces(Project proj, List<MetricEvaluator> evaluatorList) {
+    private void streamAndMeasureNamespaces(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
         proj.getNamespaces().forEach(ns -> {
-            streamAndMeasureTypes(ns, evaluatorList);
+            streamAndMeasureTypes(ns, evaluatorList, measureMethods);
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
                 log.info("Measuring Namespaces using " + mdef.primaryHandle());
@@ -124,8 +132,8 @@ public class ArcMetricsTool {
         });
     }
 
-    private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList) {
-        streamAndMeasureNamespaces(proj, evaluatorList);
+    private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
+        streamAndMeasureNamespaces(proj, evaluatorList, measureMethods);
         streamAndMeasureFiles(proj, evaluatorList);
         streamAndMeasureModules(proj, evaluatorList);
         evaluatorList.forEach(metricEvaluator -> {

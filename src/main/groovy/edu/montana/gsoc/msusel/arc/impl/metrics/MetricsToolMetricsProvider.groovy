@@ -41,6 +41,12 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
 
     static MetricsRegistrar registrar
 
+    private static final String NOT_METHODS = "not-methods"
+    private static final String METHODS_ONLY = "methods-only"
+    private static final String TYPE_CONT = "type-containers"
+    private static final String TYPES_ONLY = "types-only"
+    private static final String ALL = "all"
+
     MetricsToolMetricsProvider(ArcContext context) {
         super(context)
     }
@@ -73,24 +79,26 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
     }
 
     void registerMetrics() {
-        registrar.registerPrimary(new NumberOfFields()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfMethods()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfStatements()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfTypes()) // Needed for Quamoco
-        registrar.registerPrimary(new LinesOfCode())
-//        registrar.registerPrimary(new LogicalLinesOfCode())
-        registrar.registerPrimary(new SourceLinesOfCode()) // Needed for Quamoco and Sig Maintainability
-        registrar.registerPrimary(new NumberOfPrivateAttributes()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfProtectedAttributes()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfPublicMethods()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfAncestorClasses()) // Needed for QMOOD
-        registrar.registerPrimary(new NumberOfClasses()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfInstanceVariables()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfClassVariables()) // Needed for Quamoco
-        registrar.registerPrimary(new NumberOfLocalVariables()) // Needed for Quamoco
-        registrar.registerPrimary(new CyclomaticComplexity()) // Needed for Sig Maintainability
-        registrar.registerPrimary(new AfferentCoupling()) // Needed for Sig Maintainability
-        registrar.registerPrimary(new NumberOfMethodParameters()) // Needed for Sig Maintainability
+        registrar.register(new NumberOfFields(), NOT_METHODS) // for quamoco
+        registrar.register(new NumberOfMethods(), NOT_METHODS) // for quamoco
+        registrar.register(new NumberOfPrivateAttributes(), NOT_METHODS) // for quamoco
+        registrar.register(new NumberOfProtectedAttributes(), NOT_METHODS) // for quamoco
+        registrar.register(new NumberOfPublicMethods(), NOT_METHODS) // Needed for Quamoco
+        registrar.register(new NumberOfInstanceVariables(), NOT_METHODS) // Needed for Quamoco
+        registrar.register(new NumberOfClassVariables(), NOT_METHODS) // Needed for Quamoco
+        registrar.register(new AfferentCoupling(), NOT_METHODS) // Needed for Sig Maintainability
+        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS) // Needed for QMOOD
+        registrar.register(new NumberOfTypes(), NOT_METHODS) // Needed for Quamoco
+        registrar.register(new NumberOfClasses(), NOT_METHODS) // Needed for Quamoco
+        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS)
+
+        registrar.register(new NumberOfStatements(), ALL) // for quamoco
+        registrar.register(new NumberOfMethodParameters(), ALL) // for sig maintainability
+        registrar.register(new SourceLinesOfCode(), ALL) // for quamoco and sig maintainability
+        registrar.register(new LinesOfCode(), ALL)
+        registrar.register(new NumberOfLocalVariables(), ALL) // Needed for Quamoco
+
+        registrar.register(new CyclomaticComplexity(), METHODS_ONLY) // for sig maintainability
 
         registrar.registerSecondary(new LinesOfCodePerClass()) // depends on LOC -> Needed for QMOOD
         registrar.registerSecondary(new TotalNumberOfAttributes()) // depends on NOA -> Needed for QMOOD
