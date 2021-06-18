@@ -31,6 +31,7 @@ import edu.isu.isuese.datamodel.FileType
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.Type
+import edu.isu.isuese.datamodel.util.DBManager
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar
@@ -55,6 +56,15 @@ class ArcMetricsTool {
         registrar = MetricsToolMetricsProvider.getRegistrar()
     }
 
+    void withDb(Closure cl) {
+//        log.info "Opened at $method"
+//        if (!DBManager.getInstance().isOpen())
+        context.open()
+        cl.call()
+        context.close()
+//        log.info "Closed at $method"
+    }
+
     void init() {
         evaluatorList = Lists.newArrayList()
         evaluatorList.addAll(registrar.getCategoryEvaluators("all"))
@@ -69,11 +79,9 @@ class ArcMetricsTool {
         evaluatorList*.resetState()
         secondaryList*.resetState()
         log.info "Measuring Primary Metrics"
-        context.open()
         streamAndMeasureProject(proj, evaluatorList, true)
         log.info "Measuring Secondary Metrics"
         streamAndMeasureProject(proj, secondaryList, false)
-        context.close()
     }
 
     private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
@@ -82,7 +90,9 @@ class ArcMetricsTool {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                     log.info "Measuring Method using ${mdef.primaryHandle()}"
-                    (metricEvaluator as MetricEvaluator).measure(method)
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(method)
+                    }
                 }
             }
         }
@@ -101,7 +111,9 @@ class ArcMetricsTool {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                     log.info "Measuring Types using ${mdef.primaryHandle()}"
-                    (metricEvaluator as MetricEvaluator).measure(type)
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(type)
+                    }
                 }
             }
         }
@@ -113,7 +125,9 @@ class ArcMetricsTool {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                     log.info "Measuring Files using ${mdef.primaryHandle()}"
-                    (metricEvaluator as MetricEvaluator).measure(file)
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(file)
+                    }
                 }
             }
         }
@@ -126,7 +140,9 @@ class ArcMetricsTool {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                     log.info "Measuring Namespaces using ${mdef.primaryHandle()}"
-                    (metricEvaluator as MetricEvaluator).measure(ns)
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(ns)
+                    }
                 }
             }
         }
@@ -138,7 +154,9 @@ class ArcMetricsTool {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                     log.info "Measuring Modules using ${mdef.primaryHandle()}"
-                    (metricEvaluator as MetricEvaluator).measure(mod)
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(mod)
+                    }
                 }
             }
         }
@@ -153,7 +171,9 @@ class ArcMetricsTool {
             evaluatorList.eachParallel { metricEvaluator ->
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
                 log.info "Measuring Projects using ${mdef.primaryHandle()}"
-                (metricEvaluator as MetricEvaluator).measure(proj)
+                withDb {
+                    (metricEvaluator as MetricEvaluator).measure(proj)
+                }
             }
         }
     }
