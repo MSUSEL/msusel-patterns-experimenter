@@ -69,9 +69,7 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
                 set += it.getAggregatedFrom()
                 set += it.getComposedFrom()
 
-                set.removeIf { Type t ->
-                    t.getParentNamespace() == ns
-                }
+                set.removeAll(ns.getAllTypes())
 
                 double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
                 if (set.isEmpty()) {

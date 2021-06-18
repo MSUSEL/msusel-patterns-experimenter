@@ -26,13 +26,17 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
+import com.google.common.collect.Lists
+import edu.isu.isuese.datamodel.Method
 import edu.isu.isuese.datamodel.Project
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.MetricCategory
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
 import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
 import edu.montana.gsoc.msusel.metrics.annotations.MetricType
+import groovyx.gpars.GParsPool
 import org.apache.commons.lang3.tuple.Pair
 
 /**
@@ -55,15 +59,24 @@ import org.apache.commons.lang3.tuple.Pair
 )
 class UnitSize extends SigMainMetricEvaluator {
 
-    UnitSize() {
+    UnitSize(ArcContext context) {
+        super(context)
         riskMap[RiskCategory.LOW] = Pair.of(0.0, 15.0)
         riskMap[RiskCategory.MODERATE] = Pair.of(15.0,30.0)
         riskMap[RiskCategory.HIGH] = Pair.of(30.0, 60.0)
     }
 
     def evaluate(Project proj) {
-        proj.getAllMethods().each {
-            categorize(it, "LOC")
+        List<Method> methods = []
+        context.open()
+        methods = Lists.newArrayList(proj.getAllMethods())
+        context.close()
+        GParsPool.withPool(8) {
+            methods.eachParallel { method ->
+                context.open()
+                categorize(method as Method, "LOC")
+                context.close()
+            }
         }
     }
 
