@@ -64,7 +64,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType;
 class PatternSizeEvaluator extends MetricEvaluator {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         int size = 0
 
         if (node instanceof PatternInstance) {

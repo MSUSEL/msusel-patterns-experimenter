@@ -37,7 +37,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implements Rateable {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             Project proj = node as Project
 

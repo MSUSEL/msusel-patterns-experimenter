@@ -58,7 +58,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class TestabilityEvaluator extends MetricEvaluator {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             double volume           = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigVolume", node)
             double unitComplexity   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitComplexity", node)

@@ -55,7 +55,7 @@ class Duplication extends SigAbstractMetricEvaluator {
     int totalLines
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             totalLines = 0
             Project proj = node as Project

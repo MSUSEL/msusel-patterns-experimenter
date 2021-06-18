@@ -38,7 +38,7 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
     protected Map<RiskCategory, Pair<Double, Double>> riskMap = [:]
 
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             profile[RiskCategory.LOW] = 0.0d
             profile[RiskCategory.MODERATE] = 0.0d

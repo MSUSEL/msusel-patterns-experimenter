@@ -61,7 +61,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class ExtendibilityEvaluator extends MetricEvaluator {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             Project proj = (Project) node
 

@@ -53,7 +53,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 class AnalyzabilityEvaluator extends MetricEvaluator {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             double volume      = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigVolume", node)
             double duplication = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication.RATING", node)

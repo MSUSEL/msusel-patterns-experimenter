@@ -61,7 +61,7 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class Volume extends SigAbstractMetricEvaluator implements Rateable {
 
     @Override
-    def measure(Measurable node) {
+    def measureValue(Measurable node) {
         if (node instanceof Project) {
             double systemSize = node.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
             double technologyFactor = 0.00136d
