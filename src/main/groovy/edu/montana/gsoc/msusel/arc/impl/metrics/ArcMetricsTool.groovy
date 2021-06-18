@@ -27,7 +27,10 @@
 package edu.montana.gsoc.msusel.arc.impl.metrics
 
 import com.google.common.collect.Lists
+import edu.isu.isuese.datamodel.File
 import edu.isu.isuese.datamodel.FileType
+import edu.isu.isuese.datamodel.Method
+import edu.isu.isuese.datamodel.Module
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.Type
@@ -85,7 +88,12 @@ class ArcMetricsTool {
     }
 
     private void streamAndMeasureMethods(Type type, List<MetricEvaluator> evaluatorList) {
-        type.getMethods().each { method ->
+        List<Method> methods = []
+        withDb{
+            methods = Lists.newArrayList(type.getAllMethods())
+        }
+
+        methods.each { method ->
             GParsPool.withPool(8) {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
@@ -99,7 +107,12 @@ class ArcMetricsTool {
     }
 
     private void streamAndMeasureTypes(Namespace ns, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
-        ns.getAllTypes().each { type ->
+        List<Type> types = []
+        withDb {
+            types = Lists.newArrayList(ns.getAllTypes())
+        }
+
+        types.each { type ->
             if (measureMethods) {
                 List<MetricEvaluator> methodEvals = Lists.newArrayList()
                 methodEvals.addAll(registrar.getCategoryEvaluators("all"))
@@ -120,7 +133,12 @@ class ArcMetricsTool {
     }
 
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
-        proj.getFilesByType(FileType.SOURCE).each { file ->
+        List<File> files = []
+        withDb {
+            files = Lists.newArrayList(proj.getFilesByType(FileType.SOURCE))
+        }
+
+        files.each { file ->
             GParsPool.withPool(8) {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
@@ -134,7 +152,12 @@ class ArcMetricsTool {
     }
 
     private void streamAndMeasureNamespaces(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
-        proj.getNamespaces().each { ns ->
+        List<Namespace> namespaces = []
+        withDb {
+            namespaces = Lists.newArrayList(proj.getNamespaces())
+        }
+
+        namespaces.each { ns ->
             streamAndMeasureTypes(ns, evaluatorList, measureMethods)
             GParsPool.withPool(8) {
                 evaluatorList.eachParallel { metricEvaluator ->
@@ -149,7 +172,12 @@ class ArcMetricsTool {
     }
 
     private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
-        project.getModules().each { mod ->
+        List<Module> modules = []
+        withDb {
+            modules = Lists.newArrayList(project.getModules())
+        }
+
+        modules.each { mod ->
             GParsPool.withPool(8) {
                 evaluatorList.eachParallel { metricEvaluator ->
                     MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
