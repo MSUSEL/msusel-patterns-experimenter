@@ -117,8 +117,7 @@ public class ArcMetricsTool {
             evaluatorList.forEach(metricEvaluator -> {
                 MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
                 log.info("Measuring Namespaces using " + mdef.primaryHandle());
-                if (!ns.getName().isEmpty())
-                    metricEvaluator.measure(ns);
+                metricEvaluator.measure(ns);
             });
         });
     }
