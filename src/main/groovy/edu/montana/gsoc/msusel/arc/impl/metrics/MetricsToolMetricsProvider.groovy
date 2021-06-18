@@ -58,7 +58,17 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
 
     @Override
     void updateDatabase() {
-        registrar.getPrimaryEvaluators().each {
+        registrar.getCategoryEvaluators(ALL).each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
+        }
+        registrar.getCategoryEvaluators(METHODS_ONLY).each {
+            context.open()
+            it.toMetric(repository)
+            context.close()
+        }
+        registrar.getCategoryEvaluators(NOT_METHODS).each {
             context.open()
             it.toMetric(repository)
             context.close()
