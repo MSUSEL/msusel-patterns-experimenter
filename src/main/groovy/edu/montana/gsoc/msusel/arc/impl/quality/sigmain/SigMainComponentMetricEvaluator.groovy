@@ -31,21 +31,13 @@ import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Metric
 import edu.isu.isuese.datamodel.MetricRepository
 import edu.isu.isuese.datamodel.Project
-import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 
 abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implements Rateable {
 
-    ArcContext context
-
-    SigMainComponentMetricEvaluator(ArcContext context) {
-        this.context = context
-    }
-
     @Override
     def measureValue(Measurable node) {
-        context.open()
         if (node instanceof Project) {
             Project proj = node as Project
 
@@ -53,7 +45,6 @@ abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implement
 
             Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
         }
-        context.close()
     }
 
     protected abstract double evaluate(Project proj)

@@ -52,11 +52,14 @@ public class SigCalibrationCommand extends SecondaryAnalysisCommand {
     public void execute(ArcContext context) {
         log.info("Starting Sig Maintainability Calibration Analysis");
 
+        context.open();
+
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
             log.info("Measuring project with: " + mdef.primaryHandle());
             metricEvaluator.measure(context.getProject());
         });
+        context.close();
 
         log.info("Finished Sig Maintainability Calibration Analysis");
     }

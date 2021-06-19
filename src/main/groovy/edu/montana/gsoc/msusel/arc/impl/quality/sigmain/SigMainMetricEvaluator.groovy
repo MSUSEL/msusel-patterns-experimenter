@@ -29,20 +29,14 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.*
-import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import org.apache.commons.lang3.tuple.Pair
 
 abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator implements Rateable {
 
-    protected ArcContext context
     protected Map<RiskCategory, Double> profile = [:]
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
     protected Map<RiskCategory, Pair<Double, Double>> riskMap = [:]
-
-    SigMainMetricEvaluator(ArcContext context) {
-        this.context = context
-    }
 
     def measureValue(Measurable node) {
         if (node instanceof Project) {
