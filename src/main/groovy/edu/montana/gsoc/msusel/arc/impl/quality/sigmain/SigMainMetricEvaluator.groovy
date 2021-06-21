@@ -68,7 +68,7 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     }
 
     void categorize(Component comp, String handle) {
-        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
+        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
         double value = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:${handle}")
 
         boolean found = false

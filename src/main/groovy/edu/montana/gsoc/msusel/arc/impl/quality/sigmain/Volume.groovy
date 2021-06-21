@@ -32,14 +32,7 @@ import edu.isu.isuese.datamodel.Metric
 import edu.isu.isuese.datamodel.MetricRepository
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
-import edu.montana.gsoc.msusel.metrics.MetricEvaluator
-import edu.montana.gsoc.msusel.metrics.annotations.MetricCategory
-import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
-import edu.montana.gsoc.msusel.metrics.annotations.MetricProperties
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScale
-import edu.montana.gsoc.msusel.metrics.annotations.MetricScope
-import edu.montana.gsoc.msusel.metrics.annotations.MetricType
-
+import edu.montana.gsoc.msusel.metrics.annotations.*
 /**
  * @author Isaac Griffith
  * @version 1.3.0

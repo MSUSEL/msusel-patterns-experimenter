@@ -69,10 +69,7 @@ class Duplication extends SigAbstractMetricEvaluator {
 
                 dupLines += scanSelf(source)
 
-                for (int j = 0; j < srcFiles.size(); j++) {
-                    if (i == j)
-                        continue
-
+                for (int j = i + 1; j < srcFiles.size(); j++) {
                     File target = srcFiles.get(j)
                     dupLines += scanOther(source, target)
                 }
@@ -97,10 +94,11 @@ class Duplication extends SigAbstractMetricEvaluator {
             int before
             int after
             String mod
-            try {
-                String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
 
-                totalLines += m1Text.split("\n").size()
+            String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
+            totalLines += m1Text.split("\n").size()
+
+            try {
 
                 before = m1Text.split("\n").size()
                 mod = new String(m1Text)

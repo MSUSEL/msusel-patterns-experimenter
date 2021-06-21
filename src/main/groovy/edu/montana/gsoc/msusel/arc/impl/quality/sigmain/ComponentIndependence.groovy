@@ -71,7 +71,7 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
 
                 set.removeAll(ns.getAllTypes())
                 
-                double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
+                double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
                 if (set.isEmpty()) {
                     hiddenSize += size
                 }
