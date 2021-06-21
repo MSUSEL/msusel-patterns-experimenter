@@ -33,20 +33,21 @@ import edu.montana.gsoc.msusel.metrics.MetricEvaluator
 import edu.montana.gsoc.msusel.metrics.MetricsRegistrar
 import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 import groovy.util.logging.Log4j2
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
 @Log4j2
-class ArcMetricsTool {
+class ParallelArcMetricsTool {
 
     MetricsRegistrar registrar
     ArcContext context
     List<MetricEvaluator> evaluatorList
     List<MetricEvaluator> secondaryList
 
-    ArcMetricsTool(ArcContext context) {
+    ParallelArcMetricsTool(ArcContext context) {
         this.context = context
         registrar = MetricsToolMetricsProvider.getRegistrar()
     }
@@ -105,25 +106,24 @@ class ArcMetricsTool {
             types = Lists.newArrayList(ns.getAllTypes())
         }
 
-//        GParsPool.withPool(8) {
-//            types.eachParallel { type ->
-        types.each { type ->
-            if (measureMethods) {
-                List<MetricEvaluator> methodEvals = Lists.newArrayList()
-                methodEvals.addAll(registrar.getCategoryEvaluators("all"))
-                methodEvals.addAll(registrar.getCategoryEvaluators("methods-only"))
-                streamAndMeasureMethods(type as Type, methodEvals)
-            }
+        GParsPool.withPool(8) {
+            types.eachParallel { type ->
+                if (measureMethods) {
+                    List<MetricEvaluator> methodEvals = Lists.newArrayList()
+                    methodEvals.addAll(registrar.getCategoryEvaluators("all"))
+                    methodEvals.addAll(registrar.getCategoryEvaluators("methods-only"))
+                    streamAndMeasureMethods(type as Type, methodEvals)
+                }
 
-            evaluatorList.each { metricEvaluator ->
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-                log.info "Measuring Types using ${mdef.primaryHandle()}"
-                withDb {
-                    metricEvaluator.measure(type as Type)
+                evaluatorList.each { metricEvaluator ->
+                    MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                    log.info "Measuring Types using ${mdef.primaryHandle()}"
+                    withDb {
+                        metricEvaluator.measure(type as Type)
+                    }
                 }
             }
         }
-//        }
     }
 
     private void streamAndMeasureFiles(Project proj, List<MetricEvaluator> evaluatorList) {
@@ -132,18 +132,17 @@ class ArcMetricsTool {
             files = Lists.newArrayList(proj.getFilesByType(FileType.SOURCE))
         }
 
-//        GParsPool.withPool(8) {
-//            files.eachParallel { file ->
-        files.each { file ->
-            evaluatorList.each { metricEvaluator ->
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-                log.info "Measuring Files using ${mdef.primaryHandle()}"
-                withDb {
-                    metricEvaluator.measure(file as File)
+        GParsPool.withPool(8) {
+            files.eachParallel { file ->
+                evaluatorList.each { metricEvaluator ->
+                    MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                    log.info "Measuring Files using ${mdef.primaryHandle()}"
+                    withDb {
+                        metricEvaluator.measure(file as File)
+                    }
                 }
             }
         }
-//        }
     }
 
     private void streamAndMeasureNamespaces(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
@@ -152,19 +151,18 @@ class ArcMetricsTool {
             namespaces = Lists.newArrayList(proj.getNamespaces())
         }
 
-//        GParsPool.withPool(8) {
-//            namespaces.eachParallel { ns ->
-        namespaces.each { ns ->
-            streamAndMeasureTypes(ns as Namespace, evaluatorList, measureMethods)
-            evaluatorList.each { metricEvaluator ->
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-                log.info "Measuring Namespaces using ${mdef.primaryHandle()}"
-                withDb {
-                    metricEvaluator.measure(ns as Namespace)
+        GParsPool.withPool(8) {
+            namespaces.eachParallel { ns ->
+                streamAndMeasureTypes(ns as Namespace, evaluatorList, measureMethods)
+                evaluatorList.each { metricEvaluator ->
+                    MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                    log.info "Measuring Namespaces using ${mdef.primaryHandle()}"
+                    withDb {
+                        metricEvaluator.measure(ns as Namespace)
+                    }
                 }
             }
         }
-//        }
     }
 
     private void streamAndMeasureModules(Project project, List<MetricEvaluator> evaluatorList) {
@@ -173,18 +171,17 @@ class ArcMetricsTool {
             modules = Lists.newArrayList(project.getModules())
         }
 
-//        GParsPool.withPool(8) {
-//            modules.eachParallel { mod ->
-        modules.each { mod ->
-            evaluatorList.each { metricEvaluator ->
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-                log.info "Measuring Modules using ${mdef.primaryHandle()}"
-                withDb {
-                    metricEvaluator.measure(mod as Module)
+        GParsPool.withPool(8) {
+            modules.eachParallel { mod ->
+                evaluatorList.each { metricEvaluator ->
+                    MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                    log.info "Measuring Modules using ${mdef.primaryHandle()}"
+                    withDb {
+                        metricEvaluator.measure(mod as Module)
+                    }
                 }
             }
         }
-//        }
     }
 
     private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
@@ -192,15 +189,14 @@ class ArcMetricsTool {
         streamAndMeasureFiles(proj, evaluatorList)
         streamAndMeasureModules(proj, evaluatorList)
 
-//        GParsPool.withPool(8) {
-//            evaluatorList.eachParallel { metricEvaluator ->
-        evaluatorList.each { metricEvaluator ->
-            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-            log.info "Measuring Projects using ${mdef.primaryHandle()}"
-            withDb {
-                (metricEvaluator as MetricEvaluator).measure(proj)
+        GParsPool.withPool(8) {
+            evaluatorList.eachParallel { metricEvaluator ->
+                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                log.info "Measuring Projects using ${mdef.primaryHandle()}"
+                withDb {
+                    (metricEvaluator as MetricEvaluator).measure(proj)
+                }
             }
         }
-//        }
     }
 }

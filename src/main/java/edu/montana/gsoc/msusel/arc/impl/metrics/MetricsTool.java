@@ -57,5 +57,6 @@ public class MetricsTool extends MetricOnlyTool {
     @Override
     public void init() {
         context.registerCommand(new MetricsCommand());
+        context.registerCommand(new ParallelMetricsCommand());
     }
 }

@@ -26,15 +26,31 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.metrics;
 
+import edu.montana.gsoc.msusel.arc.ArcContext;
+import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand;
+import lombok.extern.log4j.Log4j2;
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
  */
-public interface MetricsConstants {
+@Log4j2
+public class ParallelMetricsCommand extends PrimaryAnalysisCommand {
 
-    String METRICS_CMD_NAME = "ARCMetrics";
-    String PARMETRICS_CMD_NAME = "Parallel ARCMetrics";
-    String METRICS_REPO_NAME = "arc_metrics";
-    String METRICS_REPO_KEY = "arc_metrics";
-    String METRICS_TOOL_NAME = "ARC Metrics";
+    public ParallelMetricsCommand() {
+        super(MetricsConstants.PARMETRICS_CMD_NAME);
+        this.setToolName(MetricsConstants.PARMETRICS_CMD_NAME);
+    }
+
+    @Override
+    public void execute(ArcContext context) {
+        ParallelArcMetricsTool tool = new ParallelArcMetricsTool(context);
+
+        log.info(String.format("Initializing Tool: %s", getToolName()));
+        tool.init();
+
+        log.info(String.format("Executing Tool: %s", getToolName()));
+        tool.exec();
+        log.info(String.format("Execution Complete: %s", getToolName()));
+    }
 }

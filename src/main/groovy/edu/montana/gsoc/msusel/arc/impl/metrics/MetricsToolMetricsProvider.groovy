@@ -89,32 +89,32 @@ class MetricsToolMetricsProvider extends AbstractMetricProvider {
     }
 
     void registerMetrics() {
-        registrar.register(new NumberOfFields(), NOT_METHODS) // for quamoco
-        registrar.register(new NumberOfMethods(), NOT_METHODS) // for quamoco
-        registrar.register(new NumberOfPrivateAttributes(), NOT_METHODS) // for quamoco
-        registrar.register(new NumberOfProtectedAttributes(), NOT_METHODS) // for quamoco
-        registrar.register(new NumberOfPublicMethods(), NOT_METHODS) // Needed for Quamoco
-        registrar.register(new NumberOfInstanceVariables(), NOT_METHODS) // Needed for Quamoco
-        registrar.register(new NumberOfClassVariables(), NOT_METHODS) // Needed for Quamoco
+//        registrar.register(new NumberOfFields(), NOT_METHODS) // for quamoco
+//        registrar.register(new NumberOfMethods(), NOT_METHODS) // for quamoco
+//        registrar.register(new NumberOfPrivateAttributes(), NOT_METHODS) // for quamoco
+//        registrar.register(new NumberOfProtectedAttributes(), NOT_METHODS) // for quamoco
+//        registrar.register(new NumberOfPublicMethods(), NOT_METHODS) // Needed for Quamoco
+//        registrar.register(new NumberOfInstanceVariables(), NOT_METHODS) // Needed for Quamoco
+//        registrar.register(new NumberOfClassVariables(), NOT_METHODS) // Needed for Quamoco
         registrar.register(new AfferentCoupling(), NOT_METHODS) // Needed for Sig Maintainability
-        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS) // Needed for QMOOD
-        registrar.register(new NumberOfTypes(), NOT_METHODS) // Needed for Quamoco
-        registrar.register(new NumberOfClasses(), NOT_METHODS) // Needed for Quamoco
-        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS)
+//        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS) // Needed for QMOOD
+//        registrar.register(new NumberOfTypes(), NOT_METHODS) // Needed for Quamoco
+//        registrar.register(new NumberOfClasses(), NOT_METHODS) // Needed for Quamoco
+//        registrar.register(new NumberOfAncestorClasses(), NOT_METHODS)
 
-        registrar.register(new NumberOfStatements(), ALL) // for quamoco
+//        registrar.register(new NumberOfStatements(), ALL) // for quamoco
         registrar.register(new NumberOfMethodParameters(), ALL) // for sig maintainability
         registrar.register(new SourceLinesOfCode(), ALL) // for quamoco and sig maintainability
         registrar.register(new LinesOfCode(), ALL)
-        registrar.register(new NumberOfLocalVariables(), ALL) // Needed for Quamoco
+//        registrar.register(new NumberOfLocalVariables(), ALL) // Needed for Quamoco
 
         registrar.register(new CyclomaticComplexity(), METHODS_ONLY) // for sig maintainability
 
-        registrar.registerSecondary(new LinesOfCodePerClass()) // depends on LOC -> Needed for QMOOD
-        registrar.registerSecondary(new TotalNumberOfAttributes()) // depends on NOA -> Needed for QMOOD
-        registrar.registerSecondary(new TotalNumberOfClasses()) // depends on NC -> Needed for QMOOD
-        registrar.registerSecondary(new TotalNumberOfMethods()) // depends on NOM -> Needed for QMOOD
-        registrar.registerSecondary(new PolymorphicMethods()) // depends on NOC -> Needed for QMOOD
+//        registrar.registerSecondary(new LinesOfCodePerClass()) // depends on LOC -> Needed for QMOOD
+//        registrar.registerSecondary(new TotalNumberOfAttributes()) // depends on NOA -> Needed for QMOOD
+//        registrar.registerSecondary(new TotalNumberOfClasses()) // depends on NC -> Needed for QMOOD
+//        registrar.registerSecondary(new TotalNumberOfMethods()) // depends on NOM -> Needed for QMOOD
+//        registrar.registerSecondary(new PolymorphicMethods()) // depends on NOC -> Needed for QMOOD
     }
 
     MetricEvaluator getMetricEvaluator(String handle) {
