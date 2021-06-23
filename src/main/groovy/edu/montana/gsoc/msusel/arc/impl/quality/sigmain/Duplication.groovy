@@ -27,7 +27,6 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import edu.isu.isuese.datamodel.*
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
 import java.nio.charset.MalformedInputException
@@ -75,7 +74,7 @@ class Duplication extends SigAbstractMetricEvaluator {
                 }
             }
 
-            double dupPercent = dupLines / totalLines * 100
+            double dupPercent = (dupLines / totalLines) * 100
 
             Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
         }
@@ -95,6 +94,10 @@ class Duplication extends SigAbstractMetricEvaluator {
             int after
             String mod
 
+            int size = f1.text.split("\n").size()
+            if (size <= methods[i].getStart() || size <= methods[i].getEnd())
+                continue
+
             String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
             totalLines += m1Text.split("\n").size()
 
@@ -110,13 +113,16 @@ class Duplication extends SigAbstractMetricEvaluator {
                 dup += 0
             }
 
-            for (int j = 0; j < methods.size(); j++) {
-                if (i == j)
-                    continue
-
+            for (int j = i + 1; j < methods.size(); j++) {
                 try {
+                    size = f1.text.split("\n").size()
+                    if (size <= methods[j].getStart() || size <= methods[j].getEnd())
+                        continue
+
                     String m2Text = f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n")
                     before = m2Text.split("\n").size()
+                    totalLines += before
+
                     mod = new String(m2Text)
                     mod = processText(m2Text.split("\n").toList(), mod)
                     after = mod.split("\n").size()
@@ -158,18 +164,25 @@ class Duplication extends SigAbstractMetricEvaluator {
 
         methods.each { m1 ->
             try {
-                String m1Text = sanitize(f1.text.split("\n").toList().subList(m1.getStart(), m1.getEnd()).join("\n"))
+                int size = f1.text.split("\n").size()
+                if (size > m1.getStart() && size > m1.getEnd()) {
+                    String m1Text = sanitize(f1.text.split("\n").toList().subList(m1.getStart(), m1.getEnd()).join("\n"))
 
-                other.each { m2 ->
-                    try {
-                        String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
-                        int before = m2Text.split("\n").size()
-                        String mod = processText(m1Text.split("\n").toList(), m2Text)
-                        int after = mod.split("\n").size()
+                    other.each { m2 ->
+                        try {
+                            size = f2.text.split("\n").size()
+                            if (size > m2.getStart() && size > m2.getEnd()) {
+                                String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
+                                int before = m2Text.split("\n").size()
+                                totalLines += before
+                                String mod = processText(m1Text.split("\n").toList(), m2Text)
+                                int after = mod.split("\n").size()
 
-                        dup += before - after
-                    } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
-                        dup += 0
+                                dup += before - after
+                            }
+                        } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
+                            dup += 0
+                        }
                     }
                 }
             } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {

@@ -26,13 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
-import edu.isu.isuese.datamodel.Measurable
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Metric
-import edu.isu.isuese.datamodel.MetricRepository
+import edu.isu.isuese.datamodel.*
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.Project
 import edu.montana.gsoc.msusel.metrics.annotations.*
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -56,12 +53,12 @@ class Volume extends SigAbstractMetricEvaluator implements Rateable {
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
-            double systemSize = node.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+            double systemSize = node.getValueFor((String) "${MetricsConstants.METRICS_REPO_KEY}:SLOC")
             double technologyFactor = 0.00136d
 
-            double rebuildValue = systemSize * technologyFactor * 12
+            double rebuildValue = (systemSize * technologyFactor) / 12
 
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:sigVolume.RAW").on(node).withValue(rebuildValue)
+            Measure.of("${repo.getRepoKey()}:sigVolume.RAW").on(node).withValue(rebuildValue)
         }
     }
 
