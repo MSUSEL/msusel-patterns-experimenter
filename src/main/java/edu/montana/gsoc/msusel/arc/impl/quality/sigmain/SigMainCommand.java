@@ -49,13 +49,14 @@ public class SigMainCommand extends SecondaryAnalysisCommand {
     public void execute(ArcContext context) {
         log.info("Starting Sig Maintainability Analysis");
 
-        context.open();
+//        context.open();
         provider.getRegistrar().getPrimaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
             log.info("Metric: " + mdef.name());
             metricEvaluator.measure(context.getProject());
         });
 
+        context.open();
         provider.getRegistrar().getSecondaryEvaluators().forEach(metricEvaluator -> {
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class);
             log.info("Metric: " + mdef.name());

@@ -26,10 +26,13 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
-
+import com.google.common.collect.Lists
+import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -51,7 +54,9 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 )
 class ComponentBalance extends SigMainComponentMetricEvaluator {
 
-    ComponentBalance() {}
+    ComponentBalance(ArcContext context) {
+        super(context)
+    }
 
     @Override
     protected double evaluate(Project proj) {
@@ -92,11 +97,19 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
     }
 
     List<Double> createSizesList(Project proj) {
-        List<Double> sizes = []
-        proj.getNamespaces().each {
-            def value = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
-            if (value)
-                sizes << it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
+        List<Double> sizes = Lists.newCopyOnWriteArrayList()
+        context.open()
+        List<Namespace> namespaces = proj.getNamespaces()
+        context.close()
+
+        GParsPool.withPool(8) {
+            namespaces.eachParallel { Namespace ns ->
+                context.open()
+                def value = ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
+                if (value)
+                    sizes << ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
+                context.close()
+            }
         }
 //        sizes.removeIf { it == null }
         sizes

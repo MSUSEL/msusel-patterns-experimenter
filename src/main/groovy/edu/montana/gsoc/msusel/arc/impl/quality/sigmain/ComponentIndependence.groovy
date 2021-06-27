@@ -26,12 +26,14 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
+import com.google.common.collect.Lists
 import com.google.common.collect.Sets
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Project
-import edu.isu.isuese.datamodel.Type
+import com.google.common.util.concurrent.AtomicDouble
+import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -53,37 +55,83 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 )
 class ComponentIndependence extends SigMainComponentMetricEvaluator {
 
-    ComponentIndependence() {}
+    ComponentIndependence(ArcContext context) {
+        super(context)
+    }
+
+    @Override
+    def measureValue(Measurable node) {
+        if (node instanceof Project) {
+            Project proj = node as Project
+
+            double value = evaluate(proj)
+
+            context.open()
+            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
+            context.close()
+        }
+    }
 
     @Override
     protected double evaluate(Project proj) {
-        double hiddenSize = 0
-        proj.getNamespaces().each { ns ->
-            ns.getAllTypes().each {
-                Set<Type> set = Sets.newHashSet()
+        AtomicDouble hiddenSize = new AtomicDouble(0)
+        context.open()
+        List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
+        context.close()
 
-                set += it.getRealizedBy()
-                set += it.getGeneralizes()
-                set += it.getUseFrom()
-                set += it.getAssociatedFrom()
-                set += it.getAggregatedFrom()
-                set += it.getComposedFrom()
+        GParsPool.withPool(8) {
+            namespaces.eachParallel { Namespace ns ->
+                context.open()
+                double ca = ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
+                context.close()
 
-                set.removeAll(ns.getAllTypes())
-                
-                double size = it.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
-                if (set.isEmpty()) {
-                    hiddenSize += size
+                if (ca > 0.0d) {
+                    context.open()
+                    String nsName = ns.getFullName()
+                    List<Type> types = ns.getAllTypes()
+                    context.close()
+
+                    types.eachParallel { Type type ->
+                        context.open()
+                        double typeCa = it.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
+                        if (typeCa > 0.0d) {
+                            Set<String> set = findCouplings(type, nsName)
+                            double size = it.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
+                            if (set.isEmpty()) {
+                                hiddenSize.addAndGet(size)
+                            }
+                        }
+                        context.close()
+                    }
                 }
             }
         }
 
-        double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:LOC")
-        (hiddenSize / projSize)
+        context.open()
+        double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+        context.close()
+
+        return (1 - (hiddenSize.get() / projSize)) * 100
+    }
+
+    private Set<String> findCouplings(Type type, String nsName) {
+        Set<String> set = Sets.newHashSet()
+        set.addAll(type.getRealizedBy()*.getCompKey())
+        set.addAll(type.getGeneralizes()*.getCompKey())
+        set.addAll(type.getAssociatedFrom()*.getCompKey())
+        set.addAll(type.getAggregatedFrom()*.getCompKey())
+        set.addAll(type.getComposedFrom()*.getCompKey())
+        set.addAll(type.getDependencyFrom()*.getCompKey())
+        set.addAll(type.getUseFrom()*.getCompKey())
+
+        set.removeIf { it.contains(nsName) }
+
+        set
     }
 
     @Override
     protected String getMetricName() {
         "sigComponentIndependence"
     }
+
 }

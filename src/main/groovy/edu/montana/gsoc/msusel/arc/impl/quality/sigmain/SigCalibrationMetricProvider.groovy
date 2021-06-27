@@ -80,15 +80,15 @@ class SigCalibrationMetricProvider extends AbstractMetricProvider {
 //        registrar.registerPrimary(new NumberOfMethodParameters())
 
         // Calibration metrics
-        registrar.registerSecondary(new Volume())
-        registrar.registerSecondary(new Duplication())
-        registrar.registerSecondary(new UnitComplexity())
-        registrar.registerSecondary(new UnitSize())
-        registrar.registerSecondary(new UnitInterfacing())
-        registrar.registerSecondary(new ModuleCoupling())
-        registrar.registerSecondary(new ComponentBalance())
-        registrar.registerSecondary(new ComponentIndependence())
-        registrar.registerSecondary(new ComponentEntanglement())
+        registrar.registerSecondary(new Volume(context))
+        registrar.registerSecondary(new Duplication(context))
+        registrar.registerSecondary(new UnitComplexity(context))
+        registrar.registerSecondary(new UnitSize(context))
+        registrar.registerSecondary(new UnitInterfacing(context))
+        registrar.registerSecondary(new ModuleCoupling(context))
+        registrar.registerSecondary(new ComponentBalance(context))
+        registrar.registerSecondary(new ComponentIndependence(context))
+        registrar.registerSecondary(new ComponentEntanglement(context))
     }
 
     MetricEvaluator getMetricEvaluator(String handle) {

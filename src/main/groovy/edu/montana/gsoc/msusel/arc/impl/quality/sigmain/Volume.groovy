@@ -27,6 +27,7 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 
@@ -50,15 +51,28 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 )
 class Volume extends SigAbstractMetricEvaluator implements Rateable {
 
+    Volume(ArcContext context) {
+        super(context)
+    }
+
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
+            context.open()
+            boolean hasVal = node.hasValueFor((String) "${repo.getRepoKey()}:sigVolume.RAW")
+            context.close()
+
+            if (hasVal)
+                return
+
+            context.open()
             double systemSize = node.getValueFor((String) "${MetricsConstants.METRICS_REPO_KEY}:SLOC")
             double technologyFactor = 0.00136d
 
             double rebuildValue = (systemSize * technologyFactor) / 12
 
             Measure.of("${repo.getRepoKey()}:sigVolume.RAW").on(node).withValue(rebuildValue)
+            context.close()
         }
     }
 

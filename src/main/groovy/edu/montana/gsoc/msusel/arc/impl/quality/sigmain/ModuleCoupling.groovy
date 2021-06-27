@@ -26,8 +26,13 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
+import com.google.common.collect.Lists
+import edu.isu.isuese.datamodel.Method
 import edu.isu.isuese.datamodel.Project
+import edu.isu.isuese.datamodel.Type
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovyx.gpars.GParsExecutorsPool
 import org.apache.commons.lang3.tuple.Pair
 
 /**
@@ -50,15 +55,25 @@ import org.apache.commons.lang3.tuple.Pair
 )
 class ModuleCoupling extends SigMainMetricEvaluator {
 
-    ModuleCoupling() {
+    ModuleCoupling(ArcContext context) {
+        super(context)
         riskMap[RiskCategory.LOW] = Pair.of(0.0, 10.0)
         riskMap[RiskCategory.MODERATE] = Pair.of(10.0, 20.0)
         riskMap[RiskCategory.HIGH] = Pair.of(20.0, 50.0)
     }
 
     def evaluate(Project proj) {
-        proj.getAllTypes().each {
-            categorize(it, "Ca")
+        List<Type> types = []
+        context.open()
+        types = Lists.newArrayList(proj.getAllTypes())
+        context.close()
+
+        GParsExecutorsPool.withPool(8) {
+            types.eachParallel { Type type ->
+                context.open()
+                categorize(type, "Ca")
+                context.close()
+            }
         }
     }
 

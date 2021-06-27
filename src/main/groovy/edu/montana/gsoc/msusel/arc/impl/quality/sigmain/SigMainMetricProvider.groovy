@@ -74,15 +74,15 @@ class SigMainMetricProvider extends AbstractMetricProvider {
 
     void registerMetrics() {
         // basic metrics
-        registrar.registerPrimary(new Volume())
-        registrar.registerPrimary(new Duplication())
-        registrar.registerPrimary(new UnitComplexity())
-        registrar.registerPrimary(new UnitSize())
-        registrar.registerPrimary(new UnitInterfacing())
-        registrar.registerPrimary(new ModuleCoupling())
-        registrar.registerPrimary(new ComponentBalance())
-        registrar.registerPrimary(new ComponentIndependence())
-        registrar.registerPrimary(new ComponentEntanglement())
+        registrar.registerPrimary(new Volume(context))
+        registrar.registerPrimary(new Duplication(context))
+        registrar.registerPrimary(new UnitComplexity(context))
+        registrar.registerPrimary(new UnitSize(context))
+        registrar.registerPrimary(new UnitInterfacing(context))
+        registrar.registerPrimary(new ModuleCoupling(context))
+        registrar.registerPrimary(new ComponentBalance(context))
+        registrar.registerPrimary(new ComponentIndependence(context))
+        registrar.registerPrimary(new ComponentEntanglement(context))
 
         // quality characteristics
         registrar.registerSecondary(new AnalyzabilityEvaluator())

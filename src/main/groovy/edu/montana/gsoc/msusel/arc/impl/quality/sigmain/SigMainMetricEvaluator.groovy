@@ -29,7 +29,9 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 import com.google.common.collect.HashBasedTable
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.*
+import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
+import edu.montana.gsoc.msusel.metrics.annotations.MetricDefinition
 import org.apache.commons.lang3.tuple.Pair
 
 abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator implements Rateable {
@@ -38,8 +40,18 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     protected Table<Integer, RiskCategory, Range<Double>> ratingTable = HashBasedTable.create()
     protected Map<RiskCategory, Pair<Double, Double>> riskMap = [:]
 
+    SigMainMetricEvaluator(ArcContext context) {
+        super(context)
+    }
+
     def measureValue(Measurable node) {
         if (node instanceof Project) {
+            context.open()
+            boolean hasVal = node.hasValueFor((String) "${repo.getRepoKey()}:${getMetricName()}.LOW")
+            context.close()
+            if (hasVal)
+                return
+
             profile[RiskCategory.LOW] = 0.0d
             profile[RiskCategory.MODERATE] = 0.0d
             profile[RiskCategory.HIGH] = 0.0d
@@ -68,8 +80,8 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     }
 
     void categorize(Component comp, String handle) {
-        double size = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
-        double value = comp.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:${handle}")
+        double size = comp.getValueFor((String) "${MetricsConstants.METRICS_REPO_NAME}:SLOC")
+        double value = comp.getValueFor((String) "${MetricsConstants.METRICS_REPO_NAME}:${handle}")
 
         boolean found = false
 
