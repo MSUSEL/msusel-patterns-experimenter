@@ -88,20 +88,22 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
                 if (ca > 0.0d) {
                     context.open()
                     String nsName = ns.getFullName()
-                    List<Type> types = ns.getAllTypes()
+                    List<Type> types = Lists.newArrayList(ns.getAllTypes())
                     context.close()
 
-                    types.eachParallel { Type type ->
-                        context.open()
-                        double typeCa = it.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
-                        if (typeCa > 0.0d) {
-                            Set<String> set = findCouplings(type, nsName)
-                            double size = it.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
-                            if (set.isEmpty()) {
-                                hiddenSize.addAndGet(size)
+                    GParsPool.withPool(8) {
+                        types.eachParallel { Type type ->
+                            context.open()
+                            double typeCa = type.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
+                            if (typeCa > 0.0d) {
+                                Set<String> set = findCouplings(type, nsName)
+                                double size = type.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
+                                if (set.isEmpty()) {
+                                    hiddenSize.addAndGet(size)
+                                }
                             }
+                            context.close()
                         }
-                        context.close()
                     }
                 }
             }

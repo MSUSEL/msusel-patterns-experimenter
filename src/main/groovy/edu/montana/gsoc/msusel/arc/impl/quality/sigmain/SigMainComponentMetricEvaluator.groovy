@@ -43,6 +43,10 @@ abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implement
         this.context = context
     }
 
+    def measure(Measurable node) {
+        measureValue(node)
+    }
+
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {

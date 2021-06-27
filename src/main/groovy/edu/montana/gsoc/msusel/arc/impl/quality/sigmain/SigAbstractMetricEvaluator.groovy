@@ -26,6 +26,7 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
+import edu.isu.isuese.datamodel.Measurable
 import edu.isu.isuese.datamodel.Metric
 import edu.isu.isuese.datamodel.MetricRepository
 import edu.montana.gsoc.msusel.arc.ArcContext
@@ -38,6 +39,10 @@ abstract class SigAbstractMetricEvaluator extends MetricEvaluator {
 
     SigAbstractMetricEvaluator(ArcContext context) {
         this.context = context
+    }
+
+    def measure(Measurable node) {
+        measureValue(node)
     }
 
     void toMetric(MetricRepository repository, List<String> levels) {

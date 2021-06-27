@@ -31,6 +31,8 @@ import com.google.common.collect.Maps
 import com.google.common.collect.Sets
 import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
+import edu.isu.isuese.datamodel.Measurable
+import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.detstrat.GraphUtils
@@ -66,6 +68,19 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
     ComponentEntanglement(ArcContext context) {
         super(context)
+    }
+
+    @Override
+    def measureValue(Measurable node) {
+        if (node instanceof Project) {
+            Project proj = node as Project
+
+            double value = evaluate(proj)
+
+            context.open()
+            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
+            context.close()
+        }
     }
 
     @Override
