@@ -42,7 +42,6 @@ import edu.isu.isuese.detstrat.impl.Node
 import edu.isu.isuese.detstrat.impl.Relationship
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
-import groovyx.gpars.GParsPool
 
 /**
  * @author Isaac Griffith
@@ -121,61 +120,61 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
         context.close()
 
-        GParsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
-                context.open()
-                if (!ns.getName().isEmpty()) {
-                    Node node = GraphElementFactory.getInstance().createNode(ns)
-                    nsMap.put(ns, node)
-                    graph.addNode(node)
-                }
-                context.close()
+//        GParsPool.withPool(8) {
+        namespaces.each { Namespace ns ->
+            context.open()
+            if (!ns.getName().isEmpty()) {
+                Node node = GraphElementFactory.getInstance().createNode(ns)
+                nsMap.put(ns, node)
+                graph.addNode(node)
             }
+            context.close()
         }
+//        }
 
-        GParsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
-                context.open()
-                Node nsNode = nsMap.get(ns)
-                Set<Namespace> inNs = Sets.newHashSet()
-                Set<Namespace> outNs = Sets.newHashSet()
+//        GParsPool.withPool(8) {
+        namespaces.each { Namespace ns ->
+            context.open()
+            Node nsNode = nsMap.get(ns)
+            Set<Namespace> inNs = Sets.newHashSet()
+            Set<Namespace> outNs = Sets.newHashSet()
 
-                if (!ns.getName().isEmpty()) {
-                    ns.getAllTypes().each { type ->
-                        // incoming
-                        inNs += type.getRealizedBy()*.getParentNamespace()
-                        inNs += type.getGeneralizes()*.getParentNamespace()
-                        inNs += type.getUseFrom()*.getParentNamespace()
-                        inNs += type.getAssociatedFrom()*.getParentNamespace()
-                        inNs += type.getAggregatedFrom()*.getParentNamespace()
-                        inNs += type.getComposedFrom()*.getParentNamespace()
+            if (!ns.getName().isEmpty()) {
+                ns.getAllTypes().each { type ->
+                    // incoming
+                    inNs += type.getRealizedBy()*.getParentNamespace()
+                    inNs += type.getGeneralizes()*.getParentNamespace()
+                    inNs += type.getUseFrom()*.getParentNamespace()
+                    inNs += type.getAssociatedFrom()*.getParentNamespace()
+                    inNs += type.getAggregatedFrom()*.getParentNamespace()
+                    inNs += type.getComposedFrom()*.getParentNamespace()
 
-                        inNs.remove(ns)
+                    inNs.remove(ns)
 
-                        // outgoing
-                        outNs += type.getRealizes()*.getParentNamespace()
-                        outNs += type.getGeneralizedBy()*.getParentNamespace()
-                        outNs += type.getUseTo()*.getParentNamespace()
-                        outNs += type.getAssociatedTo()*.getParentNamespace()
-                        outNs += type.getAggregatedTo()*.getParentNamespace()
-                        outNs += type.getComposedTo()*.getParentNamespace()
+                    // outgoing
+                    outNs += type.getRealizes()*.getParentNamespace()
+                    outNs += type.getGeneralizedBy()*.getParentNamespace()
+                    outNs += type.getUseTo()*.getParentNamespace()
+                    outNs += type.getAssociatedTo()*.getParentNamespace()
+                    outNs += type.getAggregatedTo()*.getParentNamespace()
+                    outNs += type.getComposedTo()*.getParentNamespace()
 
-                        outNs.remove(ns)
-                    }
+                    outNs.remove(ns)
                 }
-
-                inNs.each {
-                    Node other = nsMap.get(it)
-                    if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
-                        graph.addEdge(nsNode, other, new NamespaceRelation())
-                }
-                outNs.each {
-                    Node other = nsMap.get(it)
-                    if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
-                        graph.addEdge(other, nsNode, new NamespaceRelation())
-                }
-                context.close()
             }
+
+            inNs.each {
+                Node other = nsMap.get(it)
+                if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
+                    graph.addEdge(nsNode, other, new NamespaceRelation())
+            }
+            outNs.each {
+                Node other = nsMap.get(it)
+                if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
+                    graph.addEdge(other, nsNode, new NamespaceRelation())
+            }
+            context.close()
         }
+//        }
     }
 }
