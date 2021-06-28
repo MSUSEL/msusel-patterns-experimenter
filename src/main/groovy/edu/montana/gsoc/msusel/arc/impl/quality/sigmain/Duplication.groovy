@@ -67,7 +67,7 @@ class Duplication extends SigAbstractMetricEvaluator {
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             context.open()
-            boolean hasVal = Measure.hasValueFor(repo.getRepoKey(), "sigDuplication.RAW", node)
+            boolean hasVal = node.hasValueFor(repo.getRepoKey() + ":" + "sigDuplication.RAW")
             context.close()
             if (hasVal)
                 return

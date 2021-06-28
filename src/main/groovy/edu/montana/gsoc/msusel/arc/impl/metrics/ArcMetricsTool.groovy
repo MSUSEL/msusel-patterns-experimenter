@@ -192,7 +192,8 @@ class ArcMetricsTool {
         evaluatorList.each {metricEvaluator ->
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
             withDb {
-                hasAll = hasAll && proj.hasValueFor((String) "${metricEvaluator.getRepo().getRepoKey()}:${mdef.primaryHandle()}")
+                println "Metric Key: " + metricEvaluator.getRepo().getRepoKey() + ":" + mdef.primaryHandle()
+                hasAll = hasAll && proj.hasValueFor(metricEvaluator.getRepo().getRepoKey() + ":" + mdef.primaryHandle())
             }
         }
 

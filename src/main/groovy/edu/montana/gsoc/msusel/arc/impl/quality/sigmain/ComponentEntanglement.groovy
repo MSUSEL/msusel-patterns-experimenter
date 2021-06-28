@@ -109,7 +109,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     private void createGraph(Project proj) {
-        Map<Namespace, Node> nsMap = Maps.newConcurrentMap()
+        Map<Namespace, Node> nsMap = Maps.newHashMap()
 
         graph = NetworkBuilder.directed()
                 .allowsParallelEdges(false)

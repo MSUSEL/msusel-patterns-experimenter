@@ -47,7 +47,7 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             context.open()
-            boolean hasVal = Measure.hasValueFor(repo.getRepoKey(), getMetricName() + ".LOW", node)
+            boolean hasVal = node.hasValueFor(repo.getRepoKey() + ":" + getMetricName() + ".LOW")
             context.close()
             if (hasVal)
                 return
