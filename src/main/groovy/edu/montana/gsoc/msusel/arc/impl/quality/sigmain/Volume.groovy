@@ -59,7 +59,7 @@ class Volume extends SigAbstractMetricEvaluator implements Rateable {
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             context.open()
-            boolean hasVal = Measure.valueFor(repo.getRepoKey(), "sigVolume.RAW", node) > 0
+            boolean hasVal = Measure.hasValueFor(repo.getRepoKey(), "sigVolume.RAW", node)
             context.close()
 
             if (hasVal)

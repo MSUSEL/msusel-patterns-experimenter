@@ -51,7 +51,7 @@ abstract class SigMainComponentMetricEvaluator extends MetricEvaluator implement
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             context.open()
-            boolean hasVal = Measure.valueFor(repo.getRepoKey(), getMetricName() + ".RAW", node) > 0
+            boolean hasVal = Measure.hasValueFor(repo.getRepoKey(), getMetricName() + ".RAW", node)
             context.close()
             if (hasVal)
                 return
