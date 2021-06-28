@@ -67,9 +67,8 @@ class UnitComplexity extends SigMainMetricEvaluator {
     }
 
     def evaluate(Project proj) {
-        List<Method> methods = []
         context.open()
-        methods = Lists.newArrayList(proj.getAllMethods())
+        List<Method> methods = Lists.newArrayList(proj.getAllMethods())
         context.close()
 
         GParsExecutorsPool.withPool(8) {

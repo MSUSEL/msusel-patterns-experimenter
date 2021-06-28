@@ -63,10 +63,12 @@ abstract class SigMainMetricEvaluator extends SigAbstractMetricEvaluator impleme
             double sysSize = profile.values().sum()
             normalize(sysSize)
 
+            context.open()
             Measure.of("${repo.getRepoKey()}:${getMetricName()}.LOW").on(node).withValue(profile[RiskCategory.LOW])
             Measure.of("${repo.getRepoKey()}:${getMetricName()}.MOD").on(node).withValue(profile[RiskCategory.MODERATE])
             Measure.of("${repo.getRepoKey()}:${getMetricName()}.HIGH").on(node).withValue(profile[RiskCategory.HIGH])
             Measure.of("${repo.getRepoKey()}:${getMetricName()}.VHIGH").on(node).withValue(profile[RiskCategory.VERY_HIGH])
+            context.close()
         }
     }
 
