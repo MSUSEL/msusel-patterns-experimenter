@@ -99,7 +99,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
     List<Double> createSizesList(Project proj) {
         List<Double> sizes = Lists.newCopyOnWriteArrayList()
         context.open()
-        List<Namespace> namespaces = proj.getNamespaces()
+        List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
         context.close()
 
         GParsPool.withPool(8) {
