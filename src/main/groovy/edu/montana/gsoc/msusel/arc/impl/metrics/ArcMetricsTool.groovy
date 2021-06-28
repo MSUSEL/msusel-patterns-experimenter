@@ -189,10 +189,9 @@ class ArcMetricsTool {
 
     private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
         boolean hasAll = true
-        evaluatorList.each {metricEvaluator ->
+        registrar.getCategoryEvaluators("all").each {metricEvaluator ->
             MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
             withDb {
-                println "Metric Key: " + metricEvaluator.getRepo().getRepoKey() + ":" + mdef.primaryHandle()
                 hasAll = hasAll && proj.hasValueFor(metricEvaluator.getRepo().getRepoKey() + ":" + mdef.primaryHandle())
             }
         }

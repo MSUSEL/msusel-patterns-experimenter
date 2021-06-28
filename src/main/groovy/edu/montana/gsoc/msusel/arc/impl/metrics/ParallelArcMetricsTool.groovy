@@ -185,16 +185,27 @@ class ParallelArcMetricsTool {
     }
 
     private void streamAndMeasureProject(Project proj, List<MetricEvaluator> evaluatorList, boolean measureMethods) {
-        streamAndMeasureNamespaces(proj, evaluatorList, measureMethods)
-        streamAndMeasureFiles(proj, evaluatorList)
-        streamAndMeasureModules(proj, evaluatorList)
+        boolean hasAll = true
+        evaluatorList.each {metricEvaluator ->
+            MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+            withDb {
+                if (mdef.primaryHandle() != "Ca")
+                    hasAll = hasAll && proj.hasValueFor(metricEvaluator.getRepo().getRepoKey() + ":" + mdef.primaryHandle())
+            }
+        }
 
-        GParsPool.withPool(8) {
-            evaluatorList.eachParallel { metricEvaluator ->
-                MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
-                log.info "Measuring Projects using ${mdef.primaryHandle()}"
-                withDb {
-                    (metricEvaluator as MetricEvaluator).measure(proj)
+        if (!hasAll) {
+            streamAndMeasureNamespaces(proj, evaluatorList, measureMethods)
+            streamAndMeasureFiles(proj, evaluatorList)
+            streamAndMeasureModules(proj, evaluatorList)
+
+            GParsPool.withPool(8) {
+                evaluatorList.eachParallel { metricEvaluator ->
+                    MetricDefinition mdef = metricEvaluator.getClass().getAnnotation(MetricDefinition.class)
+                    log.info "Measuring Projects using ${mdef.primaryHandle()}"
+                    withDb {
+                        (metricEvaluator as MetricEvaluator).measure(proj)
+                    }
                 }
             }
         }
