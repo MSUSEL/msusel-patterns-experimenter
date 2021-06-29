@@ -59,18 +59,18 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         super(context)
     }
 
-    @Override
-    def measureValue(Measurable node) {
-        if (node instanceof Project) {
-            Project proj = node as Project
-
-            double value = evaluate(proj)
-
-            context.open()
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
-            context.close()
-        }
-    }
+//    @Override
+//    def measureValue(Measurable node) {
+//        if (node instanceof Project) {
+//            Project proj = node as Project
+//
+//            double value = evaluate(proj)
+//
+//            context.open()
+//            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
+//            context.close()
+//        }
+//    }
 
     @Override
     protected double evaluate(Project proj) {
