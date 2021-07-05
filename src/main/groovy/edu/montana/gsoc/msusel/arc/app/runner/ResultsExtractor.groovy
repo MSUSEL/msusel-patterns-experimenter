@@ -113,7 +113,7 @@ class ResultsExtractor {
                 log.info "Measure: $measure"
                 List<Double> vals = []
                 projects.each { proj ->
-                    vals << (proj as Project).getMeasureValueByName(measure)
+                    vals << (proj as Project).getValueFor(measure)
                 }
 
                 double diff = vals[-1]

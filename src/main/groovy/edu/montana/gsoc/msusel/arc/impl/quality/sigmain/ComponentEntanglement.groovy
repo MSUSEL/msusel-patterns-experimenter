@@ -31,8 +31,6 @@ import com.google.common.collect.Maps
 import com.google.common.collect.Sets
 import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
-import edu.isu.isuese.datamodel.Measurable
-import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.detstrat.GraphUtils

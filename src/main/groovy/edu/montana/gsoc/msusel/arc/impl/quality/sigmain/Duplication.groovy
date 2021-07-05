@@ -28,9 +28,9 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
+import com.google.common.util.concurrent.AtomicDouble
 import edu.isu.isuese.datamodel.*
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
@@ -59,7 +59,7 @@ import java.nio.charset.MalformedInputException
 @Log4j2
 class Duplication extends SigAbstractMetricEvaluator {
 
-    double totalLines
+    AtomicDouble totalLines
     Set<String> dupMethods
 
     Duplication(ArcContext context) {
@@ -69,6 +69,16 @@ class Duplication extends SigAbstractMetricEvaluator {
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
+            double dupPercent = newApproach(node as Project)
+
+            context.open()
+            Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
+            context.close()
+        }
+    }
+
+    def oldMeasureValue(Measurable node) {
+        if (node instanceof Project) {
             dupMethods = Sets.newConcurrentHashSet()
 //            context.open()
 //            boolean hasVal = node.hasValueFor(repo.getRepoKey() + ":" + "sigDuplication.RAW")
@@ -76,22 +86,22 @@ class Duplication extends SigAbstractMetricEvaluator {
 //            if (hasVal)
 //                return
 
-            totalLines = 0
+            totalLines = new AtomicDouble(0)
             Project proj = node as Project
 
             context.open()
             List<File> srcFiles = Lists.newArrayList(proj.getFilesByType(FileType.SOURCE))
             context.close()
 
-            double dupLines = 0.0
+            AtomicDouble dupLines = new AtomicDouble(0)
 
             int f = 1
             int numFiles = srcFiles.size()
             GParsExecutorsPool.withPool(8) {
-                srcFiles.each { File source ->
+                srcFiles.eachParallel { File source ->
                     log.info "ScanSelf File ${f++} / ${numFiles}"
                     context.open()
-                    scanSelf(source)
+                    dupLines.addAndGet(scanSelf(source))
                     context.close()
                 }
             }
@@ -103,30 +113,32 @@ class Duplication extends SigAbstractMetricEvaluator {
                 }
             }
 
-            GParsExecutorsPool.withPool(8) {
-                int p = 1
-                int numPairs = pairs.size()
-                pairs.each { Pair<Integer, Integer> pair ->
-                    log.info "Scanning pair ${p++} / ${numPairs}"
-                    File source = srcFiles.get(pair.getLeft())
-                    File target = srcFiles.get(pair.getRight())
-                    context.open()
-                    scanOther(source, target)
-                    context.close()
-                }
-            }
+//            GParsExecutorsPool.withPool(8) {
+//                int p = 1
+//                int numPairs = pairs.size()
+//                pairs.eachParallel { Pair<Integer, Integer> pair ->
+//                    log.info "Scanning pair ${p++} / ${numPairs}"
+//                    File source = srcFiles.get(pair.getLeft())
+//                    File target = srcFiles.get(pair.getRight())
+//                    context.open()
+//                    dupLines.addAndGet(scanOther(source, target))
+//                    context.close()
+//                }
+//            }
 
-            context.open()
-            dupMethods.each { String key ->
-                Method m = Method.findFirst("compKey = ?", key)
-                if (m != null) {
-                    dupLines += m.getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC")
-                }
-            }
-            totalLines = node.getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC")
-            context.close()
+//            context.open()
+//            dupMethods.each { String key ->
+//                Method m = Method.findFirst("compKey = ?", key)
+//                if (m != null) {
+//                    dupLines += m.getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC")
+//                }
+//            }
+//            totalLines = node.getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC")
+//            context.close()
 
-            double dupPercent = (dupLines / totalLines) * 100
+            println "DupLines: ${dupLines.get()}"
+            println "TotalLines: ${totalLines.get()}"
+            double dupPercent = (dupLines.get() / totalLines.get()) * 100
 
             context.open()
             Measure.of("${repo.getRepoKey()}:sigDuplication.RAW").on(node).withValue(dupPercent)
@@ -142,6 +154,8 @@ class Duplication extends SigAbstractMetricEvaluator {
 
         int dup = 0
 
+        totalLines.addAndGet(sanitize(f1.text).split("\n").size())
+
         List<Method> methods = file.getAllMethods()
         for (int i = 0; i < methods.size(); i++) {
             int before
@@ -152,15 +166,18 @@ class Duplication extends SigAbstractMetricEvaluator {
 
             if (size <= methods[i].getStart() || size <= methods[i].getEnd() || methods[i].getEnd() - methods[i].getStart() < 6)
                 continue
+
+            String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
+            totalLines.addAndGet(m1Text.split("\n").size())
+
             if (dupMethods.contains(methods[i].getCompKey()))
                 continue
 
-            String m1Text = sanitize(f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n"))
-//            totalLines += m1Text.split("\n").size()
 
             try {
 
                 before = m1Text.split("\n").size()
+                totalLines.addAndGet(before)
                 mod = new String(m1Text)
                 mod = processText(m1Text.split("\n").toList(), mod)
                 after = mod.split("\n").size()
@@ -175,14 +192,16 @@ class Duplication extends SigAbstractMetricEvaluator {
             for (int j = i + 1; j < methods.size(); j++) {
                 try {
                     size = f1.text.split("\n").size()
-                    if (size <= methods[j].getStart() || size <= methods[j].getEnd() || methods[i].getEnd() - methods[i].getStart() < 6)
-                        continue
-                    if (dupMethods.contains(methods[j].getCompKey()))
+                    if (size <= methods[j].getStart() || size <= methods[j].getEnd() || methods[i].getEnd() - methods[i].getStart() < 6 || dupMethods.contains(methods[i].getCompKey()))
                         continue
 
                     String m2Text = f1.text.split("\n").toList().subList(methods[i].getStart(), methods[i].getEnd()).join("\n")
                     before = m2Text.split("\n").size()
-//                    totalLines += before
+//                    totalLines.addAndGet(before)
+
+                    if (dupMethods.contains(methods[j].getCompKey()))
+                        continue
+
                     mod = new String(m2Text)
                     mod = processText(m2Text.split("\n").toList(), mod)
                     after = mod.split("\n").size()
@@ -237,11 +256,15 @@ class Duplication extends SigAbstractMetricEvaluator {
                             if (size > m2.getStart() && size > m2.getEnd() && m2.getEnd() - m2.getStart() >= 6 && !dupMethods.contains(m2.getCompKey())) {
                                 String m2Text = sanitize(f2.text.split("\n").toList().subList(m2.getStart(), m2.getEnd()).join("\n"))
                                 int before = m2Text.split("\n").size()
-//                                totalLines += before
+//                                totalLines.addAndGet(before)
                                 String mod = processText(m1Text.split("\n").toList(), m2Text)
                                 int after = mod.split("\n").size()
 
                                 dup += before - after
+
+                                if (dup > 0) {
+                                    dupMethods.add(m2.getCompKey())
+                                }
                             }
                         } catch (IllegalArgumentException | IndexOutOfBoundsException | MalformedInputException ex) {
                             dup += 0
@@ -273,5 +296,101 @@ class Duplication extends SigAbstractMetricEvaluator {
         this.toMetric(repository, ["RAW", "RATING"])
 
         null
+    }
+
+    double newApproach(Project proj) {
+        List<Integer> sizes = []
+        List<Integer> newSizes = []
+
+        context.open()
+        List<File> srcFiles = Lists.newArrayList(proj.getFilesByType(FileType.SOURCE))
+        int size = srcFiles.size() - 1
+        java.io.File temp = createTempFiles(srcFiles, sizes)
+        context.close()
+
+        for (int j = 0; j < size; j++) {
+            log.info "Processing file ${j + 1} / ${size + 1}"
+            processSelf(temp, j)
+
+            int k = j + 1
+            GParsExecutorsPool.withPool(8) {
+                (k..size).eachParallel { Integer ndx ->
+                    processOther(temp, j, ndx)
+                }
+            }
+        }
+
+        for (int j = 0; j <= size; j++) {
+            java.io.File file = new java.io.File(temp, "${j}.java")
+            newSizes << file.text.split("\n").size()
+        }
+
+        deleteTempFiles(temp)
+
+        double total = sizes.sum()
+        double dup = total - newSizes.sum()
+        println "Total Lines: ${total}"
+        println "Dup Lines: ${dup}"
+
+        double dupPercent = (dup / total) * 100
+        println "Dup Percent: ${dupPercent}"
+        return dupPercent
+    }
+
+    private java.io.File createTempFiles(ArrayList<File> srcFiles, List<Integer> sizes) {
+        try {
+            java.io.File temp = new java.io.File("." + java.io.File.separator + ".tmp" + java.io.File.separator)
+            if (temp.exists() && !temp.isDirectory())
+                temp.delete()
+            if (!temp.exists())
+                temp.mkdirs()
+
+            srcFiles.eachWithIndex { File file, int index ->
+                java.io.File write = new java.io.File(temp, "${index}.java")
+                write.text = sanitize(new java.io.File(file.getName()).text)
+                sizes << write.text.split("\n").size()
+            }
+
+            return temp
+        } catch (IOException ex) {
+        }
+
+        return null
+    }
+
+    private def deleteTempFiles(java.io.File temp) {
+        temp.deleteDir()
+    }
+
+    def processOther(java.io.File temp, int index, int other) {
+        java.io.File file = new java.io.File(temp, "${index}.java")
+        java.io.File oFile = new java.io.File(temp, "${other}.java")
+
+        List<String> lines = file.text.split("\n")
+        String otherText = oFile.text
+
+        if (lines.size() >= 6) {
+            for (int i = 0; i < lines.size() - 5; i++) {
+                String toReplace = lines.subList(i, i + 5).join("\n")
+                otherText = otherText.replace(toReplace, "")
+            }
+
+            oFile.text = sanitize(otherText)
+        }
+    }
+
+    def processSelf(java.io.File temp, int index) {
+        java.io.File file = new java.io.File(temp, "${index}.java")
+        List<String> lines = file.text.split("\n")
+        String findIn = new String(file.text)
+
+        for (int i = 0; i < lines.size() - 6; i++) {
+            String toFind = lines.subList(i, i + 6).join("\n")
+            int first = findIn.indexOf(toFind) + toFind.length()
+            String tempString = findIn.substring(first).replace(toFind, "\n")
+            findIn = findIn.substring(0, first) + tempString
+        }
+
+        file.text = sanitize(findIn)
     }
 }
