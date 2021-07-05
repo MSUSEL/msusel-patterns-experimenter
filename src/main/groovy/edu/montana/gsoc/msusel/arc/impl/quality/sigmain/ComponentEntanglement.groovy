@@ -43,7 +43,10 @@ import edu.isu.isuese.detstrat.impl.Node
 import edu.isu.isuese.detstrat.impl.Relationship
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
+
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author Isaac Griffith
@@ -63,25 +66,13 @@ import groovyx.gpars.GParsExecutorsPool
         ),
         references = []
 )
+@Log4j2
 class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
     MutableNetwork<Node, Relationship> graph
 
     ComponentEntanglement(ArcContext context) {
         super(context)
-    }
-
-    @Override
-    def measureValue(Measurable node) {
-        if (node instanceof Project) {
-            Project proj = node as Project
-
-            double value = evaluate(proj)
-
-            context.open()
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
-            context.close()
-        }
     }
 
     @Override
@@ -111,7 +102,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     private void createGraph(Project proj) {
-        Map<Namespace, Node> nsMap = Maps.newHashMap()
+        Map<String, Node> nsMap = Maps.newHashMap()
 
         graph = NetworkBuilder.directed()
                 .allowsParallelEdges(false)
@@ -127,7 +118,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                 context.open()
                 if (!ns.getName().isEmpty()) {
                     Node node = GraphElementFactory.getInstance().createNode(ns)
-                    nsMap.put(ns, node)
+                    nsMap.put(ns.getNsKey(), node)
                     graph.addNode(node)
                 }
                 context.close()
@@ -135,57 +126,61 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         }
 
         GParsExecutorsPool.withPool(8) {
+            AtomicInteger j = new AtomicInteger(1)
             namespaces.eachParallel { Namespace ns ->
                 context.open()
                 Node nsNode = nsMap.get(ns)
                 String nsName = ns.getName()
                 context.close()
-                Set<Namespace> inNs = Sets.newConcurrentHashSet()
-                Set<Namespace> outNs = Sets.newConcurrentHashSet()
+                Set<String> inNs = Sets.newConcurrentHashSet()
+                Set<String> outNs = Sets.newConcurrentHashSet()
 
                 if (!nsName.isEmpty()) {
                     context.open()
                     List<Type> types = Lists.newArrayList(ns.getAllTypes())
                     context.close()
+                    AtomicInteger i = new AtomicInteger(1)
                     GParsExecutorsPool.withPool(8) {
                         types.eachParallel { Type type ->
+                            log.info "processing ns ${j.get()}/${namespaces.size()} type ${i.getAndIncrement()} of ${types.size()}"
                             context.open()
                             // incoming
-                            inNs += type.getRealizedBy()*.getParentNamespace()
-                            inNs += type.getGeneralizes()*.getParentNamespace()
-                            inNs += type.getUseFrom()*.getParentNamespace()
-                            inNs += type.getAssociatedFrom()*.getParentNamespace()
-                            inNs += type.getAggregatedFrom()*.getParentNamespace()
-                            inNs += type.getComposedFrom()*.getParentNamespace()
+                            inNs += type.getRealizedBy()*.getParentNamespace()*.getNsKey()
+                            inNs += type.getGeneralizes()*.getParentNamespace()*.getNsKey()
+                            inNs += type.getUseFrom()*.getParentNamespace()*.getNsKey()
+                            inNs += type.getAssociatedFrom()*.getParentNamespace()*.getNsKey()
+                            inNs += type.getAggregatedFrom()*.getParentNamespace()*.getNsKey()
+                            inNs += type.getComposedFrom()*.getParentNamespace()*.getNsKey()
 
-                            inNs.remove(ns)
+                            inNs.remove(ns.getNsKey())
 
                             // outgoing
-                            outNs += type.getRealizes()*.getParentNamespace()
-                            outNs += type.getGeneralizedBy()*.getParentNamespace()
-                            outNs += type.getUseTo()*.getParentNamespace()
-                            outNs += type.getAssociatedTo()*.getParentNamespace()
-                            outNs += type.getAggregatedTo()*.getParentNamespace()
-                            outNs += type.getComposedTo()*.getParentNamespace()
+                            outNs += type.getRealizes()*.getParentNamespace()*.getNsKey()
+                            outNs += type.getGeneralizedBy()*.getParentNamespace()*.getNsKey()
+                            outNs += type.getUseTo()*.getParentNamespace()*.getNsKey()
+                            outNs += type.getAssociatedTo()*.getParentNamespace()*.getNsKey()
+                            outNs += type.getAggregatedTo()*.getParentNamespace()*.getNsKey()
+                            outNs += type.getComposedTo()*.getParentNamespace()*.getNsKey()
 
-                            outNs.remove(ns)
+                            outNs.remove(ns.getNsKey())
                             context.close()
                         }
                     }
                 }
 
                 context.open()
-                inNs.each {
-                    Node other = nsMap.get(it)
+                inNs.each { key ->
+                    Node other = nsMap.get(key)
                     if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
                         graph.addEdge(nsNode, other, new NamespaceRelation())
                 }
-                outNs.each {
-                    Node other = nsMap.get(it)
+                outNs.each { key ->
+                    Node other = nsMap.get(key)
                     if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
                         graph.addEdge(other, nsNode, new NamespaceRelation())
                 }
                 context.close()
+                j.getAndIncrement()
             }
         }
     }
