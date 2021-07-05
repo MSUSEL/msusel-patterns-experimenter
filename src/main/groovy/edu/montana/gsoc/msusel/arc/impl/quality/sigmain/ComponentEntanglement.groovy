@@ -33,6 +33,7 @@ import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
+import edu.isu.isuese.datamodel.Type
 import edu.isu.isuese.detstrat.GraphUtils
 import edu.isu.isuese.detstrat.impl.GraphElementFactory
 import edu.isu.isuese.detstrat.impl.NamespaceRelation
@@ -40,6 +41,7 @@ import edu.isu.isuese.detstrat.impl.Node
 import edu.isu.isuese.detstrat.impl.Relationship
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovyx.gpars.GParsExecutorsPool
 
 /**
  * @author Isaac Griffith
@@ -105,61 +107,71 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
         context.close()
 
-//        GParsPool.withPool(8) {
-        namespaces.each { Namespace ns ->
-            context.open()
-            if (!ns.getName().isEmpty()) {
-                Node node = GraphElementFactory.getInstance().createNode(ns)
-                nsMap.put(ns, node)
-                graph.addNode(node)
-            }
-            context.close()
-        }
-//        }
-
-//        GParsPool.withPool(8) {
-        namespaces.each { Namespace ns ->
-            context.open()
-            Node nsNode = nsMap.get(ns)
-            Set<Namespace> inNs = Sets.newHashSet()
-            Set<Namespace> outNs = Sets.newHashSet()
-
-            if (!ns.getName().isEmpty()) {
-                ns.getAllTypes().each { type ->
-                    // incoming
-                    inNs += type.getRealizedBy()*.getParentNamespace()
-                    inNs += type.getGeneralizes()*.getParentNamespace()
-                    inNs += type.getUseFrom()*.getParentNamespace()
-                    inNs += type.getAssociatedFrom()*.getParentNamespace()
-                    inNs += type.getAggregatedFrom()*.getParentNamespace()
-                    inNs += type.getComposedFrom()*.getParentNamespace()
-
-                    inNs.remove(ns)
-
-                    // outgoing
-                    outNs += type.getRealizes()*.getParentNamespace()
-                    outNs += type.getGeneralizedBy()*.getParentNamespace()
-                    outNs += type.getUseTo()*.getParentNamespace()
-                    outNs += type.getAssociatedTo()*.getParentNamespace()
-                    outNs += type.getAggregatedTo()*.getParentNamespace()
-                    outNs += type.getComposedTo()*.getParentNamespace()
-
-                    outNs.remove(ns)
+        GParsExecutorsPool.withPool(8) {
+            namespaces.eachParallel { Namespace ns ->
+                context.open()
+                if (!ns.getName().isEmpty()) {
+                    Node node = GraphElementFactory.getInstance().createNode(ns)
+                    nsMap.put(ns, node)
+                    graph.addNode(node)
                 }
+                context.close()
             }
-
-            inNs.each {
-                Node other = nsMap.get(it)
-                if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
-                    graph.addEdge(nsNode, other, new NamespaceRelation())
-            }
-            outNs.each {
-                Node other = nsMap.get(it)
-                if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
-                    graph.addEdge(other, nsNode, new NamespaceRelation())
-            }
-            context.close()
         }
-//        }
+
+        GParsExecutorsPool.withPool(8) {
+            namespaces.eachParallel { Namespace ns ->
+                context.open()
+                Node nsNode = nsMap.get(ns)
+                String nsName = ns.getName()
+                context.close()
+                Set<Namespace> inNs = Sets.newConcurrentHashSet()
+                Set<Namespace> outNs = Sets.newConcurrentHashSet()
+
+                if (!nsName.isEmpty()) {
+                    context.open()
+                    List<Type> types = Lists.newArrayList(ns.getAllTypes())
+                    context.close()
+                    GParsExecutorsPool.withPool(8) {
+                        types.eachParallel { Type type ->
+                            context.open()
+                            // incoming
+                            inNs += type.getRealizedBy()*.getParentNamespace()
+                            inNs += type.getGeneralizes()*.getParentNamespace()
+                            inNs += type.getUseFrom()*.getParentNamespace()
+                            inNs += type.getAssociatedFrom()*.getParentNamespace()
+                            inNs += type.getAggregatedFrom()*.getParentNamespace()
+                            inNs += type.getComposedFrom()*.getParentNamespace()
+
+                            inNs.remove(ns)
+
+                            // outgoing
+                            outNs += type.getRealizes()*.getParentNamespace()
+                            outNs += type.getGeneralizedBy()*.getParentNamespace()
+                            outNs += type.getUseTo()*.getParentNamespace()
+                            outNs += type.getAssociatedTo()*.getParentNamespace()
+                            outNs += type.getAggregatedTo()*.getParentNamespace()
+                            outNs += type.getComposedTo()*.getParentNamespace()
+
+                            outNs.remove(ns)
+                            context.close()
+                        }
+                    }
+                }
+
+                context.open()
+                inNs.each {
+                    Node other = nsMap.get(it)
+                    if (nsNode && other && !graph.hasEdgeConnecting(nsNode, other))
+                        graph.addEdge(nsNode, other, new NamespaceRelation())
+                }
+                outNs.each {
+                    Node other = nsMap.get(it)
+                    if (nsNode && other && !graph.hasEdgeConnecting(other, nsNode))
+                        graph.addEdge(other, nsNode, new NamespaceRelation())
+                }
+                context.close()
+            }
+        }
     }
 }
