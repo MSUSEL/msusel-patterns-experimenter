@@ -27,6 +27,8 @@
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 
 import com.google.common.collect.Lists
+import edu.isu.isuese.datamodel.Measurable
+import edu.isu.isuese.datamodel.Measure
 import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
@@ -59,6 +61,19 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
     }
 
     @Override
+    def measureValue(Measurable node) {
+        if (node instanceof Project) {
+            Project proj = node as Project
+
+            double value = evaluate(proj)
+
+            context.open()
+            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
+            context.close()
+        }
+    }
+
+    @Override
     protected double evaluate(Project proj) {
         List<Double> sizes = createSizesList(proj)
         Collections.sort(sizes)
@@ -70,7 +85,7 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
             giniCoefficient = detemineGiniCoefficient(sizes)
         }
 
-        return 1 - giniCoefficient
+        return giniCoefficient
     }
 
     @Override

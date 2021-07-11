@@ -43,6 +43,7 @@ import edu.isu.isuese.detstrat.impl.Node
 import edu.isu.isuese.detstrat.impl.Relationship
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.metrics.annotations.*
+import groovy.sql.Sql
 import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
 
@@ -76,6 +77,19 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     @Override
+    def measureValue(Measurable node) {
+        if (node instanceof Project) {
+            Project proj = node as Project
+
+            double value = evaluate(proj)
+
+            context.open()
+            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
+            context.close()
+        }
+    }
+
+    @Override
     protected double evaluate(Project proj) {
         // 1. create component graph
         createGraph(proj)
@@ -102,7 +116,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     private void createGraph(Project proj) {
-        Map<String, Node> nsMap = Maps.newHashMap()
+        Map<String, Node> nsMap = Maps.newConcurrentMap()
 
         graph = NetworkBuilder.directed()
                 .allowsParallelEdges(false)
@@ -125,48 +139,31 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
             }
         }
 
-        GParsExecutorsPool.withPool(8) {
-            AtomicInteger j = new AtomicInteger(1)
-            namespaces.eachParallel { Namespace ns ->
+//        GParsExecutorsPool.withPool(8) {
+            int j = 1
+            namespaces.each { Namespace ns ->
+                int index = j++
+                log.info "processing namespace ${index} / ${namespaces.size()}"
                 context.open()
-                Node nsNode = nsMap.get(ns)
+                Node nsNode = nsMap.get(ns.getNsKey())
                 String nsName = ns.getName()
+                int nsid = ns.getId()
                 context.close()
                 Set<String> inNs = Sets.newConcurrentHashSet()
                 Set<String> outNs = Sets.newConcurrentHashSet()
 
                 if (!nsName.isEmpty()) {
+                    // incoming
                     context.open()
-                    List<Type> types = Lists.newArrayList(ns.getAllTypes())
+                    inNs += incomingNamespacesFromNamespace(nsid, index)*.getNsKey()
+
+                    // outgoing
+                    outNs += outgoingNamespacesFromNamespace(nsid, index)*.getNsKey()
                     context.close()
-                    AtomicInteger i = new AtomicInteger(1)
-                    GParsExecutorsPool.withPool(8) {
-                        types.eachParallel { Type type ->
-                            log.info "processing ns ${j.get()}/${namespaces.size()} type ${i.getAndIncrement()} of ${types.size()}"
-                            context.open()
-                            // incoming
-                            inNs += type.getRealizedBy()*.getParentNamespace()*.getNsKey()
-                            inNs += type.getGeneralizes()*.getParentNamespace()*.getNsKey()
-                            inNs += type.getUseFrom()*.getParentNamespace()*.getNsKey()
-                            inNs += type.getAssociatedFrom()*.getParentNamespace()*.getNsKey()
-                            inNs += type.getAggregatedFrom()*.getParentNamespace()*.getNsKey()
-                            inNs += type.getComposedFrom()*.getParentNamespace()*.getNsKey()
-
-                            inNs.remove(ns.getNsKey())
-
-                            // outgoing
-                            outNs += type.getRealizes()*.getParentNamespace()*.getNsKey()
-                            outNs += type.getGeneralizedBy()*.getParentNamespace()*.getNsKey()
-                            outNs += type.getUseTo()*.getParentNamespace()*.getNsKey()
-                            outNs += type.getAssociatedTo()*.getParentNamespace()*.getNsKey()
-                            outNs += type.getAggregatedTo()*.getParentNamespace()*.getNsKey()
-                            outNs += type.getComposedTo()*.getParentNamespace()*.getNsKey()
-
-                            outNs.remove(ns.getNsKey())
-                            context.close()
-                        }
-                    }
                 }
+
+                inNs.remove(ns.getNsKey())
+                outNs.remove(ns.getNsKey())
 
                 context.open()
                 inNs.each { key ->
@@ -180,8 +177,90 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                         graph.addEdge(other, nsNode, new NamespaceRelation())
                 }
                 context.close()
-                j.getAndIncrement()
+
+//                dropViews(index)
             }
-        }
+//        }
+    }
+
+    List<Type> outgoingTypesFromType(String compKey) {
+        def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        sql.execute("""\
+create or replace view outgoingRefKeys as
+select distinct y.refKey
+from types as t
+inner join refs as r on r.refKey = ${compKey}
+inner join relations on r.id = relations.to_id
+inner join refs as y on y.id = relations.from_id;
+""")
+        List<Type> types = Type.findBySQL("select types.* from types inner join outgoingRefKeys on types.compKey = outgoingRefKeys.refKey")
+        return types
+    }
+
+    List<Type> incomingTypesFromType(String compKey) {
+        def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        sql.execute("""\
+create or replace view incomingRefKeys as
+select distinct y.refKey
+from types as t
+inner join refs as r on r.refKey = ${compKey}
+inner join relations on r.id = relations.from_id
+inner join refs as y on y.id = relations.to_id;
+""")
+        List<Type> types = Type.findBySQL("select types.* from types inner join incomingRefKeys on types.compKey = incomingRefKeys.refKey")
+        return types
+    }
+
+    List<Namespace> outgoingNamespacesFromNamespace(int nsid, int index) {
+        def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        sql.execute("""\
+create or replace view outgoingNsRefs${index} as
+select distinct ns.id as nsID, y.refKey
+from namespaces as ns
+    inner join types as t on t.namespace_id = ${nsid}
+    inner join refs as r on t.compKey = r.refKey
+    inner join relations on r.id = relations.from_id
+    inner join refs as y on y.id = relations.to_id;
+""")
+        sql.close()
+
+        List<Namespace> namespaces = Namespace.findBySQL("""\
+select distinct ns.*
+from namespaces as ns
+inner join types on types.namespace_id = ns.id
+inner join outgoingNsRefs${index} on types.compKey = outgoingNsRefs${index}.refKey
+where ns.id != ${nsid};
+""")
+        return namespaces
+    }
+
+    List<Namespace> incomingNamespacesFromNamespace(int nsid, int index) {
+        def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        sql.execute("""\
+create or replace view incomingNsRefs${index} as
+select distinct ns.id as nsID, y.refKey
+from namespaces as ns
+    inner join types as t on t.namespace_id = ${nsid}
+    inner join refs as r on t.compKey = r.refKey
+    inner join relations on r.id = relations.to_id
+    inner join refs as y on y.id = relations.from_id;
+""")
+        sql.close()
+
+        List<Namespace> namespaces = Namespace.findBySQL("""\
+select distinct ns.*
+from namespaces as ns
+inner join types on types.namespace_id = ns.id
+inner join incomingNsRefs${index} on types.compKey = incomingNsRefs${index}.refKey
+where ns.id != ${nsid};
+""")
+        return namespaces
+    }
+
+    void dropViews(int index) {
+        def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        sql.execute("drop view outgoingNsRefs${index}")
+        sql.execute("drop view incomingNsRefs${index}")
+        sql.close()
     }
 }

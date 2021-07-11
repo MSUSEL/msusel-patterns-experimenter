@@ -69,12 +69,12 @@ class Duplication extends SigAbstractMetricEvaluator {
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
-            context.open()
-            boolean hasVal = node.hasValueFor(repo.getRepoKey() + ":sigDuplication.RAW")
-            context.close()
-
-            if (hasVal)
-                return
+//            context.open()
+//            boolean hasVal = node.hasValueFor(repo.getRepoKey() + ":sigDuplication.RAW")
+//            context.close()
+//
+//            if (hasVal)
+//                return
 
             double dupPercent = newApproach(node as Project)
 
@@ -316,7 +316,7 @@ class Duplication extends SigAbstractMetricEvaluator {
         context.close()
 
         for (int j = 0; j < size; j++) {
-            log.info "Processing file ${j + 1} / ${size + 1}"
+            log.info "Processing file ${j + 1} / ${size}"
             processSelf(temp, j)
 
             int k = j + 1
