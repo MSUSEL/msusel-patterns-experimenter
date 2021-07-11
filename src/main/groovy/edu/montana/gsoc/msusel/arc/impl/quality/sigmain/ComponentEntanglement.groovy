@@ -149,8 +149,8 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                 String nsName = ns.getName()
                 int nsid = ns.getId()
                 context.close()
-                Set<String> inNs = Sets.newConcurrentHashSet()
-                Set<String> outNs = Sets.newConcurrentHashSet()
+                Set<String> inNs = Sets.newHashSet()
+                Set<String> outNs = Sets.newHashSet()
 
                 if (!nsName.isEmpty()) {
                     // incoming
