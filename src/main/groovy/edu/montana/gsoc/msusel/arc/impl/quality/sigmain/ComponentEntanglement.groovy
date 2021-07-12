@@ -31,11 +31,7 @@ import com.google.common.collect.Maps
 import com.google.common.collect.Sets
 import com.google.common.graph.MutableNetwork
 import com.google.common.graph.NetworkBuilder
-import edu.isu.isuese.datamodel.Measurable
-import edu.isu.isuese.datamodel.Measure
-import edu.isu.isuese.datamodel.Namespace
-import edu.isu.isuese.datamodel.Project
-import edu.isu.isuese.datamodel.Type
+import edu.isu.isuese.datamodel.*
 import edu.isu.isuese.detstrat.GraphUtils
 import edu.isu.isuese.detstrat.impl.GraphElementFactory
 import edu.isu.isuese.detstrat.impl.NamespaceRelation
@@ -46,8 +42,6 @@ import edu.montana.gsoc.msusel.metrics.annotations.*
 import groovy.sql.Sql
 import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
-
-import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author Isaac Griffith
@@ -93,6 +87,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     protected double evaluate(Project proj) {
         // 1. create component graph
         createGraph(proj)
+        log.info "Done creating graph"
 
         // 2. calc communication density
         double commDensity = ((double) graph.nodes().size()) / graph.edges().size()
@@ -101,7 +96,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         if (graph.edges().size() == 0) {
             return 1.0
         } else {
-            GraphUtils.getInstance().markCycles(graph)
+            GraphUtils.getInstance().markCycles2(graph)
             double numCyclic = graph.edges().findAll { it.cyclic }.size()
             double commViolationRatio = numCyclic / graph.edges().size()
 
@@ -116,7 +111,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     private void createGraph(Project proj) {
-        Map<String, Node> nsMap = Maps.newConcurrentMap()
+        Map<String, Node> nsMap = Maps.newHashMap()
 
         graph = NetworkBuilder.directed()
                 .allowsParallelEdges(false)
@@ -128,7 +123,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         context.close()
 
         GParsExecutorsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
+            namespaces.each { Namespace ns ->
                 context.open()
                 if (!ns.getName().isEmpty()) {
                     Node node = GraphElementFactory.getInstance().createNode(ns)
@@ -155,10 +150,10 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                 if (!nsName.isEmpty()) {
                     // incoming
                     context.open()
-                    inNs += incomingNamespacesFromNamespace(nsid, index)*.getNsKey()
+                    inNs += incomingNamespacesFromNamespace(nsid, index)
 
                     // outgoing
-                    outNs += outgoingNamespacesFromNamespace(nsid, index)*.getNsKey()
+                    outNs += outgoingNamespacesFromNamespace(nsid, index)
                     context.close()
                 }
 
@@ -211,10 +206,10 @@ inner join refs as y on y.id = relations.to_id;
         return types
     }
 
-    List<Namespace> outgoingNamespacesFromNamespace(int nsid, int index) {
+    List<String> outgoingNamespacesFromNamespace(int nsid, int index) {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
         sql.execute("""\
-create or replace view outgoingNsRefs${index} as
+create or replace view outgoingNsRefs as
 select distinct ns.id as nsID, y.refKey
 from namespaces as ns
     inner join types as t on t.namespace_id = ${nsid}
@@ -222,22 +217,23 @@ from namespaces as ns
     inner join relations on r.id = relations.from_id
     inner join refs as y on y.id = relations.to_id;
 """)
-        sql.close()
 
-        List<Namespace> namespaces = Namespace.findBySQL("""\
-select distinct ns.*
+        sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
+        List<String> namespaces = sql.rows("""\
+select distinct ns.nsKey
 from namespaces as ns
 inner join types on types.namespace_id = ns.id
-inner join outgoingNsRefs${index} on types.compKey = outgoingNsRefs${index}.refKey
+inner join outgoingNsRefs on types.compKey = outgoingNsRefs.refKey
 where ns.id != ${nsid};
-""")
+""").collect {it.nsKey }
+        sql.close()
         return namespaces
     }
 
-    List<Namespace> incomingNamespacesFromNamespace(int nsid, int index) {
+    List<String> incomingNamespacesFromNamespace(int nsid, int index) {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
         sql.execute("""\
-create or replace view incomingNsRefs${index} as
+create or replace view incomingNsRefs as
 select distinct ns.id as nsID, y.refKey
 from namespaces as ns
     inner join types as t on t.namespace_id = ${nsid}
@@ -245,22 +241,20 @@ from namespaces as ns
     inner join relations on r.id = relations.to_id
     inner join refs as y on y.id = relations.from_id;
 """)
-        sql.close()
-
-        List<Namespace> namespaces = Namespace.findBySQL("""\
-select distinct ns.*
+        List<String> namespaces = sql.rows("""\
+select distinct ns.nsKey
 from namespaces as ns
 inner join types on types.namespace_id = ns.id
-inner join incomingNsRefs${index} on types.compKey = incomingNsRefs${index}.refKey
+inner join incomingNsRefs on types.compKey = incomingNsRefs.refKey
 where ns.id != ${nsid};
-""")
+""").collect { it.nsKey }
+        sql.close()
         return namespaces
     }
 
     void dropViews(int index) {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
-        sql.execute("drop view outgoingNsRefs${index}")
-        sql.execute("drop view incomingNsRefs${index}")
+        sql.execute("drop view outgoingNsRefs${index};drop view incomingNsRefs${index};")
         sql.close()
     }
 }
