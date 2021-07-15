@@ -24,18 +24,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.quality.sigmain;
+package edu.montana.gsoc.msusel.arc.app.runner.sigrating
 
-public interface SigMainConstants {
-    String SIGMAIN_CMD_NAME = "SigMain";
-    String SIGMAIN_REPO_KEY = "sig-metrics";
-    String SIGMAIN_REPO_NAME = "SigMain Metrics";
-    String SIGMAIN_TOOL_NAME = "Sig Maintainability Model";
+import edu.isu.isuese.datamodel.Project
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrateConstants
+import edu.montana.gsoc.msusel.arc.impl.quality.sigmain.SigMainConstants
 
-    String SIGCAL_CMD_NAME = "SigCal";
-    String SIGCAL_REPO_KEY = "sig-calibration";
-    String SIGCAL_REPO_NAME = "SigCal Metrics";
-    String SIGCAL_TOOL_NAME = "Sig Model Calibration";
+class SigRatingPhaseTwo extends WorkFlow {
 
-    String SIGRATE_CMD_NAME = "SigRating";
+    Command sigrate
+
+    SigRatingPhaseTwo(ArcContext context) {
+        super("Sig Rating Phase Two", "Sig Maintainability Model Rating Test - Phase Two", context)
+    }
+
+    @Override
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        sigrate = context.getRegisteredCommand(SigMainConstants.SIGRATE_CMD_NAME)
+    }
+
+    @Override
+    void executeStudy() {
+        context.open()
+        List<Project> projects = []
+        results.rowKeySet().each { row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, SigCalibrateConstants.KEY)))
+        }
+        context.close()
+
+        projects.each {
+            context.project = it
+            runTools()
+        }
+    }
+
+    void runTools() {
+        sigrate.execute(context)
+    }
 }

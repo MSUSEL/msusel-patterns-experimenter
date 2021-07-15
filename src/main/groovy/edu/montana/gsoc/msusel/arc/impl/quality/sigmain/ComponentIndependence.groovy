@@ -29,14 +29,17 @@ package edu.montana.gsoc.msusel.arc.impl.quality.sigmain
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import com.google.common.util.concurrent.AtomicDouble
-import edu.isu.isuese.datamodel.*
+import edu.isu.isuese.datamodel.Measurable
+import edu.isu.isuese.datamodel.Measure
+import edu.isu.isuese.datamodel.Namespace
+import edu.isu.isuese.datamodel.Project
+import edu.isu.isuese.datamodel.Type
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.metrics.annotations.*
 import groovy.sql.Sql
 import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
-import groovyx.gpars.GParsPool
 
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -65,57 +68,48 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         super(context)
     }
 
-//    @Override
-//    def measureValue(Measurable node) {
-//        if (node instanceof Project) {
-//            Project proj = node as Project
-//
-//            double value = evaluate(proj)
-//
-//            context.open()
-//            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
-//            context.close()
-//        }
-//    }
-
     @Override
     protected double evaluate(Project proj) {
-        AtomicDouble hiddenSize = new AtomicDouble(0)
         context.open()
-        List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
+        Set<Namespace> namespaces = Sets.newHashSet(proj.getNamespaces())
         context.close()
 
+        AtomicDouble hiddenSize = new AtomicDouble(0)
         AtomicInteger index = new AtomicInteger(1)
+
         GParsExecutorsPool.withPool(8) {
             namespaces.eachParallel { Namespace ns ->
                 int ndx = index.getAndIncrement()
                 log.info "processing namespace ${ndx} / ${namespaces.size()}"
                 context.open()
-                double ca = ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
                 int nsid = ns.getId()
+                double ca = ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:Ca")
+                String name = ns.getName()
                 context.close()
 
-                List<Type> hiddenTypes = hiddenTypesFromNamespace(nsid, ndx)
+                if (name != null && ca > 0.0) {
+                    Set<Type> hiddenTypes = Sets.newHashSet(hiddenTypesFromNamespace(nsid, ndx))
 //                dropView(ndx)
 
 //                GParsExecutorsPool.withPool(8) {
-                int j = 1
-                hiddenTypes.each { Type type ->
+                    int j = 1
+                    hiddenTypes.each { Type type ->
                         log.info "processing type ${j++} / ${hiddenTypes.size()}"
                         context.open()
                         double size = type.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
                         context.close()
                         hiddenSize.addAndGet(size)
                     }
-//                }
+                }
             }
         }
+//        }
 
         context.open()
         double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
         context.close()
 
-        return (hiddenSize.get() / projSize) * 100
+        return ((projSize - hiddenSize.get()) / projSize) * 100
     }
 
     @Override
@@ -127,20 +121,19 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
         sql.execute("""\
 create or replace view hidden${index} as
-select distinct y.*
+select distinct t.compKey as toKey, y.refKey as fromKey
 from namespaces as ns
     inner join types as t on t.namespace_id = ${nsid}
     inner join refs as r on t.compKey = r.refKey
     inner join relations on r.id = relations.to_id
-    inner join refs as y on y.id = relations.from_id and y.refKey not like CONCAT(ns.nsKey + '%');
+    inner join refs as y on y.id = relations.from_id and y.refKey not like CONCAT(ns.nsKey + ':%');
 """)
         sql.close()
 
         context.open()
         List<Type> types = Lists.newArrayList(Type.findBySQL("""\
-select distinct types.*
-    from types inner join hidden${index} on types.compKey = hidden${index}.refKey
-    where types.namespace_id != ${nsid};
+select * from types
+where namespace_id = ${nsid} and (compKey not in (select toKey from hidden${index}));
 """))
         context.close()
         return types
@@ -151,4 +144,6 @@ select distinct types.*
         sql.execute("drop view hidden${index}")
         sql.close()
     }
+
+
 }

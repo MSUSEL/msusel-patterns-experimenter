@@ -48,7 +48,7 @@ class SingleValueRater extends AbstractMetricRater {
                 rating = (double) i
         }
 
-        Measure.of("${SigMainConstants.SIGMAIN_REPO_NAME}:${metricHandle}.RATING").on(measurable).withValue(rating)
+        Measure.of((String) "${SigMainConstants.SIGMAIN_REPO_NAME}:${metricHandle}.RATING").on(measurable).withValue(rating)
     }
 
     Map<Integer, Double> loadRatingTable() {

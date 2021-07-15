@@ -26,16 +26,31 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.sigmain;
 
-public interface SigMainConstants {
-    String SIGMAIN_CMD_NAME = "SigMain";
-    String SIGMAIN_REPO_KEY = "sig-metrics";
-    String SIGMAIN_REPO_NAME = "SigMain Metrics";
-    String SIGMAIN_TOOL_NAME = "Sig Maintainability Model";
+import com.google.common.collect.ImmutableList;
+import edu.montana.gsoc.msusel.arc.ArcContext;
+import edu.montana.gsoc.msusel.arc.Provider;
+import edu.montana.gsoc.msusel.arc.provider.RepoProvider;
+import edu.montana.gsoc.msusel.arc.tool.MetricOnlyTool;
 
-    String SIGCAL_CMD_NAME = "SigCal";
-    String SIGCAL_REPO_KEY = "sig-calibration";
-    String SIGCAL_REPO_NAME = "SigCal Metrics";
-    String SIGCAL_TOOL_NAME = "Sig Model Calibration";
+import java.util.List;
 
-    String SIGRATE_CMD_NAME = "SigRating";
+public class SigRatingTool extends MetricOnlyTool {
+
+    SigRatingMetricProvider metricProvider;
+    SigCalibrationRepoProvider repoProvider;
+
+    public SigRatingTool(ArcContext context) {
+        super(context);
+        repoProvider = new SigCalibrationRepoProvider(context);
+        metricProvider = new SigRatingMetricProvider(context);
+    }
+
+    @Override
+    public RepoProvider getRepoProvider() { return repoProvider; }
+
+    @Override
+    public List<Provider> getOtherProviders() { return ImmutableList.of(metricProvider); }
+
+    @Override
+    public void init() { context.registerCommand(new SigRatingCommand(metricProvider)); }
 }

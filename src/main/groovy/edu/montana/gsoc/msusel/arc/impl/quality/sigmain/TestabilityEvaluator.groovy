@@ -60,9 +60,9 @@ class TestabilityEvaluator extends MetricEvaluator {
     @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
-            double volume           = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigVolume", node)
-            double unitComplexity   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitComplexity", node)
-            double compIndependence = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentIndependence", node)
+            double volume           = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigVolume.RATING", node)
+            double unitComplexity   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigUnitComplexity.RATING", node)
+            double compIndependence = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigComponentIndependence.RATING", node)
 
             def factors = [
                     [0.33, volume],

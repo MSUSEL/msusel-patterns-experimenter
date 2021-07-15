@@ -43,6 +43,8 @@ import groovy.sql.Sql
 import groovy.util.logging.Log4j2
 import groovyx.gpars.GParsExecutorsPool
 
+import java.util.concurrent.atomic.AtomicInteger
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -68,19 +70,6 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
     ComponentEntanglement(ArcContext context) {
         super(context)
-    }
-
-    @Override
-    def measureValue(Measurable node) {
-        if (node instanceof Project) {
-            Project proj = node as Project
-
-            double value = evaluate(proj)
-
-            context.open()
-            Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${getMetricName()}.RAW").on(proj).withValue(value)
-            context.close()
-        }
     }
 
     @Override
@@ -111,7 +100,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
     }
 
     private void createGraph(Project proj) {
-        Map<String, Node> nsMap = Maps.newHashMap()
+        Map<String, Node> nsMap = Maps.newConcurrentMap()
 
         graph = NetworkBuilder.directed()
                 .allowsParallelEdges(false)
@@ -123,7 +112,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         context.close()
 
         GParsExecutorsPool.withPool(8) {
-            namespaces.each { Namespace ns ->
+            namespaces.eachParallel { Namespace ns ->
                 context.open()
                 if (!ns.getName().isEmpty()) {
                     Node node = GraphElementFactory.getInstance().createNode(ns)
@@ -134,10 +123,10 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
             }
         }
 
-//        GParsExecutorsPool.withPool(8) {
-            int j = 1
-            namespaces.each { Namespace ns ->
-                int index = j++
+        AtomicInteger j = new AtomicInteger(1)
+        GParsExecutorsPool.withPool(8) {
+            namespaces.eachParallel { Namespace ns ->
+                int index = j.getAndIncrement()
                 log.info "processing namespace ${index} / ${namespaces.size()}"
                 context.open()
                 Node nsNode = nsMap.get(ns.getNsKey())
@@ -175,7 +164,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
 //                dropViews(index)
             }
-//        }
+        }
     }
 
     List<Type> outgoingTypesFromType(String compKey) {
@@ -209,7 +198,7 @@ inner join refs as y on y.id = relations.to_id;
     List<String> outgoingNamespacesFromNamespace(int nsid, int index) {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
         sql.execute("""\
-create or replace view outgoingNsRefs as
+create or replace view outgoingNsRefs${index} as
 select distinct ns.id as nsID, y.refKey
 from namespaces as ns
     inner join types as t on t.namespace_id = ${nsid}
@@ -223,7 +212,7 @@ from namespaces as ns
 select distinct ns.nsKey
 from namespaces as ns
 inner join types on types.namespace_id = ns.id
-inner join outgoingNsRefs on types.compKey = outgoingNsRefs.refKey
+inner join outgoingNsRefs${index} as onsr on types.compKey = onsr.refKey
 where ns.id != ${nsid};
 """).collect {it.nsKey }
         sql.close()
@@ -233,7 +222,7 @@ where ns.id != ${nsid};
     List<String> incomingNamespacesFromNamespace(int nsid, int index) {
         def sql = Sql.newInstance(context.getDBCreds().url, context.getDBCreds().user, context.getDBCreds().pass, context.getDBCreds().driver)
         sql.execute("""\
-create or replace view incomingNsRefs as
+create or replace view incomingNsRefs${index} as
 select distinct ns.id as nsID, y.refKey
 from namespaces as ns
     inner join types as t on t.namespace_id = ${nsid}
@@ -245,7 +234,7 @@ from namespaces as ns
 select distinct ns.nsKey
 from namespaces as ns
 inner join types on types.namespace_id = ns.id
-inner join incomingNsRefs on types.compKey = incomingNsRefs.refKey
+inner join incomingNsRefs${index} as insr on types.compKey = insr.refKey
 where ns.id != ${nsid};
 """).collect { it.nsKey }
         sql.close()

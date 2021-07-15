@@ -24,18 +24,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.quality.sigmain;
+package edu.montana.gsoc.msusel.arc.app.runner.sigrating
 
-public interface SigMainConstants {
-    String SIGMAIN_CMD_NAME = "SigMain";
-    String SIGMAIN_REPO_KEY = "sig-metrics";
-    String SIGMAIN_REPO_NAME = "SigMain Metrics";
-    String SIGMAIN_TOOL_NAME = "Sig Maintainability Model";
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrateConstants
+import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationPhaseOne
 
-    String SIGCAL_CMD_NAME = "SigCal";
-    String SIGCAL_REPO_KEY = "sig-calibration";
-    String SIGCAL_REPO_NAME = "SigCal Metrics";
-    String SIGCAL_TOOL_NAME = "Sig Model Calibration";
+class SigRatingRunner extends EmpiricalStudy {
 
-    String SIGRATE_CMD_NAME = "SigRating";
+    private static final String STUDY_NAME = "Sig Maintainability Rating Test"
+    private static final String STUDY_DESC = ""
+
+    SigRatingRunner(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
+
+        this.phases = [
+                new SigCalibrationPhaseOne(context),
+                new SigRatingPhaseTwo(context),
+        ]
+
+        this.headers = SigCalibrateConstants.HEADERS
+        this.keyHeaders = [SigCalibrateConstants.KEY]
+        this.identifier = SigCalibrateConstants.ID
+    }
+
+    def static getConfigHeaders() {
+        return [
+                SigCalibrateConstants.KEY,
+                SigCalibrateConstants.LOCATION
+        ]
+    }
+
+    def static getConfigFileName() {
+        "rating.conf"
+    }
 }

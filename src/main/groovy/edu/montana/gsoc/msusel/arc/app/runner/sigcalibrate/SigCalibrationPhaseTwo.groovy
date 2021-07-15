@@ -41,7 +41,7 @@ import groovy.util.logging.Log4j2
  * @version 1.3.0
  */
 @Log4j2
-class SigCalibrationPhaseTwo  extends WorkFlow {
+class SigCalibrationPhaseTwo extends WorkFlow {
 
 //    Command git
     Command java
