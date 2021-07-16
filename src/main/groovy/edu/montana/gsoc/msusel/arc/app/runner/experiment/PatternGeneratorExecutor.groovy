@@ -67,6 +67,7 @@ class PatternGeneratorExecutor extends WorkFlow {
         director.initialize()
         GeneratorContext context = GeneratorContext.instance
         context.resetDb = false
+        context.dataOnly = false
         context.results = results
         director.execute()
     }
