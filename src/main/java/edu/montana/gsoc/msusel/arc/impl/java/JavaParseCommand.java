@@ -36,10 +36,10 @@ import lombok.extern.log4j.Log4j2;
  * @version 1.3.0
  */
 @Log4j2
-public class JavaAICommand extends ArtifactIdentifierCommand {
+public class JavaParseCommand extends ArtifactIdentifierCommand {
 
-    public JavaAICommand() {
-        super(JavaConstants.JAVA_TOOL_CMD_NAME);
+    public JavaParseCommand() {
+        super(JavaConstants.JAVA_PARSE_CMD_NAME);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class JavaAICommand extends ArtifactIdentifierCommand {
         context.close();
 
         JavaDirector director = new JavaDirector(context.getProject(), context.getDBCreds(), true, true, false, false);
-        director.identify(context.getProject(), path);
+        director.build(path);
         log.info("Java Artifact Identification Complete");
     }
 

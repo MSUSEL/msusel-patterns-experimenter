@@ -46,8 +46,8 @@ class ExperimentRunner extends EmpiricalStudy {
 
         this.phases = [
                 new PatternGeneratorExecutor(context),
-                new SourceInjectorExecutor(context),
                 new ExperimentPhaseOne(context),
+                new SourceInjectorExecutor(context),
                 new ExperimentPhaseOneInjected(context),
                 new ExperimentPhaseTwo(context)
         ]

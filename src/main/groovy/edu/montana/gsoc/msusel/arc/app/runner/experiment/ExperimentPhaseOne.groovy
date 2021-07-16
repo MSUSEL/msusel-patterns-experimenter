@@ -40,6 +40,7 @@ class ExperimentPhaseOne extends WorkFlow {
 
     Table<String, String, String> results
     Command java
+    Command parser
     Command jdi
     Command build
     Command pattern4
@@ -54,6 +55,7 @@ class ExperimentPhaseOne extends WorkFlow {
     @Override
     void initWorkflow(ConfigObject runnerConfig, int num) {
         java     = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
+        parser   = getContext().getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi      = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
         build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
         pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
@@ -72,7 +74,7 @@ class ExperimentPhaseOne extends WorkFlow {
             // Java
             java.execute(getContext())
             build.execute(getContext())
-            java.execute(getContext())
+            parser.execute(getContext())
             jdi.execute(getContext())
 
             // Pattern 4

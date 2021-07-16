@@ -35,4 +35,5 @@ public interface JavaConstants {
     String JAVA_TOOL_CMD_NAME      = "Java Artifact Identifier";
     String JAVA_BUILD_CMD_NAME     = "Java Build Command";
     String JAVA_DIR_IDENT_CMD_NAME = "Java Directory Identifier";
+    String JAVA_PARSE_CMD_NAME     = "Java Parser";
 }

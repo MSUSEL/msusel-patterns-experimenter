@@ -46,5 +46,6 @@ public class JavaTool extends CommandOnlyTool {
                 .gradleHome(context.getArcProperty(GradleConstants.GRADLE_CMD_PROPERTY))
                 .create());
         context.registerCommand(new JavaDirectoryIdentifier());
+        context.registerCommand(new JavaParseCommand());
     }
 }
