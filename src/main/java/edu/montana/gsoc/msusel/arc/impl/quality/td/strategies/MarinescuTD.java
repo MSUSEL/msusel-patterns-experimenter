@@ -40,9 +40,13 @@ public class MarinescuTD extends TechnicalDebtCalcStrategy {
      * {@inheritDoc}
      */
     @Override
-    public double calculate(TDParams param)
+    public double calculatePrinciple(TDParams params)
     {
         // TODO Auto-generated method stub
+        return 0.0;
+    }
+
+    public double calculateInterest(TDParams params) {
         return 0.0;
     }
 

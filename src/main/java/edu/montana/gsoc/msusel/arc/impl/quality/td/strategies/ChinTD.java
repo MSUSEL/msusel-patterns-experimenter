@@ -41,13 +41,13 @@ public class ChinTD extends TechnicalDebtCalcStrategy {
      * {@inheritDoc}
      */
     @Override
-    public double calculate(TDParams param)
+    public double calculatePrinciple(TDParams params)
     {
-        double recurringInterest = param.getNumericParam(ChinParams.RECURRING_INTEREST);
-        double compoundingInterest = param.getNumericParam(ChinParams.COMPOUNDING_INTEREST);
+        double recurringInterest = params.getNumericParam(ChinParams.RECURRING_INTEREST);
+        double compoundingInterest = params.getNumericParam(ChinParams.COMPOUNDING_INTEREST);
 
-        double remainingYearsActiveDev = param.getNumericParam(ChinParams.REMAINING_YEARS_ACTIVE_DEV);
-        double yearsOfMaintenance = param.getNumericParam(ChinParams.YEARS_OF_MAINTENANCE);
+        double remainingYearsActiveDev = params.getNumericParam(ChinParams.REMAINING_YEARS_ACTIVE_DEV);
+        double yearsOfMaintenance = params.getNumericParam(ChinParams.YEARS_OF_MAINTENANCE);
 
         double activeTD = 0.0;
         for (int currentYear = 0; currentYear < remainingYearsActiveDev - 1; currentYear++)
@@ -59,6 +59,10 @@ public class ChinTD extends TechnicalDebtCalcStrategy {
                 * yearsOfMaintenance;
 
         return activeTD + maintenanceTD;
+    }
+
+    public double calculateInterest(TDParams params) {
+        return 0.0;
     }
 
     /**

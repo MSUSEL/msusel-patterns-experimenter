@@ -33,4 +33,30 @@ abstract class AbstractMetricRater implements MetricRater {
     AbstractMetricRater(String metricHandle) {
         this.metricHandle = metricHandle
     }
+
+    double calcRating(double value, Map<Integer, Double> table) {
+        double rating = 0.0
+
+        for (int i = 1; i < 5; i++) {
+            if (value <= table[i] && value > table[i + 1]) {
+                rating = findPoint(value, table, i)
+            }
+        }
+
+        if (rating == 0.0) {
+            if (value < table[1])
+                rating = 5.0
+            else
+                rating = 1.0
+        }
+
+        return rating
+    }
+
+    double findPoint(double value, Map<Integer, Double> table, int index) {
+        double min = table[index]
+        double max = table[index + 1]
+
+        return index + ((value - min) / (max - min))
+    }
 }

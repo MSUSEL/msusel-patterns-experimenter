@@ -37,6 +37,9 @@ public interface TechDebtConstants {
     String CAST_CMD_NAME = "Cast Technical Debt";
     String NUGROHO_CMD_NAME = "Nugroho Technical Debt";
     String TD_TOOL_NAME = "Arc TD";
-    String NUGROHO_MEASURE_NAME = "nugroho_td";
+    String NUGROHO_PRINCIPLE_MM = "nugroho_td_principle_manmonths";
+    String NUGROHO_PRINCIPLE_DOLLARS = "nugroho_td_principle_dollars";
+    String NUGROHO_INTEREST_MM = "nugroho_td_interest_manmonths";
+    String NUGROHO_INTEREST_DOLLARS = "nugroho_td_interest_dollars";
     String CAST_MEASURE_NAME = "cast_td";
 }

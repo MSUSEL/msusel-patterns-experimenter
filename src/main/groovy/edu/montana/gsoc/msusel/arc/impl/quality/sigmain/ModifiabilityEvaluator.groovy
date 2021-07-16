@@ -58,6 +58,11 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class ModifiabilityEvaluator extends MetricEvaluator {
 
     @Override
+    def measure(Measurable node) {
+        measureValue(node)
+    }
+
+    @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             double duplication    = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigDuplication.RATING", node)

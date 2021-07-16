@@ -39,16 +39,12 @@ class SingleValueRater extends AbstractMetricRater {
 
     @Override
     void rate(Measurable measurable) {
-        double value = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "${metricHandle}.RAW", measurable)
+        double value = measurable.getValueFor("${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.RAW")
+
         Map<Integer, Double> table = loadRatingTable()
-        double rating = 1.0
+        double rating = calcRating(value, table)
 
-        for (int i = 5; i > 1; i--) {
-            if (value <= table[i])
-                rating = (double) i
-        }
-
-        Measure.of((String) "${SigMainConstants.SIGMAIN_REPO_NAME}:${metricHandle}.RATING").on(measurable).withValue(rating)
+        Measure.of((String) "${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.RATING").on(measurable).withValue(rating)
     }
 
     Map<Integer, Double> loadRatingTable() {

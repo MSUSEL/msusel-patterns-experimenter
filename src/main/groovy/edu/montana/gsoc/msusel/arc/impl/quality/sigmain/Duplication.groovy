@@ -57,7 +57,7 @@ import java.nio.charset.MalformedInputException
         references = []
 )
 @Log4j2
-class Duplication extends SigAbstractMetricEvaluator {
+class Duplication extends SigAbstractMetricEvaluator implements Rateable {
 
     AtomicDouble totalLines
     Set<String> dupMethods
@@ -399,5 +399,9 @@ class Duplication extends SigAbstractMetricEvaluator {
         }
 
         file.text = sanitize(findIn)
+    }
+
+    MetricRater getMetricRater() {
+        return new SingleValueRater("sigDuplication")
     }
 }

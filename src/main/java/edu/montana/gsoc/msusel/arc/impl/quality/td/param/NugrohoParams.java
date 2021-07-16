@@ -42,4 +42,6 @@ public interface NugrohoParams {
     String TECH_FACTOR                 = "techFactor";
     String MAINTAINABILITY             = "maintainability";
     String REFACTORING_ADJ             = "refactoringAdj";
+    String MAINTENANCE_FRACTION        = "maintenanceFraction";
+    String MAINT_TEAM_COST             = "maintenanceTeamCost";
 }

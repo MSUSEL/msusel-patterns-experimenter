@@ -40,11 +40,13 @@ public abstract class TechnicalDebtCalcStrategy {
      * Calculates and returns the technical debt value for the project under
      * analysis.
      * 
-     * @param param
+     * @param params
      *            A Technical Debt calculation parameter object.
      * @return The value of technical debt
      */
-    public abstract double calculate(TDParams param);
+    public abstract double calculatePrinciple(TDParams params);
+
+    public abstract double calculateInterest(TDParams params);
 
     /**
      * Constructs a Strategy specific TDParams object

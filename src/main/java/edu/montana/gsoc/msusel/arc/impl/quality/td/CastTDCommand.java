@@ -80,7 +80,7 @@ public class CastTDCommand extends TechDebtCommand {
         params.setParam(CastParams.COUNT_MED_SEVERITY, med.size());
         params.setParam(CastParams.COUNT_LOW_SEVERITY, low.size());
 
-        double value = strategy.calculate(params);
+        double value = strategy.calculatePrinciple(params);
 
         Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.CAST_MEASURE_NAME)
                 .on(context.getProject())

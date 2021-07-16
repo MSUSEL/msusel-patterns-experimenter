@@ -66,6 +66,6 @@ class ExperimentRunner extends EmpiricalStudy {
     }
 
     def static getConfigFileName() {
-        "calibration.conf"
+        "experiment.conf"
     }
 }

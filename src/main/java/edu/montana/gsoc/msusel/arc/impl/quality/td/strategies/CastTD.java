@@ -44,7 +44,7 @@ public class CastTD extends TechnicalDebtCalcStrategy {
     /**
      * {@inheritDoc}
      */
-    public double calculate(TDParams params)
+    public double calculatePrinciple(TDParams params)
     {
         double countHighSeverity = params.getNumericParam(CastParams.COUNT_HIGH_SEVERITY);
         double countMedSeverity = params.getNumericParam(CastParams.COUNT_MED_SEVERITY);
@@ -65,6 +65,10 @@ public class CastTD extends TechnicalDebtCalcStrategy {
         return (countHighSeverity * percentHighSeverity * timeToFixHighSeverity * costHighSeverity)
                 + (countMedSeverity * percentMedSeverity * timeToFixMedSeverity * costMedSeverity)
                 + (countLowSeverity * percentLowSeverity * timeToFixLowSeverity * costLowSeverity);
+    }
+
+    public double calculateInterest(TDParams params) {
+        return 0.0;
     }
 
     /**

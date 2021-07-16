@@ -58,6 +58,11 @@ import edu.montana.gsoc.msusel.metrics.annotations.MetricType
 class ModularityEvaluator extends MetricEvaluator {
 
     @Override
+    def measure(Measurable node) {
+        measureValue(node)
+    }
+
+    @Override
     def measureValue(Measurable node) {
         if (node instanceof Project) {
             double moduleCoupling   = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModuleCoupling.RATING", node)

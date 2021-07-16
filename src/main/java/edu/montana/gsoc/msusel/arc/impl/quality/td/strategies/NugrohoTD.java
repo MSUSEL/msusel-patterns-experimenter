@@ -53,7 +53,7 @@ public class NugrohoTD extends TechnicalDebtCalcStrategy {
 
         reworkFractionTable.put(2, 3, 40);
         reworkFractionTable.put(2, 4, 75);
-        reworkFractionTable.put(3, 5, 115);
+        reworkFractionTable.put(2, 5, 115);
 
         reworkFractionTable.put(3, 4, 35);
         reworkFractionTable.put(3, 5, 75);
@@ -65,23 +65,28 @@ public class NugrohoTD extends TechnicalDebtCalcStrategy {
      * {@inheritDoc}
      */
     @Override
-    public double calculate(TDParams param) {
-        double refactoringAdj = param.getNumericParam(NugrohoParams.REFACTORING_ADJ);
+    public double calculatePrinciple(TDParams params) {
+        double refactoringAdj = params.getNumericParam(NugrohoParams.REFACTORING_ADJ);
+        double systemSize = params.getNumericParam(NugrohoParams.SYSTEM_SIZE);
+        double techFactor = params.getNumericParam(NugrohoParams.TECH_FACTOR);
 
-        double systemSize = param.getNumericParam(NugrohoParams.SYSTEM_SIZE);
-        double techFactor = param.getNumericParam(NugrohoParams.TECH_FACTOR);
-        double reworkFraction = reworkFractionTable.get(((Double) param.getNumericParam(NugrohoParams.MAINTAINABILITY)).intValue(), 5);
-//        double maintenanceFactor = 0.0;
-//        double qualityLevel = 0;
-        double percentYearlyMaintGenTD = param.getNumericParam(NugrohoParams.PERCENT_YEARLY_MAINT_GEN_TD);
-        double projectionYears = 0.0;
+        double reworkFraction = reworkFractionTable.get(((Double) params.getNumericParam(NugrohoParams.MAINTAINABILITY)).intValue(), 5);
+        double rebuildValue = systemSize * techFactor;
+        return reworkFraction * rebuildValue * refactoringAdj; // Repair Effort
+    }
 
-        double rebuildValue = systemSize * Math.pow((1 + percentYearlyMaintGenTD), projectionYears) * techFactor;
-        double repairEffort = reworkFraction * rebuildValue * refactoringAdj;
-//        double qualityFactor = Math.pow(2, ((qualityLevel - 3) / 2));
-//        double maintenanceEffort = (maintenanceFactor * rebuildValue) / qualityFactor;
+    public double calculateInterest(TDParams params) {
+        double systemSize = params.getNumericParam(NugrohoParams.SYSTEM_SIZE);
+        double techFactor = params.getNumericParam(NugrohoParams.TECH_FACTOR);
+        double rebuildValue = systemSize * techFactor;
 
-        return repairEffort;
+        double maintenanceFraction = params.getNumericParam(NugrohoParams.MAINTENANCE_FRACTION);
+        double qualityLevel = params.getNumericParam(NugrohoParams.MAINTAINABILITY);
+        double qualityFactor = Math.pow(2, ((qualityLevel - 3) / 2));
+        double maintenanceEffortCurrent = (maintenanceFraction * rebuildValue) / qualityFactor;
+        double maintenanceEffortIdeal = (maintenanceFraction * rebuildValue) / 2;
+
+        return maintenanceEffortCurrent - maintenanceEffortIdeal;
     }
 
     /**

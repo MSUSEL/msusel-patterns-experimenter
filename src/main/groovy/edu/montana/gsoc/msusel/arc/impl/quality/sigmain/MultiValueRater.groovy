@@ -44,29 +44,16 @@ class MultiValueRater extends AbstractMetricRater {
         Table<Integer, RiskCategory, Double> ratingTable = loadRatingTable()
         Map<RiskCategory, Double> profile = loadRiskProfile(measurable)
         double rating = 0.0
+        List<Double> ratings = []
 
-        if ((profile[RiskCategory.MODERATE] <= ratingTable.get(5, RiskCategory.MODERATE)) &&
-                (profile[RiskCategory.HIGH] <= ratingTable.get(5, RiskCategory.HIGH)) &&
-                (profile[RiskCategory.VERY_HIGH] <= ratingTable.get(5, RiskCategory.VERY_HIGH)))
-            rating = 5.0
-        else {
-            (2..4).each {
-                if (rating == 0.0d) {
-                    boolean val = false
-                    profile.each { cat, value ->
-                        val = val || (value > ratingTable.get(it, cat))
-                    }
-                    if (val) {
-                        rating = (double) it
-                    }
-                }
-            }
+        [RiskCategory.MODERATE, RiskCategory.HIGH, RiskCategory.VERY_HIGH].each {
+            Map<Integer, Double> table = ratingTable.columnMap()[it]
+            ratings << calcRating(profile[it], table)
         }
 
-        if (rating == 0.0d)
-            rating = 1.0
+        rating = ratings.min()
 
-        Measure.of("${SigMainConstants.SIGMAIN_REPO_NAME}:${metricHandle}.RATING").on(measurable).withValue(rating)
+        Measure.of("${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.RATING").on(measurable).withValue(rating)
     }
 
     Table<Integer, RiskCategory, Double> loadRatingTable() {
@@ -75,7 +62,10 @@ class MultiValueRater extends AbstractMetricRater {
         InputStreamReader isr = new InputStreamReader(is)
         Iterable<CSVRecord> records = CSVFormat.EXCEL.withFirstRecordAsHeader().parse(isr)
         records.each { record ->
-            table.put(Integer.parseInt(record.get(0)), RiskCategory.fromString(record.get(1)), Double.parseDouble(record.get(1)))
+            table.put(Integer.parseInt(record.get(0)), RiskCategory.LOW, Double.parseDouble(record.get(1)))
+            table.put(Integer.parseInt(record.get(0)), RiskCategory.MODERATE, Double.parseDouble(record.get(2)))
+            table.put(Integer.parseInt(record.get(0)), RiskCategory.HIGH, Double.parseDouble(record.get(3)))
+            table.put(Integer.parseInt(record.get(0)), RiskCategory.VERY_HIGH, Double.parseDouble(record.get(4)))
         }
         is.close()
         table
@@ -84,10 +74,10 @@ class MultiValueRater extends AbstractMetricRater {
     Map<RiskCategory, Double> loadRiskProfile(Measurable measureable) {
         Map<RiskCategory, Double> map = [:]
 
-        map[RiskCategory.LOW] = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "${metricHandle}.LOW", measureable)
-        map[RiskCategory.MODERATE] = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_NAME, "${metricHandle}.MOD", measureable)
-        map[RiskCategory.HIGH] = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_NAME, "${metricHandle}.HIGH", measureable)
-        map[RiskCategory.VERY_HIGH] = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_NAME, "${metricHandle}.VHIGH", measureable)
+        map[RiskCategory.LOW] = measureable.getValueFor((String) "${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.LOW")
+        map[RiskCategory.MODERATE] = measureable.getValueFor((String) "${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.MOD")
+        map[RiskCategory.HIGH] = measureable.getValueFor((String) "${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.HIGH")
+        map[RiskCategory.VERY_HIGH] = measureable.getValueFor("${SigMainConstants.SIGMAIN_REPO_KEY}:${metricHandle}.VHIGH")
 
         map
     }

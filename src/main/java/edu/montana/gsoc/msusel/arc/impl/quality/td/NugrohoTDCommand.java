@@ -50,27 +50,42 @@ public class NugrohoTDCommand extends TechDebtCommand {
         log.info("Executing Nugroho TD Analysis");
 
         context.open();
-        double analyzability = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigAnalyzability", context.getProject());
-        double modifiability = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModifiability", context.getProject());
-        double testability = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigTestability", context.getProject());
-        double modularity = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigModularity", context.getProject());
-        double reusability = Measure.valueFor(SigMainConstants.SIGMAIN_REPO_KEY, "sigReusability", context.getProject());
+        double analyzability = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigAnalyzability");
+        double modifiability = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigModifiability");
+        double testability = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigTestability");
+        double modularity = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigModularity");
+        double reusability = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigReusability");
 
-        double maintainability = 0.2 * analyzability + 0.2 * modifiability + 0.2 * testability + 0.2 * modularity + 0.2 * reusability;
+        double maintainability = Math.ceil(0.2 * analyzability + 0.2 * modifiability + 0.2 * testability + 0.2 * modularity + 0.2 * reusability);
 
-        double size = Measure.valueFor(MetricsConstants.METRICS_REPO_KEY, "SLOC", context.getProject());
+        double size = context.getProject().getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC");
 
         TDParams params = strategy.generateParams();
         params.setParam(NugrohoParams.MAINTAINABILITY, maintainability);
         params.setParam(NugrohoParams.REFACTORING_ADJ, 0.10);
         params.setParam(NugrohoParams.TECH_FACTOR, 0.00136d);
+        params.setParam(NugrohoParams.MAINTENANCE_FRACTION, 0.15);
+        params.setParam(NugrohoParams.MAINT_TEAM_COST, 100_000);
         params.setParam(NugrohoParams.SYSTEM_SIZE, size);
 
-        double value = strategy.calculate(params);
+        double principle = strategy.calculatePrinciple(params);
+        double interest = strategy.calculateInterest(params);
 
-        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.NUGROHO_MEASURE_NAME)
+        double principleDollars = (principle * params.getNumericParam(NugrohoParams.MAINT_TEAM_COST)) / 12;
+        double interestDollars = (interest * params.getNumericParam(NugrohoParams.MAINT_TEAM_COST)) / 12;
+
+        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.NUGROHO_PRINCIPLE_MM)
                 .on(context.getProject())
-                .withValue(value);
+                .withValue(principle);
+        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.NUGROHO_PRINCIPLE_DOLLARS)
+                .on(context.getProject())
+                .withValue(principleDollars);
+        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.NUGROHO_INTEREST_MM)
+                .on(context.getProject())
+                .withValue(interest);
+        Measure.of(TechDebtConstants.TD_REPO_KEY + ":" + TechDebtConstants.NUGROHO_INTEREST_DOLLARS)
+                .on(context.getProject())
+                .withValue(interestDollars);
         context.close();
 
         log.info("Finished Nugroho TD Analysis");

@@ -32,10 +32,12 @@ import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrateConstants
 import edu.montana.gsoc.msusel.arc.impl.quality.sigmain.SigMainConstants
+import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtConstants
 
 class SigRatingPhaseTwo extends WorkFlow {
 
     Command sigrate
+    Command nugrohoTD
 
     SigRatingPhaseTwo(ArcContext context) {
         super("Sig Rating Phase Two", "Sig Maintainability Model Rating Test - Phase Two", context)
@@ -44,6 +46,7 @@ class SigRatingPhaseTwo extends WorkFlow {
     @Override
     void initWorkflow(ConfigObject runnerConfig, int num) {
         sigrate = context.getRegisteredCommand(SigMainConstants.SIGRATE_CMD_NAME)
+        nugrohoTD = context.getRegisteredCommand(TechDebtConstants.NUGROHO_CMD_NAME)
     }
 
     @Override
@@ -63,5 +66,6 @@ class SigRatingPhaseTwo extends WorkFlow {
 
     void runTools() {
         sigrate.execute(context)
+        nugrohoTD.execute(context)
     }
 }

@@ -44,16 +44,17 @@ import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtConstants
 class ExperimentPhaseTwo extends WorkFlow {
 
     Table<String, String, String> results
-    Command findbugs
-    Command pmd
+//    Command findbugs
+//    Command pmd
     Command metrics
-    Command qmood
-    Command quamoco
-    Command castTD
+//    Command qmood
+//    Command quamoco
+//    Command castTD
     Command nugrohoTD
     Command sigmain
-    Collector fbColl
-    Collector pmdColl
+    Command sigrating
+//    Collector fbColl
+//    Collector pmdColl
 
     ExperimentPhaseTwo(ArcContext context) {
         super("Experiment Phase Two", "A Test Empirical Study", context)
@@ -63,16 +64,17 @@ class ExperimentPhaseTwo extends WorkFlow {
     void initWorkflow(ConfigObject runnerConfig, int num) {
         getContext().addArcProperty("quamoco.models.dir", "config/quamoco/models")
 
-        findbugs  = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME)
-        pmd       = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME)
+//        findbugs  = getContext().getRegisteredCommand(FindBugsConstants.FB_CMD_NAME)
+//        pmd       = getContext().getRegisteredCommand(PMDConstants.PMD_CMD_NAME)
         metrics   = getContext().getRegisteredCommand(MetricsConstants.METRICS_CMD_NAME)
-        castTD    = getContext().getRegisteredCommand(TechDebtConstants.CAST_CMD_NAME)
+//        castTD    = getContext().getRegisteredCommand(TechDebtConstants.CAST_CMD_NAME)
         nugrohoTD = getContext().getRegisteredCommand(TechDebtConstants.NUGROHO_CMD_NAME)
-        sigmain   = getContext().getRegisteredCommand(SigMainConstants.SIGMAIN_REPO_KEY)
-        qmood     = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME)
-        quamoco   = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME)
-        fbColl    = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME)
-        pmdColl   = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME)
+        sigmain   = getContext().getRegisteredCommand(SigMainConstants.SIGMAIN_CMD_NAME)
+        sigrating = getContext().getRegisteredCommand(SigMainConstants.SIGRATE_CMD_NAME)
+//        qmood     = getContext().getRegisteredCommand(QMoodConstants.QMOOD_CMD_NAME)
+//        quamoco   = getContext().getRegisteredCommand(QuamocoConstants.QUAMOCO_CMD_NAME)
+//        fbColl    = getContext().getRegisteredCollector(FindBugsConstants.FB_COLL_NAME)
+//        pmdColl   = getContext().getRegisteredCollector(PMDConstants.PMD_COLL_NAME)
     }
 
     void executeStudy() {
@@ -89,27 +91,28 @@ class ExperimentPhaseTwo extends WorkFlow {
         getContext().close()
 
         // SpotBugs
-        findbugs.execute(getContext())
-        fbColl.execute(getContext())
+//        findbugs.execute(getContext())
+//        fbColl.execute(getContext())
 
         // PMD
-        pmd.execute(getContext())
-        pmdColl.execute(getContext())
+//        pmd.execute(getContext())
+//        pmdColl.execute(getContext())
 
         // Metrics
         metrics.execute(getContext())
 
         // Cast TechDebt
-        castTD.execute(getContext())
+//        castTD.execute(getContext())
 
         // QMood
-        qmood.execute(getContext())
+//        qmood.execute(getContext())
 
         // Quamoco
-        quamoco.execute(getContext())
+//        quamoco.execute(getContext())
 
         // Sig Maintainability
         sigmain.execute(getContext())
+        sigrating.execute(getContext())
 
         // Nugroho TechDebt
         nugrohoTD.execute(getContext())

@@ -48,21 +48,21 @@ public class SonarTD extends TechnicalDebtCalcStrategy {
      * {@inheritDoc}
      */
     @Override
-    public double calculate(TDParams param)
+    public double calculatePrinciple(TDParams params)
     {
-        double costToFixOneBlock = param.getNumericParam(COST_TO_FIX_ONE_BLOCK);
+        double costToFixOneBlock = params.getNumericParam(COST_TO_FIX_ONE_BLOCK);
         double duplicatedBlocks = 0;
-        double costToFixOneViolation = param.getNumericParam(COST_TO_FIX_ONE_VIOLATION);
+        double costToFixOneViolation = params.getNumericParam(COST_TO_FIX_ONE_VIOLATION);
         double mandatoryViolations = 0;
-        double costToCommentOneAPI = param.getNumericParam(COST_TO_COMMENT_ONE_API);
+        double costToCommentOneAPI = params.getNumericParam(COST_TO_COMMENT_ONE_API);
         double publicUndocumentedAPI = 0;
-        double costToCoverOneOfComplexity = param.getNumericParam(COST_TO_COVER_ONE_OF_COMPLEXITY);
+        double costToCoverOneOfComplexity = params.getNumericParam(COST_TO_COVER_ONE_OF_COMPLEXITY);
         double uncoveredComplexityByTests = 0;
-        double costToCutAnEdgeBetweenTwoFiles = param.getNumericParam(COST_TO_CUT_AN_EDGE_BETWEEN_TWO_FILES);
+        double costToCutAnEdgeBetweenTwoFiles = params.getNumericParam(COST_TO_CUT_AN_EDGE_BETWEEN_TWO_FILES);
         double packageEdgesWeight = 0;
-        double costToSplitAMethod = param.getNumericParam(COST_TO_SPLIT_A_METHOD);
+        double costToSplitAMethod = params.getNumericParam(COST_TO_SPLIT_A_METHOD);
         double functionComplexityDistribution = 0;
-        double costToSplitAClass = param.getNumericParam(COST_TO_SPLIT_A_CLASS);
+        double costToSplitAClass = params.getNumericParam(COST_TO_SPLIT_A_CLASS);
         double classComplexitDistribution = 0;
 
         double duplication = costToFixOneBlock * duplicatedBlocks;
@@ -74,6 +74,10 @@ public class SonarTD extends TechnicalDebtCalcStrategy {
                 + (costToSplitAClass * classComplexitDistribution);
 
         return duplication + violations + comments + coverage + design + complexity;
+    }
+
+    public double calculateInterest(TDParams params) {
+        return 0.0;
     }
 
     /**

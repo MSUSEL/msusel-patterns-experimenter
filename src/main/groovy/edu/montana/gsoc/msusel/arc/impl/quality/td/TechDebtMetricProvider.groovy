@@ -53,17 +53,47 @@ class TechDebtMetricProvider extends AbstractMetricProvider {
             metric = Metric.builder()
                     .name(TechDebtConstants.CAST_MEASURE_NAME)
                     .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.CAST_MEASURE_NAME}")
-                    .description("Technical Debt Measure")
+                    .description("Cast TD Principle")
                     .create()
             repository.addMetric(metric)
         }
 
-        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_MEASURE_NAME}")
+        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_PRINCIPLE_DOLLARS}")
         if (!metric) {
             metric = Metric.builder()
-                    .name(TechDebtConstants.NUGROHO_MEASURE_NAME)
-                    .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_MEASURE_NAME}")
-                    .description("Technical Debt Measure")
+                    .name(TechDebtConstants.NUGROHO_PRINCIPLE_DOLLARS)
+                    .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_PRINCIPLE_DOLLARS}")
+                    .description("Nugroho TD Principle (Dollars)")
+                    .create()
+            repository.addMetric(metric)
+        }
+
+        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_PRINCIPLE_MM}")
+        if (!metric) {
+            metric = Metric.builder()
+                    .name(TechDebtConstants.NUGROHO_PRINCIPLE_MM)
+                    .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_PRINCIPLE_MM}")
+                    .description("Nugroho TD Principle (Man Months)")
+                    .create()
+            repository.addMetric(metric)
+        }
+
+        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_INTEREST_DOLLARS}")
+        if (!metric) {
+            metric = Metric.builder()
+                    .name(TechDebtConstants.NUGROHO_INTEREST_DOLLARS)
+                    .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_INTEREST_DOLLARS}")
+                    .description("Nugroho TD Interest (Dollars)")
+                    .create()
+            repository.addMetric(metric)
+        }
+
+        metric = Metric.findFirst("metricKey = ?", (String) "${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_INTEREST_MM}")
+        if (!metric) {
+            metric = Metric.builder()
+                    .name(TechDebtConstants.NUGROHO_INTEREST_MM)
+                    .key("${TechDebtConstants.TD_REPO_KEY}:${TechDebtConstants.NUGROHO_INTEREST_MM}")
+                    .description("Nugroho TD Interest (Man Months)")
                     .create()
             repository.addMetric(metric)
         }
