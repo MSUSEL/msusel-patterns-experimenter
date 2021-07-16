@@ -44,7 +44,7 @@ public class JavaParseCommand extends ArtifactIdentifierCommand {
 
     @Override
     public void execute(ArcContext context) {
-        log.info("Java Artifact Identification Started");
+        log.info("Java Artifact Identification and Parsing Started");
 
         context.open();
         String path = context.getProject().getFullPath();
@@ -57,11 +57,11 @@ public class JavaParseCommand extends ArtifactIdentifierCommand {
 
         JavaDirector director = new JavaDirector(context.getProject(), context.getDBCreds(), true, true, false, false);
         director.build(path);
-        log.info("Java Artifact Identification Complete");
+        log.info("Java Artifact Identification and Parsing Complete");
     }
 
     @Override
     public String getToolName() {
-        return JavaConstants.JAVA_TOOL_CMD_NAME;
+        return JavaConstants.JAVA_PARSE_CMD_NAME;
     }
 }
