@@ -56,7 +56,7 @@ public class NugrohoTDCommand extends TechDebtCommand {
         double modularity = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigModularity");
         double reusability = context.getProject().getValueFor(SigMainConstants.SIGMAIN_REPO_KEY + ":sigReusability");
 
-        double maintainability = Math.ceil(0.2 * analyzability + 0.2 * modifiability + 0.2 * testability + 0.2 * modularity + 0.2 * reusability);
+        double maintainability = 0.2 * analyzability + 0.2 * modifiability + 0.2 * testability + 0.2 * modularity + 0.2 * reusability;
 
         double size = context.getProject().getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC");
 

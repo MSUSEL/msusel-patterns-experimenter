@@ -59,6 +59,8 @@ public class NugrohoTD extends TechnicalDebtCalcStrategy {
         reworkFractionTable.put(3, 5, 75);
 
         reworkFractionTable.put(4, 5, 40);
+
+        reworkFractionTable.put(5, 5, 0);
     }
 
     /**
@@ -69,8 +71,13 @@ public class NugrohoTD extends TechnicalDebtCalcStrategy {
         double refactoringAdj = params.getNumericParam(NugrohoParams.REFACTORING_ADJ);
         double systemSize = params.getNumericParam(NugrohoParams.SYSTEM_SIZE);
         double techFactor = params.getNumericParam(NugrohoParams.TECH_FACTOR);
+        double maintainability = params.getNumericParam(NugrohoParams.MAINTAINABILITY);
 
-        double reworkFraction = reworkFractionTable.get(((Double) params.getNumericParam(NugrohoParams.MAINTAINABILITY)).intValue(), 5);
+        int low = (int) Math.floor(maintainability);
+        double reworkFraction = 0;
+        if (low < 5)
+            reworkFraction = ((5 - maintainability) / (5 - low)) * reworkFractionTable.get(low, 5);
+
         double rebuildValue = systemSize * techFactor;
         return reworkFraction * rebuildValue * refactoringAdj; // Repair Effort
     }
