@@ -26,6 +26,8 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.quality.quamoco;
 
+import java.io.File;
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -34,9 +36,9 @@ public interface QuamocoConstants {
 
     String QUAMOCO_CMD_NAME         = "Quamoco";
     String QM_HOME_PROP_KEY         = "quamoco.models.dir";
-    String QUAMOCO_LANG_MODELS_FILE = "config/quamoco/languages.properties";
-    String QUAMOCO_METRICS_FILE     = "config/quamoco/metrics.properties";
-    String QUAMOCO_CONFIG_DIR       = "config/quamoco/";
+    String QUAMOCO_LANG_MODELS_FILE = "config" + File.separator + "quamoco" + File.separator + "languages.properties";
+    String QUAMOCO_METRICS_FILE     = "config" + File.separator + "quamoco" + File.separator + "metrics.properties";
+    String QUAMOCO_CONFIG_DIR       = "config" + File.separator + "quamoco" + File.separator;
     String QUAMOCO_REPO_NAME        = "arc-quamoco";
     String QUAMOCO_REPO_KEY         = "arc-quamoco";
     String QUAMOCO_TOOL_NAME        = "Arc Quamoco";
