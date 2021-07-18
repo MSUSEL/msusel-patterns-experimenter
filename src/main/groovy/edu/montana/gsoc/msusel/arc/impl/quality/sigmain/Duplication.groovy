@@ -143,8 +143,6 @@ class Duplication extends SigAbstractMetricEvaluator implements Rateable {
 //            totalLines = node.getValueFor(MetricsConstants.METRICS_REPO_KEY + ":SLOC")
 //            context.close()
 
-            println "DupLines: ${dupLines.get()}"
-            println "TotalLines: ${totalLines.get()}"
             double dupPercent = (dupLines.get() / totalLines.get()) * 100
 
             context.open()
@@ -336,11 +334,7 @@ class Duplication extends SigAbstractMetricEvaluator implements Rateable {
 
         double total = sizes.sum()
         double dup = total - newSizes.sum()
-        println "Total Lines: ${total}"
-        println "Dup Lines: ${dup}"
-
         double dupPercent = (dup / total) * 100
-        println "Dup Percent: ${dupPercent}"
         return dupPercent
     }
 

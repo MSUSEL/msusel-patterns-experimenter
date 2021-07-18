@@ -109,7 +109,7 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         double projSize = proj.getValueFor("${MetricsConstants.METRICS_REPO_NAME}:SLOC")
         context.close()
 
-        return ((projSize - hiddenSize.get()) / projSize) * 100
+        return (1 - (projSize - hiddenSize.get()) / projSize) * 100
     }
 
     @Override
