@@ -78,10 +78,10 @@ class PatternGeneratorExecutor extends WorkFlow {
         language = 'java'
         patterns = ['${patterns.join("','")}']
         numInstances = ${(int) Math.ceil((double)NUM / patterns.size())}
-        maxBreadth = 5
+        maxBreadth = 3
         maxDepth = 2
         version = "1.0.0"
-        arities = [1, 3, 5]
+        arities = [1, 2, 3]
         srcPath = "src/main/java"
         testPath = "src/test/java"
         binPath = "build/classes/java/main"
