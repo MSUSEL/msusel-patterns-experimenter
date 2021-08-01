@@ -73,6 +73,12 @@ class PatternGeneratorExecutor extends WorkFlow {
     }
 
     ConfigObject createConfig() {
+        String jb = System.getenv('JAVA_HOME')
+        if (jb.endsWith(File.separator))
+            jb += "bin" + File.separator + "java"
+        else
+            jb += File.separator + "bin" + File.separator + "java"
+
         String config = """\
         output = '$base'
         language = 'java'
@@ -86,7 +92,7 @@ class PatternGeneratorExecutor extends WorkFlow {
         testPath = "src/test/java"
         binPath = "build/classes/java/main"
         srcExt = ".java"
-        java_binary = '${System.getenv('JAVA_HOME').replace("\\", File.separator) + File.separator + "bin" + File.separator + "java"}'
+        java_binary = '$jb'
         
         license {
             name = 'MIT'
