@@ -86,7 +86,7 @@ class PatternGeneratorExecutor extends WorkFlow {
         testPath = "src/test/java"
         binPath = "build/classes/java/main"
         srcExt = ".java"
-        java_binary = "${System.getenv('JAVA_HOME') + File.separator + "bin" + File.separator + "java"}"
+        java_binary = '${System.getenv('JAVA_HOME').replace("\\", File.separator) + File.separator + "bin" + File.separator + "java"}'
         
         license {
             name = 'MIT'
