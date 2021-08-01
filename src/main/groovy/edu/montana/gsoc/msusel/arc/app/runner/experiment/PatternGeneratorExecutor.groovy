@@ -86,7 +86,7 @@ class PatternGeneratorExecutor extends WorkFlow {
         testPath = "src/test/java"
         binPath = "build/classes/java/main"
         srcExt = ".java"
-        java_binary = "${this.context.getArcProperty("arc.tool.java8.binary")}"
+        java_binary = "${System.getenv('JAVA_HOME') + File.separator + "bin" + File.separator + "java"}"
         
         license {
             name = 'MIT'

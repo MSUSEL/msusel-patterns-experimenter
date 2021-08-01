@@ -45,6 +45,18 @@ public class JavaBuildCommand extends ToolCommand {
     public JavaBuildCommand(String gradleHome, String mavenHome) {
         super(JavaConstants.JAVA_BUILD_CMD_NAME, null, null);
 
+        if (System.getenv("GRADLE_HOME") != null) {
+            File f = new File(System.getenv("GRADLE_HOME"));
+            File f2 = new File(f, "gradle");
+            gradleHome = f2.getAbsolutePath();
+        }
+
+        if (System.getenv("MAVEN_HOME") != null) {
+            File f = new File(System.getenv("MAVEN_HOME"));
+            File f2 = new File(f, "mvn");
+            mavenHome = f2.getAbsolutePath();
+        }
+
         gradleCmd = GradleCommand.builder().toolHome(gradleHome).create();
         mavenCmd = MavenCommand.builder().toolHome(mavenHome).create();
         basicJavaCmd = BasicJavaCommand.builder().create();

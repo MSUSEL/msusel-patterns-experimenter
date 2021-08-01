@@ -43,9 +43,7 @@ public class JavaTool extends CommandOnlyTool {
     public void init() {
         context.registerCommand(new JavaAICommand());
         context.registerCommand(new JavaParseCommand());
-        context.registerCommand(JavaBuildCommand.builder()
-                .gradleHome(context.getArcProperty(GradleConstants.GRADLE_CMD_PROPERTY))
-                .create());
+        context.registerCommand(JavaBuildCommand.builder().create());
         context.registerCommand(new JavaDirectoryIdentifier());
     }
 }
