@@ -170,8 +170,6 @@ class CommandLineInterface {
         EmpiricalStudy empiricalStudy = null
         if (arc.study) {
             String studyName = arc.study
-            println "StudyName: $studyName"
-            println "KeySet: ${manager.studies.keySet()}"
             if (manager.studies.keySet().contains(studyName))
                 empiricalStudy = manager.studies[studyName]
             else
