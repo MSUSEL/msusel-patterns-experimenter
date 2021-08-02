@@ -92,7 +92,7 @@ class PatternGeneratorExecutor extends WorkFlow {
         testPath = "src/test/java"
         binPath = "build/classes/java/main"
         srcExt = ".java"
-        java_binary = '$jb'
+        java_binary = '${jb.replace('\\', '\\\\')}'
         
         license {
             name = 'MIT'
