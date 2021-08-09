@@ -24,29 +24,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.experiment
+package edu.montana.gsoc.msusel.arc.app.runner.test
 
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
-import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.app.runner.casestudy.CaseStudyRunner
-import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigrating.SigRatingRunner
-import edu.montana.gsoc.msusel.arc.app.runner.test.TestExperimentRunner
+import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+import edu.montana.gsoc.msusel.arc.app.runner.experiment.*
+import groovy.util.logging.Log4j2
 
-class StudyManager {
+/**
+ * @author Isaac Griffith
+ * @version 1.3.0
+ */
+@Log4j2
+class TestExperimentRunner extends EmpiricalStudy {
 
-    final Map<String, EmpiricalStudy> studies
+    private static final String STUDY_NAME = "Grime Experiment Test"
+    private static final String STUDY_DESC = ""
 
-    StudyManager(ArcContext context) {
-        studies = [
-                //"test" : new TestEmpiricalStudy(context),
-                "experiment" : new ExperimentRunner(context),
-                "case-study" : new CaseStudyRunner(context),
-                "calibration" : new SigCalibrationRunner(context),
-                "rating-test" : new SigRatingRunner(context),
-                "test" : new TestExperimentRunner(context)
+    TestExperimentRunner(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
+
+        this.phases = [
+                new PatternGeneratorExecutor(context),
+                new ExperimentPhaseOne(context),
+                new SourceInjectorExecutor(context),
+                new ExperimentPhaseOneInjected(context)
         ]
+
+        this.headers = ExperimentConstants.HEADERS
+        this.keyHeaders = [ExperimentConstants.Key1, ExperimentConstants.Key2]
+        this.identifier = ExperimentConstants.ID
+    }
+
+    def static getConfigHeaders() {
+        return [
+                ExperimentConstants.PatternType,
+                ExperimentConstants.GrimeType,
+                ExperimentConstants.GrimeSeverity
+        ]
+    }
+
+    def static getConfigFileName() {
+        "experiment.conf"
     }
 }
