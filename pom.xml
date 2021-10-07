@@ -14,7 +14,7 @@
     <name>MSUSEL Arc Framework</name>
     <description>A Module containing the artifacts needed to experiment with/observe coding issues.</description>
     <url>http://MSUSEL.github.io</url>
-
+    
     <developers>
         <developer>
             <id>isaac.griffith</id>
@@ -31,6 +31,7 @@
     <properties>
         <siteRepoName>MSUSEL</siteRepoName>
         <siteOwner>msusel-patterns-experimenter</siteOwner>
+        <jdk.min.version>17</jdk.min.version>
     </properties>
 
     <dependencies>
@@ -91,7 +92,7 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
-            <version>1.90</version>
+            <version>1.133</version>
         </dependency>
 
         <!-- JGit -->

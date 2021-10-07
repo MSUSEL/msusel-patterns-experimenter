@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * MSUSEL Arc Framework
@@ -29,9 +29,9 @@ package edu.montana.gsoc.msusel.arc.impl.pattern4
 import edu.isu.isuese.datamodel.*
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.collector.FileCollector
+import groovy.transform.builder.Builder
 import groovy.util.logging.Log4j2
 import groovy.xml.XmlSlurper
-import lombok.Builder
 
 import java.io.File
 import java.text.SimpleDateFormat

@@ -1,7 +1,7 @@
 --
 -- The MIT License (MIT)
 --
--- MSUSEL DataModel
+-- MSUSEL Arc Framework
 -- Copyright (c) 2015-2019 Montana State University, Gianforte School of Computing,
 -- Software Engineering Laboratory and Idaho State University, Informatics and
 -- Computer Science, Empirical Software Engineering Laboratory
@@ -46,13 +46,13 @@ create table pattern_repositories
 
 create table patterns
 (
-    id                    INTEGER NOT NULL PRIMARY KEY Auto_Increment,
-    patternKey            TEXT,
-    name                  TEXT,
-    family                TEXT,
-    pattern_repository_id INTEGER REFERENCES pattern_repositories (id),
-    created_at            DATETIME,
-    updated_at            DATETIME
+    id                     INTEGER NOT NULL PRIMARY KEY Auto_Increment,
+    patternKey             TEXT,
+    name                   TEXT,
+    family                 TEXT,
+    pattern_repository_id  INTEGER REFERENCES pattern_repositories (id),
+    created_at             DATETIME,
+    updated_at             DATETIME
 );
 
 create table roles

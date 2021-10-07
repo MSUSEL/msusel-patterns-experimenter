@@ -1,4 +1,4 @@
-/**
+/*
  * The MIT License (MIT)
  *
  * MSUSEL Arc Framework
@@ -24,7 +24,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 /**
  * Generated Type
  *

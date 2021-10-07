@@ -3,15 +3,18 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile name="Annotation profile for MSUSEL Arc Framework" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" />
+        </processorPath>
         <module name="msusel-arc-framework" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="msusel-arc-framework" target="11" />
+      <module name="msusel-arc-framework" target="17" />
       <module name="msusel-arc-framework (1)" target="1.5" />
       <module name="msusel-arc-framework (2)" target="11" />
     </bytecodeTargetLevel>
