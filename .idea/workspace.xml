@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyRunner.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,9 +69,9 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="project.structure.side.proportion" value="0.5263158" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
@@ -302,7 +303,7 @@
       <workItem from="1623357056664" duration="55255000" />
       <workItem from="1623849107522" duration="4677000" />
       <workItem from="1633505840049" duration="1806000" />
-      <workItem from="1633568519764" duration="1281000" />
+      <workItem from="1633568519764" duration="1718000" />
     </task>
     <servers />
   </component>
@@ -311,5 +312,16 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.conf" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
