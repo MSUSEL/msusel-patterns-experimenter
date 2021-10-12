@@ -36,6 +36,7 @@ import edu.montana.gsoc.msusel.arc.impl.issues.grime.GrimeTool
 import edu.montana.gsoc.msusel.arc.impl.issues.pmd.PMDTool
 import edu.montana.gsoc.msusel.arc.impl.java.JavaTool
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsTool
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorTool
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Tool
 import edu.montana.gsoc.msusel.arc.impl.patterngen.PatternGeneratorTool
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternTool
@@ -74,7 +75,8 @@ class ToolsLoader {
                 new PatternGeneratorTool(context),
                 new SigMainTool(context),
                 new SigCalibrationTool(context),
-                new SigRatingTool(context)
+                new SigRatingTool(context),
+                new PatternExtractorTool(context)
         ]
 
         log.info("Tools instantiated now loading repos and initializing commands")

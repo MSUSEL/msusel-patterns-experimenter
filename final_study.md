@@ -8,14 +8,14 @@
 1. Pattern Name <- Config.projName
 2. Pattern Inst Base <- Config.instBase
 3. Pattern Inst File <- Config.instFile
-4. Instances <- collect(Pattern Inst File)
 
 ## Analysis
 4. Execute Java AI on Project
 5. Execute Java Parser on Project
 
 ## Pattern Extraction
-6. for i in Instances do
+6. Instances <- collect(Pattern Inst File)
+7. for i in Instances do
    1. for each type identified in i do
       1. Find all types that connect to i via
          - Association (to/from)

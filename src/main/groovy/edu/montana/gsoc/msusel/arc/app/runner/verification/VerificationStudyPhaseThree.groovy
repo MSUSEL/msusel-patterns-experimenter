@@ -24,20 +24,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.command;
+package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public abstract class SecondaryAnalysisCommand extends AbstractCommand {
+import edu.isu.isuese.datamodel.Project
+import edu.isu.isuese.datamodel.System
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
-    public SecondaryAnalysisCommand(Object name) {
-        super(name.toString());
+class VerificationStudyPhaseThree  extends WorkFlow {
+
+    Command extractor
+
+    VerificationStudyPhaseThree(ArcContext context) {
+        super("Verification Study Phase Three", "Phase Three", context)
     }
 
-    @Override
-    public String getToolName() {
-        return name;
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        extractor = context.getRegisteredCommand(PatternExtractorConstants.CMD_NAME)
+    }
+
+    void executeStudy() {
+        context.open()
+        List<Project> projects = []
+        results.rowKeySet().each { row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
+        }
+        context.close()
+
+        projects.each {
+            context.project = it
+            runTools()
+        }
+    }
+
+    void runTools() {
+        extractor.execute(context)
     }
 }

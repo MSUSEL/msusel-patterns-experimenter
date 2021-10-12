@@ -26,5 +26,37 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-class VerificationStudyRunner {
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+
+class VerificationStudyRunner extends EmpiricalStudy {
+
+    private static final String STUDY_NAME = "Verification Study"
+    private static final String STUDY_DESC = ""
+
+    VerificationStudyRunner(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
+
+        this.phases = [
+                new VerificationStudyPhaseOne(context),
+                new VerificationStudyPhaseTwo(context),
+        ]
+
+        this.headers = VerificationStudyConstants.HEADERS
+        this.keyHeaders = [VerificationStudyConstants.KEY]
+        this.identifier = VerificationStudyConstants.ID
+    }
+
+    def static getConfigHeaders() {
+        return [
+                VerificationStudyConstants.KEY,
+                VerificationStudyConstants.LOCATION,
+                VerificationStudyConstants.INSTLOC
+        ]
+    }
+
+    def static getConfigFileName() {
+        "vstudy.conf"
+    }
 }

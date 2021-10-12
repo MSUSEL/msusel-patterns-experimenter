@@ -24,20 +24,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.command;
+package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public abstract class SecondaryAnalysisCommand extends AbstractCommand {
+import edu.isu.isuese.datamodel.Project
+import edu.isu.isuese.datamodel.System
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 
-    public SecondaryAnalysisCommand(Object name) {
-        super(name.toString());
+class VerificationStudyPhaseOne extends WorkFlow {
+
+    VerificationStudyPhaseOne(ArcContext context) {
+        super("Verification Study Phase One", "Phase One", context)
     }
 
-    @Override
-    public String getToolName() {
-        return name;
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+
+    }
+
+    void executeStudy() {
+        context.open()
+        results.rowKeySet().each {id ->
+            def map = results.row(id)
+            String key = map[VerificationStudyConstants.KEY]
+            String sysName = key.split(/:/)[0]
+            String projName = key.split(/:/)[1]
+            String projVersion = projName.split(/-/)[1]
+            System sys = System.builder()
+                .name(sysName)
+                .key(sysName)
+                .basePath(normalizePath(map[VerificationStudyConstants.LOCATION]))
+                .create()
+            Project proj = Project.builder()
+                .name(projName)
+                .projKey(key)
+                .relPath(projVersion)
+                .version(projVersion)
+                .create()
+            sys.addProject(proj)
+        }
+    }
+
+    void runTools() {
+
     }
 }

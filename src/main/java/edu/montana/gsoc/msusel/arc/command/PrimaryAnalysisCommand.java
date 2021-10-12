@@ -48,8 +48,8 @@ public abstract class PrimaryAnalysisCommand extends AbstractCommand {
     @Setter
     protected String binaryDirectory;
 
-    public PrimaryAnalysisCommand(String name) {
-        super(name);
-        this.toolName = name;
+    public PrimaryAnalysisCommand(Object name) {
+        super(name.toString());
+        this.toolName = name.toString();
     }
 }

@@ -24,20 +24,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.command;
+package edu.montana.gsoc.msusel.arc.impl.patextract
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public abstract class SecondaryAnalysisCommand extends AbstractCommand {
+interface PatternExtractorConstants {
 
-    public SecondaryAnalysisCommand(Object name) {
-        super(name.toString());
-    }
-
-    @Override
-    public String getToolName() {
-        return name;
-    }
+    String CMD_NAME = "PatternExtractor"
+    String RESULTS_FILE = "arc.pattern.extractor.results"
+    String BASE_DIR = "arc.pattern.extractor.base"
 }

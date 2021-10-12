@@ -47,8 +47,8 @@ public abstract class FileCollector implements Collector, Command {
     @Getter
     protected String name;
 
-    public FileCollector(String name, String resultsFile) {
-        this.name = name;
+    public FileCollector(Object name, String resultsFile) {
+        this.name = name.toString();
         this.resultsFile = resultsFile;
     }
 

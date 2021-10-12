@@ -72,6 +72,11 @@ public class ArcContext {
         return null; // consider throwing an exception here
     }
 
+    public void setArcProperty(String prop, String value) {
+        if (prop != null && !prop.isBlank() && value != null && !prop.isBlank())
+            arcProperties.setProperty(prop, value);
+    }
+
     public void registerCommand(Command command) {
         if (command != null)
             commandMap.put(command.getToolName(), command);

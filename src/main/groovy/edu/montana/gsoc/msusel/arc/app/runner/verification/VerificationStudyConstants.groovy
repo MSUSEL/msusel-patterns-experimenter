@@ -24,20 +24,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.command;
+package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-public abstract class SecondaryAnalysisCommand extends AbstractCommand {
+interface VerificationStudyConstants {
 
-    public SecondaryAnalysisCommand(Object name) {
-        super(name.toString());
-    }
-
-    @Override
-    public String getToolName() {
-        return name;
-    }
+    String ID = "Identifier"
+    String KEY = "Key"
+    String LOCATION = "Location"
+    String INSTLOC = "InstLoc"
+    String[] HEADERS = [ID, KEY, LOCATION]
 }

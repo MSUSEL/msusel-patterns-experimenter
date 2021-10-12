@@ -32,7 +32,7 @@ package edu.montana.gsoc.msusel.arc.command;
  */
 public abstract class RepositoryCommand extends AbstractCommand {
 
-    public RepositoryCommand(String name) {
-        super(name);
+    public RepositoryCommand(Object name) {
+        super(name.toString());
     }
 }

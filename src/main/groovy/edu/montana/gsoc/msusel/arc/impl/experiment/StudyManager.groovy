@@ -34,6 +34,7 @@ import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentRunner
 import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationRunner
 import edu.montana.gsoc.msusel.arc.app.runner.sigrating.SigRatingRunner
 import edu.montana.gsoc.msusel.arc.app.runner.test.TestExperimentRunner
+import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyRunner
 
 class StudyManager {
 
@@ -46,6 +47,7 @@ class StudyManager {
                 "case-study" : new CaseStudyRunner(context),
                 "calibration" : new SigCalibrationRunner(context),
                 "rating-test" : new SigRatingRunner(context),
+                "verification" : new VerificationStudyRunner(context),
                 "test" : new TestExperimentRunner(context)
         ]
     }
