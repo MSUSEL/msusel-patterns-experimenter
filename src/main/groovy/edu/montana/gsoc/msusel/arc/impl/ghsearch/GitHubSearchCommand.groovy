@@ -41,8 +41,6 @@
 package edu.montana.gsoc.msusel.arc.impl.ghsearch
 
 import com.google.common.collect.Lists
-import com.google.common.flogger.StackSize
-import edu.isu.isuese.datamodel.Module
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.SCM
 import edu.isu.isuese.datamodel.SCMType
@@ -52,7 +50,6 @@ import edu.montana.gsoc.msusel.arc.ArcProperties
 import edu.montana.gsoc.msusel.arc.command.CommandUtils
 import edu.montana.gsoc.msusel.arc.command.RepositoryCommand
 import groovy.util.logging.Log4j2
-import groovyx.gpars.GParsPool
 import org.kohsuke.github.GHRepository
 import org.kohsuke.github.GHTag
 import org.kohsuke.github.GitHub
