@@ -110,7 +110,7 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
                 String projKey = proj.getProjectKey()
                 String projName = proj.getName()
                 String projVersion = proj.getVersion()
-                String patternName = data[id]
+                String patternName = data[id - 1]
                 String patternLoc = new File(baseDir,  patternName).toPath().toAbsolutePath().toString()
                 pw.printf("%d,\"%s_%s\",\"%s\"\n", id, projKey, patternName, patternLoc)
             }
