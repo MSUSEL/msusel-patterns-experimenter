@@ -76,7 +76,9 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
 
                 Set<Type> types = Sets.newHashSet()
                 typeNames.each {
-                    types.add(getType(it, context.getProject()))
+                    Type t = getType(it, context.getProject())
+                    if (t != null)
+                        types.add(t)
                 }
                 Set<Type> related = findRelatedTypes(types)
 
