@@ -53,7 +53,8 @@ class VerificationStudyRunner extends EmpiricalStudy {
         return [
                 VerificationStudyConstants.KEY,
                 VerificationStudyConstants.LOCATION,
-                VerificationStudyConstants.INSTLOC
+                VerificationStudyConstants.INSTLOC,
+                VerificationStudyConstants.RESULTSLOC
         ]
     }
 

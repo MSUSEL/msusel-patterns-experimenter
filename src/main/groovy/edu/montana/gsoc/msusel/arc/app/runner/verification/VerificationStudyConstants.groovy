@@ -32,5 +32,6 @@ interface VerificationStudyConstants {
     String KEY = "Key"
     String LOCATION = "Location"
     String INSTLOC = "InstLoc"
-    String[] HEADERS = [ID, KEY, LOCATION]
+    String RESULTSLOC = "ResultsLoc"
+    String[] HEADERS = [ID, KEY, LOCATION, INSTLOC, RESULTSLOC]
 }

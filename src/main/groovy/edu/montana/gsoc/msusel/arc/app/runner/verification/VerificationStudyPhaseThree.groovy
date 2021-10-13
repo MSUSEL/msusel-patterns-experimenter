@@ -49,13 +49,19 @@ class VerificationStudyPhaseThree  extends WorkFlow {
     void executeStudy() {
         context.open()
         List<Project> projects = []
+        List<String> instLocs = []
+        List<String> resultsFiles = []
         results.rowKeySet().each { row ->
             projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
+            instLocs << results.get(row, VerificationStudyConstants.INSTLOC)
+            resultsFiles << results.get(row, VerificationStudyConstants.RESULTSLOC)
         }
         context.close()
 
-        projects.each {
-            context.project = it
+        projects.eachWithIndex { project, index ->
+            context.setArcProperty(PatternExtractorConstants.BASE_DIR, instLocs[index])
+            context.setArcProperty(PatternExtractorConstants.RESULTS_FILE, resultsFiles[index])
+            context.project = project
             runTools()
         }
     }
