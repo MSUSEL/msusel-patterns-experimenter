@@ -57,7 +57,7 @@ class VerificationStudyPhaseOne extends WorkFlow {
             Project proj = Project.builder()
                 .name(projName)
                 .projKey(key)
-                .relPath(projVersion)
+                .relPath("")
                 .version(projVersion)
                 .create()
             sys.addProject(proj)
