@@ -14,7 +14,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="msusel-arc-framework" target="17" />
+      <module name="msusel-arc-framework" target="11" />
       <module name="msusel-arc-framework (1)" target="1.5" />
       <module name="msusel-arc-framework (2)" target="11" />
     </bytecodeTargetLevel>
