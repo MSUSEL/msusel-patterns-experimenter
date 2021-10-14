@@ -53,7 +53,11 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
     void execute(ArcContext context) {
         String resultsFile = context.getArcProperty(PatternExtractorConstants.RESULTS_FILE)
         String base = context.getArcProperty(PatternExtractorConstants.BASE_DIR)
-        File baseDir = new File(Paths.get(context.getArcProperty("arc.base.dir")).toAbsolutePath().toFile(), base)
+        File baseDir
+        if (context.getArcProperty("arc.base.dir") == "." || context.getArcProperty("arc.base.dir") == "." + File.separator)
+            baseDir = new File(base)
+        else
+            baseDir = new File(Paths.get(context.getArcProperty("arc.base.dir")).toAbsolutePath().toFile(), base)
 
         def data = new XmlSlurper().parseText(new File(resultsFile).text)
 
