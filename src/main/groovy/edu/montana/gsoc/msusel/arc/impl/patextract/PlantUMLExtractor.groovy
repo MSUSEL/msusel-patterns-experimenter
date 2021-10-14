@@ -57,20 +57,20 @@ class PlantUMLExtractor {
 
     private void generateRelationships(StringBuilder builder) {
         types.each {first ->
-            first.getGeneralizedBy().each { second -> builder << "${first.getFullName()} --|> ${second.getFullName()}" }
-            first.getGeneralizes().each { second -> builder << "${first.getFullName()} <|-- ${second.getFullName()}" }
-            first.getAssociatedFrom().each { second -> builder << "${first.getFullName()} --> ${second.getFullName()}" }
-            first.getAssociatedTo().each { second -> builder << "${first.getFullName()} <-- ${second.getFullName()}" }
-            first.getComposedFrom().each { second -> builder << "${first.getFullName()} *--> ${second.getFullName()}" }
-            first.getComposedTo().each { second -> builder << "${first.getFullName()} <--* ${second.getFullName()}" }
-            first.getAggregatedFrom().each { second -> builder << "${first.getFullName()} o--> ${second.getFullName()}" }
-            first.getAggregatedTo().each { second -> builder << "${first.getFullName()} <--o ${second.getFullName()}" }
-            first.getUseFrom().each { second -> builder << "${first.getFullName()} ..> ${second.getFullName()}" }
-            first.getUseTo().each { second -> builder << "${first.getFullName()} <.. ${second.getFullName()}" }
-            first.getDependencyFrom().each { second -> builder << "${first.getFullName()} ..> ${second.getFullName()}" }
-            first.getDependencyTo().each { second -> builder << "${first.getFullName()} <.. ${second.getFullName()}" }
-            first.getRealizedBy().each { second -> builder << "${first.getFullName()} ..|> ${second.getFullName()}" }
-            first.getRealizes().each { second -> builder << "${first.getFullName()} <|.. ${second.getFullName()}" }
+            first.getGeneralizedBy().each { second -> builder << "${first.getFullName()} --|> ${second.getFullName()}\n" }
+            first.getGeneralizes().each { second -> builder << "${first.getFullName()} <|-- ${second.getFullName()}\n" }
+            first.getAssociatedFrom().each { second -> builder << "${first.getFullName()} <-- ${second.getFullName()}\n" }
+            first.getAssociatedTo().each { second -> builder << "${first.getFullName()} --> ${second.getFullName()}\n" }
+            first.getComposedFrom().each { second -> builder << "${first.getFullName()} <--* ${second.getFullName()}\n" }
+            first.getComposedTo().each { second -> builder << "${first.getFullName()} *--> ${second.getFullName()}\n" }
+            first.getAggregatedFrom().each { second -> builder << "${first.getFullName()} <--o ${second.getFullName()}\n" }
+            first.getAggregatedTo().each { second -> builder << "${first.getFullName()} o--> ${second.getFullName()}\n" }
+            first.getUseFrom().each { second -> builder << "${first.getFullName()} <.. ${second.getFullName()}\n" }
+            first.getUseTo().each { second -> builder << "${first.getFullName()} ..> ${second.getFullName()}\n" }
+            first.getDependencyFrom().each { second -> builder << "${first.getFullName()} <.. ${second.getFullName()}\n" }
+            first.getDependencyTo().each { second -> builder << "${first.getFullName()} ..> ${second.getFullName()}\n" }
+            first.getRealizedBy().each { second -> builder << "${first.getFullName()} ..|> ${second.getFullName()}\n" }
+            first.getRealizes().each { second -> builder << "${first.getFullName()} <|.. ${second.getFullName()}\n" }
         }
     }
 
