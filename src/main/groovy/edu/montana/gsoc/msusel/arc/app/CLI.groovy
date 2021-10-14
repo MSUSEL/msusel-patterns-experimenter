@@ -37,6 +37,8 @@ import groovy.cli.Unparsed
 import groovy.cli.picocli.CliBuilder
 import groovy.util.logging.Log4j2
 
+import java.nio.file.Paths
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -140,9 +142,9 @@ class CommandLineInterface {
 
         String base
         if (arc.base) {
-            base = arc.base.first()
+            base = Paths.get(arc.base.first()).toAbsolutePath().toString()
         } else {
-            base = "."
+            base = Paths.get(".").toAbsolutePath().toString()
         }
 
 //        if (arc.properties) {
