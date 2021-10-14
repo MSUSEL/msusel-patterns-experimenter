@@ -54,6 +54,8 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
         String resultsFile = context.getArcProperty(PatternExtractorConstants.RESULTS_FILE)
         String base = context.getArcProperty(PatternExtractorConstants.BASE_DIR)
         File baseDir
+
+        log.info("arc.base.dir: " + context.getArcProperty("arc.base.dir"))
         if (context.getArcProperty("arc.base.dir") == "." || context.getArcProperty("arc.base.dir") == "." + File.separator)
             baseDir = new File(base)
         else
