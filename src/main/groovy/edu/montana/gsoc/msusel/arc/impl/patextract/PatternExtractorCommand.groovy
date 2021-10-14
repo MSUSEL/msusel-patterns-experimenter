@@ -179,6 +179,13 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
                 Path srcPath = Paths.get(file)
                 String fileName = srcPath.getFileName().toString()
                 Path targetPath = Paths.get(baseDir.toPath().toAbsolutePath().toString(), patternName, "inst-$instNum", "src", "main", "java", pkgPath, fileName)
+                log.info("Base Dir: " + baseDir.toPath().toAbsolutePath().toString())
+                log.info("Pattern Name: " + patternName)
+                log.info("Inst: " + "inst-$instNum")
+                log.info("PkgPath: " + pkgPath)
+                log.info("FileName: " + fileName)
+                log.info("Source Path: " + srcPath)
+                log.info("Target Path: " + targetPath.toString())
                 Files.createDirectories(Paths.get(baseDir.toPath().toAbsolutePath().toString(), patternName, "inst-$instNum", "src", "main", "java", pkgPath))
                 Files.copy(srcPath, targetPath)
             }

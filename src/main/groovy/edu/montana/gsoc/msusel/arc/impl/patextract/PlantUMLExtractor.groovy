@@ -45,11 +45,11 @@ class PlantUMLExtractor {
         builder << "@startuml\n"
         types.each {
             String val = plantUmlForType(it, true)
-            if (val) builder << "${val}"
+            if (val) builder << "${val}\n"
         }
         related.each {
             String val = plantUmlForType(it, false)
-            if (val) builder << "${val}"
+            if (val) builder << "${val}\n"
         }
         generateRelationships(builder)
         builder << "@enduml"
