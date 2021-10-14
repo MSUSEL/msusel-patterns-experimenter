@@ -149,7 +149,7 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
     private Map<String, Set<String>> extractPackageFileMap(Set<Type> types) {
         Map<String, Set<String>> pkgFiles = Maps.newConcurrentMap()
         types.each {
-            if (it) {
+            if (it && it.getParentNamespace() && it.getParentFile()) {
                 String pkgName = it.getParentNamespace().getFullName()
                 String file = it.getParentFile().getFullPath()
                 if (pkgFiles[pkgName]) {
