@@ -56,7 +56,7 @@ class PatternExtractorCommand extends SecondaryAnalysisCommand {
         File baseDir
 
         log.info("arc.base.dir: " + context.getArcProperty("arc.base.dir"))
-        if (context.getArcProperty("arc.base.dir") == "." || context.getArcProperty("arc.base.dir") == "." + File.separator)
+        if (context.getArcProperty("arc.base.dir").endsWith(".") || context.getArcProperty("arc.base.dir").endsWith("." + File.separator))
             baseDir = new File(base)
         else
             baseDir = new File(Paths.get(context.getArcProperty("arc.base.dir")).toAbsolutePath().toFile(), base)
