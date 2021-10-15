@@ -43,23 +43,26 @@ class VerificationStudyPhaseOne extends WorkFlow {
 
     void executeStudy() {
         context.open()
-        results.rowKeySet().each {id ->
+        results.rowKeySet().each { id ->
             def map = results.row(id)
             String key = map[VerificationStudyConstants.KEY]
             String sysName = key.split(/:/)[0]
             String projName = key.split(/:/)[1]
             String projVersion = projName.split(/-/)[1]
-            System sys = System.builder()
-                .name(sysName)
-                .key(sysName)
-                .basePath(normalizePath(map[VerificationStudyConstants.LOCATION]))
-                .create()
+            System sys = System.findFirst("key = ?", sysName)
+            if (!sys) {
+                sys = System.builder()
+                        .name(sysName)
+                        .key(sysName)
+                        .basePath(normalizePath(map[VerificationStudyConstants.LOCATION]))
+                        .create()
+            }
             Project proj = Project.builder()
-                .name(projName)
-                .projKey(key)
-                .relPath("")
-                .version(projVersion)
-                .create()
+                    .name(projName)
+                    .projKey(key)
+                    .relPath(projVersion)
+                    .version(projVersion)
+                    .create()
             sys.addProject(proj)
         }
     }
