@@ -49,7 +49,7 @@ class VerificationStudyPhaseOne extends WorkFlow {
             String sysName = key.split(/:/)[0]
             String projName = key.split(/:/)[1]
             String projVersion = projName.split(/-/)[1]
-            System sys = System.findFirst("key = ?", sysName)
+            System sys = System.findFirst("sysKey = ?", sysName)
             if (!sys) {
                 sys = System.builder()
                         .name(sysName)
