@@ -26,12 +26,11 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
-import edu.isu.isuese.datamodel.Project
+
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
 
 class Pattern4TestPhaseFour extends WorkFlow {
