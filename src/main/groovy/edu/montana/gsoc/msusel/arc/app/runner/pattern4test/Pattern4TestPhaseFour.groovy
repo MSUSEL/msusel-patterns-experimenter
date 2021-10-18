@@ -53,12 +53,12 @@ class Pattern4TestPhaseFour extends WorkFlow {
     void executeStudy() {
         context.open()
         List<System> systems = System.findAll()
-        context.close()
 
         systems.each { sys ->
             context.system = sys
             runTools()
         }
+        context.close()
     }
 
     void runTools() {
