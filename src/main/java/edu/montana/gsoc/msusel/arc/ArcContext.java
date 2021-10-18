@@ -50,6 +50,9 @@ public class ArcContext {
     @Getter @Setter
     Project project;
 
+    @Getter @Setter
+    System system;
+
     Map<String, Command> commandMap;
     Map<String, Collector> collectorMap;
 

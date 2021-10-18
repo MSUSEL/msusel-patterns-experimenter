@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestPhaseFour.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4Command.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patterns/PatternChainingCommand.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patterns/PatternChainingCommand.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/ArcContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/montana/gsoc/msusel/arc/ArcContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/migrations/20210616060107_create_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/migrations/20210616060107_create_db.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,7 +314,7 @@
       <workItem from="1634183926416" duration="5961000" />
       <workItem from="1634292610122" duration="3272000" />
       <workItem from="1634323548553" duration="599000" />
-      <workItem from="1634402994212" duration="4805000" />
+      <workItem from="1634402994212" duration="7304000" />
     </task>
     <servers />
   </component>

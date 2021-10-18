@@ -24,33 +24,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patterns
+package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
-import edu.isu.isuese.datamodel.pattern.ChainIdentifier
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.command.PrimaryAnalysisCommand
-import groovy.util.logging.Log4j2
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
+import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
 
-/**
- * @author Isaac Griffith
- * @version 1.3.0
- */
-@Log4j2
-class PatternChainingCommand extends PrimaryAnalysisCommand {
+class Pattern4TestPhaseFour extends WorkFlow {
 
-    PatternChainingCommand() {
-        super(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME)
+    private static final String STUDY_NAME = "Pattern 4 Test - Phase 4"
+    private static final String STUDY_DESC = "Pattern Chaining Test"
+
+    Command chaining
+
+    Pattern4TestPhaseFour(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context)
     }
 
     @Override
-    void execute(ArcContext context) {
-        log.info("Starting Pattern Chain Identification")
-        ChainIdentifier chainId = new ChainIdentifier()
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        chaining = context.getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME)
+    }
 
-        System sys = context.getSystem()
-        chainId.findChains(sys)
-        chainId.constructChains(sys)
-        log.info("Pattern Chain Identification Complete")
+    @Override
+    void executeStudy() {
+        context.open()
+        List<System> systems = System.findAll()
+        context.close()
+
+        systems.each { sys ->
+            context.system = sys
+            runTools()
+        }
+    }
+
+    void runTools() {
+        chaining.execute(context)
     }
 }
