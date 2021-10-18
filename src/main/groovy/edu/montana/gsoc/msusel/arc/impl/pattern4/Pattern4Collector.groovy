@@ -123,7 +123,7 @@ class Pattern4Collector extends FileCollector {
             member = components[1]
         }
 
-        Type type = project.findTypeByQualifiedName(typeAndNS)
+        Type type = project.findTypeByQualifiedName(typeAndNS.replace(":", "."))
 
         if (member && type) {
             String[] memberComps = member.split(":")
