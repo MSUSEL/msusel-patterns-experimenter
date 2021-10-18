@@ -42,7 +42,8 @@ class PatternsTestRunner extends EmpiricalStudy {
                 new PatternsTestPhaseOne(context),
                 new PatternsTestPhaseTwo(context),
                 new PatternsTestPhaseThree(context),
-                new PatternsTestPhaseFour(context)
+                new PatternsTestPhaseFour(context),
+                new PatternsTestPhaseFive(context)
         ]
 
         this.headers = PatternsTestConstants.HEADERS
