@@ -31,6 +31,12 @@ import edu.montana.gsoc.msusel.arc.command.ToolCommand;
 import lombok.Builder;
 import org.apache.commons.exec.CommandLine;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /**
  * @author Isaac Griffith
  * @version 1.3.0
@@ -52,6 +58,10 @@ public class Pattern4Command extends ToolCommand {
 
     @Override
     public CommandLine buildCommandLine() {
+        Path p = Paths.get(CommandUtils.absolutePathString(reportFile));
+        p.toFile().mkdirs();
+        try { Files.deleteIfExists(p); } catch (IOException e) {}
+
         return new CommandLine("java")
             .addArgument("-Xms32m")
             .addArgument("-Xmx512m")
