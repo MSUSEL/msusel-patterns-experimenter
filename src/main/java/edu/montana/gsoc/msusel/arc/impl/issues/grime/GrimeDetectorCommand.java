@@ -28,7 +28,9 @@ package edu.montana.gsoc.msusel.arc.impl.issues.grime;
 
 import com.google.common.collect.Lists;
 import edu.isu.isuese.datamodel.Project;
+import edu.isu.isuese.detstrat.impl.ClassGrimeDetector;
 import edu.isu.isuese.detstrat.impl.GrimeDetector;
+import edu.isu.isuese.detstrat.impl.ModularGrimeDetector;
 import edu.isu.isuese.detstrat.impl.OrgGrimeDetector;
 import edu.montana.gsoc.msusel.arc.ArcContext;
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand;
@@ -53,8 +55,8 @@ public class GrimeDetectorCommand extends SecondaryAnalysisCommand {
 
         log.info("Initializing Grime Detectors");
         List<GrimeDetector> detectors = Lists.newArrayList(
-//                new ClassGrimeDetector(),
-//                new ModularGrimeDetector(),
+                new ClassGrimeDetector(),
+                new ModularGrimeDetector(),
                 new OrgGrimeDetector()
         );
 

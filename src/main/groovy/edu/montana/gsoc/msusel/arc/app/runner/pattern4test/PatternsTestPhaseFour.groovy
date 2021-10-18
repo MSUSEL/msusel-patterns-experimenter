@@ -24,31 +24,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.app.runner
+package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+
+import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.app.runner.casestudy.CaseStudyRunner
-import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentRunner
-import edu.montana.gsoc.msusel.arc.app.runner.pattern4test.PatternsTestRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigrating.SigRatingRunner
-import edu.montana.gsoc.msusel.arc.app.runner.test.TestExperimentRunner
-import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyRunner
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
 
-class StudyManager {
+class PatternsTestPhaseFour extends WorkFlow {
 
-    final Map<String, EmpiricalStudy> studies
+    private static final String STUDY_NAME = "Pattern 4 Test - Phase 4"
+    private static final String STUDY_DESC = "Pattern Chaining Test"
 
-    StudyManager(ArcContext context) {
-        studies = [
-                //"test" : new TestEmpiricalStudy(context),
-                "experiment" : new ExperimentRunner(context),
-                "case-study" : new CaseStudyRunner(context),
-                "calibration" : new SigCalibrationRunner(context),
-                "rating-test" : new SigRatingRunner(context),
-                "verification" : new VerificationStudyRunner(context),
-                "test" : new TestExperimentRunner(context),
-                "p4test" : new PatternsTestRunner(context)
-        ]
+    Command chaining
+
+    PatternsTestPhaseFour(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context)
+    }
+
+    @Override
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        chaining = context.getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME)
+    }
+
+    @Override
+    void executeStudy() {
+        context.open()
+        List<System> systems = System.findAll()
+
+        systems.each { sys ->
+            context.system = sys
+            runTools()
+        }
+        context.close()
+    }
+
+    void runTools() {
+        chaining.execute(context)
     }
 }

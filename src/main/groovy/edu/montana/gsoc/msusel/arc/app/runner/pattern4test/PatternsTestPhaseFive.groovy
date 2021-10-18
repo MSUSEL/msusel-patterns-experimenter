@@ -26,39 +26,44 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
-import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.impl.issues.grime.GrimeConstants
 
-class Pattern4TestRunner extends EmpiricalStudy {
+class PatternsTestPhaseFive extends WorkFlow {
 
-    private static final String STUDY_NAME = "Pattern4 Test"
-    private static final String STUDY_DESC = ""
+    private static final String STUDY_NAME = "Patterns Test - Phase 5"
+    private static final String STUDY_DESC = "Grime Detection"
 
-    Pattern4TestRunner(ArcContext context) {
-        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
+    Command grimeDetector
 
-        this.phases = [
-                new Pattern4TestPhaseOne(context),
-                new Pattern4TestPhaseTwo(context),
-                new Pattern4TestPhaseThree(context),
-                new Pattern4TestPhaseFour(context)
-        ]
-
-        this.headers = Pattern4TestConstants.HEADERS
-        this.keyHeaders = [Pattern4TestConstants.KEY]
-        this.identifier = Pattern4TestConstants.ID
-
+    PatternsTestPhaseFive(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context)
     }
 
-    def static getConfigFileName() {
-        "p4test.conf"
+    @Override
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        grimeDetector = context.getRegisteredCommand(GrimeConstants.GRIME_DETECT_CMD_NAME)
     }
 
-    def static getConfigHeaders() {
-        return [
-                Pattern4TestConstants.KEY,
-                Pattern4TestConstants.LOCATION
-        ]
+    @Override
+    void executeStudy() {
+        context.open()
+        List<Project> projects = []
+        results.rowKeySet().each {row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, PatternsTestConstants.KEY)))
+        }
+        context.close()
+
+        projects.each { project ->
+            context.project = project
+            runTools()
+        }
+    }
+
+    void runTools() {
+        grimeDetector.execute(context)
     }
 }

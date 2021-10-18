@@ -26,42 +26,39 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
-
-import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.Command
-import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
+import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
 
-class Pattern4TestPhaseFour extends WorkFlow {
+class PatternsTestRunner extends EmpiricalStudy {
 
-    private static final String STUDY_NAME = "Pattern 4 Test - Phase 4"
-    private static final String STUDY_DESC = "Pattern Chaining Test"
+    private static final String STUDY_NAME = "Pattern4 Test"
+    private static final String STUDY_DESC = ""
 
-    Command chaining
+    PatternsTestRunner(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
 
-    Pattern4TestPhaseFour(ArcContext context) {
-        super(STUDY_NAME, STUDY_DESC, context)
+        this.phases = [
+                new PatternsTestPhaseOne(context),
+                new PatternsTestPhaseTwo(context),
+                new PatternsTestPhaseThree(context),
+                new PatternsTestPhaseFour(context)
+        ]
+
+        this.headers = PatternsTestConstants.HEADERS
+        this.keyHeaders = [PatternsTestConstants.KEY]
+        this.identifier = PatternsTestConstants.ID
+
     }
 
-    @Override
-    void initWorkflow(ConfigObject runnerConfig, int num) {
-        chaining = context.getRegisteredCommand(ArcPatternConstants.PATTERN_CHAIN_CMD_NAME)
+    def static getConfigFileName() {
+        "p4test.conf"
     }
 
-    @Override
-    void executeStudy() {
-        context.open()
-        List<System> systems = System.findAll()
-
-        systems.each { sys ->
-            context.system = sys
-            runTools()
-        }
-        context.close()
-    }
-
-    void runTools() {
-        chaining.execute(context)
+    def static getConfigHeaders() {
+        return [
+                PatternsTestConstants.KEY,
+                PatternsTestConstants.LOCATION
+        ]
     }
 }

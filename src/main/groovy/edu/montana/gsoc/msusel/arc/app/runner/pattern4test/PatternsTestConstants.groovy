@@ -26,45 +26,9 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
-import edu.isu.isuese.datamodel.Project
-import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.Collector
-import edu.montana.gsoc.msusel.arc.Command
-import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
-import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
-
-class Pattern4TestPhaseThree extends WorkFlow {
-
-    Command p4cmd
-    Collector p4coll
-
-    Pattern4TestPhaseThree(ArcContext context) {
-        super("Pattern4 Test Phase Three - Pattern 4 Tool", "Phase Three", context)
-    }
-
-    @Override
-    void initWorkflow(ConfigObject runnerConfig, int num) {
-        p4cmd = context.getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
-        p4coll = context.getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME)
-    }
-
-    void executeStudy() {
-        context.open()
-        List<Project> projects = []
-        results.rowKeySet().each { row ->
-            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
-        }
-        context.close()
-
-        projects.eachWithIndex { project, index ->
-            context.project = project
-            runTools()
-        }
-    }
-
-    void runTools() {
-        p4cmd.execute(context)
-        p4coll.execute(context)
-    }
+interface PatternsTestConstants {
+    String KEY = "Key"
+    String ID = "Identifier"
+    String LOCATION = "Location"
+    String[] HEADERS = [KEY, ID, LOCATION]
 }

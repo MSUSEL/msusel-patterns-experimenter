@@ -27,44 +27,46 @@
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
 import edu.isu.isuese.datamodel.Project
-import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
+import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
-class Pattern4TestPhaseOne extends WorkFlow {
+class PatternsTestPhaseTwo extends WorkFlow {
 
-    Pattern4TestPhaseOne(ArcContext context) {
-        super("Pattern 4 Test Phase One", "Phase One", context)
+    Command java
+    Command parser
+    Command jdi
+
+    PatternsTestPhaseTwo(ArcContext context) {
+        super("Pattern4 Test Phase Two", "Phase Two", context)
     }
 
     void initWorkflow(ConfigObject runnerConfig, int num) {
-
+        java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
+        parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
+        jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
     }
 
     void executeStudy() {
         context.open()
-        results.rowKeySet().each { id ->
-            def map = results.row(id)
-            String key = map[VerificationStudyConstants.KEY]
-            String sysName = key.split(/:/)[0]
-            String projName = key.split(/:/)[1]
-            String projVersion = projName.split(/-/)[1]
-            System sys = System.findFirst("sysKey = ?", sysName)
-            if (!sys) {
-                sys = System.builder()
-                        .name(sysName)
-                        .key(sysName)
-                        .basePath(normalizePath(map[VerificationStudyConstants.LOCATION]))
-                        .create()
-            }
-            Project proj = Project.builder()
-                    .name(projName)
-                    .projKey(key)
-                    .relPath("")
-                    .version(projVersion)
-                    .create()
-            sys.addProject(proj)
+        List<Project> projects = []
+        results.rowKeySet().each { row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
         }
+        context.close()
+
+        projects.eachWithIndex { project, index ->
+            context.project = project
+            runTools()
+        }
+    }
+
+    void runTools() {
+        java.execute(context)
+        parser.execute(context)
+        jdi.execute(context)
     }
 }
