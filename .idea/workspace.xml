@@ -5,7 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseOne.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestConstants.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestPhaseOne.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestPhaseThree.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestPhaseTwo.groovy" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/Pattern4TestRunner.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/CLI.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/experiment/StudyManager.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/StudyManager.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +72,7 @@
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.Spock" value="spock.lang.Specification" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/groovy/edu/montana/gsoc/msusel/arc/impl/quality/sigmain" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../msusel-java-parser" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../isuese-chain-builder" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="Libraries" />
@@ -308,7 +315,9 @@
       <workItem from="1633774489039" duration="21339000" />
       <workItem from="1634028268735" duration="20084000" />
       <workItem from="1634183926416" duration="5961000" />
-      <workItem from="1634292610122" duration="1865000" />
+      <workItem from="1634292610122" duration="3272000" />
+      <workItem from="1634323548553" duration="599000" />
+      <workItem from="1634402994212" duration="3582000" />
     </task>
     <servers />
   </component>

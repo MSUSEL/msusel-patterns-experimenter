@@ -31,7 +31,7 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.ArcProperties
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.db.ConfigLoader
-import edu.montana.gsoc.msusel.arc.impl.experiment.StudyManager
+import edu.montana.gsoc.msusel.arc.app.runner.StudyManager
 import groovy.cli.Option
 import groovy.cli.Unparsed
 import groovy.cli.picocli.CliBuilder

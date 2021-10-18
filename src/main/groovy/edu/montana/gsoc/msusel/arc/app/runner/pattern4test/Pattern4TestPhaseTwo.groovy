@@ -24,31 +24,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.experiment
+package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
+import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.app.runner.casestudy.CaseStudyRunner
-import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigcalibrate.SigCalibrationRunner
-import edu.montana.gsoc.msusel.arc.app.runner.sigrating.SigRatingRunner
-import edu.montana.gsoc.msusel.arc.app.runner.test.TestExperimentRunner
-import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyRunner
+import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
+import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
-class StudyManager {
+class Pattern4TestPhaseTwo extends WorkFlow {
 
-    final Map<String, EmpiricalStudy> studies
+    Command java
+    Command parser
+    Command jdi
 
-    StudyManager(ArcContext context) {
-        studies = [
-                //"test" : new TestEmpiricalStudy(context),
-                "experiment" : new ExperimentRunner(context),
-                "case-study" : new CaseStudyRunner(context),
-                "calibration" : new SigCalibrationRunner(context),
-                "rating-test" : new SigRatingRunner(context),
-                "verification" : new VerificationStudyRunner(context),
-                "test" : new TestExperimentRunner(context)
-        ]
+    Pattern4TestPhaseTwo(ArcContext context) {
+        super("Pattern4 Test Phase Two", "Phase Two", context)
+    }
+
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+        java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
+        parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
+        jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
+    }
+
+    void executeStudy() {
+        context.open()
+        List<Project> projects = []
+        results.rowKeySet().each { row ->
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
+        }
+        context.close()
+
+        projects.eachWithIndex { project, index ->
+            context.project = project
+            runTools()
+        }
+    }
+
+    void runTools() {
+        java.execute(context)
+        parser.execute(context)
+        jdi.execute(context)
     }
 }
