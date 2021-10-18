@@ -50,10 +50,8 @@ class PatternChainingCommand extends PrimaryAnalysisCommand {
 
         System sys = context.getSystem()
 
-        context.open()
         chainId.findChains(sys)
         chainId.constructChains(sys)
-        context.close()
         log.info("Pattern Chain Identification Complete")
     }
 }
