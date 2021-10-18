@@ -26,10 +26,33 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.patextract
 
-interface PatternExtractorConstants {
+import edu.isu.isuese.datamodel.Finding
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand
+import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance
 
-    String CMD_NAME = "PatternExtractor"
-    String MARKER_CMD_NAME = "PatternMarker"
-    String RESULTS_FILE = "arc.pattern.extractor.results"
-    String BASE_DIR = "arc.pattern.extractor.base"
+class PatternMarkerCommand extends SecondaryAnalysisCommand {
+
+    PatternMarkerCommand() {
+        super(PatternExtractorConstants.MARKER_CMD_NAME)
+    }
+
+    @Override
+    void execute(ArcContext context) {
+        context.open()
+        context.system.getPatternChains().each { chain ->
+            List<Integer> list = []
+            List<PatternInstance> instances = chain.getInstances()
+            chain.getInstances().each { inst ->
+                List<Finding> findings = Finding.getFindingsFor(inst)
+                list << findings.size()
+            }
+
+            for (int i = 0; i < list.size() - 1; i++) {
+                if (list[i] != list[i + 1])
+                    instances[i + 1].markForExtraction()
+            }
+        }
+        context.close()
+    }
 }

@@ -30,5 +30,7 @@ interface PatternsTestConstants {
     String KEY = "Key"
     String ID = "Identifier"
     String LOCATION = "Location"
-    String[] HEADERS = [KEY, ID, LOCATION]
+    String INSTLOC = "InstLoc"
+    String RESULTSLOC = "ResultsLoc"
+    String[] HEADERS = [ID, KEY, LOCATION, INSTLOC, RESULTSLOC]
 }

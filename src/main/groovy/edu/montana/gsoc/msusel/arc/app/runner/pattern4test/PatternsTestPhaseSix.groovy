@@ -24,12 +24,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patextract
+package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
-interface PatternExtractorConstants {
+import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Command
+import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 
-    String CMD_NAME = "PatternExtractor"
-    String MARKER_CMD_NAME = "PatternMarker"
-    String RESULTS_FILE = "arc.pattern.extractor.results"
-    String BASE_DIR = "arc.pattern.extractor.base"
+class PatternsTestPhaseSix extends WorkFlow {
+
+    private static final String STUDY_NAME = "Patterns Test - Phase 6"
+    private static final String STUDY_DESC = "Pattern Extraction"
+
+    Command extractor
+
+    PatternsTestPhaseSix(ArcContext context) {
+        super(STUDY_NAME, STUDY_DESC, context)
+    }
+
+    @Override
+    void initWorkflow(ConfigObject runnerConfig, int num) {
+
+    }
+
+    @Override
+    void executeStudy() {
+
+    }
+
+    void runTools() {
+        extractor.execute(context)
+    }
 }

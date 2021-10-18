@@ -31,6 +31,7 @@ import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.app.runner.pattern4test.PatternsTestConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
@@ -52,9 +53,9 @@ class VerificationStudyPhaseThree  extends WorkFlow {
         List<String> instLocs = []
         List<String> resultsFiles = []
         results.rowKeySet().each { row ->
-            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
-            instLocs << results.get(row, VerificationStudyConstants.INSTLOC)
-            resultsFiles << results.get(row, VerificationStudyConstants.RESULTSLOC)
+            projects.add(Project.findFirst("projKey = ?", results.get(row, PatternsTestConstants.KEY)))
+            instLocs << results.get(row, PatternsTestConstants.INSTLOC)
+            resultsFiles << results.get(row, PatternsTestConstants.RESULTSLOC)
         }
         context.close()
 
