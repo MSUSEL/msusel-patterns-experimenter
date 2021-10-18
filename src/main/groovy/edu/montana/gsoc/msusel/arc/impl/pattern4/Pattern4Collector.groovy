@@ -68,7 +68,7 @@ class Pattern4Collector extends FileCollector {
                 context.open()
                 Pattern patt = null
                 try {
-                    patt = Pattern.find("patternKey = ?", "gof:$rbmlName").get(0)
+                    patt = Pattern.find("patternKey = ?", "gof:$rbmlName".toString()).get(0)
                 } catch (IndexOutOfBoundsException ex) {}
                 context.close()
 
