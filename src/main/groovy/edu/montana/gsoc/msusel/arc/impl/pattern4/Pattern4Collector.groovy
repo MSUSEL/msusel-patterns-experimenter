@@ -124,7 +124,7 @@ class Pattern4Collector extends FileCollector {
         }
 
         log.info "Type and Namespace: $typeAndNS"
-        Type type = project.findTypeByQualifiedName(typeAndNS.replace(".", ":"))
+        Type type = project.findTypeByQualifiedName(typeAndNS)
 
         if (member && type) {
             String[] memberComps = member.split(":")
