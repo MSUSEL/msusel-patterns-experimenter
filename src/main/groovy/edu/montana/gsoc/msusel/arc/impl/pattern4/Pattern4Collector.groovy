@@ -123,6 +123,7 @@ class Pattern4Collector extends FileCollector {
             member = components[1]
         }
 
+        log.info "Type and Namespace: $typeAndNS"
         Type type = project.findTypeByQualifiedName(typeAndNS.replace(".", ":"))
 
         if (member && type) {
