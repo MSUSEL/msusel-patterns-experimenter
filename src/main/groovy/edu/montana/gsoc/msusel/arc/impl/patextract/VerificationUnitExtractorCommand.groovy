@@ -57,13 +57,14 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
     @Override
     void execute(ArcContext context) {
         log.info "Started Verification Unit Extraction"
-        String base = context.getArcProperty(PatternExtractorConstants.BASE_DIR)
-        File baseDir
+//        String base = context.getArcProperty(PatternExtractorConstants.BASE_DIR)
+        String base = context.getArcProperty("arc.base.dir")
+        File baseDir = new File(base)
 
-        if (context.getArcProperty("arc.base.dir").endsWith(".") || context.getArcProperty("arc.base.dir").endsWith("." + File.separator))
-            baseDir = new File(base)
-        else
-            baseDir = new File(Paths.get(context.getArcProperty("arc.base.dir")).toAbsolutePath().toFile(), base)
+//        if (context.getArcProperty("arc.base.dir").endsWith(".") || context.getArcProperty("arc.base.dir").endsWith("." + File.separator))
+//            baseDir = new File(base)
+//        else
+//            baseDir = new File(Paths.get(context.getArcProperty("arc.base.dir")).toAbsolutePath().toFile(), base)
 
         context.open()
 
