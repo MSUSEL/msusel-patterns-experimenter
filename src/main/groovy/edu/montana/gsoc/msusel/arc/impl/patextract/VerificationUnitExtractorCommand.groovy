@@ -122,6 +122,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
         {
             for (int id = 1; id <= totalUnitCount; id++) {
                 String unitName = "unit-$id"
+                String baseLoc = new File(new File(new File(baseDir, "units"), unitName), "base").toPath().toString()
                 String infLoc = new File(new File(new File(baseDir, "units"), unitName), "infected").toPath().toString()
                 pw.printf("%d,\"verification:%s\",\"%s\",\"%s\"\n", id, unitName, baseLoc, infLoc)
             }
