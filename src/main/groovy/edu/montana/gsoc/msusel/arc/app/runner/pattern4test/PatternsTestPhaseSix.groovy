@@ -30,6 +30,7 @@ import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorCommand
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
 /**
@@ -50,6 +51,7 @@ class PatternsTestPhaseSix extends WorkFlow {
 
     @Override
     void initWorkflow(ConfigObject runnerConfig, int num) {
+        marker = context.getRegisteredCommand(PatternExtractorConstants.MARKER_CMD_NAME)
         extractor = context.getRegisteredCommand(PatternExtractorConstants.UNIT_EXTRACTOR_CMD_NAME)
     }
 
