@@ -33,6 +33,10 @@ import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.patterns.ArcPatternConstants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseFour extends WorkFlow {
 
     private static final String STUDY_NAME = "Pattern 4 Test - Phase 4"

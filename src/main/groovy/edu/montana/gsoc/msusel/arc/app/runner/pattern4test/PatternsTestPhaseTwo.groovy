@@ -32,8 +32,11 @@ import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
-import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseTwo extends WorkFlow {
 
     Command java

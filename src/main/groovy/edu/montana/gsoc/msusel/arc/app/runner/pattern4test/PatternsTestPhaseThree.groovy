@@ -34,6 +34,10 @@ import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseThree extends WorkFlow {
 
     Command p4cmd

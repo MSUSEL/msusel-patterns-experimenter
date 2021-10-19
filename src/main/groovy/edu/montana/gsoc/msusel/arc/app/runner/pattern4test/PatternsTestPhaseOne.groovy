@@ -32,6 +32,10 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.verification.VerificationStudyConstants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseOne extends WorkFlow {
 
     PatternsTestPhaseOne(ArcContext context) {

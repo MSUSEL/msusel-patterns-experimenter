@@ -30,6 +30,10 @@ import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.EmpiricalStudy
 import edu.montana.gsoc.msusel.arc.app.runner.StudyConfigReader
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestRunner extends EmpiricalStudy {
 
     private static final String STUDY_NAME = "Pattern4 Test"

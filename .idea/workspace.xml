@@ -5,7 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffcb95f1-b4c0-4c23-ae3c-0ce85fa6175b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/VerificationUnitExtractorCommand.groovy" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestConstants.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestConstants.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseFive.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseFive.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseFour.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseFour.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseOne.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseSix.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseSix.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseThree.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseThree.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestPhaseTwo.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestRunner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/pattern4test/PatternsTestRunner.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyConstants.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyConstants.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseOne.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseOne.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseThree.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseThree.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseTwo.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyPhaseTwo.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyRunner.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/app/runner/verification/VerificationStudyRunner.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternExtractorConstants.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternExtractorConstants.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternExtractorTool.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternExtractorTool.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternMarkerCommand.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PatternMarkerCommand.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PlantUMLExtractor.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/patextract/PlantUMLExtractor.groovy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4Collector.groovy" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/groovy/edu/montana/gsoc/msusel/arc/impl/pattern4/Pattern4Collector.groovy" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,7 +330,9 @@
       <workItem from="1634292610122" duration="3272000" />
       <workItem from="1634323548553" duration="599000" />
       <workItem from="1634402994212" duration="21266000" />
-      <workItem from="1634629813520" duration="1254000" />
+      <workItem from="1634629813520" duration="1883000" />
+      <workItem from="1634635750574" duration="55000" />
+      <workItem from="1634635825309" duration="8330000" />
     </task>
     <servers />
   </component>

@@ -29,6 +29,10 @@ package edu.montana.gsoc.msusel.arc.impl.patextract
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.tool.CommandOnlyTool
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternExtractorTool extends CommandOnlyTool {
 
     PatternExtractorTool(ArcContext context) {
@@ -37,5 +41,7 @@ class PatternExtractorTool extends CommandOnlyTool {
 
     void init() {
         context.registerCommand(new PatternExtractorCommand())
+        context.registerCommand(new PatternMarkerCommand())
+        context.registerCommand(new VerificationUnitExtractorCommand())
     }
 }

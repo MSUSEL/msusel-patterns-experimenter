@@ -37,6 +37,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.concurrent.atomic.AtomicInteger
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 @Log4j2
 class Pattern4Collector extends FileCollector {
 

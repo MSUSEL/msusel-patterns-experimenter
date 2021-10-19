@@ -26,6 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.verification
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 interface VerificationStudyConstants {
 
     String ID = "Identifier"

@@ -27,10 +27,16 @@
 package edu.montana.gsoc.msusel.arc.impl.patextract
 
 import edu.isu.isuese.datamodel.Finding
+import edu.isu.isuese.datamodel.PatternInstance
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.command.SecondaryAnalysisCommand
-import edu.montana.gsoc.msusel.arc.impl.pattern4.resultsdm.PatternInstance
+import groovy.util.logging.Log4j2
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
+@Log4j2
 class PatternMarkerCommand extends SecondaryAnalysisCommand {
 
     PatternMarkerCommand() {
@@ -39,12 +45,13 @@ class PatternMarkerCommand extends SecondaryAnalysisCommand {
 
     @Override
     void execute(ArcContext context) {
+        log.info "Started marking patterns for extraction"
         context.open()
         context.system.getPatternChains().each { chain ->
             List<Integer> list = []
             List<PatternInstance> instances = chain.getInstances()
             chain.getInstances().each { inst ->
-                List<Finding> findings = Finding.getFindingsFor(inst)
+                List<Finding> findings = Finding.getFindingsFor(inst.getRefKey())
                 list << findings.size()
             }
 
@@ -54,5 +61,6 @@ class PatternMarkerCommand extends SecondaryAnalysisCommand {
             }
         }
         context.close()
+        log.info "Finished marking patterns for extraction"
     }
 }

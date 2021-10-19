@@ -31,6 +31,10 @@ import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class VerificationStudyPhaseOne extends WorkFlow {
 
     VerificationStudyPhaseOne(ArcContext context) {

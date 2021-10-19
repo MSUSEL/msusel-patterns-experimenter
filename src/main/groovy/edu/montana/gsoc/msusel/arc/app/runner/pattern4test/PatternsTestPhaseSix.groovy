@@ -26,16 +26,23 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseSix extends WorkFlow {
 
     private static final String STUDY_NAME = "Patterns Test - Phase 6"
     private static final String STUDY_DESC = "Pattern Extraction"
 
     Command extractor
+    Command marker
 
     PatternsTestPhaseSix(ArcContext context) {
         super(STUDY_NAME, STUDY_DESC, context)
@@ -43,15 +50,26 @@ class PatternsTestPhaseSix extends WorkFlow {
 
     @Override
     void initWorkflow(ConfigObject runnerConfig, int num) {
-
+        extractor = context.getRegisteredCommand(PatternExtractorConstants.UNIT_EXTRACTOR_CMD_NAME)
     }
 
     @Override
     void executeStudy() {
+        context.open()
+        List<System> systems = []
+        System.findAll().each {
+            systems << it
+        }
+        context.close()
 
+        systems.each {
+            context.system = it
+            runTools()
+        }
     }
 
     void runTools() {
+        marker.execute(context)
         extractor.execute(context)
     }
 }

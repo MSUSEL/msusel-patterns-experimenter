@@ -26,9 +26,13 @@
  */
 package edu.montana.gsoc.msusel.arc.impl.patextract
 
-import com.google.common.collect.Sets
+
 import edu.isu.isuese.datamodel.Type
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PlantUMLExtractor {
 
     Set<Type> types

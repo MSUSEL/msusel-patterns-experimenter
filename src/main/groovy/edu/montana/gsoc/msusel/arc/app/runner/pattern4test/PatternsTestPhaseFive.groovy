@@ -32,6 +32,10 @@ import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.issues.grime.GrimeConstants
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 class PatternsTestPhaseFive extends WorkFlow {
 
     private static final String STUDY_NAME = "Patterns Test - Phase 5"

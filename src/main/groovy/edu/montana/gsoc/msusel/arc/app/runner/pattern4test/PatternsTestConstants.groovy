@@ -26,6 +26,10 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.pattern4test
 
+/**
+ * @author Isaac D Griffith
+ * @version 1.3.0
+ */
 interface PatternsTestConstants {
     String KEY = "Key"
     String ID = "Identifier"

@@ -30,6 +30,7 @@ interface PatternExtractorConstants {
 
     String CMD_NAME = "PatternExtractor"
     String MARKER_CMD_NAME = "PatternMarker"
+    String UNIT_EXTRACTOR_CMD_NAME = "VerificationStudyUnitExtractor"
     String RESULTS_FILE = "arc.pattern.extractor.results"
     String BASE_DIR = "arc.pattern.extractor.base"
 }
