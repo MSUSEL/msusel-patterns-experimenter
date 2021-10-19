@@ -116,14 +116,13 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
 
     private writeAnalysisConfig(File baseDir, int totalUnitCount) {
         log.info "Started Writing Analysis Config"
-        File analysisConfig = Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", "verex.conf").toAbsolutePath().toString()
+        File analysisConfig = new File(new File(baseDir, "units"), "verex.conf")
         Files.deleteIfExists(analysisConfig.toPath())
         try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(analysisConfig.toPath(), StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)))
         {
             for (int id = 1; id <= totalUnitCount; id++) {
                 String unitName = "unit-$id"
-                String baseLoc = Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "base").toAbsolutePath().toString()
-                String infLoc = Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "infected").toAbsolutePath().toString()
+                String infLoc = new File(new File(new File(baseDir, "units"), unitName), "infected").toPath().toString()
                 pw.printf("%d,\"verification:%s\",\"%s\",\"%s\"\n", id, unitName, baseLoc, infLoc)
             }
         } catch (IOException ex) {
@@ -169,8 +168,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             files.each { file ->
                 Path srcPath = Paths.get(file)
                 String fileName = srcPath.getFileName().toString()
-                Path targetPath = Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "base", "src", "main", "java", pkgPath, fileName)
-                Files.createDirectories(Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "base", "src", "main", "java", pkgPath))
+                Path targetPath = Paths.get(baseDir.toPath().toString(), "units", unitName, "base", "src", "main", "java", pkgPath, fileName)
+                Files.createDirectories(Paths.get(baseDir.toPath().toString(), "units", unitName, "base", "src", "main", "java", pkgPath))
                 Files.copy(srcPath, targetPath)
             }
         }
@@ -180,8 +179,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             files.each { file ->
                 Path srcPath = Paths.get(file)
                 String fileName = srcPath.getFileName().toString()
-                Path targetPath = Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "infected", "src", "main", "java", pkgPath, fileName)
-                Files.createDirectories(Paths.get(baseDir.toPath().toAbsolutePath().toString(), "units", unitName, "infected", "src", "main", "java", pkgPath))
+                Path targetPath = Paths.get(baseDir.toPath().toString(), "units", unitName, "infected", "src", "main", "java", pkgPath, fileName)
+                Files.createDirectories(Paths.get(baseDir.toPath().toString(), "units", unitName, "infected", "src", "main", "java", pkgPath))
                 Files.copy(srcPath, targetPath)
             }
         }
