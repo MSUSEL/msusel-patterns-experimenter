@@ -27,9 +27,12 @@
 package edu.montana.gsoc.msusel.arc.impl.patextract
 
 import com.google.common.collect.Sets
+import edu.isu.isuese.datamodel.Field
 import edu.isu.isuese.datamodel.Finding
+import edu.isu.isuese.datamodel.Method
 import edu.isu.isuese.datamodel.PatternInstance
 import edu.isu.isuese.datamodel.RefType
+import edu.isu.isuese.datamodel.Type
 import groovy.util.logging.Log4j2
 import org.apache.commons.lang3.tuple.Pair
 
@@ -76,7 +79,20 @@ class InjectorControlGenerator {
         finding.getReferences().each {
             if (it.getType() != RefType.PATTERN) {
                 builder << ","
-                builder << it.getRefKey().replace(inst.getParentProject().getRefKey(), "")
+                switch (it.getType()) {
+                    case RefType.METHOD:
+                        Method m = Method.findFirst("compKey = ?", it.getRefKey())
+                        builder << m.signature()
+                        break
+                    case RefType.FIELD:
+                        Field f = Field.findFirst("compKey = ?", it.getRefKey())
+                        builder << f.getName()
+                        break
+                    case RefType.TYPE:
+                        Type t = Type.findFirst("compKey = ?", it.getRefKey())
+                        builder << t.getFullName()
+                        break
+                }
             }
         }
 
