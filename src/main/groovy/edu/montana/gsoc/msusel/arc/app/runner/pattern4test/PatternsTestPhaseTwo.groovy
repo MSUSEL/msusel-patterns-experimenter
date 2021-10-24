@@ -61,7 +61,7 @@ class PatternsTestPhaseTwo extends WorkFlow {
         }
         context.close()
 
-        projects.eachWithIndex { project, index ->
+        projects.each { project ->
             context.project = project
             runTools()
         }
