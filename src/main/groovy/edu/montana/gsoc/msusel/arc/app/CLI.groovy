@@ -68,7 +68,7 @@ class CLI {
 
         File fBase
         if (System.getenv("ARC_HOME") == null)
-            fBase = new File("")
+            fBase = new File(base)
         else fBase = new File((String) System.getenv("ARC_HOME"))
         File fConfig = new File(fBase, ArcConstants.PROPERTIES_FILE)
         Properties config = loader.loadConfiguration(fConfig)

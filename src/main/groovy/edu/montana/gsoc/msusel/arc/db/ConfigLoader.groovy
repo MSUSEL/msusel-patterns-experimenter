@@ -38,7 +38,7 @@ class ConfigLoader {
             throw new IllegalArgumentException("loadConfiguration: props cannot be null")
 
         if (!props.exists()) {
-            System.err << "Config file ${props.name} does not exist\n"
+            System.err << "Config file ${props.getAbsoluteFile().path} does not exist\n"
             System.exit 1
         }
 
