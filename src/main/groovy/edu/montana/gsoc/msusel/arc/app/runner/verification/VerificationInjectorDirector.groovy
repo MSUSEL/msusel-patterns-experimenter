@@ -61,14 +61,14 @@ class VerificationInjectorDirector {
             }
 
             return [
-                    VerificationStudyConstants.INJECTED_KEY : proj.projectKey,
-                    VerificationStudyConstants.INJECTED_LOCATION : proj.getFullPath()
+                    "InjectedKey" : proj.projectKey,
+                    "InjectedLocation" : proj.getFullPath()
             ]
         } else {
             Project p = Project.findFirst("projKey = ?", projKey)
             return [
-                    VerificationStudyConstants.INJECTED_KEY : p.projectKey,
-                    VerificationStudyConstants.INJECTED_LOCATION : p.getFullPath()]
+                    "InjectedKey" : p.projectKey,
+                    "InjectedLocation" : p.getFullPath()]
         }
     }
 }
