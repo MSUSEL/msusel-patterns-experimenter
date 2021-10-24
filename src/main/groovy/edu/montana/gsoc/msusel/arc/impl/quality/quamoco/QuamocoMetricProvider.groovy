@@ -47,8 +47,8 @@ class QuamocoMetricProvider extends AbstractMetricProvider {
 
     void loadData() {
         File baseDir = new File(context.getArcProperty(ArcProperties.ARC_HOME_DIR))
-        File configDir = new File(baseDir, QuamocoConstants.QUAMOCO_CONFIG_DIR)
-        File file = new File(configDir, "quamoco_metrics.yml")
+        File configDir = new File(baseDir.getAbsoluteFile(), QuamocoConstants.QUAMOCO_CONFIG_DIR)
+        File file = new File(configDir.getAbsoluteFile(), "quamoco_metrics.yml")
         config = new YamlSlurper().parseText(file.text)
     }
 
