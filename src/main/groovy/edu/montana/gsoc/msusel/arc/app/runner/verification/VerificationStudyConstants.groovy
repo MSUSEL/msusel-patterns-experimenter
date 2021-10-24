@@ -33,9 +33,15 @@ package edu.montana.gsoc.msusel.arc.app.runner.verification
 interface VerificationStudyConstants {
 
     String ID = "Identifier"
-    String KEY = "Key"
-    String LOCATION = "Location"
-    String INSTLOC = "InstLoc"
-    String RESULTSLOC = "ResultsLoc"
-    String[] HEADERS = [ID, KEY, LOCATION, INSTLOC, RESULTSLOC]
+    String SYSTEM_KEY = "SystemKey"
+    String BASE_KEY = "BaseKey"
+    String INFECTED_KEY = "InfectedKey"
+    String INJECTED_KEY = "InjectedKey"
+    String SYSTEM_LOCATION = "SystemLocation"
+    String BASE_LOCATION = "BaseLocation"
+    String INFECTED_LOCATION = "InfectedLocation"
+    String INJECTED_LOCATION = "InjectedLocation"
+    String CONTROL_FILE = "ControlFile"
+    String[] HEADERS = [ID, SYSTEM_KEY, SYSTEM_LOCATION, BASE_KEY, INFECTED_KEY, INJECTED_KEY,
+                        BASE_LOCATION, INFECTED_LOCATION, INJECTED_LOCATION, CONTROL_FILE]
 }

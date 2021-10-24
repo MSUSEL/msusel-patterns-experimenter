@@ -49,25 +49,29 @@ class VerificationStudyPhaseOne extends WorkFlow {
         context.open()
         results.rowKeySet().each { id ->
             def map = results.row(id)
-            String key = map[VerificationStudyConstants.KEY]
-            String sysName = key.split(/:/)[0]
-            String projName = key.split(/:/)[1]
-            String projVersion = projName.split(/-/)[1]
-            System sys = System.findFirst("sysKey = ?", sysName)
+            String key = map[VerificationStudyConstants.SYSTEM_KEY]
+            System sys = System.findFirst("sysKey = ?", key)
             if (!sys) {
                 sys = System.builder()
-                        .name(sysName)
-                        .key(sysName)
-                        .basePath(normalizePath(map[VerificationStudyConstants.LOCATION]))
+                        .name(key)
+                        .key(key)
+                        .basePath(normalizePath(map[VerificationStudyConstants.SYSTEM_LOCATION]))
                         .create()
             }
-            Project proj = Project.builder()
-                    .name(projName)
-                    .projKey(key)
-                    .relPath("")
-                    .version(projVersion)
+            Project base = Project.builder()
+                    .name("Base")
+                    .projKey(map[VerificationStudyConstants.BASE_KEY])
+                    .relPath(normalizePath(map[VerificationStudyConstants.BASE_LOCATION]))
+                    .version()
                     .create()
-            sys.addProject(proj)
+            Project infected = Project.builder()
+                    .name("Infected")
+                    .projKey(map[VerificationStudyConstants.INFECTED_KEY])
+                    .relPath(normalizePath(map[VerificationStudyConstants.INFECTED_LOCATION]))
+                    .version()
+                    .create()
+            sys.addProject(base)
+            sys.addProject(infected)
         }
     }
 

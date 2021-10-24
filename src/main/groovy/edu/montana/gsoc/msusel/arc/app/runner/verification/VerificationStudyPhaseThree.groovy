@@ -26,14 +26,20 @@
  */
 package edu.montana.gsoc.msusel.arc.app.runner.verification
 
+import com.google.common.collect.Table
+import edu.isu.isuese.datamodel.PatternInstance
 import edu.isu.isuese.datamodel.Project
 import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
+import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import edu.montana.gsoc.msusel.arc.app.runner.pattern4test.PatternsTestConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
+import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
+import edu.montana.gsoc.msusel.inject.Director
 
 /**
  * @author Isaac D Griffith
@@ -41,37 +47,83 @@ import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
  */
 class VerificationStudyPhaseThree  extends WorkFlow {
 
-    Command extractor
+    Table<String, String, String> results
+    Command java
+    Command jdi
+    Command build
+    Command pattern4
+    Command parser
+    Collector p4coll
 
     VerificationStudyPhaseThree(ArcContext context) {
         super("Verification Study Phase Three", "Phase Three", context)
     }
 
     void initWorkflow(ConfigObject runnerConfig, int num) {
-        extractor = context.getRegisteredCommand(PatternExtractorConstants.CMD_NAME)
+        java     = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
+        parser   = getContext().getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
+        jdi      = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
+        build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
+        pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
+        p4coll   = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME)
     }
 
     void executeStudy() {
-        context.open()
-        List<Project> projects = []
-        List<String> instLocs = []
-        List<String> resultsFiles = []
-        results.rowKeySet().each { row ->
-            projects.add(Project.findFirst("projKey = ?", results.get(row, PatternsTestConstants.KEY)))
-            instLocs << results.get(row, PatternsTestConstants.INSTLOC)
-            resultsFiles << results.get(row, PatternsTestConstants.RESULTSLOC)
-        }
-        context.close()
+        ConfigSlurper slurper = new ConfigSlurper()
 
-        projects.eachWithIndex { project, index ->
-            context.setArcProperty(PatternExtractorConstants.BASE_DIR, instLocs[index])
-            context.setArcProperty(PatternExtractorConstants.RESULTS_FILE, resultsFiles[index])
-            context.project = project
+        results.rowKeySet().each {id ->
+            ConfigObject config = createConfig(slurper, results.row(id))
+
+            context.open()
+            def vals = VerificationInjectorDirector.instance.inject(config)
+            context.close()
+
+            vals.each { col, value ->
+                results.put(id, col, value)
+            }
+
+            context.open()
+            context.project = Project.findFirst("projKey = ?", results.row(id).get(VerificationStudyConstants.INJECTED_KEY))
             runTools()
+            context.close()
         }
     }
 
     void runTools() {
-        extractor.execute(context)
+        java.execute(context)
+        build.execute(context)
+        java.execute(context)
+        parser.execute(context)
+        jdi.execute(context)
+        pattern4.execute(context)
+        p4coll.execute(context)
+    }
+
+    private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
+        context.open()
+        log.info("Looking up project with key: ${map[ExperimentConstants.Key1]}")
+        Project proj = Project.findFirst("projKey = ?", map[ExperimentConstants.Key1])
+        PatternInstance inst
+
+        if (proj) inst = proj.getPatternInstances().first()
+
+        if (proj && inst) {
+            String confText = """
+            where {
+                systemKey = '${proj.getParentSystem().getKey()}'
+                projectKey = '${proj.getProjectKey()}'
+                patternInst = '${inst.getInstKey()}'
+            }
+            control {
+                fileName = ''
+            }
+            """
+            context.close()
+            return slurper.parse(confText)
+        }
+        else {
+            context.close()
+            return null
+        }
     }
 }

@@ -24,14 +24,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patextract
+package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-interface PatternExtractorConstants {
+import edu.montana.gsoc.msusel.arc.app.runner.ResultsWriter
 
-    String CMD_NAME = "PatternExtractor"
-    String MARKER_CMD_NAME = "PatternMarker"
-    String UNIT_EXTRACTOR_CMD_NAME = "VerificationStudyUnitExtractor"
-    String INJECTOR_CONTROL_GEN_CMD_NAME = "InjectorControlGeneraotr"
-    String RESULTS_FILE = "arc.pattern.extractor.results"
-    String BASE_DIR = "arc.pattern.extractor.base"
+class VerificationResultsWriter extends ResultsWriter {
+
+    @Override
+    void combineHeadersAndMeasures() {
+        measures.each {
+            String measureName = it.split(":")[1]
+            headers += measureName + ".Inf"
+            headers += measureName + ".Inj"
+        }
+    }
 }

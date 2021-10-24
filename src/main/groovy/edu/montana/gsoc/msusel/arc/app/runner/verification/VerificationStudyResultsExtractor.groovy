@@ -24,14 +24,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package edu.montana.gsoc.msusel.arc.impl.patextract
+package edu.montana.gsoc.msusel.arc.app.runner.verification
 
-interface PatternExtractorConstants {
+import com.google.common.collect.Table
+import edu.isu.isuese.datamodel.Project
+import edu.montana.gsoc.msusel.arc.app.runner.ResultsExtractor
 
-    String CMD_NAME = "PatternExtractor"
-    String MARKER_CMD_NAME = "PatternMarker"
-    String UNIT_EXTRACTOR_CMD_NAME = "VerificationStudyUnitExtractor"
-    String INJECTOR_CONTROL_GEN_CMD_NAME = "InjectorControlGeneraotr"
-    String RESULTS_FILE = "arc.pattern.extractor.results"
-    String BASE_DIR = "arc.pattern.extractor.base"
+class VerificationStudyResultsExtractor extends ResultsExtractor {
+
+    void extractProjectResults(Table<String, String, String> values) {
+        values.rowKeySet().each {id ->
+            Project base = Project.findFirst("projKey = ?", VerificationStudyConstants.BASE_KEY)
+            Project infected = Project.findFirst("projKey = ?", VerificationStudyConstants.INFECTED_KEY)
+            Project injected = Project.findFirst("projKey = ?", VerificationStudyConstants.INJECTED_KEY)
+
+            measures.each {measure ->
+                log.info "Measure: $measure"
+
+                double baseVal = base.getValueFor(measure)
+                double infVal = infected.getValueFor(measure)
+                double injVal = injected.getValueFor(measure)
+
+                double diffInfBase = infVal - baseVal
+                double diffInjBase = injVal - baseVal
+
+                String name = measure.split(/:/)[1]
+                values.put(id, "${name}.Inf", "$diffInfBase")
+                values.put(id, "${name}.Inj", "$diffInjBase")
+            }
+        }
+    }
 }

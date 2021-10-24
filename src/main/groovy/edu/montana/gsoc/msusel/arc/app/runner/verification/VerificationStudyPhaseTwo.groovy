@@ -28,10 +28,12 @@ package edu.montana.gsoc.msusel.arc.app.runner.verification
 
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
+import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
+import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 
 /**
  * @author Isaac D Griffith
@@ -42,6 +44,9 @@ class VerificationStudyPhaseTwo extends WorkFlow {
     Command java
     Command parser
     Command jdi
+    Command build
+    Command pattern4
+    Collector p4coll
 
     VerificationStudyPhaseTwo(ArcContext context) {
         super("Verification Study Phase Two", "Phase Two", context)
@@ -51,20 +56,21 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
         parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
+        build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
+        pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
+        p4coll = context.getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME)
     }
 
     void executeStudy() {
         context.open()
         List<Project> projects = []
-        List<String> instLocs = []
         results.rowKeySet().each { row ->
-            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.KEY)))
-            instLocs << results.get(row, VerificationStudyConstants.INSTLOC)
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.BASE_KEY)))
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.BASE_KEY)))
         }
         context.close()
 
-        projects.eachWithIndex { project, index ->
-            context.setArcProperty(PatternExtractorConstants.BASE_DIR, instLocs[index])
+        projects.each { project ->
             context.project = project
             runTools()
         }
@@ -72,7 +78,11 @@ class VerificationStudyPhaseTwo extends WorkFlow {
 
     void runTools() {
         java.execute(context)
+        build.execute(context)
+        java.execute(context)
         parser.execute(context)
         jdi.execute(context)
+        pattern4.execute(context)
+        p4coll.execute(context)
     }
 }

@@ -48,8 +48,6 @@ import java.util.concurrent.ConcurrentMap
 @Log4j2
 class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
 
-
-
     VerificationUnitExtractorCommand() {
         super(PatternExtractorConstants.UNIT_EXTRACTOR_CMD_NAME)
     }
@@ -104,8 +102,9 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             var baseTuple = collectTypeData(base)
             var infTuple = collectTypeData(infected)
 
-            createDirectoryStructure(baseDir, unitName, baseTuple[0] as String, infTuple[0] as String)
+            createDirectoryStructure(baseDir, unitName, baseTuple[0] as String, infTuple[0] as String, base.getParentProject().getProjectKey(), infected.getParentProject().getProjectKey(), base.getParentPattern().getName())
             copyFiles(baseDir, unitName, baseTuple[2] as ConcurrentMap<String, Set<String>>, infTuple[2] as ConcurrentMap<String, Set<String>>)
+            generateInjectionControlData(unitName, base, infected, baseDir)
 
             unitNum++
             totalUnitCount++
@@ -132,7 +131,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
         log.info "Finished Writing Analysis Config"
     }
 
-    private void createDirectoryStructure(File baseDir, String unitName, String basePuml, String infPuml) {
+    private void createDirectoryStructure(File baseDir, String unitName, String basePuml, String infPuml, String baseProjKey, String infProjKey, String pattern) {
         log.info "Creating Directory Structure for unit: $unitName"
         def tree = new FileTreeBuilder(baseDir)
         tree."units" {
@@ -147,6 +146,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     docs {
                         "classdiagram.puml"(basePuml)
                     }
+                    "build.gradle"(createGradleBuild())
+                    "settings.gradle"(createGradleSettings("$unitName-base"))
                 }
                 infected {
                     src {
@@ -158,7 +159,15 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     docs {
                         "classdiagram.puml"(infPuml)
                     }
+                    "build.gradle"(createGradleBuild())
+                    "settings.gradle"(createGradleSettings("$unitName-infected"))
                 }
+                "unit.properties"("""\
+                    base.project = ${baseProjKey}
+                    infected.project = ${infProjKey}
+                    pattern.type = ${pattern}
+                """.stripIndent())
+                "injection.control"(generateInjectionControlFile())
             }
         }
     }
@@ -238,5 +247,45 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             related += it.getRealizes()
         }
         related
+    }
+
+    private String createGradleBuild() {
+        """
+        plugins {
+            id 'java'
+        }
+        
+        repositories {
+            mavenCentral()
+        }
+        
+        dependencies {
+            // Use JUnit Jupiter API for testing.
+            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+
+            // Use JUnit Jupiter Engine for testing.
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+            // This dependency is used by the application.
+            implementation 'com.google.guava:guava:29.0-jre'
+        }
+        
+        tasks.named('test') {
+            // Use junit platform for unit tests.
+            useJUnitPlatform()
+        }
+        """.stripIndent(8)
+    }
+
+    private String createGradleSettings(String name) {
+        """\
+        rootProject.name = '$name'
+        """.stripIndent(8)
+    }
+
+    private void generateInjectionControlData(String unitName, PatternInstance base, PatternInstance inf, File baseDir) {
+        File file = new File(new File(new File(baseDir, "units"), unitName), "injector.control")
+        InjectorControlGenerator generator = new InjectorControlGenerator()
+        generator.generate(base, inf, file)
     }
 }

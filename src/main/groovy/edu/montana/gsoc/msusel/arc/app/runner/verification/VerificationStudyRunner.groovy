@@ -42,6 +42,10 @@ class VerificationStudyRunner extends EmpiricalStudy {
     VerificationStudyRunner(ArcContext context) {
         super(STUDY_NAME, STUDY_DESC, context, new StudyConfigReader(getConfigFileName(), getConfigHeaders()))
 
+        this.resEx = new VerificationStudyResultsExtractor()
+        this.resWrite = new VerificationResultsWriter()
+        this.resReader = new VerificationResultsReader()
+
         this.phases = [
                 new VerificationStudyPhaseOne(context),
                 new VerificationStudyPhaseTwo(context),
@@ -49,16 +53,24 @@ class VerificationStudyRunner extends EmpiricalStudy {
         ]
 
         this.headers = VerificationStudyConstants.HEADERS
-        this.keyHeaders = [VerificationStudyConstants.KEY]
+        this.keyHeaders = [
+                VerificationStudyConstants.BASE_KEY,
+                VerificationStudyConstants.INFECTED_KEY,
+                VerificationStudyConstants.INJECTED_KEY
+        ]
         this.identifier = VerificationStudyConstants.ID
     }
 
     def static getConfigHeaders() {
         return [
-                VerificationStudyConstants.KEY,
-                VerificationStudyConstants.LOCATION,
-                VerificationStudyConstants.INSTLOC,
-                VerificationStudyConstants.RESULTSLOC
+                VerificationStudyConstants.SYSTEM_KEY,
+                VerificationStudyConstants.SYSTEM_LOCATION,
+                VerificationStudyConstants.BASE_KEY,
+                VerificationStudyConstants.INFECTED_KEY,
+                VerificationStudyConstants.INJECTED_KEY,
+                VerificationStudyConstants.BASE_LOCATION,
+                VerificationStudyConstants.INFECTED_LOCATION,
+                VerificationStudyConstants.INJECTED_LOCATION
         ]
     }
 
