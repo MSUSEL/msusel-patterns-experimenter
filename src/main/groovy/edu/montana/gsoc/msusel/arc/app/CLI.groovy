@@ -68,13 +68,13 @@ class CLI {
 
         File fBase
         if (System.getenv("ARC_HOME") == null)
-            fBase = new File(".")
+            fBase = new File("")
         else fBase = new File((String) System.getenv("ARC_HOME"))
         File fConfig = new File(fBase, ArcConstants.PROPERTIES_FILE)
         Properties config = loader.loadConfiguration(fConfig)
         context.setArcProperties(config)
         if (System.getenv("ARC_HOME") == null)
-            context.addArcProperty(ArcProperties.ARC_HOME_DIR, ".")
+            context.addArcProperty(ArcProperties.ARC_HOME_DIR, "")
         else context.addArcProperty(ArcProperties.ARC_HOME_DIR, System.getenv("ARC_HOME"))
 
         log.info("Configuration loaded")
@@ -142,9 +142,11 @@ class CommandLineInterface {
 
         String base
         if (arc.base) {
+            if ((arc.base.first() as String).contains("."))
+                (arc.base.first() as String).replace(".", "")
             base = Paths.get(arc.base.first()).toAbsolutePath().toString()
         } else {
-            base = Paths.get(".").toAbsolutePath().toString()
+            base = Paths.get("").toAbsolutePath().toString()
         }
 
 //        if (arc.properties) {
