@@ -33,6 +33,8 @@ package edu.montana.gsoc.msusel.arc.app.runner.verification
 interface VerificationStudyConstants {
 
     String ID = "Identifier"
+    String KEY = "Key"
+    String LOCATION = "Location"
     String SYSTEM_KEY = "SystemKey"
     String BASE_KEY = "BaseKey"
     String INFECTED_KEY = "InfectedKey"
