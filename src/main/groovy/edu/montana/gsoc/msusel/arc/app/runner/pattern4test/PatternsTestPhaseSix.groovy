@@ -30,7 +30,6 @@ import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorCommand
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 
 /**
