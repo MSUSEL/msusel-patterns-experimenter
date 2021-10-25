@@ -48,16 +48,23 @@ class PatternMarkerCommand extends SecondaryAnalysisCommand {
         log.info "Started marking patterns for extraction"
         context.open()
         context.system.getPatternChains().each { chain ->
-            List<Integer> list = []
+            List<Map<String, Integer>> maps = [:]
             List<PatternInstance> instances = chain.getInstances()
+            int index = 0
             chain.getInstances().each { inst ->
-                List<Finding> findings = Finding.getFindingsFor(inst.getRefKey())
-                list << findings.size()
+                Finding.getFindingsFor(inst.getRefKey()).each {
+                    if (maps[index].containsKey(it.getParentRule().getName()))
+                        maps[index][it.getParentRule().getName()] += 1
+                    else
+                        maps[index][it.getParentRule().getName()] = 0
+                }
             }
 
-            for (int i = 0; i < list.size() - 1; i++) {
-                if (list[i] != list[i + 1])
-                    instances[i + 1].markForExtraction()
+            for (int i = 0; i < maps.size() - 1; i++) {
+                maps[i].keySet().each {
+                    if (maps[i][it] != maps[i + 1][it])
+                        instances[i + 1].markForExtraction()
+                }
             }
         }
         context.close()
