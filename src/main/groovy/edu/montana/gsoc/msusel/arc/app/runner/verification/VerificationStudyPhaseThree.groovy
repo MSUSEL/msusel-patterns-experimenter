@@ -49,9 +49,7 @@ class VerificationStudyPhaseThree  extends WorkFlow {
     Command java
     Command jdi
     Command build
-    Command pattern4
     Command parser
-    Collector p4coll
 
     VerificationStudyPhaseThree(ArcContext context) {
         super("Verification Study Phase Three", "Phase Three", context)
@@ -62,8 +60,6 @@ class VerificationStudyPhaseThree  extends WorkFlow {
         parser   = getContext().getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi      = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
         build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
-        pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
-        p4coll   = getContext().getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME)
     }
 
     void executeStudy() {
@@ -93,14 +89,12 @@ class VerificationStudyPhaseThree  extends WorkFlow {
         java.execute(context)
         parser.execute(context)
         jdi.execute(context)
-        pattern4.execute(context)
-        p4coll.execute(context)
     }
 
     private ConfigObject createConfig(ConfigSlurper slurper, Map<String, String> map) {
         context.open()
-        log.info("Looking up project with key: ${map[ExperimentConstants.Key1]}")
-        Project proj = Project.findFirst("projKey = ?", map[ExperimentConstants.Key1])
+        log.info("Looking up project with key: ${map[VerificationStudyConstants.BASE_KEY]}")
+        Project proj = Project.findFirst("projKey = ?", map[VerificationStudyConstants.BASE_KEY])
         PatternInstance inst
 
         if (proj) inst = proj.getPatternInstances().first()

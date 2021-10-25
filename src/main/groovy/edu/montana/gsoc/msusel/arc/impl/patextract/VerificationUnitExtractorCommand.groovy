@@ -104,7 +104,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             var baseTuple = collectTypeData(base)
             var infTuple = collectTypeData(infected)
 
-            createDirectoryStructure(baseDir, unitName, baseTuple[0] as String, infTuple[0] as String, base.getParentProject().getProjectKey(), infected.getParentProject().getProjectKey(), base.getParentPattern().getName())
+            createDirectoryStructure(base, infected, baseDir, unitName, baseTuple[0] as String, infTuple[0] as String, base.getParentProject().getProjectKey(), infected.getParentProject().getProjectKey(), base.getParentPattern().getName())
             copyFiles(baseDir, unitName, baseTuple[2] as ConcurrentMap<String, Set<String>>, infTuple[2] as ConcurrentMap<String, Set<String>>)
             generateInjectionControlData(unitName, base, infected, baseDir)
 
@@ -140,13 +140,16 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
         log.info "Finished Writing Analysis Config"
     }
 
-    private void createDirectoryStructure(File baseDir, String unitName, String basePuml, String infPuml, String baseProjKey, String infProjKey, String pattern) {
+    private void createDirectoryStructure(PatternInstance baseInst, PatternInstance infInst, File baseDir, String unitName, String basePuml, String infPuml, String baseProjKey, String infProjKey, String pattern) {
         log.info "Creating Directory Structure for unit: $unitName"
         def tree = new FileTreeBuilder(baseDir)
         String settingsBase = createGradleSettings("$unitName-base")
         String buildBase = createGradleBuild()
         String settingsInf = createGradleSettings("$unitName-infected")
         String buildInf = createGradleBuild()
+        String baseInstConf = PatternInstanceWriter.instance.write(baseInst)
+        String infInstConf = PatternInstanceWriter.instance.write(infInst)
+
         tree."units" {
             "$unitName" {
                 base {
@@ -161,6 +164,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     }
                     "build.gradle"(buildBase)
                     "settings.gradle"(settingsBase)
+                    "instance.conf"(baseInstConf)
                 }
                 infected {
                     src {
@@ -174,6 +178,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     }
                     "build.gradle"(buildInf)
                     "settings.gradle"(settingsInf)
+                    "instance.conf"(infInstConf)
                 }
                 "unit.properties"("""\
                     base.project = ${baseProjKey}

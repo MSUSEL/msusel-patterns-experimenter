@@ -33,6 +33,7 @@ import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
 import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
+import edu.montana.gsoc.msusel.arc.impl.patextract.PatternInstanceReader
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 
 /**
@@ -45,8 +46,6 @@ class VerificationStudyPhaseTwo extends WorkFlow {
     Command parser
     Command jdi
     Command build
-    Command pattern4
-    Collector p4coll
 
     VerificationStudyPhaseTwo(ArcContext context) {
         super("Verification Study Phase Two", "Phase Two", context)
@@ -57,8 +56,6 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
         build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
-        pattern4 = getContext().getRegisteredCommand(Pattern4Constants.PATTERN4_CMD_NAME)
-        p4coll = context.getRegisteredCollector(Pattern4Constants.PATTERN4_COLL_NAME)
     }
 
     void executeStudy() {
@@ -66,7 +63,7 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         List<Project> projects = []
         results.rowKeySet().each { row ->
             projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.BASE_KEY)))
-            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.BASE_KEY)))
+            projects.add(Project.findFirst("projKey = ?", results.get(row, VerificationStudyConstants.INFECTED_KEY)))
         }
         context.close()
 
@@ -82,7 +79,11 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         java.execute(context)
         parser.execute(context)
         jdi.execute(context)
-        pattern4.execute(context)
-        p4coll.execute(context)
+
+        createPatternInstance()
+    }
+
+    void createPatternInstance() {
+        PatternInstanceReader.instance.read(context.getProject())
     }
 }
