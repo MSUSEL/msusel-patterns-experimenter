@@ -29,22 +29,20 @@ package edu.montana.gsoc.msusel.arc.app.runner.verification
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.PatternInstance
 import edu.isu.isuese.datamodel.Project
-import edu.isu.isuese.datamodel.System
 import edu.montana.gsoc.msusel.arc.ArcContext
 import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
-import edu.montana.gsoc.msusel.arc.app.runner.pattern4test.PatternsTestConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
-import edu.montana.gsoc.msusel.arc.impl.patextract.PatternExtractorConstants
 import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
-import edu.montana.gsoc.msusel.inject.Director
+import groovy.util.logging.Log4j2
 
 /**
  * @author Isaac D Griffith
  * @version 1.3.0
  */
+@Log4j2
 class VerificationStudyPhaseThree  extends WorkFlow {
 
     Table<String, String, String> results
