@@ -123,9 +123,16 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
         {
             for (int id = 1; id <= totalUnitCount; id++) {
                 String unitName = "unit-$id"
-                String baseLoc = new File(new File(new File(baseDir, "units"), unitName), "base").toPath().toString()
-                String infLoc = new File(new File(new File(baseDir, "units"), unitName), "infected").toPath().toString()
-                pw.printf("%d,\"verification:%s\",\"%s\",\"%s\"\n", id, unitName, baseLoc, infLoc)
+                String sysKey = "verification"
+                String sysLoc = new File(baseDir, "units")
+                String baseKey = "verification:${unitName}-base"
+                String infKey = "verification:${unitName}-inf"
+                String injKey = "verification:${unitName}-inj"
+                String baseLoc = "${unitName}${File.separator}base"
+                String infLoc = "${unitName}${File.separator}infected"
+                String injLoc = "${unitName}${File.separator}infected"
+                String controlFileLoc = "${unitName}${File.separator}injector.control"
+                pw.printf("%d,\"verification:%s\",\"%s\",\"%s\"\n", id, sysKey, sysLoc, baseKey, infKey, injKey, baseLoc, infLoc, injLoc, controlFileLoc)
             }
         } catch (IOException ex) {
             log.error "Could not write out the analysis config"
@@ -136,6 +143,10 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
     private void createDirectoryStructure(File baseDir, String unitName, String basePuml, String infPuml, String baseProjKey, String infProjKey, String pattern) {
         log.info "Creating Directory Structure for unit: $unitName"
         def tree = new FileTreeBuilder(baseDir)
+        String settingsBase = createGradleSettings("$unitName-base")
+        String buildBase = createGradleBuild()
+        String settingsInf = createGradleSettings("$unitName-infected")
+        String buildInf = createGradleBuild()
         tree."units" {
             "$unitName" {
                 base {
@@ -148,8 +159,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     docs {
                         "classdiagram.puml"(basePuml)
                     }
-                    "build.gradle"(createGradleBuild())
-                    "settings.gradle"(createGradleSettings("$unitName-base"))
+                    "build.gradle"(buildBase)
+                    "settings.gradle"(settingsBase)
                 }
                 infected {
                     src {
@@ -161,8 +172,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                     docs {
                         "classdiagram.puml"(infPuml)
                     }
-                    "build.gradle"(createGradleBuild())
-                    "settings.gradle"(createGradleSettings("$unitName-infected"))
+                    "build.gradle"(buildInf)
+                    "settings.gradle"(settingsInf)
                 }
                 "unit.properties"("""\
                     base.project = ${baseProjKey}
@@ -276,13 +287,13 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             // Use junit platform for unit tests.
             useJUnitPlatform()
         }
-        """.stripIndent(8)
+        """.stripIndent()
     }
 
     private String createGradleSettings(String name) {
         """\
         rootProject.name = '$name'
-        """.stripIndent(8)
+        """.stripIndent()
     }
 
     private void generateInjectionControlData(String unitName, PatternInstance base, PatternInstance inf, File baseDir) {
