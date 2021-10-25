@@ -75,6 +75,6 @@ class VerificationStudyRunner extends EmpiricalStudy {
     }
 
     def static getConfigFileName() {
-        "vstudy.conf"
+        "verex.conf"
     }
 }
