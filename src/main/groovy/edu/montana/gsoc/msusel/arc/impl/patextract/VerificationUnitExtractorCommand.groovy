@@ -124,7 +124,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
             for (int id = 1; id <= totalUnitCount; id++) {
                 String unitName = "unit-$id"
                 String sysKey = "verification"
-                String sysLoc = new File(baseDir, "units")
+                String sysLoc = new File(baseDir, "units").toString().replace("./", "")
                 String baseKey = "verification:${unitName}-base"
                 String infKey = "verification:${unitName}-inf"
                 String injKey = "verification:${unitName}-inj"
@@ -132,7 +132,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                 String infLoc = "${unitName}${File.separator}infected"
                 String injLoc = "${unitName}${File.separator}infected"
                 String controlFileLoc = "${unitName}${File.separator}injector.control"
-                pw.printf("%d,\"verification:%s\",\"%s\",\"%s\"\n", id, sysKey, sysLoc, baseKey, infKey, injKey, baseLoc, infLoc, injLoc, controlFileLoc)
+                pw.printf("%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", id, sysKey, sysLoc, baseKey, infKey, injKey, baseLoc, infLoc, injLoc, controlFileLoc)
             }
         } catch (IOException ex) {
             log.error "Could not write out the analysis config"
