@@ -57,6 +57,8 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
         log.info "Started Verification Unit Extraction"
 //        String base = context.getArcProperty(PatternExtractorConstants.BASE_DIR)
         String base = context.getArcProperty("arc.base.dir")
+        if (base.contains("."))
+            base.replace(".", "")
         File baseDir = new File(base)
 
 //        if (context.getArcProperty("arc.base.dir").endsWith(".") || context.getArcProperty("arc.base.dir").endsWith("." + File.separator))
@@ -92,7 +94,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
 
     def writeOutPairs(File baseDir, List<Pair<PatternInstance, PatternInstance>> pairs) {
         int unitNum = 1
-        int totalUnitCount = 1
+        int totalUnitCount = 0
         pairs.each {pair ->
             PatternInstance base = pair.left
             PatternInstance infected = pair.right
