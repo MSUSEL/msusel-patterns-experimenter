@@ -39,7 +39,7 @@ import groovy.util.logging.Log4j2
 class VerificationInjectorDirector {
 
     def inject(ConfigObject config) {
-        Project proj = Project.findFirst("projKey = ?", (String) config.where.projectKey)
+        Project proj = Project.findFirst("projKey = ?", (String) config.where.baseKey)
 
         String projKey = config.where.injectedKey
 
