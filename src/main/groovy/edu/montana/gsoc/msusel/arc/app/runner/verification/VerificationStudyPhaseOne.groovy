@@ -51,6 +51,8 @@ class VerificationStudyPhaseOne extends WorkFlow {
             def map = results.row(id)
             String key = map[VerificationStudyConstants.SYSTEM_KEY]
             System sys = System.findFirst("sysKey = ?", key)
+            String baseName = map[VerificationStudyConstants.BASE_KEY].split(/:/)[1]
+            String infName = map[VerificationStudyConstants.INFECTED_KEY].split(/:/)[1]
             if (!sys) {
                 sys = System.builder()
                         .name(key)
@@ -59,13 +61,13 @@ class VerificationStudyPhaseOne extends WorkFlow {
                         .create()
             }
             Project base = Project.builder()
-                    .name("Base")
+                    .name(baseName)
                     .projKey(map[VerificationStudyConstants.BASE_KEY])
                     .relPath(normalizePath(map[VerificationStudyConstants.BASE_LOCATION]))
                     .version()
                     .create()
             Project infected = Project.builder()
-                    .name("Infected")
+                    .name(infName)
                     .projKey(map[VerificationStudyConstants.INFECTED_KEY])
                     .relPath(normalizePath(map[VerificationStudyConstants.INFECTED_LOCATION]))
                     .version()
