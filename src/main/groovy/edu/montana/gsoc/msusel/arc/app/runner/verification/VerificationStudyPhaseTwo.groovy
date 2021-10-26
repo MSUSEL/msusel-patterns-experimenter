@@ -55,7 +55,7 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
         parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
-        build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
+        build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
     }
 
     void executeStudy() {
