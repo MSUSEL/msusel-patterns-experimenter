@@ -41,10 +41,7 @@ class VerificationInjectorDirector {
     def inject(ConfigObject config) {
         Project proj = Project.findFirst("projKey = ?", (String) config.where.projectKey)
 
-        String projKey = config.where.projectKey
-        String[] comps = projKey.split(/:/)
-        comps[1] = comps[1] + "_copy"
-        projKey = comps.join(":")
+        String projKey = config.where.injectedKey
 
         if (!Project.findFirst("projKey = ?", projKey)) {
 

@@ -103,11 +103,12 @@ class VerificationStudyPhaseThree  extends WorkFlow {
             String confText = """
             where {
                 systemKey = '${proj.getParentSystem().getKey()}'
-                projectKey = '${proj.getProjectKey()}'
+                baseKey = '${proj.getProjectKey()}'
+                injectedKey = '${map[VerificationStudyConstants.INJECTED_KEY]}'
                 patternInst = '${inst.getInstKey()}'
             }
             control {
-                fileName = ''
+                fileName = '${map[VerificationStudyConstants.CONTROL_FILE]}'
             }
             """
             context.close()
