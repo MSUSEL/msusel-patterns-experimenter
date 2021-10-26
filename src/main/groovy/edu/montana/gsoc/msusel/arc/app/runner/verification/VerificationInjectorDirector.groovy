@@ -60,6 +60,7 @@ class VerificationInjectorDirector {
             file.readLines().each { line ->
                 String[] params = line.split(",")
                 SourceInjector injector = InjectorFactory.instance.createInjector(inst, "grime", params[0])
+                log.info "Injector Params:\n${Arrays.copyOfRange(params, 1, params.length - 1)}"
                 injector.inject(Arrays.copyOfRange(params, 1, params.length - 1))
             }
 
