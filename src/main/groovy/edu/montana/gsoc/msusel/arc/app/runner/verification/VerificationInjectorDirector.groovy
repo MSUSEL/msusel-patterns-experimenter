@@ -47,17 +47,8 @@ class VerificationInjectorDirector {
 
             ProjectCopier copier = new ProjectCopier()
             proj = copier.execute(proj, projKey, config.where.injectedLoc)
+            PatternInstance inst = proj.getPatternInstances().first()
 
-            String instKey = config.where.patternInst.replace("base", "inj")
-
-            log.info "Project: $proj"
-            log.info "config instance key: ${config.where.patternInst}"
-            log.info "instance key searched for: ${instKey}"
-
-            PatternInstance inst = PatternInstance.findFirst("instKey = ?", instKey)
-            log.info "Pattern found was: $inst"
-            inst = proj.getPatternInstances().first()
-            log.info "First Pattern Instance of Proj: $inst"
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
             file.readLines().each { line ->

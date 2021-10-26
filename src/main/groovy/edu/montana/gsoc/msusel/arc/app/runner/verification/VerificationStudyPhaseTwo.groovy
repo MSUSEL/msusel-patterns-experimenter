@@ -67,20 +67,20 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         }
         context.close()
 
-        projects.each { project ->
-            context.project = project
-            runTools()
-        }
+        runTools(projects)
     }
 
-    void runTools() {
-        java.execute(context)
-        build.execute(context)
-        java.execute(context)
-        parser.execute(context)
-        jdi.execute(context)
+    void runTools(List<Project> projects) {
+        projects.each { project ->
+            context.project = project
+            java.execute(context)
+            build.execute(context)
+            java.execute(context)
+            parser.execute(context)
+            jdi.execute(context)
 
-        createPatternInstance()
+            createPatternInstance()
+        }
     }
 
     void createPatternInstance() {
