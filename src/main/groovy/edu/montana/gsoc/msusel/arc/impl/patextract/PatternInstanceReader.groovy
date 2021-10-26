@@ -37,13 +37,17 @@ import edu.isu.isuese.datamodel.Reference
 import edu.isu.isuese.datamodel.Role
 import edu.isu.isuese.datamodel.RoleBinding
 import edu.isu.isuese.datamodel.Type
+import groovy.util.logging.Log4j2
 
 @Singleton
+@Log4j2
 class PatternInstanceReader {
 
     void read(Project project) {
         String path = project.getFullPath().replace("./", "")
         File file = new File(new File(path), "instance.conf")
+        log.info "Reading file: $file"
+
         if (file.exists() && file.canRead()) {
             ConfigSlurper slurper = new ConfigSlurper()
             ConfigObject instData = slurper.parse(file.text)
