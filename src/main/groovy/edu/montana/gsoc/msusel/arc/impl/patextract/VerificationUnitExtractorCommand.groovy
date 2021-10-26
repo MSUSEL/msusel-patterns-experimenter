@@ -130,7 +130,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                 String injKey = "verification:${unitName}-inj"
                 String baseLoc = "${unitName}${File.separator}base"
                 String infLoc = "${unitName}${File.separator}infected"
-                String injLoc = "${unitName}${File.separator}infected"
+                String injLoc = "${unitName}${File.separator}injected"
                 String controlFileLoc = "${unitName}${File.separator}injector.control"
                 pw.printf("%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", id, sysKey, sysLoc, baseKey, infKey, injKey, baseLoc, infLoc, injLoc, controlFileLoc)
             }
