@@ -30,6 +30,7 @@ import com.google.common.collect.Sets
 import edu.isu.isuese.datamodel.Field
 import edu.isu.isuese.datamodel.Finding
 import edu.isu.isuese.datamodel.Method
+import edu.isu.isuese.datamodel.Namespace
 import edu.isu.isuese.datamodel.PatternInstance
 import edu.isu.isuese.datamodel.RefType
 import edu.isu.isuese.datamodel.Type
@@ -90,6 +91,10 @@ class InjectorControlGenerator {
                         break
                     case RefType.TYPE:
                         Type t = Type.findFirst("compKey = ?", it.getRefKey())
+                        builder << t.getFullName()
+                        break
+                    case RefType.NAMESPACE:
+                        Namespace t = Namespace.findFirst("nsKey = ?", it.getRefKey())
                         builder << t.getFullName()
                         break
                 }
