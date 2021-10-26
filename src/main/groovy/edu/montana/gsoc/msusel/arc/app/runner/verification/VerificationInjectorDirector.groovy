@@ -48,13 +48,12 @@ class VerificationInjectorDirector {
             ProjectCopier copier = new ProjectCopier()
             proj = copier.execute(proj, projKey, config.where.injectedLoc)
 
-            String[] instKey = config.where.patternInst.split(/:/)
-            instKey[1] = instKey[1] + "_copy"
+            String instKey = config.where.patternInst.replace("base", "inj")
 
             log.info "config instance key: ${config.where.patternInst}"
-            log.info "instance key searched for: ${instKey.join(":")}"
+            log.info "instance key searched for: ${instKey}"
 
-            PatternInstance inst = PatternInstance.findFirst("instKey = ?", (String) instKey.join(":"))
+            PatternInstance inst = PatternInstance.findFirst("instKey = ?", instKey)
 
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
