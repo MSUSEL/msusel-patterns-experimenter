@@ -84,6 +84,8 @@ class VerificationStudyPhaseTwo extends WorkFlow {
     }
 
     void createPatternInstance() {
+        context.open()
         PatternInstanceReader.instance.read(context.getProject())
+        context.close()
     }
 }
