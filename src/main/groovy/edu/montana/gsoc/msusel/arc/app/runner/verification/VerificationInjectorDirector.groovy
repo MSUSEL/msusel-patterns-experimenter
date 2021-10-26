@@ -56,6 +56,8 @@ class VerificationInjectorDirector {
 
             PatternInstance inst = PatternInstance.findFirst("instKey = ?", instKey)
             log.info "Pattern found was: $inst"
+            inst = proj.getPatternInstances().first()
+            log.info "First Pattern Instance of Proj: $inst"
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
             file.readLines().each { line ->
