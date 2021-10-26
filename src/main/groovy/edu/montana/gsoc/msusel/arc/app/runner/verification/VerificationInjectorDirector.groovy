@@ -50,11 +50,12 @@ class VerificationInjectorDirector {
 
             String instKey = config.where.patternInst.replace("base", "inj")
 
+            log.info "Project: $proj"
             log.info "config instance key: ${config.where.patternInst}"
             log.info "instance key searched for: ${instKey}"
 
             PatternInstance inst = PatternInstance.findFirst("instKey = ?", instKey)
-
+            log.info "Pattern found was: $inst"
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
             file.readLines().each { line ->
