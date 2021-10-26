@@ -50,6 +50,10 @@ class VerificationInjectorDirector {
 
             String[] instKey = config.where.patternInst.split(/:/)
             instKey[1] = instKey[1] + "_copy"
+
+            log.info "config instance key: ${config.where.patternInst}"
+            log.info "instance key searched for: ${instKey.join(":")}"
+
             PatternInstance inst = PatternInstance.findFirst("instKey = ?", (String) instKey.join(":"))
 
             File file = new File(config.control.fileName)

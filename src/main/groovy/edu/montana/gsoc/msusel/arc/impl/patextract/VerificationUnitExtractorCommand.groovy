@@ -127,7 +127,7 @@ class VerificationUnitExtractorCommand extends SecondaryAnalysisCommand {
                 String sysLoc = new File(baseDir, "units").toString().replace("./", "")
                 String baseKey = "verification:${unitName}-base"
                 String infKey = "verification:${unitName}-inf"
-                String injKey = "verification:${unitName}-inj"
+                String injKey = "${unitName}-inj"
                 String baseLoc = "${unitName}${File.separator}base"
                 String infLoc = "${unitName}${File.separator}infected"
                 String injLoc = "${unitName}${File.separator}injected"
