@@ -60,6 +60,7 @@ class PatternInstanceReader {
             pattern.addInstance(inst)
 
             instData.instance.bindings.each { item ->
+                log.info "Item values: $item"
                 Role role = Role.findFirst("roleKey = ?", item.role)
                 Reference ref = null
                 switch (RefType.fromValue(Integer.valueOf(item.refType))) {
