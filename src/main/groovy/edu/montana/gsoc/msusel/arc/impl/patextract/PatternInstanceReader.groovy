@@ -63,20 +63,20 @@ class PatternInstanceReader {
                 log.info "Item values: $item"
                 Role role = Role.findFirst("roleKey = ?", item.role)
                 Reference ref = null
-                switch (RefType.valueOf(item.refType)) {
-                    case RefType.TYPE:
+                switch (item.refType) {
+                    case "TYPE":
                         Type t = Type.findFirst("compKey = ?", project.getProjectKey() + ":" + item.ref)
                         ref = t.createReference()
                         break
-                    case RefType.METHOD:
+                    case "METHOD":
                         Method m = Method.findFirst("compKey = ?", project.getProjectKey() + ":" + item.ref)
                         ref = m.createReference()
                         break
-                    case RefType.NAMESPACE:
+                    case "NAMESPACE":
                         Namespace ns = Namespace.findFirst("nsKey = ?", project.getProjectKey() + ":" + item.ref)
                         ref = ns.createReference()
                         break
-                    case RefType.FIELD:
+                    case "FIELD":
                         Field f = Field.findFirst("compKey = ?", project.getProjectKey() + ":" + item.ref)
                         ref = f.createReference()
                         break
