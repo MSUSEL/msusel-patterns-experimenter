@@ -32,8 +32,10 @@ import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.inject.InjectorFactory
 import edu.montana.gsoc.msusel.inject.ProjectCopier
 import edu.montana.gsoc.msusel.inject.SourceInjector
+import groovy.util.logging.Log4j2
 
 @Singleton
+@Log4j2
 class VerificationInjectorDirector {
 
     def inject(ConfigObject config) {
@@ -54,6 +56,7 @@ class VerificationInjectorDirector {
             PatternInstance inst = PatternInstance.findFirst("instKey = ?", (String) instKey.join(":"))
 
             File file = new File(config.control.fileName)
+            log.info "Control file location: $file"
             file.readLines().each { line ->
                 String[] params = line.split(",")
                 SourceInjector injector = InjectorFactory.instance.createInjector(inst, "grime", params[0])
