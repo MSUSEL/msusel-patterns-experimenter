@@ -52,7 +52,7 @@ class VerificationInjectorDirector {
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
             file.readLines().each { line ->
-                String[] params = line.split(",")
+                String[] params = line.split(";")
                 SourceInjector injector = InjectorFactory.instance.createInjector(inst, "grime", params[0])
                 log.info "Injector Params:\n${Arrays.copyOfRange(params, 1, params.length)}"
                 injector.inject(Arrays.copyOfRange(params, 1, params.length))
