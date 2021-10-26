@@ -105,6 +105,7 @@ class VerificationStudyPhaseThree  extends WorkFlow {
                 systemKey = '${proj.getParentSystem().getKey()}'
                 baseKey = '${proj.getProjectKey()}'
                 injectedKey = '${map[VerificationStudyConstants.INJECTED_KEY]}'
+                injectedLoc = '${map[VerificationStudyConstants.INJECTED_LOCATION]}'
                 patternInst = '${inst.getInstKey()}'
             }
             control {

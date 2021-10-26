@@ -46,7 +46,7 @@ class VerificationInjectorDirector {
         if (!Project.findFirst("projKey = ?", projKey)) {
 
             ProjectCopier copier = new ProjectCopier()
-            proj = copier.execute(proj)
+            proj = copier.execute(proj, projKey, config.where.injectedLoc)
 
             String[] instKey = config.where.patternInst.split(/:/)
             instKey[1] = instKey[1] + "_copy"
