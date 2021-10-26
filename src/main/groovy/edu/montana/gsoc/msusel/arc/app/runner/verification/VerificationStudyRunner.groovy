@@ -70,7 +70,8 @@ class VerificationStudyRunner extends EmpiricalStudy {
                 VerificationStudyConstants.INJECTED_KEY,
                 VerificationStudyConstants.BASE_LOCATION,
                 VerificationStudyConstants.INFECTED_LOCATION,
-                VerificationStudyConstants.INJECTED_LOCATION
+                VerificationStudyConstants.INJECTED_LOCATION,
+                VerificationStudyConstants.CONTROL_FILE
         ]
     }
 
