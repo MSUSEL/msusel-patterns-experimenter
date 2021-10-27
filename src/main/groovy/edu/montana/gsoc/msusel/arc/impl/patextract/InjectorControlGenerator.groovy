@@ -79,11 +79,13 @@ class InjectorControlGenerator {
         builder << ruleName
         finding.getReferences().each {
             if (it.getType() != RefType.PATTERN) {
-                builder << ","
+                builder << ";"
                 switch (it.getType()) {
                     case RefType.METHOD:
                         Method m = Method.findFirst("compKey = ?", it.getRefKey())
-                        builder << m.signature()
+                        String sig = m.signature()
+                        int ndex = sig.indexOf(m.getName())
+                        builder << sig.substring(ndex)
                         break
                     case RefType.FIELD:
                         Field f = Field.findFirst("compKey = ?", it.getRefKey())
