@@ -29,7 +29,9 @@ package edu.montana.gsoc.msusel.arc.app.runner.verification
 import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.app.runner.ResultsExtractor
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class VerificationStudyResultsExtractor extends ResultsExtractor {
 
     void extractProjectResults(Table<String, String, String> values) {
