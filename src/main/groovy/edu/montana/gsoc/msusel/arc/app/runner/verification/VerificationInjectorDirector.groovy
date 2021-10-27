@@ -57,7 +57,7 @@ class VerificationInjectorDirector {
                 String[] params = line.split(";")
                 SourceInjector injector = InjectorFactory.instance.createInjector(inst, "grime", params[0])
                 log.info "Injector Params:\n${Arrays.copyOfRange(params, 1, params.length)}"
-                injector.inject(Arrays.copyOfRange(params, 1, params.length))
+                injector.inject(proj, Arrays.copyOfRange(params, 1, params.length))
             }
 
             return [
