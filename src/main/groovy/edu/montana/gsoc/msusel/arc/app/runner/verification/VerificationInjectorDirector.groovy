@@ -47,7 +47,7 @@ class VerificationInjectorDirector {
 
             ProjectCopier copier = new ProjectCopier()
             copier.execute(proj, projKey, config.where.injectedLoc)
-            proj = Project.findFirst("projKey = ?", (String) config.where.injectedKey)
+            proj = Project.findFirst("projKey = ?", "${config.where.systemKey}:${config.where.injectedKey}")
             PatternInstance inst = proj.getPatternInstances().first()
 
             File file = new File(config.control.fileName)
