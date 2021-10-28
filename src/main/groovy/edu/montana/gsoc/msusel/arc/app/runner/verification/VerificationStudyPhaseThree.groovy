@@ -30,12 +30,9 @@ import com.google.common.collect.Table
 import edu.isu.isuese.datamodel.PatternInstance
 import edu.isu.isuese.datamodel.Project
 import edu.montana.gsoc.msusel.arc.ArcContext
-import edu.montana.gsoc.msusel.arc.Collector
 import edu.montana.gsoc.msusel.arc.Command
 import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
-import edu.montana.gsoc.msusel.arc.app.runner.experiment.ExperimentConstants
 import edu.montana.gsoc.msusel.arc.impl.java.JavaConstants
-import edu.montana.gsoc.msusel.arc.impl.pattern4.Pattern4Constants
 import groovy.util.logging.Log4j2
 
 /**
@@ -48,7 +45,6 @@ class VerificationStudyPhaseThree  extends WorkFlow {
     Table<String, String, String> results
     Command java
     Command jdi
-    Command build
     Command parser
 
     VerificationStudyPhaseThree(ArcContext context) {
@@ -59,7 +55,6 @@ class VerificationStudyPhaseThree  extends WorkFlow {
         java     = getContext().getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
         parser   = getContext().getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi      = getContext().getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
-        build    = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
     }
 
     void executeStudy() {
@@ -78,14 +73,12 @@ class VerificationStudyPhaseThree  extends WorkFlow {
 
             context.open()
             context.project = Project.findFirst("projKey = ?", results.row(id).get(VerificationStudyConstants.INJECTED_KEY))
-            runTools()
             context.close()
+            runTools()
         }
     }
 
     void runTools() {
-        java.execute(context)
-        build.execute(context)
         java.execute(context)
         parser.execute(context)
         jdi.execute(context)
