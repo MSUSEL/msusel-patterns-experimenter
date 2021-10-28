@@ -41,9 +41,9 @@ class VerificationInjectorDirector {
     def inject(ConfigObject config) {
         Project proj = Project.findFirst("projKey = ?", (String) config.where.baseKey)
 
-        String projKey = "${config.where.systemKey}:${config.where.injectedKey}"
+        String projKey = config.where.injectedKey
 
-        if (!Project.findFirst("projKey = ?", projKey)) {
+        if (!Project.findFirst("projKey = ?", (String) "${config.where.systemKey}:${config.where.injectedKey}")) {
 
             ProjectCopier copier = new ProjectCopier()
             proj = copier.execute(proj, projKey, config.where.injectedLoc)
@@ -67,7 +67,7 @@ class VerificationInjectorDirector {
                     "InjectedLocation" : proj.getFullPath()
             ]
         } else {
-            Project p = Project.findFirst("projKey = ?", projKey)
+            Project p = Project.findFirst("projKey = ?", (String) "${config.where.systemKey}:${config.where.injectedKey}")
             return [
                     "InjectedKey" : p.projectKey,
                     "InjectedLocation" : p.getFullPath()]
