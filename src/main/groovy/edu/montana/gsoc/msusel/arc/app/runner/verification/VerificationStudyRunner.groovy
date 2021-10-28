@@ -49,7 +49,8 @@ class VerificationStudyRunner extends EmpiricalStudy {
         this.phases = [
                 new VerificationStudyPhaseOne(context),
                 new VerificationStudyPhaseTwo(context),
-                new VerificationStudyPhaseThree(context)
+                new VerificationStudyPhaseThree(context),
+                new VerificationStudyPhaseFour(context)
         ]
 
         this.headers = VerificationStudyConstants.HEADERS
