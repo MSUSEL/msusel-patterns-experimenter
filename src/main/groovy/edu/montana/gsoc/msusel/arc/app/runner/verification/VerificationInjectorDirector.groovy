@@ -41,13 +41,13 @@ class VerificationInjectorDirector {
     def inject(ConfigObject config) {
         Project proj = Project.findFirst("projKey = ?", (String) config.where.baseKey)
 
-        String projKey = config.where.injectedKey
+        String projKey = "${config.where.systemKey}:${config.where.injectedKey}"
 
         if (!Project.findFirst("projKey = ?", projKey)) {
 
             ProjectCopier copier = new ProjectCopier()
             copier.execute(proj, projKey, config.where.injectedLoc)
-            proj = Project.findFirst("projKey = ?", (String) "${config.where.systemKey}:${config.where.injectedKey}")
+            proj = Project.findFirst("projKey = ?", projKey)
             proj.refresh()
             PatternInstance inst = proj.getPatternInstances().first()
 
