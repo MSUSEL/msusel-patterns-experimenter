@@ -48,10 +48,12 @@ class VerificationInjectorDirector {
             ProjectCopier copier = new ProjectCopier()
             proj = copier.execute(proj, projKey, config.where.injectedLoc)
             proj.refresh()
+
             PatternInstance inst = proj.getPatternInstances().first()
 
             log.info "ProjKey variable: $projKey"
             log.info "Copied Project Key: ${proj.getProjectKey()}"
+            log.info "Pattern Instance key: ${inst.instKey} and id: ${inst.id}"
 
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
