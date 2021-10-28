@@ -50,6 +50,9 @@ class VerificationInjectorDirector {
             proj.refresh()
             PatternInstance inst = proj.getPatternInstances().first()
 
+            log.info "ProjKey variable: $projKey"
+            log.info "Copied Project Key: ${proj.getProjectKey()}"
+
             File file = new File(config.control.fileName)
             log.info "Control file location: $file"
             file.readLines().each { line ->
