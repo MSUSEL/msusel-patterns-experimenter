@@ -46,8 +46,7 @@ class VerificationInjectorDirector {
         if (!Project.findFirst("projKey = ?", projKey)) {
 
             ProjectCopier copier = new ProjectCopier()
-            copier.execute(proj, projKey, config.where.injectedLoc)
-            proj = Project.findFirst("projKey = ?", projKey)
+            proj = copier.execute(proj, projKey, config.where.injectedLoc)
             proj.refresh()
             PatternInstance inst = proj.getPatternInstances().first()
 
