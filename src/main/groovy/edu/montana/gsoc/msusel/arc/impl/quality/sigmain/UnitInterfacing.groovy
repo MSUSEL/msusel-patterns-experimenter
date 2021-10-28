@@ -72,13 +72,14 @@ class UnitInterfacing extends SigMainMetricEvaluator {
         methods = Lists.newArrayList(proj.getAllMethods())
         context.close()
 
-        GParsExecutorsPool.withPool(8) {
-            methods.eachParallel { Method method ->
+//        GParsExecutorsPool.withPool(8) {
+//            methods.eachParallel { Method method ->
+            methods.each { Method method ->
                 context.open()
                 categorize(method, "NOMP")
                 context.close()
             }
-        }
+//        }
     }
 
     @Override

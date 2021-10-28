@@ -71,13 +71,14 @@ class UnitComplexity extends SigMainMetricEvaluator {
         List<Method> methods = Lists.newArrayList(proj.getAllMethods())
         context.close()
 
-        GParsExecutorsPool.withPool(8) {
-            methods.eachParallel { Method method ->
-                context.open()
-                categorize(method, "MCC")
-                context.close()
-            }
+//        GParsExecutorsPool.withPool(8) {
+//            methods.eachParallel { Method method ->
+        methods.each { Method method ->
+            context.open()
+            categorize(method, "MCC")
+            context.close()
         }
+//        }
     }
 
     @Override

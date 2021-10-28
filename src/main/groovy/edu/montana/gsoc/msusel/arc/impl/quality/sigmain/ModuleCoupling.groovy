@@ -68,13 +68,14 @@ class ModuleCoupling extends SigMainMetricEvaluator {
         types = Lists.newArrayList(proj.getAllTypes())
         context.close()
 
-        GParsExecutorsPool.withPool(8) {
-            types.eachParallel { Type type ->
-                context.open()
-                categorize(type, "Ca")
-                context.close()
-            }
+//        GParsExecutorsPool.withPool(8) {
+//            types.eachParallel { Type type ->
+        types.each { Type type ->
+            context.open()
+            categorize(type, "Ca")
+            context.close()
         }
+//        }
     }
 
     @Override

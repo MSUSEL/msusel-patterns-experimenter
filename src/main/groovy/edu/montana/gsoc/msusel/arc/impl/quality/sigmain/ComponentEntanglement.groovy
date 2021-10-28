@@ -111,8 +111,9 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
         List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
         context.close()
 
-        GParsExecutorsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
+//        GParsExecutorsPool.withPool(8) {
+//            namespaces.eachParallel { Namespace ns ->
+            namespaces.each { Namespace ns ->
                 context.open()
                 if (!ns.getName().isEmpty()) {
                     Node node = GraphElementFactory.getInstance().createNode(ns)
@@ -121,11 +122,12 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
                 }
                 context.close()
             }
-        }
+//        }
 
         AtomicInteger j = new AtomicInteger(1)
-        GParsExecutorsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
+//        GParsExecutorsPool.withPool(8) {
+//            namespaces.eachParallel { Namespace ns ->
+            namespaces.each { Namespace ns ->
                 int index = j.getAndIncrement()
                 log.info "processing namespace ${index} / ${namespaces.size()}"
                 context.open()
@@ -164,7 +166,7 @@ class ComponentEntanglement extends SigMainComponentMetricEvaluator {
 
 //                dropViews(index)
             }
-        }
+//        }
     }
 
     List<Type> outgoingTypesFromType(String compKey) {

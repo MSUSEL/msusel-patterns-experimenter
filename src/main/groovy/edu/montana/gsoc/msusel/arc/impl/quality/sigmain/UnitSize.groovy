@@ -62,7 +62,7 @@ class UnitSize extends SigMainMetricEvaluator {
     UnitSize(ArcContext context) {
         super(context)
         riskMap[RiskCategory.LOW] = Pair.of(0.0, 15.0)
-        riskMap[RiskCategory.MODERATE] = Pair.of(15.0,30.0)
+        riskMap[RiskCategory.MODERATE] = Pair.of(15.0, 30.0)
         riskMap[RiskCategory.HIGH] = Pair.of(30.0, 60.0)
     }
 
@@ -72,13 +72,14 @@ class UnitSize extends SigMainMetricEvaluator {
         methods = Lists.newArrayList(proj.getAllMethods())
         context.close()
 
-        GParsExecutorsPool.withPool(8) {
-            methods.eachParallel { Method method ->
-                context.open()
-                categorize(method, "SLOC")
-                context.close()
-            }
+//        GParsExecutorsPool.withPool(8) {
+//            methods.eachParallel { Method method ->
+        methods.each { Method method ->
+            context.open()
+            categorize(method, "SLOC")
+            context.close()
         }
+//        }
     }
 
     @Override

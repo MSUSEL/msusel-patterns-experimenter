@@ -77,8 +77,9 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
         AtomicDouble hiddenSize = new AtomicDouble(0)
         AtomicInteger index = new AtomicInteger(1)
 
-        GParsExecutorsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
+//        GParsExecutorsPool.withPool(8) {
+//            namespaces.eachParallel { Namespace ns ->
+            namespaces.each { Namespace ns ->
                 int ndx = index.getAndIncrement()
                 log.info "processing namespace ${ndx} / ${namespaces.size()}"
                 context.open()
@@ -102,7 +103,7 @@ class ComponentIndependence extends SigMainComponentMetricEvaluator {
                     }
                 }
             }
-        }
+//        }
 //        }
 
         context.open()

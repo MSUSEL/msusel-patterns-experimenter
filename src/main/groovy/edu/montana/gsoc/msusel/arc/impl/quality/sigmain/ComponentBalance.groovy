@@ -117,15 +117,16 @@ class ComponentBalance extends SigMainComponentMetricEvaluator {
         List<Namespace> namespaces = Lists.newArrayList(proj.getNamespaces())
         context.close()
 
-        GParsPool.withPool(8) {
-            namespaces.eachParallel { Namespace ns ->
+//        GParsPool.withPool(8) {
+//            namespaces.eachParallel { Namespace ns ->
+            namespaces.each { Namespace ns ->
                 context.open()
                 def value = ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
                 if (value)
                     sizes << ns.getValueFor("${MetricsConstants.METRICS_REPO_KEY}:SLOC")
                 context.close()
             }
-        }
+//        }
 //        sizes.removeIf { it == null }
         sizes
     }

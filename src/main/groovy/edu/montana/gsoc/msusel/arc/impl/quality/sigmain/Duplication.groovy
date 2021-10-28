@@ -104,14 +104,15 @@ class Duplication extends SigAbstractMetricEvaluator implements Rateable {
 
             int f = 1
             int numFiles = srcFiles.size()
-            GParsExecutorsPool.withPool(8) {
-                srcFiles.eachParallel { File source ->
-                    log.info "ScanSelf File ${f++} / ${numFiles}"
-                    context.open()
-                    dupLines.addAndGet(scanSelf(source))
-                    context.close()
-                }
+//            GParsExecutorsPool.withPool(8) {
+//                srcFiles.eachParallel { File source ->
+            srcFiles.each { File source ->
+                log.info "ScanSelf File ${f++} / ${numFiles}"
+                context.open()
+                dupLines.addAndGet(scanSelf(source))
+                context.close()
             }
+//            }
 
             List<Pair<Integer, Integer>> pairs = []
             for (int i = 0; i < srcFiles.size() - 1; i++) {
