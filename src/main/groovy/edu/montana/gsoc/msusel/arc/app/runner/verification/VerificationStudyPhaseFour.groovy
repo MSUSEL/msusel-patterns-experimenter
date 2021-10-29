@@ -62,9 +62,9 @@ class VerificationStudyPhaseFour extends WorkFlow {
     @Override
     void executeStudy() {
         results.rowKeySet().each {id ->
-            runTools(results.get(id, VerificationStudyConstants.BASE_KEY))
-            runTools(results.get(id, VerificationStudyConstants.INFECTED_KEY))
-            runTools(results.get(id, VerificationStudyConstants.INJECTED_KEY))
+            runTools(results.row(id).get(VerificationStudyConstants.BASE_KEY))
+            runTools(results.row(id).get(VerificationStudyConstants.INFECTED_KEY))
+            runTools(results.row(id).get(VerificationStudyConstants.INJECTED_KEY))
         }
     }
 
