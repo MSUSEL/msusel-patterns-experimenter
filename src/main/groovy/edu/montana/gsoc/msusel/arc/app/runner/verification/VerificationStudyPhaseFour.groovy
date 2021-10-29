@@ -35,7 +35,9 @@ import edu.montana.gsoc.msusel.arc.app.runner.WorkFlow
 import edu.montana.gsoc.msusel.arc.impl.metrics.MetricsConstants
 import edu.montana.gsoc.msusel.arc.impl.quality.sigmain.SigMainConstants
 import edu.montana.gsoc.msusel.arc.impl.quality.td.TechDebtConstants
+import groovy.util.logging.Log4j2
 
+@Log4j2
 class VerificationStudyPhaseFour extends WorkFlow {
 
     private static final String STUDY_NAME = "Verification Study Phase Four"
@@ -61,6 +63,7 @@ class VerificationStudyPhaseFour extends WorkFlow {
 
     @Override
     void executeStudy() {
+        MeasureTable.getInstance().reset()
         results.rowKeySet().each {id ->
             runTools(results.row(id).get(VerificationStudyConstants.BASE_KEY))
             runTools(results.row(id).get(VerificationStudyConstants.INFECTED_KEY))
@@ -69,7 +72,7 @@ class VerificationStudyPhaseFour extends WorkFlow {
     }
 
     void runTools(String projKey) {
-        MeasureTable.getInstance().reset()
+        log.info "Project Key: $projKey"
         context.open()
         context.setProject(Project.findFirst("projKey = ?", projKey))
         context.close()
