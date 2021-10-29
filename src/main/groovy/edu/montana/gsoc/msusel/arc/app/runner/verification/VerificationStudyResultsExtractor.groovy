@@ -47,12 +47,16 @@ class VerificationStudyResultsExtractor extends ResultsExtractor {
                 double infVal = infected.getValueFor(measure)
                 double injVal = injected.getValueFor(measure)
 
+                log.info "BaseVal: $baseVal"
+                log.info "BaseVal: $infVal"
+                log.info "BaseVal: $injVal"
+
                 double diffInfBase = infVal - baseVal
                 double diffInjBase = injVal - baseVal
 
-                String name = measure.split(/:/)[1]
-                values.put(id, "${name}.Inf", "$diffInfBase")
-                values.put(id, "${name}.Inj", "$diffInjBase")
+                String name = measure.split(":")[1]
+                values.put(id, "${name}.Inf", "$diffInfBase" as String)
+                values.put(id, "${name}.Inj", "$diffInjBase" as String)
             }
         }
     }
