@@ -36,9 +36,9 @@ class VerificationStudyResultsExtractor extends ResultsExtractor {
 
     void extractProjectResults(Table<String, String, String> values) {
         values.rowKeySet().each {id ->
-            Project base = Project.findFirst("projKey = ?", values.row(id).get(VerificationStudyConstants.BASE_KEY))
-            Project infected = Project.findFirst("projKey = ?", values.row(id).get(VerificationStudyConstants.INFECTED_KEY))
-            Project injected = Project.findFirst("projKey = ?", values.row(id).get(VerificationStudyConstants.INJECTED_KEY))
+            Project base = Project.findFirst("projKey = ?", values.get(id, VerificationStudyConstants.BASE_KEY))
+            Project infected = Project.findFirst("projKey = ?", values.get(id, VerificationStudyConstants.INFECTED_KEY))
+            Project injected = Project.findFirst("projKey = ?", values.get(id, VerificationStudyConstants.INJECTED_KEY))
 
             measures.each {measure ->
                 log.info "Measure: $measure"
@@ -56,8 +56,8 @@ class VerificationStudyResultsExtractor extends ResultsExtractor {
 
                 String name = measure.split(":")[1]
                 log.info "Recording measure for name: $name"
-                values.put(id, "${name}.Inf" as String, "$diffInfBase" as String)
-                values.put(id, "${name}.Inj" as String, "$diffInjBase" as String)
+                values.put(id, name + ".Inf", "$diffInfBase")
+                values.put(id, name + ".Inj", "$diffInjBase")
             }
         }
     }
