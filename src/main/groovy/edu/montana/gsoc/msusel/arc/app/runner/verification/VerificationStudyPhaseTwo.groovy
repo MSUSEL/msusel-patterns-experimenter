@@ -45,7 +45,6 @@ class VerificationStudyPhaseTwo extends WorkFlow {
     Command java
     Command parser
     Command jdi
-    Command build
 
     VerificationStudyPhaseTwo(ArcContext context) {
         super("Verification Study Phase Two", "Phase Two", context)
@@ -55,7 +54,6 @@ class VerificationStudyPhaseTwo extends WorkFlow {
         java = context.getRegisteredCommand(JavaConstants.JAVA_TOOL_CMD_NAME)
         parser = context.getRegisteredCommand(JavaConstants.JAVA_PARSE_CMD_NAME)
         jdi = context.getRegisteredCommand(JavaConstants.JAVA_DIR_IDENT_CMD_NAME)
-        build = getContext().getRegisteredCommand(JavaConstants.JAVA_BUILD_CMD_NAME)
     }
 
     void executeStudy() {
@@ -73,8 +71,6 @@ class VerificationStudyPhaseTwo extends WorkFlow {
     void runTools(List<Project> projects) {
         projects.each { project ->
             context.project = project
-            java.execute(context)
-            build.execute(context)
             java.execute(context)
             parser.execute(context)
             jdi.execute(context)

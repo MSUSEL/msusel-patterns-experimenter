@@ -55,7 +55,6 @@ class VerificationStudyResultsExtractor extends ResultsExtractor {
                 double diffInjBase = injVal - baseVal
 
                 String name = measure.split(":")[1]
-                log.info "Recording measure for name: $name"
                 values.put(id, name + ".Inf", "$diffInfBase")
                 values.put(id, name + ".Inj", "$diffInjBase")
             }

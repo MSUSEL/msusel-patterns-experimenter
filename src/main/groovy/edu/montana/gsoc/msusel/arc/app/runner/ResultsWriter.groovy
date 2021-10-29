@@ -53,7 +53,6 @@ class ResultsWriter {
 
     void writeResults(Table<String, String, String> table) {
         combineHeadersAndMeasures()
-        log.info "Headers: $headers"
         produceResults(table)
     }
 
@@ -64,15 +63,8 @@ class ResultsWriter {
                 Map<String, String> row = table.row(id)
                 List<String> rowValues = []
                 headers.each {
-                    log.info "Row Key: $it"
-                    if (row.containsKey(it)) {
-                        log.info "Value found"
-                        rowValues << row.get(it)
-                    }
-                    else {
-                        log.info "No Value found"
-                        rowValues << ""
-                    }
+                    if (row.containsKey(it)) rowValues << row.get(it)
+                    else rowValues << ""
                 }
                 rowValues.remove(0)
                 rowValues.add(0, id.toString())
