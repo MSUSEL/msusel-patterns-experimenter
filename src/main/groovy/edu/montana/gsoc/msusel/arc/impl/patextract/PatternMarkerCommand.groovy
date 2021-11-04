@@ -64,7 +64,7 @@ class PatternMarkerCommand extends SecondaryAnalysisCommand {
 
             for (int i = 0; i < maps.size() - 1; i++) {
                 maps[i].keySet().each {
-                    if (maps[i][it] != maps[i + 1][it])
+                    if (maps[i][it] < maps[i + 1][it])
                         instances[i + 1].markForExtraction()
                 }
             }
